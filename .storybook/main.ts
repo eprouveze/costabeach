@@ -11,17 +11,25 @@ const config: StorybookConfig = {
     {
       name: "@storybook/addon-styling-webpack",
       options: {
-        postCss: true,
+        postCss: {
+          implementation: require('postcss'),
+        },
       },
     },
   ],
   framework: {
     name: "@storybook/nextjs",
-    options: {},
+    options: {
+      builder: {
+        useSWC: true,
+      },
+    },
   },
   docs: {
-    autodocs: "tag",
+    autodocs: true,
+    defaultName: 'Documentation',
   },
+  staticDirs: ['../public'],
   webpackFinal: async (config) => {
     if (config.resolve) {
       config.resolve.alias = {

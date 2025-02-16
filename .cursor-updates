@@ -11,3 +11,4 @@
 - Reorganized stories folder structure following atomic design principles (atoms, molecules, organisms, templates, pages)
 - Fixed atom stories to use named exports consistently
 - Cleaned up stories directory structure and removed stray files
+- Completed public organisms (Header, Footer, PropertyShowcase) and their Storybook stories, implementing responsive design and modern UI patterns.
