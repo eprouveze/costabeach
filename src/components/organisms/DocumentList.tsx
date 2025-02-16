@@ -22,7 +22,10 @@ export function DocumentList({ documents, onView, onDownload }: DocumentListProp
   return (
     <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       {documents.map((doc) => (
-        <Card key={doc.id} className="p-4 hover:shadow-lg transition-shadow">
+        <Card
+          key={doc.id}
+          className="p-4 hover:shadow-lg transition-shadow"
+        >
           <div className="flex items-start justify-between">
             <div className="flex items-center space-x-3">
               <FileText className="w-6 h-6 text-blue-500" />

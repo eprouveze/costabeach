@@ -25,6 +25,8 @@ export function OwnerPortalSidebar({ onNavigate, currentPath = "/owner/dashboard
       <div className="mb-6">
         <TextField
           icon={Search}
+          label="Search"
+          name="search"
           placeholder="Search..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}

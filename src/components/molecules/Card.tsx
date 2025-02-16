@@ -5,10 +5,11 @@ import { Heading } from '../atoms/Heading';
 import { Paragraph } from '../atoms/Paragraph';
 
 interface CardProps {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   imageUrl?: string;
   className?: string;
+  children?: React.ReactNode;
 }
 
 export const Card: React.FC<CardProps> = ({
@@ -16,6 +17,7 @@ export const Card: React.FC<CardProps> = ({
   description,
   imageUrl,
   className = '',
+  children,
 }) => {
   return (
     <div className={`rounded-lg shadow-md overflow-hidden bg-white dark:bg-gray-800 ${className}`}>
@@ -28,14 +30,21 @@ export const Card: React.FC<CardProps> = ({
           />
         </div>
       )}
-      <div className="p-4">
-        <Heading level="h3" className="mb-2">
-          {title}
-        </Heading>
-        <Paragraph className="text-gray-600 dark:text-gray-300">
-          {description}
-        </Paragraph>
-      </div>
+      {(title || description) && (
+        <div className="p-4">
+          {title && (
+            <Heading level="h3" className="mb-2">
+              {title}
+            </Heading>
+          )}
+          {description && (
+            <Paragraph className="text-gray-600 dark:text-gray-300">
+              {description}
+            </Paragraph>
+          )}
+        </div>
+      )}
+      {children}
     </div>
   );
 }; 
