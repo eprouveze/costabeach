@@ -28,7 +28,7 @@ const weightStyles = {
   bold: "font-bold",
 };
 
-const Heading = ({
+export const Heading = ({
   level = "h2",
   size = "md",
   weight = "semibold",
@@ -51,6 +51,4 @@ const Heading = ({
       {children}
     </Tag>
   );
-};
-
-export default Heading; 
+}; 

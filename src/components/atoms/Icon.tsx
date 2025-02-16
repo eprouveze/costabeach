@@ -18,7 +18,7 @@ const sizeMap = {
   xl: 40,
 };
 
-const Icon = ({
+export const Icon = ({
   icon: IconComponent,
   size = "md",
   className,
@@ -33,6 +33,4 @@ const Icon = ({
       {...props}
     />
   );
-};
-
-export default Icon; 
+}; 

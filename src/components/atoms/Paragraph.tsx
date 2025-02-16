@@ -40,7 +40,7 @@ const leadingStyles = {
   loose: "leading-loose",
 };
 
-const Paragraph = ({
+export const Paragraph = ({
   size = "base",
   variant = "default",
   weight = "normal",
@@ -63,6 +63,4 @@ const Paragraph = ({
       {children}
     </p>
   );
-};
-
-export default Paragraph; 
+}; 

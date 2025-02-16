@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import Input from "../Input";
+import { Input } from "../Input";
 
 const meta: Meta<typeof Input> = {
   title: "Atoms/Input",
@@ -9,24 +9,18 @@ const meta: Meta<typeof Input> = {
   },
   tags: ["autodocs"],
   argTypes: {
-    label: {
-      control: "text",
-    },
-    placeholder: {
-      control: "text",
+    type: {
+      control: "select",
+      options: ["text", "email", "password", "number"],
     },
     error: {
       control: "text",
     },
-    helperText: {
+    label: {
       control: "text",
     },
-    disabled: {
-      control: "boolean",
-    },
-    type: {
-      control: "select",
-      options: ["text", "password", "email", "number"],
+    helperText: {
+      control: "text",
     },
   },
 };
@@ -42,32 +36,25 @@ export const Default: Story = {
 
 export const WithLabel: Story = {
   args: {
-    label: "Email",
-    placeholder: "Enter your email",
-    type: "email",
-  },
-};
-
-export const WithHelperText: Story = {
-  args: {
-    label: "Password",
-    type: "password",
-    helperText: "Must be at least 8 characters",
+    label: "Username",
+    placeholder: "Enter username",
   },
 };
 
 export const WithError: Story = {
   args: {
-    label: "Username",
-    value: "invalid@email",
-    error: "Please enter a valid email address",
+    label: "Password",
+    type: "password",
+    error: "Password must be at least 8 characters",
+    placeholder: "Enter password",
   },
 };
 
-export const Disabled: Story = {
+export const WithHelperText: Story = {
   args: {
-    label: "Disabled Input",
-    placeholder: "This input is disabled",
-    disabled: true,
+    label: "Email",
+    type: "email",
+    helperText: "We'll never share your email",
+    placeholder: "Enter email",
   },
 }; 

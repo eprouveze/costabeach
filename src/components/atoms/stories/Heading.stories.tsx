@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import Heading from "../Heading";
+import { Heading } from "../Heading";
 
 const meta: Meta<typeof Heading> = {
   title: "Atoms/Heading",
@@ -27,11 +27,17 @@ const meta: Meta<typeof Heading> = {
 export default meta;
 type Story = StoryObj<typeof Heading>;
 
+export const Default: Story = {
+  args: {
+    children: "Example Heading",
+  },
+};
+
 export const H1: Story = {
   args: {
     level: "h1",
     size: "2xl",
-    children: "Main Heading (H1)",
+    children: "H1 Heading",
   },
 };
 
@@ -39,7 +45,7 @@ export const H2: Story = {
   args: {
     level: "h2",
     size: "xl",
-    children: "Section Heading (H2)",
+    children: "H2 Heading",
   },
 };
 
@@ -47,8 +53,21 @@ export const H3: Story = {
   args: {
     level: "h3",
     size: "lg",
-    children: "Subsection Heading (H3)",
+    children: "H3 Heading",
   },
+};
+
+export const AllLevels: Story = {
+  render: () => (
+    <div className="space-y-4">
+      <Heading level="h1" size="2xl">H1 Heading</Heading>
+      <Heading level="h2" size="xl">H2 Heading</Heading>
+      <Heading level="h3" size="lg">H3 Heading</Heading>
+      <Heading level="h4" size="md">H4 Heading</Heading>
+      <Heading level="h5" size="sm">H5 Heading</Heading>
+      <Heading level="h6" size="xs">H6 Heading</Heading>
+    </div>
+  ),
 };
 
 export const H4: Story = {
