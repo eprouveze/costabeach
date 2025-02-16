@@ -1,0 +1,22 @@
+# Cursor Updates
+
+- Ran production build verification - build completed successfully with no TypeScript or compilation errors
+- Performed build check on Next.js app with tRPC and Tailwind configuration
+- Successfully ran production build with Prisma generation and Next.js compilation
+- Fixed dynamic route warning by adding force-dynamic config to root page
+- Added Storybook with Button component and stories, updated .cursorrules with Storybook guidelines
+- Captured screenshot of Button component stories in Storybook
+- Implemented atomic components (Button, Input, Heading, Paragraph, Icon) with Storybook stories and proper component organization
+- Added Storybook stories for all molecule components (Form, Card, NavItem, and TextField) with multiple variants and interactive examples
+- Reorganized stories folder structure following atomic design principles (atoms, molecules, organisms, templates, pages)
+- Fixed atom stories to use named exports consistently
+- Cleaned up stories directory structure and removed stray files
+- Completed public organisms (Header, Footer, PropertyShowcase) and their Storybook stories, implementing responsive design and modern UI patterns
+- Fixed Storybook configuration for version 8.5.6, including framework setup and import paths
+- Added owner portal organisms (OwnerPortalSidebar, DocumentList) with proper stories and documentation
+- Removed duplicate stories and reorganized story files into proper atomic design folders
+- Successfully running Storybook with all atom, molecule, and organism components displaying correctly
+- Improved Storybook configuration with better TypeScript support, documentation settings, and webpack optimization
+- Fixed NavItem prop type error in Header component by adding required icon props for navigation items
+- Fixed Link href errors in OwnerPortalSidebar by making href optional in NavItem and adding proper onClick support
+- Recreated package.json file to remove hidden null characters causing JSON parse errors
