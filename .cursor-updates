@@ -7,4 +7,7 @@
 - Added Storybook with Button component and stories, updated .cursorrules with Storybook guidelines
 - Captured screenshot of Button component stories in Storybook
 - Implemented atomic components (Button, Input, Heading, Paragraph, Icon) with Storybook stories and proper component organization
-- Added Storybook stories for all molecule components (Form, Card, NavItem, and TextField) with multiple variants and interactive examples.
+- Added Storybook stories for all molecule components (Form, Card, NavItem, and TextField) with multiple variants and interactive examples
+- Reorganized stories folder structure following atomic design principles (atoms, molecules, organisms, templates, pages)
+- Fixed atom stories to use named exports consistently
+- Cleaned up stories directory structure and removed stray files

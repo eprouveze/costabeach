@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Icon } from "../Icon";
+import { Icon } from "@/components/atoms/Icon";
 import { Home, Mail, Settings, User, Bell } from "lucide-react";
 
 const meta: Meta<typeof Icon> = {
