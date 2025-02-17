@@ -21,3 +21,4 @@
 - Fixed Link href errors in OwnerPortalSidebar by making href optional in NavItem and adding proper onClick support
 - Recreated package.json file to remove hidden null characters causing JSON parse errors
 - Software Developer 5: Created the PublicLandingTemplate component and updated its Storybook stories as part of the Public Templates tasks.
+- Developer 6: Completed OwnerDashboardTemplate and its Storybook story.
