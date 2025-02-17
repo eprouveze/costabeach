@@ -1,7 +1,8 @@
 import type { StorybookConfig } from "@storybook/nextjs";
+import path from "path";
 
 const config: StorybookConfig = {
-  stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
+  stories: ["../src/stories/**/*.stories.@(js|jsx|ts|tsx)"],
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
@@ -16,22 +17,13 @@ const config: StorybookConfig = {
     autodocs: "tag",
   },
   webpackFinal: async (config) => {
-    // Return the altered config
-    return {
-      ...config,
-      resolve: {
-        ...config.resolve,
-        fallback: {
-          ...config.resolve?.fallback,
-          fs: false,
-          net: false,
-          tls: false,
-          dns: false,
-          child_process: false,
-          http2: false,
-        },
-      },
-    };
+    if (config.resolve) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        "@": path.resolve(__dirname, "../src"),
+      };
+    }
+    return config;
   },
 };
 

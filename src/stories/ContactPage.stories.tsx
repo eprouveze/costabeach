@@ -1,12 +1,30 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import ContactPage from "../../app/contact/page";
-import { Meta, StoryFn } from '@storybook/react';
 
-export default {
-  title: 'Pages/ContactPage',
+const meta = {
+  title: "Pages/ContactPage",
   component: ContactPage,
-} as Meta;
+  parameters: {
+    layout: "fullscreen",
+    docs: {
+      description: {
+        component: 'Contact page with a form for users to send messages.',
+      },
+    },
+  },
+  tags: ["autodocs"],
+} satisfies Meta<typeof ContactPage>;
 
-const Template: StoryFn = (args) => <ContactPage {...args} />;
+export default meta;
 
-export const Default = Template.bind({});
-Default.args = {}; 
+type Story = StoryObj<typeof ContactPage>;
+
+export const Default: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Default view of the contact page with email and message form fields.',
+      },
+    },
+  },
+}; 

@@ -26,3 +26,4 @@
 - Created missing page components for owner dashboard, owner login, and property detail pages to fix build errors and match Storybook stories.
 - Removed nodemailer dependency in favor of Resend for email functionality, resolving Node.js built-in module errors in the browser environment.
 - Replaced Clerk authentication with NextAuth.js in OwnerLoginPage to maintain consistent authentication strategy across the application.
+- Recovered `.env` file from git history and restored it with configuration values.

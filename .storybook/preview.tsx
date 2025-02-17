@@ -1,5 +1,6 @@
 import type { Preview } from "@storybook/react";
-import { SessionProvider } from "next-auth/react";
+import { ClerkProvider } from "@clerk/nextjs";
+import "../src/app/globals.css";
 
 const preview: Preview = {
   parameters: {
@@ -13,9 +14,9 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => (
-      <SessionProvider session={null}>
+      <ClerkProvider>
         <Story />
-      </SessionProvider>
+      </ClerkProvider>
     ),
   ],
 };
