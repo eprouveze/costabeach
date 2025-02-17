@@ -1,6 +1,6 @@
 "use client";
 
-import { UserButton } from "@/stubs/clerkNextjs";
+import { UserButton } from "@clerk/nextjs";
 import { Building2, Calendar, CreditCard, LayoutDashboard, LogOut, MessageSquare, Settings, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

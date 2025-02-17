@@ -28,3 +28,4 @@
 - Replaced Clerk authentication with NextAuth.js in OwnerLoginPage to maintain consistent authentication strategy across the application.
 - Recovered `.env` file from git history and restored it with configuration values.
 - Implemented utilities and integrations including AuthWrapper for Clerk authentication, Supabase API hooks, ErrorBoundary component, and corresponding Storybook stories.
+- Update summary: Replaced Clerk middleware with custom getAuth implementation to fix type errors and successfully built the project.
