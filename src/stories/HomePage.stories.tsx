@@ -1,12 +1,12 @@
 import HomePage from '@/app/page';
-import { Meta, Story } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 export default {
   title: 'Pages/HomePage',
   component: HomePage,
 } as Meta;
 
-const Template: Story = (args) => <HomePage {...args} />;
+const Template: StoryFn = (args) => <HomePage {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {}; 

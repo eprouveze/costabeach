@@ -1,12 +1,12 @@
 import PropertyDetailPage from '@/app/property-detail/page';
-import { Meta, Story } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 export default {
   title: 'Pages/PropertyDetailPage',
   component: PropertyDetailPage,
 } as Meta;
 
-const Template: Story = (args) => <PropertyDetailPage {...args} />;
+const Template: StoryFn = (args) => <PropertyDetailPage {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {}; 

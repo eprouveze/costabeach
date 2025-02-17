@@ -22,3 +22,5 @@
 - Recreated package.json file to remove hidden null characters causing JSON parse errors
 - Software Developer 5: Created the PublicLandingTemplate component and updated its Storybook stories as part of the Public Templates tasks.
 - Developer 6: Completed OwnerDashboardTemplate and its Storybook story.
+- Update: Completed Software Developer 8 tasks - implemented OwnerLoginPage, OwnerDashboardPage, added Storybook stories for both pages, created Clerk stub, and added a root layout to fix build errors.
+- Created missing page components for owner dashboard, owner login, and property detail pages to fix build errors and match Storybook stories.
