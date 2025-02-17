@@ -1,21 +1,22 @@
 /* New File */
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import PublicLandingTemplate from '../components/PublicLandingTemplate';
+import PublicLandingTemplate from '../components/templates/PublicLandingTemplate';
 
-const meta: Meta<typeof PublicLandingTemplate> = {
+const meta = {
   title: 'Components/PublicLandingTemplate',
   component: PublicLandingTemplate,
-};
+  parameters: {
+    layout: 'fullscreen',
+  },
+} satisfies Meta<typeof PublicLandingTemplate>;
 
 export default meta;
 
-type Story = StoryObj<typeof PublicLandingTemplate>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {
-    children: <div className="p-4">Content goes here</div>,
-  },
+  args: {},
 };
 
 export const WithExtraContent: Story = {
