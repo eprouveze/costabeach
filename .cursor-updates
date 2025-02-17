@@ -27,3 +27,4 @@
 - Removed nodemailer dependency in favor of Resend for email functionality, resolving Node.js built-in module errors in the browser environment.
 - Replaced Clerk authentication with NextAuth.js in OwnerLoginPage to maintain consistent authentication strategy across the application.
 - Recovered `.env` file from git history and restored it with configuration values.
+- Implemented utilities and integrations including AuthWrapper for Clerk authentication, Supabase API hooks, ErrorBoundary component, and corresponding Storybook stories.

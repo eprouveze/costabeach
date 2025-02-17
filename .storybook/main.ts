@@ -8,13 +8,18 @@ const config: StorybookConfig = {
     "@storybook/addon-essentials",
     "@storybook/addon-onboarding",
     "@storybook/addon-interactions",
+    "@storybook/addon-a11y",
+    "@storybook/addon-viewport",
+    "@storybook/addon-docs",
+    "@storybook/addon-controls",
   ],
   framework: {
     name: "@storybook/nextjs",
     options: {},
   },
   docs: {
-    autodocs: "tag",
+    autodocs: true,
+    defaultName: 'Documentation',
   },
   webpackFinal: async (config) => {
     if (config.resolve) {
