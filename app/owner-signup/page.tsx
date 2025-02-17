@@ -1,16 +1,15 @@
-/* OwnerLoginPage component */
 "use client";
 
-import { SignIn } from "@clerk/nextjs";
+import { SignUp } from "@clerk/nextjs";
 
-export default function OwnerLoginPage() {
+export default function OwnerSignUpPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="max-w-md w-full">
-        <SignIn
-          path="/owner-login"
+        <SignUp
+          path="/owner-signup"
           routing="path"
-          signUpUrl="/owner-signup"
+          signInUrl="/owner-login"
           redirectUrl="/owner-dashboard"
           appearance={{
             elements: {
