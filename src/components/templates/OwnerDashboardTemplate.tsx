@@ -1,6 +1,6 @@
 "use client";
 
-import { UserButton } from "@clerk/nextjs";
+import { signOut } from "next-auth/react";
 import { Building2, Calendar, CreditCard, LayoutDashboard, LogOut, MessageSquare, Settings, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -46,6 +46,13 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
               </Link>
             );
           })}
+          <button
+            onClick={() => signOut({ callbackUrl: "/" })}
+            className="w-full flex items-center gap-3 px-6 py-3 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50"
+          >
+            <LogOut className="w-5 h-5" />
+            Sign Out
+          </button>
         </nav>
       </aside>
 
@@ -55,9 +62,6 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
         <header className="bg-white border-b border-gray-200">
           <div className="px-4 h-16 flex items-center justify-between">
             <h1 className="text-xl font-semibold text-gray-800">Owner Dashboard</h1>
-            <div className="flex items-center gap-4">
-              <UserButton />
-            </div>
           </div>
         </header>
 

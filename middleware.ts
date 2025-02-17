@@ -1,6 +1,5 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { getAuth } from '@clerk/nextjs/server';
+import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
 
 const publicPaths = [
   '/',
@@ -14,26 +13,32 @@ const isPublic = (path: string) => {
   return publicPaths.some(pattern => new RegExp(`^${pattern}$`).test(path));
 };
 
-export function middleware(request: NextRequest) {
-  if (isPublic(request.nextUrl.pathname)) {
+export default withAuth(
+  function middleware(req) {
+    if (isPublic(req.nextUrl.pathname)) {
+      return NextResponse.next();
+    }
     return NextResponse.next();
+  },
+  {
+    callbacks: {
+      authorized: ({ req, token }) => {
+        if (isPublic(req.nextUrl.pathname)) {
+          return true;
+        }
+        return !!token;
+      },
+    },
+    pages: {
+      signIn: '/owner-login',
+    },
   }
-
-  const { userId } = getAuth(request);
-
-  if (!userId) {
-    const signInUrl = new URL('/owner-login', request.url);
-    signInUrl.searchParams.set('redirect_url', request.url);
-    return NextResponse.redirect(signInUrl);
-  }
-
-  return NextResponse.next();
-}
+);
 
 export const config = {
   matcher: [
     // Skip Next.js internal paths and static files
-    '/((?!.*\..*|_next).*)',
+    '/((?!.*\\..*|_next).*)',
     // Always run for API routes (or tRPC endpoints)
     '/(api|trpc)(.*)',
   ],

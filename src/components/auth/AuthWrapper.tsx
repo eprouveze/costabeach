@@ -1,40 +1,33 @@
 "use client";
 
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { ReactNode, useEffect } from "react";
-import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 interface AuthWrapperProps {
-  children: ReactNode;
+  children: React.ReactNode;
   requireAuth?: boolean;
   allowedRoles?: string[];
 }
 
-export const AuthWrapper = ({
-  children,
-  requireAuth = true,
-  allowedRoles = [],
-}: AuthWrapperProps) => {
-  const { isLoaded, userId, sessionId, getToken } = useAuth();
+export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }: AuthWrapperProps) {
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoaded) return;
-
-    if (requireAuth && !sessionId) {
-      toast.error("Please sign in to access this page");
-      router.push("/sign-in");
-      return;
+    if (requireAuth && status === "unauthenticated") {
+      router.push("/owner-login");
     }
+    // Add role check if needed in the future
+  }, [requireAuth, status, router]);
 
-    // Role-based access can be implemented here if needed
-    // For now, we'll just check if authentication is required
-  }, [isLoaded, sessionId, requireAuth, router]);
-
-  if (!isLoaded) {
+  if (requireAuth && status === "loading") {
     return <div>Loading...</div>;
   }
 
+  if (requireAuth && !session) {
+    return null;
+  }
+
   return <>{children}</>;
-}; 
+} 
