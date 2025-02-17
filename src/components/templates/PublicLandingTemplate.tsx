@@ -11,6 +11,26 @@ interface PublicLandingTemplateProps {
 export default function PublicLandingTemplate({ children }: PublicLandingTemplateProps) {
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Navigation Header */}
+      <header className="bg-white shadow-sm">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <Link href="/" className="text-xl font-bold text-blue-600">
+            Costa Beach
+          </Link>
+          <nav className="flex items-center gap-6">
+            <Link href="/contact" className="text-gray-600 hover:text-blue-600">
+              Contact
+            </Link>
+            <Link
+              href="/owner-login"
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Owner Login
+            </Link>
+          </nav>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <div className="relative bg-blue-600 h-[600px]">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-400 opacity-90" />
