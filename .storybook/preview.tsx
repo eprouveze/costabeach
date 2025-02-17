@@ -1,7 +1,14 @@
 import type { Preview } from "@storybook/react";
-import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "next-themes";
+import { ToastContainer } from "react-toastify";
+import { initialize, mswLoader } from "msw-storybook-addon";
 import "../src/app/globals.css";
+import "react-toastify/dist/ReactToastify.css";
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
+
+// Initialize MSW
+initialize();
 
 const preview: Preview = {
   parameters: {
@@ -9,7 +16,7 @@ const preview: Preview = {
     controls: {
       matchers: {
         color: /(background|color)$/i,
-        date: /Date$/,
+        date: /Date$/i,
       },
     },
     viewport: {
@@ -42,16 +49,34 @@ const preview: Preview = {
         ],
       },
     },
+    nextjs: {
+      appDirectory: true,
+      navigation: {
+        pathname: "/owner-login",
+        query: {},
+      },
+    },
+    themes: {
+      default: "light",
+      list: [
+        { name: "light", class: "light", color: "#ffffff" },
+        { name: "dark", class: "dark", color: "#0f172a" },
+      ],
+    },
   },
   decorators: [
     (Story) => (
-      <ThemeProvider>
-        <div className="p-4">
-          <Story />
-        </div>
-      </ThemeProvider>
+      <SessionProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <div className="min-h-screen">
+            <Story />
+            <ToastContainer />
+          </div>
+        </ThemeProvider>
+      </SessionProvider>
     ),
   ],
+  loaders: [mswLoader],
 };
 
 export default preview; 

@@ -20,6 +20,13 @@ model User {
   login          String?
   role           UserRole  @default(user)
   isAdmin        Boolean   @default(false)
+  
+  // Owner specific fields
+  buildingNumber String?
+  apartmentNumber String?
+  phoneNumber    String?
+  isVerifiedOwner Boolean  @default(false)
+  
   accounts       Account[]
   sessions       Session[]
 }
@@ -68,4 +75,23 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model OwnerRegistration {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  name            String
+  buildingNumber  String
+  apartmentNumber String
+  phoneNumber     String
+  status          RegistrationStatus @default(pending)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  notes           String?   // For admin comments
+}
+
+enum RegistrationStatus {
+  pending
+  approved
+  rejected
 }

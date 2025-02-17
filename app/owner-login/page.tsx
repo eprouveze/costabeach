@@ -5,18 +5,49 @@ import React, { Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 function SignInContent() {
   const [email, setEmail] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const error = searchParams.get("error");
+  const callbackUrl = searchParams.get("callbackUrl") || "/owner-dashboard";
+
+  React.useEffect(() => {
+    if (error) {
+      toast.error(
+        error === "AccessDenied"
+          ? "Access denied. Please make sure you have an approved account."
+          : "An error occurred during sign in. Please try again."
+      );
+    }
+  }, [error]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    await signIn("email", { 
-      email, 
-      callbackUrl: "/owner-dashboard"
-    });
+    
+    try {
+      const result = await signIn("email", {
+        email,
+        callbackUrl,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        toast.error("Failed to sign in. Please try again.");
+      } else {
+        toast.success("Check your email for the login link!");
+        router.push("/auth/verify");
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -71,12 +102,21 @@ function SignInContent() {
               disabled={isLoading}
               className="w-full rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-3 text-sm font-medium text-white transition-all hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? "Signing in..." : "Sign in with Email"}
+              {isLoading ? "Sending link..." : "Sign in with Email"}
             </button>
           </form>
 
           <div className="mt-6">
             <p className="text-center text-sm text-neutral-600 dark:text-neutral-400">
+              New owner?{" "}
+              <Link
+                href="/owner-register"
+                className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500"
+              >
+                Register here
+              </Link>
+            </p>
+            <p className="mt-2 text-center text-sm text-neutral-600 dark:text-neutral-400">
               By signing in, you agree to our{" "}
               <Link
                 href="/privacy"

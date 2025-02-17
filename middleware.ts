@@ -1,45 +1,58 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
+// Public paths that don't require authentication
 const publicPaths = [
-  '/',
-  '/contact',
-  '/property-detail(.*)',
-  '/owner-login',
-  '/owner-signup',
+  "/",
+  "/contact",
+  "/owner-login",
+  "/owner-register",
+  "/auth/verify",
+  "/auth/error",
+  "/auth/signin",
+  "/auth/signout",
+  "/privacy",
 ];
 
-const isPublic = (path: string) => {
-  return publicPaths.some(pattern => new RegExp(`^${pattern}$`).test(path));
-};
+// Admin paths that require admin access
+const adminPaths = ["/admin"];
 
-export default withAuth(
-  function middleware(req) {
-    if (isPublic(req.nextUrl.pathname)) {
-      return NextResponse.next();
-    }
+// Custom middleware function without withAuth
+export function middleware(req) {
+  const { pathname } = req.nextUrl;
+
+  // Allow public paths without any checks
+  if (publicPaths.some(path => pathname === path || pathname.startsWith("/auth/"))) {
     return NextResponse.next();
-  },
-  {
+  }
+
+  // For admin paths and protected routes, use withAuth
+  return withAuth(req, {
     callbacks: {
-      authorized: ({ req, token }) => {
-        if (isPublic(req.nextUrl.pathname)) {
-          return true;
+      authorized: ({ token }) => {
+        // For admin paths, require admin token
+        if (pathname.startsWith("/admin")) {
+          return !!token?.isAdmin;
         }
+        // For all other protected routes, just require a valid token
         return !!token;
       },
     },
     pages: {
-      signIn: '/owner-login',
+      signIn: "/owner-login",
     },
-  }
-);
+  });
+}
 
 export const config = {
   matcher: [
-    // Skip Next.js internal paths and static files
-    '/((?!.*\\..*|_next).*)',
-    // Always run for API routes (or tRPC endpoints)
-    '/(api|trpc)(.*)',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder
+     */
+    "/((?!_next/static|_next/image|favicon.ico|public/).*)",
   ],
 }; 
