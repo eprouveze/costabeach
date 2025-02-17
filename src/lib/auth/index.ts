@@ -6,6 +6,7 @@ import {
   type DefaultSession,
 } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
+import { Resend } from "resend";
 
 export enum UserRole {
   user = "user",
@@ -61,15 +62,16 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     EmailProvider({
-      server: {
-        host: "smtp.resend.com",
-        port: 465,
-        auth: {
-          user: "resend",
-          pass: process.env.EMAIL_SERVER_PASSWORD,
-        },
+      // Use Resend's API directly instead of SMTP
+      async sendVerificationRequest({ identifier, url }) {
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        await resend.emails.send({
+          from: process.env.EMAIL_FROM || "onboarding@resend.dev",
+          to: identifier,
+          subject: "Sign in to Costabeach",
+          html: `<p>Click <a href="${url}">here</a> to sign in to your account.</p>`,
+        });
       },
-      from: process.env.EMAIL_FROM || "onboarding@resend.dev",
     }),
   ],
   session: {
