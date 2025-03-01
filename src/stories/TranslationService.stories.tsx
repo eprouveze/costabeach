@@ -1,7 +1,16 @@
-import { Meta } from '@storybook/blocks';
+import React from 'react';
+import { Meta } from '@storybook/react';
+import { Markdown } from '@storybook/blocks';
 
-<Meta title="Documentation/Translation Service" />
+const meta: Meta = {
+  title: 'Documentation/Translation Service',
+};
 
+export default meta;
+
+export const Documentation = () => {
+  return (
+    <Markdown>{`
 # Translation Service
 
 The Costa Beach HOA Portal includes a comprehensive translation service that allows for seamless translation of documents and text between supported languages.
@@ -73,7 +82,7 @@ Document translations are processed in the background using Inngest:
 
 ### Translating Text (Client-Side)
 
-```tsx
+\`\`\`tsx
 import { trpc } from '@/lib/trpc/react';
 
 // In a React component
@@ -90,11 +99,11 @@ const handleTranslate = () => {
     }
   });
 };
-```
+\`\`\`
 
 ### Requesting Document Translation
 
-```tsx
+\`\`\`tsx
 import { trpc } from '@/lib/trpc/react';
 
 // In a React component
@@ -116,11 +125,11 @@ const handleRequestTranslation = (documentId) => {
     }
   });
 };
-```
+\`\`\`
 
 ### Checking Translation Status
 
-```tsx
+\`\`\`tsx
 import { trpc } from '@/lib/trpc/react';
 
 // In a React component
@@ -136,13 +145,13 @@ useEffect(() => {
     return () => clearInterval(interval);
   }
 }, [data, refetch]);
-```
+\`\`\`
 
 ### Controlling Translation Formality
 
 For languages that support formality levels (like German, French, Italian, etc.), you can specify the desired level:
 
-```tsx
+\`\`\`tsx
 // In the translations router
 const translatedText = await translateText(
   text,
@@ -150,7 +159,7 @@ const translatedText = await translateText(
   targetLanguage,
   { formality: 'more' } // For more formal translations
 );
-```
+\`\`\`
 
 ## Best Practices
 
@@ -160,4 +169,7 @@ const translatedText = await translateText(
 4. **Consider Content Size**: Very large documents may take longer to translate
 5. **Respect Rate Limits**: Be mindful of DeepL API rate limits when implementing translation features
 6. **Use Appropriate Formality**: Select the right formality level based on the content type and audience
-7. **Provide Context**: When translating domain-specific content, provide context to improve accuracy 
+7. **Provide Context**: When translating domain-specific content, provide context to improve accuracy
+    `}</Markdown>
+  );
+}; 
