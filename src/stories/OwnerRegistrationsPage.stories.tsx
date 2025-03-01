@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { SessionProvider } from "next-auth/react";
 import { ToastContainer } from "react-toastify";
-import OwnerRegistrationsPage from "@/app/admin/owner-registrations/page";
-import { rest } from "msw";
+import OwnerRegistrationsPage from "../../app/admin/owner-registrations/page";
+import { http } from "msw";
 import { userEvent, within } from "@storybook/testing-library";
 import { expect } from "@storybook/jest";
 
@@ -53,8 +53,10 @@ const meta = {
     },
     msw: {
       handlers: [
-        rest.get("/api/admin/owner-registrations", (req, res, ctx) => {
-          return res(ctx.json(mockRegistrations));
+        http.get("/api/admin/owner-registrations", () => {
+          return new Response(JSON.stringify(mockRegistrations), {
+            headers: { 'Content-Type': 'application/json' },
+          });
         }),
       ],
     },
@@ -96,8 +98,10 @@ export const EmptyState: Story = {
   parameters: {
     msw: {
       handlers: [
-        rest.get("/api/admin/owner-registrations", (req, res, ctx) => {
-          return res(ctx.json([]));
+        http.get("/api/admin/owner-registrations", () => {
+          return new Response(JSON.stringify([]), {
+            headers: { 'Content-Type': 'application/json' },
+          });
         }),
       ],
     },
@@ -114,8 +118,10 @@ export const LoadingState: Story = {
   parameters: {
     msw: {
       handlers: [
-        rest.get("/api/admin/owner-registrations", (req, res, ctx) => {
-          return res(ctx.delay(2000), ctx.json(mockRegistrations));
+        http.get("/api/admin/owner-registrations", () => {
+          return new Response(JSON.stringify(mockRegistrations), {
+            headers: { 'Content-Type': 'application/json' },
+          });
         }),
       ],
     },
@@ -132,8 +138,10 @@ export const ErrorState: Story = {
   parameters: {
     msw: {
       handlers: [
-        rest.get("/api/admin/owner-registrations", (req, res, ctx) => {
-          return res(ctx.status(500));
+        http.get("/api/admin/owner-registrations", () => {
+          return new Response(JSON.stringify(null), {
+            status: 500,
+          });
         }),
       ],
     },

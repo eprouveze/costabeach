@@ -2,13 +2,30 @@ import type { Preview } from "@storybook/react";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { ToastContainer } from "react-toastify";
-import { initialize, mswLoader } from "msw-storybook-addon";
+import { initialize } from "msw-storybook-addon";
+import { withThemeByClassName } from "@storybook/addon-themes";
 import "../src/app/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 
 // Initialize MSW
 initialize();
+
+// Mock session data
+const mockSession = {
+  data: {
+    user: {
+      email: "test@example.com",
+      name: "Test User",
+      image: null,
+      id: "test-user-id",
+      role: "user",
+      isAdmin: false,
+    },
+    expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+  },
+  status: "authenticated",
+};
 
 const preview: Preview = {
   parameters: {
@@ -22,6 +39,12 @@ const preview: Preview = {
     viewport: {
       viewports: INITIAL_VIEWPORTS,
       defaultViewport: 'responsive',
+    },
+    nextauth: {
+      session: mockSession,
+    },
+    msw: {
+      handlers: [],
     },
     a11y: {
       config: {
@@ -56,17 +79,10 @@ const preview: Preview = {
         query: {},
       },
     },
-    themes: {
-      default: "light",
-      list: [
-        { name: "light", class: "light", color: "#ffffff" },
-        { name: "dark", class: "dark", color: "#0f172a" },
-      ],
-    },
   },
   decorators: [
     (Story) => (
-      <SessionProvider>
+      <SessionProvider session={mockSession.data}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="min-h-screen">
             <Story />
@@ -75,8 +91,14 @@ const preview: Preview = {
         </ThemeProvider>
       </SessionProvider>
     ),
+    withThemeByClassName({
+      themes: {
+        light: 'light',
+        dark: 'dark',
+      },
+      defaultTheme: 'light',
+    }),
   ],
-  loaders: [mswLoader],
 };
 
 export default preview; 

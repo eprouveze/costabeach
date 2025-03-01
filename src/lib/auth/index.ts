@@ -68,22 +68,28 @@ export const authOptions: NextAuthOptions = {
       from: process.env.EMAIL_FROM,
       sendVerificationRequest: async ({ identifier: email, url }) => {
         const resend = new Resend(process.env.RESEND_API_KEY);
-        await resend.emails.send({
-          from: process.env.EMAIL_FROM || "Costa Beach <noreply@costabeach.com>",
-          to: email,
-          subject: "Sign in to Costa Beach",
-          html: `
-            <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
-              <h1 style="color: #2563eb; margin-bottom: 24px;">Welcome to Costa Beach</h1>
-              <p style="margin-bottom: 24px;">Click the link below to sign in to your account:</p>
-              <a href="${url}" style="display: inline-block; padding: 12px 24px; background-color: #2563eb; color: white; text-decoration: none; border-radius: 6px;">Sign in to Costa Beach</a>
-              <p style="margin-top: 24px; color: #6b7280;">If you did not request this email, you can safely ignore it.</p>
-              <div style="margin-top: 48px; padding-top: 24px; border-top: 1px solid #e5e7eb; color: #6b7280;">
-                <p style="font-size: 14px;">Costa Beach Owner Portal</p>
+        try {
+          const result = await resend.emails.send({
+            from: process.env.EMAIL_FROM || "Costa Beach <onboarding@resend.dev>",
+            to: email,
+            subject: "Sign in to Costa Beach",
+            html: `
+              <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
+                <h1 style="color: #2563eb; margin-bottom: 24px;">Welcome to Costa Beach</h1>
+                <p style="margin-bottom: 24px;">Click the link below to sign in to your account:</p>
+                <a href="${url}" style="display: inline-block; padding: 12px 24px; background-color: #2563eb; color: white; text-decoration: none; border-radius: 6px;">Sign in to Costa Beach</a>
+                <p style="margin-top: 24px; color: #6b7280;">If you did not request this email, you can safely ignore it.</p>
+                <div style="margin-top: 48px; padding-top: 24px; border-top: 1px solid #e5e7eb; color: #6b7280;">
+                  <p style="font-size: 14px;">Costa Beach Owner Portal</p>
+                </div>
               </div>
-            </div>
-          `,
-        });
+            `,
+          });
+          console.log('Email sent:', result);
+        } catch (error) {
+          console.error('Failed to send email:', error);
+          throw new Error('Failed to send verification email');
+        }
       },
     }),
   ],
