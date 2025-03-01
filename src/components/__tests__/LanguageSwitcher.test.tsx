@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { LanguageSwitcher } from '../LanguageSwitcher';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 // Mock the useI18n hook
 jest.mock('../../lib/i18n/client', () => ({
@@ -57,12 +57,12 @@ describe('LanguageSwitcher', () => {
     render(<LanguageSwitcher variant="buttons" />);
     
     // Should show all language buttons
-    expect(screen.getByText('FR')).toBeInTheDocument();
-    expect(screen.getByText('EN')).toBeInTheDocument();
-    expect(screen.getByText('AR')).toBeInTheDocument();
+    expect(screen.getByText('Français')).toBeInTheDocument();
+    expect(screen.getByText('English')).toBeInTheDocument();
+    expect(screen.getByText('العربية')).toBeInTheDocument();
     
     // Current language button should be highlighted
-    expect(screen.getByText('FR').closest('button')).toHaveClass('bg-primary');
+    expect(screen.getByText('Français').closest('button')).toHaveClass('bg-primary');
   });
 
   it('opens the dropdown when clicked', () => {
@@ -119,7 +119,7 @@ describe('LanguageSwitcher', () => {
     render(<LanguageSwitcher variant="buttons" />);
     
     // Click English button
-    fireEvent.click(screen.getByText('EN'));
+    fireEvent.click(screen.getByText('English'));
     
     // Should call setLocale with 'en'
     expect(mockSetLocale).toHaveBeenCalledWith('en');

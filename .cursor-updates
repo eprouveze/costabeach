@@ -48,5 +48,5 @@
 - Fixed LanguageSwitcher component in Storybook by creating a standalone StorybookLanguageSwitcher component that doesn't require the I18nProvider context.
 - Fixed Storybook story ID issue by adding a Documentation story to the LanguageSwitcher component to match the expected ID pattern.
 - Fixed ErrorBoundary Storybook story by implementing a button-triggered error approach, adding react-toastify mock, and using fn() for action tracking.
-- Fixed i18n test suite by properly mocking router, translations, and ensuring tests correctly handle asynchronous operations.
+- Fixed i18n test suite by resolving async/await issues in server.ts, updating client tests to match URL format for locale changes, and ensuring proper translation function testing in server tests.
 - Updated development plan to mark section 2.2 Translation Infrastructure as completed and added a note about fixing the i18n test suite.

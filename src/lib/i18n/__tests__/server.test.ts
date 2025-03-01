@@ -77,17 +77,17 @@ describe('useTranslation', () => {
   });
 
   it('uses provided locale if specified', async () => {
-    const { t, locale } = await useTranslation('ar');
+    const { t, locale, isRTL } = await useTranslation('ar');
     
     expect(locale).toBe('ar');
-    expect(loadTranslations).toHaveBeenCalledWith('ar');
+    expect(loadTranslations).toHaveBeenCalledWith('ar', 'common');
   });
 
   it('gets locale from request if none provided', async () => {
-    const { t, locale } = await useTranslation();
+    const { t, locale, isRTL } = await useTranslation();
     
     expect(locale).toBe('fr');
-    expect(loadTranslations).toHaveBeenCalledWith('fr');
+    expect(loadTranslations).toHaveBeenCalledWith('fr', 'common');
   });
 
   it('sets isRTL to true for Arabic locale', async () => {
@@ -102,12 +102,16 @@ describe('useTranslation', () => {
     expect(isRTL).toBe(false);
   });
 
-  it('provides a translation function that uses getTranslation', async () => {
+  it('provides a translation function that returns correct translations', async () => {
+    // Mock the loadTranslations to return a specific object we can test against
+    (loadTranslations as jest.Mock).mockResolvedValueOnce({ hello: 'Hello in fr' });
+    
     const { t } = await useTranslation('fr');
-    const mockTranslations = { hello: 'Hello in fr' };
     
-    t('hello');
+    // Call the translation function
+    const result = t('hello');
     
-    expect(getTranslation).toHaveBeenCalledWith(mockTranslations, 'hello');
+    // Verify that the translation function returns the correct value
+    expect(result).toBe('Hello in fr');
   });
 }); 

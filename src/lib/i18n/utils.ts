@@ -1,19 +1,26 @@
 import { Locale, defaultLocale, locales } from './config';
 
-// Cache for translations to avoid repeated fetching
-const translationCache: Record<Locale, any> = {
-  fr: {},
-  ar: {},
-  en: {}
-};
+// Initialize cache for translations to avoid repeated fetching
+const translationCache: Record<Locale, Record<string, any>> = {} as Record<Locale, Record<string, any>>;
+
+// Initialize cache for each locale
+locales.forEach(locale => {
+  translationCache[locale] = {};
+});
 
 /**
- * Load translations for a specific locale
+ * Load translations for a specific locale and namespace
  */
-export async function loadTranslations(locale: Locale): Promise<Record<string, any>> {
-  // Return from cache if available
-  if (translationCache[locale]) {
-    return translationCache[locale];
+export async function loadTranslations(
+  locale: Locale, 
+  namespace: string = 'common'
+): Promise<Record<string, any>> {
+  // Return from cache if available and has the namespace
+  if (
+    translationCache[locale] && 
+    translationCache[locale][namespace]
+  ) {
+    return translationCache[locale][namespace];
   }
   
   try {
@@ -23,6 +30,17 @@ export async function loadTranslations(locale: Locale): Promise<Record<string, a
     );
     
     // Cache the translations
+    if (!translationCache[locale]) {
+      translationCache[locale] = {};
+    }
+    
+    // If namespace is specified, return only that namespace
+    if (namespace !== 'common' && translations[namespace]) {
+      translationCache[locale][namespace] = translations[namespace];
+      return translations[namespace];
+    }
+    
+    // Otherwise cache and return all translations
     translationCache[locale] = translations;
     return translations;
   } catch (error) {
@@ -31,7 +49,7 @@ export async function loadTranslations(locale: Locale): Promise<Record<string, a
     // Fallback to default locale if the requested locale fails
     if (locale !== defaultLocale) {
       console.warn(`Falling back to ${defaultLocale} translations`);
-      return loadTranslations(defaultLocale);
+      return loadTranslations(defaultLocale, namespace);
     }
     
     // Return empty object if even default locale fails

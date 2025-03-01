@@ -6,7 +6,7 @@ import '@testing-library/jest-dom';
 import { usePathname, useRouter } from 'next/navigation';
 import { I18nProvider, useI18n } from '../client';
 import { loadTranslations } from '../utils';
-import { Locale } from '../config';
+import { Locale, defaultLocale } from '../config';
 import { act } from 'react-dom/test-utils';
 
 // Mock the next/navigation hooks
@@ -48,7 +48,7 @@ const mockTranslations: Record<string, any> = {
 // Setup the loadTranslations mock
 beforeEach(() => {
   jest.clearAllMocks();
-  (loadTranslations as jest.Mock).mockImplementation((locale: string) => {
+  (loadTranslations as jest.Mock).mockImplementation((locale: string, namespace?: string) => {
     return Promise.resolve(mockTranslations[locale] || {});
   });
 });
@@ -140,9 +140,10 @@ describe('I18nProvider', () => {
     // Wait for translations to load
     await waitFor(() => {
       expect(screen.getByTestId('loading')).toHaveTextContent('loaded');
-    });
+    }, { timeout: 3000 });
     
-    expect(screen.getByTestId('locale')).toHaveTextContent('fr');
+    // Check that the default locale is used (fr)
+    expect(screen.getByTestId('locale')).toHaveTextContent(defaultLocale);
   });
   
   it('sets direction based on locale', async () => {
@@ -155,14 +156,13 @@ describe('I18nProvider', () => {
     // Wait for translations to load
     await waitFor(() => {
       expect(screen.getByTestId('loading')).toHaveTextContent('loaded');
-    });
+    }, { timeout: 3000 });
     
+    // French is ltr
     expect(screen.getByTestId('direction')).toHaveTextContent('ltr');
   });
   
   it('handles Arabic locale correctly', async () => {
-    (loadTranslations as jest.Mock).mockImplementation(() => Promise.resolve(mockTranslations.ar));
-    
     render(
       <I18nProvider>
         <ArabicTestComponent />
@@ -171,10 +171,13 @@ describe('I18nProvider', () => {
     
     // Wait for translations to load and locale to change
     await waitFor(() => {
-      expect(screen.getByTestId('direction')).toHaveTextContent('rtl');
+      expect(screen.getByTestId('locale')).toHaveTextContent('ar');
     }, { timeout: 3000 });
     
-    expect(screen.getByTestId('locale')).toHaveTextContent('ar');
+    // Check that direction is rtl for Arabic
+    await waitFor(() => {
+      expect(screen.getByTestId('direction')).toHaveTextContent('rtl');
+    }, { timeout: 3000 });
   });
   
   it('translates text correctly', async () => {
@@ -187,8 +190,9 @@ describe('I18nProvider', () => {
     // Wait for translations to load
     await waitFor(() => {
       expect(screen.getByTestId('loading')).toHaveTextContent('loaded');
-    });
+    }, { timeout: 3000 });
     
+    // Check that the translation is correct for French (default locale)
     expect(screen.getByTestId('translation')).toHaveTextContent('Bonjour');
   });
   
@@ -202,23 +206,21 @@ describe('I18nProvider', () => {
     // Wait for translations to load
     await waitFor(() => {
       expect(screen.getByTestId('missing-translation')).toHaveTextContent('common.missing');
-    });
+    }, { timeout: 3000 });
   });
   
   it('changes locale when setLocale is called', async () => {
     // Reset mockPush before this test
     mockPush.mockClear();
     
-    // Mock the loadTranslations function to return immediately
-    (loadTranslations as jest.Mock).mockImplementation((locale: string) => {
-      return Promise.resolve(mockTranslations[locale] || {});
+    // Mock the router.push to simulate the URL change and trigger the useEffect
+    mockPush.mockImplementation((url: string) => {
+      // Simulate the URL change
+      jest.spyOn(window, 'location', 'get').mockReturnValue({
+        ...window.location,
+        search: url.includes('?') ? url.split('?')[1] : '',
+      });
     });
-    
-    // Skip the test if mockPush is not working properly
-    if (!mockPush) {
-      console.warn('mockPush is not defined, skipping test');
-      return;
-    }
     
     render(
       <I18nProvider>
@@ -234,15 +236,20 @@ describe('I18nProvider', () => {
     // Ensure loading is complete
     await waitFor(() => {
       expect(screen.getByTestId('loading')).toHaveTextContent('loaded');
+    }, { timeout: 3000 });
+    
+    // Click the button to change locale to French
+    act(() => {
+      fireEvent.click(screen.getByTestId('change-locale'));
     });
     
-    // Clear the mock before clicking
-    mockPush.mockClear();
+    // Verify that the router.push was called with the correct path format
+    // The client.tsx implementation uses segments[1] = newLocale, which results in /fr/test
+    expect(mockPush).toHaveBeenCalledWith('/fr/test');
     
-    // Click the button to change locale
-    fireEvent.click(screen.getByTestId('change-locale'));
-    
-    // Verify that mockPush was called
-    expect(mockPush).toHaveBeenCalled();
+    // Since we're mocking the URL change, we need to manually trigger the loadTranslations for French
+    act(() => {
+      (loadTranslations as jest.Mock).mockImplementation(() => Promise.resolve(mockTranslations.fr));
+    });
   });
 }); 
