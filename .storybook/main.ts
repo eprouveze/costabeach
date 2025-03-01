@@ -32,6 +32,8 @@ const config: StorybookConfig = {
         // Mock next-auth/react with our implementation
         "next-auth/react": path.resolve(__dirname, "./mockNextAuth"),
         "next/navigation": path.resolve(__dirname, "./mockNextNavigation"),
+        // Mock react-toastify
+        "react-toastify": path.resolve(__dirname, "./mockToastify"),
       };
     }
     return config;

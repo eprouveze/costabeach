@@ -47,4 +47,4 @@
 - Fixed LanguageSwitcher component in Storybook by creating a mockI18n.tsx file with proper JSX syntax and updating imports in Storybook configuration to use the new file.
 - Fixed LanguageSwitcher component in Storybook by creating a standalone StorybookLanguageSwitcher component that doesn't require the I18nProvider context.
 - Fixed Storybook story ID issue by adding a Documentation story to the LanguageSwitcher component to match the expected ID pattern.
-- Fixed ErrorBoundary Storybook story by using fn() without callback arguments to properly implement explicit spy functions in Storybook 8.
+- Fixed ErrorBoundary Storybook story by implementing a button-triggered error approach, adding react-toastify mock, and using fn() for action tracking.
