@@ -74,7 +74,7 @@ This development plan outlines the transformation of the Costa Beach application
 
 ## 1. Database Schema Updates
 
-### 1.1 Document Schema
+### 1.1 Document Schema ✅
 - [x] Create `Document` table with fields for title, description, file path, category, language, etc.
 - [x] Create `DocumentCategory` enum or table
 - [x] Add language reference fields
@@ -89,7 +89,7 @@ This development plan outlines the transformation of the Costa Beach application
 **Tests:**
 - [x] Unit tests for model validation
 - [x] Prisma query tests for document retrieval
-- [ ] Test multi-language document storage
+- [x] Test multi-language document storage
 
 **Testing Instructions:**
 - Run `npm test -- --testPathPattern=Document` to verify model tests
@@ -97,7 +97,7 @@ This development plan outlines the transformation of the Costa Beach application
 - Ensure view and download counts increment properly
 
 **Storybook:**
-- [ ] Create Storybook documentation for database schema
+- [x] Create Storybook documentation for database schema
 
 ### 1.2 User Permissions Schema
 - [x] Update `User` model with permission fields
