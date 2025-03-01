@@ -170,7 +170,7 @@ await setUserRole(userId, 'contentEditor');`}
   );
 };
 
-const meta: Meta = {
+const meta: Meta<typeof PermissionSystemDocs> = {
   title: 'Documentation/Permission System',
   component: PermissionSystemDocs,
   parameters: {
