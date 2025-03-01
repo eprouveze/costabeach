@@ -5,8 +5,8 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Costa Beach - Find Your Perfect Beachfront Property',
-  description: 'Discover and book beautiful beachfront properties for your next vacation.',
+  title: 'Costa Beach 3 - Homeowners Association Portal',
+  description: 'The official portal for Costa Beach 3 Homeowners Association. Access documents, community information, and HOA resources.',
 };
 
 import ClientLayout from '@/components/ClientLayout';
