@@ -30,3 +30,4 @@
 - Implemented utilities and integrations including AuthWrapper for Clerk authentication, Supabase API hooks, ErrorBoundary component, and corresponding Storybook stories.
 - Update summary: Replaced Clerk middleware with custom getAuth implementation to fix type errors and successfully built the project.
 - Created detailed development plan for converting from a property rental marketplace to an HOA information portal with multilingual support and document management.
+- Implemented document management system with type definitions, utility functions, tRPC router, React hooks, and UI components for uploading, viewing, and managing documents.

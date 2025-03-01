@@ -27,8 +27,13 @@ model User {
   phoneNumber    String?
   isVerifiedOwner Boolean  @default(false)
   
+  // Permission fields
+  permissions    Permission[]
+  preferredLanguage Language @default(french)
+  
   accounts       Account[]
   sessions       Session[]
+  documents      Document[] // Documents created by this user
 }
 
 model Account {
@@ -61,6 +66,21 @@ model Session {
 enum UserRole {
   user
   admin
+  contentEditor
+}
+
+enum Language {
+  french
+  arabic
+}
+
+enum Permission {
+  manageUsers
+  manageDocuments
+  manageComiteDocuments
+  manageSocieteDocuments
+  manageLegalDocuments
+  approveRegistrations
 }
 
 model Allowlist {
@@ -88,10 +108,39 @@ model OwnerRegistration {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   notes           String?   // For admin comments
+  preferredLanguage Language @default(french)
 }
 
 enum RegistrationStatus {
   pending
   approved
   rejected
+}
+
+enum DocumentCategory {
+  comiteDeSuivi
+  societeDeGestion
+  legal
+}
+
+model Document {
+  id              String    @id @default(cuid())
+  title           String
+  description     String?
+  filePath        String    // S3 path
+  fileSize        Int       // Size in bytes
+  fileType        String    // MIME type
+  category        DocumentCategory
+  language        Language
+  translatedDocumentId String?   // Reference to translated version if exists
+  translatedDocument   Document?  @relation("DocumentTranslation", fields: [translatedDocumentId], references: [id])
+  translations    Document[] @relation("DocumentTranslation")
+  isTranslated    Boolean   @default(false)
+  isPublished     Boolean   @default(true)
+  viewCount       Int       @default(0)
+  downloadCount   Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  authorId        String
+  author          User      @relation(fields: [authorId], references: [id])
 }
