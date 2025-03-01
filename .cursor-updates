@@ -55,3 +55,5 @@
 - Fixed Storybook documentation for Translation Service by converting MDX to TSX format for compatibility with Storybook 8.x.
 - Fixed build error by installing nodemailer package which was required by NextAuth's email provider, resolving the module not found error during build.
 - Implemented AWS S3 integration with configuration, operations, and comprehensive test suite; created index file to export all S3 functionality and ensured 98% code coverage for the S3 module.
+- Updated app metadata in layout.tsx to reflect the HOA portal focus, changing title to "Costa Beach 3 - Homeowners Association Portal" and updating description to match the portal's purpose.
+- Created comprehensive Storybook documentation for AWS S3 integration, including S3Integration.stories.tsx with architecture overview, DocumentUpload.stories.tsx with upload workflow, and DocumentPreview.stories.tsx with download and preview functionality.
