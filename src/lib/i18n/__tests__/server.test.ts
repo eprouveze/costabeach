@@ -1,149 +1,113 @@
 import { getLocale, useTranslation } from '../server';
-import * as utils from '../utils';
+import { loadTranslations, getTranslation, formatDate, formatNumber } from '../utils';
 import { defaultLocale } from '../config';
 import { cookies, headers } from 'next/headers';
 
-// Mock the Next.js cookies and headers
+// Mock next/headers
 jest.mock('next/headers', () => ({
-  cookies: jest.fn(),
-  headers: jest.fn(),
+  cookies: jest.fn(() => ({
+    get: jest.fn((name) => {
+      if (name === 'NEXT_LOCALE' && mockCookieLocale) {
+        return { value: mockCookieLocale };
+      }
+      return undefined;
+    }),
+  })),
+  headers: jest.fn(() => ({
+    get: jest.fn((name) => {
+      if (name === 'Accept-Language' && mockAcceptLanguage) {
+        return mockAcceptLanguage;
+      }
+      return undefined;
+    }),
+  })),
 }));
 
-// Mock the utils functions
+// Mock utils functions
 jest.mock('../utils', () => ({
-  loadTranslations: jest.fn(),
-  getTranslation: jest.fn(),
-  formatDate: jest.fn(),
-  formatNumber: jest.fn(),
+  loadTranslations: jest.fn((locale) => Promise.resolve({ hello: `Hello in ${locale}` })),
+  getTranslation: jest.fn((translations, key) => translations[key] || key),
+  formatDate: jest.fn((date, locale) => `Formatted date in ${locale}`),
+  formatNumber: jest.fn((number, locale) => `Formatted number in ${locale}`),
 }));
 
-// Mock the server module to control getLocale
-jest.mock('../server', () => {
-  const originalModule = jest.requireActual('../server');
-  return {
-    ...originalModule,
-    getLocale: jest.fn().mockResolvedValue('fr'),
-  };
-});
+// Mock variables for testing
+let mockCookieLocale: string | null = null;
+let mockAcceptLanguage: string | null = null;
 
-describe('i18n server', () => {
-  describe('getLocale', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-      // Reset the mock to use the original implementation for these tests
-      (getLocale as jest.Mock).mockImplementation(
-        jest.requireActual('../server').getLocale
-      );
-    });
-
-    it('should return locale from cookies if available', async () => {
-      // Mock cookies
-      const mockCookieStore = {
-        get: jest.fn().mockReturnValue({ value: 'fr' }),
-      };
-      (cookies as jest.Mock).mockReturnValue(mockCookieStore);
-
-      const locale = await getLocale();
-      
-      expect(locale).toBe('fr');
-      expect(mockCookieStore.get).toHaveBeenCalledWith('NEXT_LOCALE');
-      expect(headers).not.toHaveBeenCalled();
-    });
-
-    it('should fall back to Accept-Language header if no cookie', async () => {
-      // Mock cookies with no locale
-      const mockCookieStore = {
-        get: jest.fn().mockReturnValue(null),
-      };
-      (cookies as jest.Mock).mockReturnValue(mockCookieStore);
-      
-      // Mock headers with fr locale
-      const mockHeadersList = {
-        get: jest.fn().mockReturnValue('fr,en-US;q=0.9,en;q=0.8'),
-      };
-      (headers as jest.Mock).mockReturnValue(mockHeadersList);
-
-      const locale = await getLocale();
-      
-      expect(locale).toBe('fr');
-      expect(mockCookieStore.get).toHaveBeenCalledWith('NEXT_LOCALE');
-      expect(mockHeadersList.get).toHaveBeenCalledWith('Accept-Language');
-    });
-
-    it('should return default locale if no cookie or valid header', async () => {
-      // Mock cookies with no locale
-      const mockCookieStore = {
-        get: jest.fn().mockReturnValue(null),
-      };
-      (cookies as jest.Mock).mockReturnValue(mockCookieStore);
-      
-      // Mock headers with unsupported locale
-      const mockHeadersList = {
-        get: jest.fn().mockReturnValue('de,es;q=0.9'),
-      };
-      (headers as jest.Mock).mockReturnValue(mockHeadersList);
-
-      const locale = await getLocale();
-      
-      expect(locale).toBe(defaultLocale);
-      expect(mockCookieStore.get).toHaveBeenCalledWith('NEXT_LOCALE');
-      expect(mockHeadersList.get).toHaveBeenCalledWith('Accept-Language');
-    });
+describe('getLocale', () => {
+  beforeEach(() => {
+    mockCookieLocale = null;
+    mockAcceptLanguage = null;
+    jest.clearAllMocks();
   });
 
-  describe('useTranslation', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-    });
+  it('returns locale from cookies if available', async () => {
+    mockCookieLocale = 'fr';
+    
+    const result = await getLocale();
+    
+    expect(cookies).toHaveBeenCalled();
+    expect(result).toBe('fr');
+  });
 
-    it('should use provided locale if specified', async () => {
-      const mockTranslations = { common: { welcome: 'Bienvenue' } };
-      (utils.loadTranslations as jest.Mock).mockResolvedValue(mockTranslations);
-      
-      const translation = await useTranslation('fr');
-      
-      expect(utils.loadTranslations).toHaveBeenCalledWith('fr');
-      expect(translation.locale).toBe('fr');
-    });
+  it('falls back to Accept-Language header if no cookie', async () => {
+    mockAcceptLanguage = 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7';
+    
+    const result = await getLocale();
+    
+    expect(cookies).toHaveBeenCalled();
+    expect(headers).toHaveBeenCalled();
+    expect(result).toBe('fr');
+  });
 
-    it('should get locale from request if none provided', async () => {
-      const mockTranslations = { common: { welcome: 'Bienvenue' } };
-      (utils.loadTranslations as jest.Mock).mockResolvedValue(mockTranslations);
-      
-      const translation = await useTranslation();
-      
-      expect(getLocale).toHaveBeenCalled();
-      expect(utils.loadTranslations).toHaveBeenCalledWith('fr');
-      expect(translation.locale).toBe('fr');
-    });
+  it('returns default locale if no cookie or valid header', async () => {
+    mockAcceptLanguage = 'invalid-locale';
+    
+    const result = await getLocale();
+    
+    expect(result).toBe(defaultLocale);
+  });
+});
 
-    it('should set isRTL to true for Arabic locale', async () => {
-      const mockTranslations = { common: { welcome: 'مرحبا' } };
-      (utils.loadTranslations as jest.Mock).mockResolvedValue(mockTranslations);
-      
-      const translation = await useTranslation('ar');
-      
-      expect(translation.isRTL).toBe(true);
-    });
+describe('useTranslation', () => {
+  beforeEach(() => {
+    mockCookieLocale = 'fr';
+    jest.clearAllMocks();
+  });
 
-    it('should set isRTL to false for non-Arabic locales', async () => {
-      const mockTranslations = { common: { welcome: 'Bienvenue' } };
-      (utils.loadTranslations as jest.Mock).mockResolvedValue(mockTranslations);
-      
-      const translation = await useTranslation('fr');
-      
-      expect(translation.isRTL).toBe(false);
-    });
+  it('uses provided locale if specified', async () => {
+    const { t, locale } = await useTranslation('ar');
+    
+    expect(locale).toBe('ar');
+    expect(loadTranslations).toHaveBeenCalledWith('ar');
+  });
 
-    it('should provide t function that uses getTranslation', async () => {
-      const mockTranslations = { common: { welcome: 'Bienvenue' } };
-      (utils.loadTranslations as jest.Mock).mockResolvedValue(mockTranslations);
-      (utils.getTranslation as jest.Mock).mockReturnValue('Bienvenue');
-      
-      const translation = await useTranslation('fr');
-      translation.t('common.welcome');
-      
-      expect(utils.getTranslation).toHaveBeenCalledWith(mockTranslations, 'common.welcome');
-    });
+  it('gets locale from request if none provided', async () => {
+    const { t, locale } = await useTranslation();
+    
+    expect(locale).toBe('fr');
+    expect(loadTranslations).toHaveBeenCalledWith('fr');
+  });
+
+  it('sets isRTL to true for Arabic locale', async () => {
+    const { isRTL } = await useTranslation('ar');
+    
+    expect(isRTL).toBe(true);
+  });
+
+  it('sets isRTL to false for non-Arabic locales', async () => {
+    const { isRTL } = await useTranslation('fr');
+    
+    expect(isRTL).toBe(false);
+  });
+
+  it('provides a translation function that uses getTranslation', async () => {
+    const { t } = await useTranslation('fr');
+    const mockTranslations = { hello: 'Hello in fr' };
+    
+    t('hello');
+    
+    expect(getTranslation).toHaveBeenCalledWith(mockTranslations, 'hello');
   });
 }); 

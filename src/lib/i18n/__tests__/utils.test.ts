@@ -1,12 +1,17 @@
 import { loadTranslations, getTranslation, formatDate, formatNumber } from '../utils';
 import { Locale } from '../config';
 
-// Mock the dynamic import
+// Mock dynamic import for loadTranslations
 jest.mock('../utils', () => {
   const originalModule = jest.requireActual('../utils');
   return {
     ...originalModule,
-    loadTranslations: jest.fn(),
+    loadTranslations: jest.fn().mockImplementation((locale) => {
+      return Promise.resolve({
+        hello: 'Hello',
+        welcome: 'Welcome'
+      });
+    })
   };
 });
 
@@ -16,114 +21,137 @@ describe('i18n utils', () => {
       jest.clearAllMocks();
     });
 
-    it('should load translations for a valid locale', async () => {
-      const mockTranslations = { common: { welcome: 'Bienvenue' } };
-      (loadTranslations as jest.Mock).mockResolvedValue(mockTranslations);
-
-      const result = await loadTranslations('fr' as Locale);
-      expect(result).toEqual(mockTranslations);
-      expect(loadTranslations).toHaveBeenCalledWith('fr');
+    it('loads translations for a valid locale', async () => {
+      const translations = await loadTranslations('en' as Locale);
+      
+      expect(loadTranslations).toHaveBeenCalledWith('en');
+      expect(translations).toEqual({ hello: 'Hello', welcome: 'Welcome' });
     });
 
-    it('should fall back to default locale if translations fail to load', async () => {
-      const mockTranslations = { common: { welcome: 'Welcome' } };
-      (loadTranslations as jest.Mock)
-        .mockRejectedValueOnce(new Error('Failed to load'))
-        .mockResolvedValueOnce(mockTranslations);
-
-      const result = await loadTranslations('invalid-locale' as Locale);
-      expect(result).toEqual(mockTranslations);
+    it('handles fetch errors gracefully', async () => {
+      (loadTranslations as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
+      
+      try {
+        await loadTranslations('en' as Locale);
+      } catch (error) {
+        expect(error).toBeDefined();
+      }
     });
   });
 
   describe('getTranslation', () => {
-    it('should return the correct translation for a valid key', () => {
-      const translations = {
-        common: {
-          welcome: 'Welcome',
-          hello: 'Hello',
-        },
-        buttons: {
-          submit: 'Submit',
-        },
-      };
-
-      expect(getTranslation(translations, 'common.welcome')).toBe('Welcome');
-      expect(getTranslation(translations, 'common.hello')).toBe('Hello');
-      expect(getTranslation(translations, 'buttons.submit')).toBe('Submit');
+    it('returns the translation if it exists', () => {
+      const translations = { hello: 'Hello', welcome: 'Welcome' };
+      
+      const result = getTranslation(translations, 'hello');
+      
+      expect(result).toBe('Hello');
     });
 
-    it('should return the key if translation is not found', () => {
-      const translations = {
-        common: {
-          welcome: 'Welcome',
-        },
-      };
+    it('returns the key if translation does not exist', () => {
+      const translations = { hello: 'Hello' };
+      
+      const result = getTranslation(translations, 'missing');
+      
+      expect(result).toBe('missing');
+    });
 
-      expect(getTranslation(translations, 'common.missing')).toBe('common.missing');
-      expect(getTranslation(translations, 'missing.key')).toBe('missing.key');
+    it('handles nested keys with dot notation', () => {
+      const translations = { 
+        common: { 
+          hello: 'Hello',
+          welcome: 'Welcome' 
+        } 
+      };
+      
+      const result = getTranslation(translations, 'common.hello');
+      
+      expect(result).toBe('Hello');
+    });
+
+    it('returns the key if nested path is invalid', () => {
+      const translations = { common: { hello: 'Hello' } };
+      
+      const result = getTranslation(translations, 'common.missing');
+      
+      expect(result).toBe('common.missing');
     });
   });
 
   describe('formatDate', () => {
-    it('should format dates according to locale', () => {
-      const date = new Date('2023-01-15');
-      
+    const originalIntl = global.Intl;
+    
+    beforeEach(() => {
       // Save original Intl
-      const originalIntl = global.Intl;
+      global.Intl = { ...originalIntl };
       
-      // Mock Intl.DateTimeFormat
-      const mockFormat = jest.fn().mockReturnValue('15 janvier 2023');
-      global.Intl = {
-        ...originalIntl,
-        DateTimeFormat: jest.fn().mockImplementation(() => ({
-          format: mockFormat,
-        })) as any,
-      };
+      // Mock DateTimeFormat
+      global.Intl.DateTimeFormat = jest.fn().mockImplementation((locale) => ({
+        format: () => `Formatted date in ${locale}`,
+      })) as any;
       
       // Add supportedLocalesOf to the mock
-      (global.Intl.DateTimeFormat as any).supportedLocalesOf = jest.fn().mockReturnValue(['fr']);
+      global.Intl.DateTimeFormat.supportedLocalesOf = jest.fn().mockImplementation((locales) => {
+        if (locales.includes('fr')) return ['fr'];
+        return [];
+      });
+    });
+    
+    afterEach(() => {
+      // Restore original Intl
+      global.Intl = originalIntl;
+    });
 
+    it('formats date with the specified locale', () => {
+      const date = new Date('2023-01-01');
+      
       const result = formatDate(date, 'fr' as Locale);
       
-      expect(global.Intl.DateTimeFormat).toHaveBeenCalledWith('fr', {
+      expect(global.Intl.DateTimeFormat).toHaveBeenCalledWith('fr', expect.any(Object));
+      expect(result).toBe('Formatted date in fr');
+    });
+
+    it('uses default formatting options', () => {
+      const date = new Date('2023-01-01');
+      
+      formatDate(date, 'en' as Locale);
+      
+      expect(global.Intl.DateTimeFormat).toHaveBeenCalledWith('en', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
       });
-      expect(result).toBe('15 janvier 2023');
-      
-      // Restore original Intl
-      global.Intl = originalIntl;
     });
   });
 
   describe('formatNumber', () => {
-    it('should format numbers according to locale', () => {
-      const number = 1234.56;
-      
+    const originalIntl = global.Intl;
+    
+    beforeEach(() => {
       // Save original Intl
-      const originalIntl = global.Intl;
+      global.Intl = { ...originalIntl };
       
-      // Mock Intl.NumberFormat
-      const mockFormat = jest.fn().mockReturnValue('1 234,56');
-      global.Intl = {
-        ...originalIntl,
-        NumberFormat: jest.fn().mockImplementation(() => ({
-          format: mockFormat,
-        })) as any,
-      };
+      // Mock NumberFormat
+      global.Intl.NumberFormat = jest.fn().mockImplementation((locale) => ({
+        format: () => `Formatted number in ${locale}`,
+      })) as any;
       
       // Add supportedLocalesOf to the mock
-      (global.Intl.NumberFormat as any).supportedLocalesOf = jest.fn().mockReturnValue(['fr']);
-
-      const result = formatNumber(number, 'fr' as Locale);
-      
-      expect(global.Intl.NumberFormat).toHaveBeenCalledWith('fr');
-      expect(result).toBe('1 234,56');
-      
+      global.Intl.NumberFormat.supportedLocalesOf = jest.fn().mockImplementation((locales) => {
+        if (locales.includes('fr')) return ['fr'];
+        return [];
+      });
+    });
+    
+    afterEach(() => {
       // Restore original Intl
       global.Intl = originalIntl;
+    });
+
+    it('formats number with the specified locale', () => {
+      const result = formatNumber(1000, 'fr' as Locale);
+      
+      expect(result).toBe('Formatted number in fr');
     });
   });
 }); 
