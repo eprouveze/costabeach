@@ -44,3 +44,6 @@
 - Fixed Storybook configuration for i18n components by updating mockI18n.ts, LanguageSwitcher.stories.tsx, and I18nSystem.stories.tsx to properly support Storybook 8.x syntax and ensure components render correctly with the i18n context.
 - Fixed AuthWrapper component in Storybook by directly mocking the next-auth/react module with a comprehensive implementation that provides useSession, SessionProvider, and other authentication functions.
 - Fixed JSX syntax error in mockNextAuth.ts by replacing JSX syntax with React.createElement to ensure proper compilation in Storybook.
+- Fixed LanguageSwitcher component in Storybook by creating a mockI18n.tsx file with proper JSX syntax and updating imports in Storybook configuration to use the new file.
+- Fixed LanguageSwitcher component in Storybook by creating a standalone StorybookLanguageSwitcher component that doesn't require the I18nProvider context.
+- Fixed Storybook story ID issue by adding a Documentation story to the LanguageSwitcher component to match the expected ID pattern.

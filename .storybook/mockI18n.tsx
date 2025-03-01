@@ -40,17 +40,16 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     isRTL: locale === "ar",
   };
   
-  return React.createElement(
-    I18nContext.Provider,
-    { value },
-    children
+  return (
+    <I18nContext.Provider value={value}>
+      {children}
+    </I18nContext.Provider>
   );
 }
 
 // Create a decorator that wraps stories with the I18nProvider
-export const withI18nProvider = (Story: React.ComponentType) => 
-  React.createElement(
-    I18nProvider,
-    null,
-    React.createElement(Story, null)
-  ); 
+export const withI18nProvider = (Story: React.ComponentType) => (
+  <I18nProvider>
+    <Story />
+  </I18nProvider>
+); 

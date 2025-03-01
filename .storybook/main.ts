@@ -28,7 +28,7 @@ const config: StorybookConfig = {
       config.resolve.alias = {
         ...config.resolve.alias,
         "@": path.resolve(__dirname, "../src"),
-        "@/lib/i18n/client": path.resolve(__dirname, "./mockI18n"),
+        "@/lib/i18n/client": path.resolve(__dirname, "./mockI18n.tsx"),
         // Mock next-auth/react with our implementation
         "next-auth/react": path.resolve(__dirname, "./mockNextAuth"),
         "next/navigation": path.resolve(__dirname, "./mockNextNavigation"),

@@ -2,7 +2,7 @@ import type { Preview } from "@storybook/react";
 import "../src/app/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
-import { withI18nProvider } from "./mockI18n";
+import { withI18nProvider } from "./mockI18n.tsx";
 
 const preview: Preview = {
   parameters: {
