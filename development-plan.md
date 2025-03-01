@@ -31,6 +31,13 @@ This development plan outlines the transformation of the Costa Beach application
    - Ensure accessibility compliance
    - Implement proper internationalization
 
+4. **Git Workflow**
+   - After completing a section (e.g., "### 1.1 Document Schema"), including successful tests and Storybook with no errors, create a Git commit
+   - Use semantic commit messages that clearly describe the changes
+   - Include the section number and name in the commit message (e.g., "feat(1.1): Complete Document Schema implementation")
+   - Run `npm run build` before committing to ensure there are no build errors
+   - Update the development plan to mark the section as completed
+
 ## Identified Issues to Fix
 
 ### Critical Issues
