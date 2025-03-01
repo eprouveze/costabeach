@@ -53,3 +53,4 @@
 - Completed section 2.3 OpenAI Translation Service by implementing text translation, document translation, caching mechanism, and Inngest background jobs; fixed type issues in translations utility and Inngest configuration to ensure all tests pass successfully.
 - Migrated from OpenAI to DeepL Translation API, implementing formality and context parameters, updating tests, and ensuring all translation functionality works correctly with comprehensive test coverage.
 - Fixed Storybook documentation for Translation Service by converting MDX to TSX format for compatibility with Storybook 8.x.
+- Fixed build error by installing nodemailer package which was required by NextAuth's email provider, resolving the module not found error during build.
