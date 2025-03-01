@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
-const meta: Meta<typeof LanguageSwitcher> = {
+const meta = {
   title: "Components/LanguageSwitcher",
   component: LanguageSwitcher,
   parameters: {
@@ -25,10 +25,10 @@ const meta: Meta<typeof LanguageSwitcher> = {
       description: "Additional CSS classes to apply to the component",
     },
   },
-};
+} satisfies Meta<typeof LanguageSwitcher>;
 
 export default meta;
-type Story = StoryObj<typeof LanguageSwitcher>;
+type Story = StoryObj<typeof meta>;
 
 export const Dropdown: Story = {
   args: {

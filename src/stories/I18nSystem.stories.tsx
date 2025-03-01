@@ -1,8 +1,8 @@
-import type { Meta } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const I18nSystemDocs = () => {
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Internationalization (i18n) System</h1>
       
       <section className="mb-8">
@@ -24,6 +24,71 @@ const I18nSystemDocs = () => {
 
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">Key Components</h2>
+        
+        <div className="mb-6">
+          <h3 className="text-xl font-medium mb-2">I18nProvider</h3>
+          <p className="mb-2">
+            A context provider that manages the current locale and provides translation functions.
+            All components that use the <code>useI18n</code> hook must be wrapped in this provider.
+          </p>
+          <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md mb-4 overflow-x-auto">
+            {`// In your root layout.tsx
+import { I18nProvider } from "@/lib/i18n/client";
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        <I18nProvider>
+          {children}
+        </I18nProvider>
+      </body>
+    </html>
+  );
+}`}
+          </pre>
+          <div className="bg-amber-50 dark:bg-amber-900 p-4 rounded-md mb-4">
+            <h4 className="font-medium mb-2">⚠️ Storybook Usage</h4>
+            <p>
+              For Storybook, we've implemented a global mock for the I18n system. This is done through:
+            </p>
+            <ol className="list-decimal pl-6 mt-2 mb-2">
+              <li>A mock implementation in <code>.storybook/mockI18n.ts</code></li>
+              <li>A webpack alias in <code>.storybook/main.ts</code> that redirects imports</li>
+              <li>A global decorator in <code>.storybook/preview.tsx</code></li>
+            </ol>
+            <p className="mt-2">
+              This approach ensures that all components using the <code>useI18n</code> hook 
+              work correctly in Storybook without needing individual mocks in each story.
+            </p>
+            <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md mt-2 overflow-x-auto">
+              {`// .storybook/mockI18n.ts
+export const useI18n = () => ({
+  locale: "fr",
+  setLocale: (newLocale) => console.log(\`Setting locale to \${newLocale}\`),
+  t: (key) => key,
+  isLoading: false,
+  isRTL: false,
+});
+
+// .storybook/main.ts (in webpackFinal)
+config.resolve.alias = {
+  ...config.resolve.alias,
+  "@/lib/i18n/client": path.resolve(__dirname, "./mockI18n"),
+};
+
+// .storybook/preview.tsx
+import { withI18nProvider } from "./mockI18n";
+
+const preview = {
+  decorators: [
+    withI18nProvider,
+    // other decorators...
+  ],
+};`}
+            </pre>
+          </div>
+        </div>
         
         <div className="mb-6">
           <h3 className="text-xl font-medium mb-2">LanguageSwitcher</h3>
@@ -171,14 +236,16 @@ export default async function ServerComponent() {
   );
 };
 
-const meta: Meta<typeof I18nSystemDocs> = {
+const meta = {
   title: "Documentation/I18n System",
   component: I18nSystemDocs,
   parameters: {
     layout: "fullscreen",
   },
-};
+} satisfies Meta<typeof I18nSystemDocs>;
 
 export default meta;
 
-export const Documentation = {}; 
+type Story = StoryObj<typeof meta>;
+
+export const Documentation: Story = {}; 

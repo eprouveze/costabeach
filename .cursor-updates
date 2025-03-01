@@ -40,3 +40,5 @@
 - Completed section 1.1 Document Schema implementation with proper database model, tests, and Storybook documentation.
 - Completed section 1.2 User Permissions Schema implementation with enhanced tests for role assignment and permission management, and added comprehensive Storybook documentation for the permission system.
 - Completed section 2.1 Next.js i18n Setup by creating comprehensive Storybook documentation for the internationalization system, explaining language detection, translation hooks, and best practices.
+- Fixed Storybook error in LanguageSwitcher component by creating a mock I18nProvider and updating the I18nSystem documentation with Storybook usage guidelines.
+- Fixed Storybook configuration for i18n components by updating mockI18n.ts, LanguageSwitcher.stories.tsx, and I18nSystem.stories.tsx to properly support Storybook 8.x syntax and ensure components render correctly with the i18n context.

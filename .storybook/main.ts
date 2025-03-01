@@ -2,7 +2,7 @@ import type { StorybookConfig } from "@storybook/nextjs";
 import path from "path";
 
 const config: StorybookConfig = {
-  stories: ["../src/stories/**/*.stories.@(ts|tsx)"],
+  stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
@@ -10,22 +10,25 @@ const config: StorybookConfig = {
     "@storybook/addon-interactions",
     "@storybook/addon-themes",
     "@storybook/addon-a11y",
-    "msw-storybook-addon",
-    "@storybook/addon-styling-webpack",
+    "@storybook/addon-viewport",
+    {
+      name: "@storybook/addon-styling-webpack",
+      options: {},
+    },
   ],
   framework: {
     name: "@storybook/nextjs",
     options: {},
   },
   docs: {
-    defaultName: 'Documentation'
+    autodocs: "tag",
   },
-  staticDirs: ["../public"],
   webpackFinal: async (config) => {
     if (config.resolve) {
       config.resolve.alias = {
         ...config.resolve.alias,
-        "@": path.resolve(__dirname, "../"),
+        "@": path.resolve(__dirname, "../src"),
+        "@/lib/i18n/client": path.resolve(__dirname, "./mockI18n"),
       };
     }
     return config;

@@ -1,28 +1,20 @@
 import type { Preview } from "@storybook/react";
-import { SessionProvider } from "next-auth/react";
-import { ThemeProvider } from "next-themes";
-import { ToastContainer } from "react-toastify";
-import { initialize } from "msw-storybook-addon";
-import { withThemeByClassName } from "@storybook/addon-themes";
 import "../src/app/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
+import { SessionProvider } from "next-auth/react";
+import { withI18nProvider } from "./mockI18n";
 
 // Initialize MSW
-initialize();
-
-// Mock session data
+// This is needed for the auth provider
 const mockSession = {
   data: {
     user: {
-      email: "test@example.com",
       name: "Test User",
-      image: null,
-      id: "test-user-id",
-      role: "user",
-      isAdmin: false,
+      email: "test@example.com",
+      image: "https://avatars.githubusercontent.com/u/1234567?v=4",
     },
-    expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    expires: "2021-10-10T00:00:00.000Z",
   },
   status: "authenticated",
 };
@@ -36,68 +28,35 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
-    viewport: {
-      viewports: INITIAL_VIEWPORTS,
-      defaultViewport: 'responsive',
-    },
-    nextauth: {
-      session: mockSession,
-    },
-    msw: {
-      handlers: [],
-    },
-    a11y: {
-      config: {
-        rules: [
-          {
-            id: 'color-contrast',
-            enabled: true,
-          },
-          {
-            id: 'label',
-            enabled: true,
-          },
-          {
-            id: 'image-alt',
-            enabled: true,
-          },
-          {
-            id: 'button-name',
-            enabled: true,
-          },
-          {
-            id: 'heading-order',
-            enabled: true,
-          },
-        ],
-      },
+    backgrounds: {
+      default: "light",
+      values: [
+        {
+          name: "light",
+          value: "#ffffff",
+        },
+        {
+          name: "dark",
+          value: "#1a1a1a",
+        },
+      ],
     },
     nextjs: {
       appDirectory: true,
-      navigation: {
-        pathname: "/owner-login",
-        query: {},
-      },
+    },
+    viewport: {
+      viewports: INITIAL_VIEWPORTS,
     },
   },
   decorators: [
+    withI18nProvider,
     (Story) => (
       <SessionProvider session={mockSession.data}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="min-h-screen">
-            <Story />
-            <ToastContainer />
-          </div>
-        </ThemeProvider>
+        <div className="p-4">
+          <Story />
+        </div>
       </SessionProvider>
     ),
-    withThemeByClassName({
-      themes: {
-        light: 'light',
-        dark: 'dark',
-      },
-      defaultTheme: 'light',
-    }),
   ],
 };
 
