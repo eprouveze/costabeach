@@ -1,0 +1,139 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Documentation/Translation Service" />
+
+# Translation Service
+
+The Costa Beach HOA Portal includes a comprehensive translation service that allows for seamless translation of documents and text between supported languages.
+
+## Supported Languages
+
+The system currently supports the following languages:
+
+- French (primary language)
+- Arabic
+- English
+
+## Features
+
+### Text Translation
+
+The translation service can translate arbitrary text between any of the supported languages. This is useful for:
+
+- Translating user-generated content
+- Providing on-the-fly translations of UI elements
+- Supporting multilingual communication
+
+### Document Translation
+
+Documents can be translated between languages with the following capabilities:
+
+- Automatic translation of document content for text-based files
+- Translation of document metadata (title, description) for all file types
+- Background processing for large documents
+- Caching to avoid redundant translations
+
+## Technical Implementation
+
+### OpenAI Integration
+
+The translation service uses OpenAI's advanced language models to provide high-quality translations. The system:
+
+1. Uses the O1 model for optimal translation quality
+2. Maintains formatting and structure of the original text
+3. Optimizes for natural, fluent translations in the target language
+
+### Caching System
+
+To improve performance and reduce API costs, the translation service implements a caching system:
+
+- Translations are cached in memory for 24 hours
+- Cache keys are based on the source text and target language
+- Long texts are truncated in the cache key to avoid memory issues
+
+### Background Processing
+
+Document translations are processed in the background using Inngest:
+
+1. User requests a document translation
+2. System checks if translation already exists
+3. If not, a background job is created
+4. User can check translation status while processing
+5. Once complete, the translated document is available for viewing
+
+## Usage Examples
+
+### Translating Text (Client-Side)
+
+```tsx
+import { trpc } from '@/lib/trpc/react';
+
+// In a React component
+const { mutate, isLoading } = trpc.translations.translateText.useMutation();
+
+const handleTranslate = () => {
+  mutate({
+    text: "Hello world",
+    sourceLanguage: "english",
+    targetLanguage: "french"
+  }, {
+    onSuccess: (data) => {
+      console.log(data.translatedText); // "Bonjour le monde"
+    }
+  });
+};
+```
+
+### Requesting Document Translation
+
+```tsx
+import { trpc } from '@/lib/trpc/react';
+
+// In a React component
+const { mutate } = trpc.translations.requestDocumentTranslation.useMutation();
+
+const handleRequestTranslation = (documentId) => {
+  mutate({
+    documentId,
+    targetLanguage: "arabic"
+  }, {
+    onSuccess: (data) => {
+      if (data.status === "completed") {
+        // Translation was already available
+        showDocument(data.documentId);
+      } else {
+        // Translation is being processed
+        showTranslationPending();
+      }
+    }
+  });
+};
+```
+
+### Checking Translation Status
+
+```tsx
+import { trpc } from '@/lib/trpc/react';
+
+// In a React component
+const { data, refetch } = trpc.translations.getTranslationStatus.useQuery({
+  documentId: "doc-123",
+  targetLanguage: "arabic"
+});
+
+// Poll for updates
+useEffect(() => {
+  if (data?.status === "pending") {
+    const interval = setInterval(refetch, 5000);
+    return () => clearInterval(interval);
+  }
+}, [data, refetch]);
+```
+
+## Best Practices
+
+1. **Avoid Unnecessary Translations**: Only translate content when needed to reduce API costs
+2. **Use Polling for Status Updates**: When waiting for document translations, use polling rather than webhooks
+3. **Handle Errors Gracefully**: Always provide fallback options if translations fail
+4. **Consider Content Size**: Very large documents may take longer to translate
+5. **Respect Rate Limits**: Be mindful of OpenAI API rate limits when implementing translation features 
