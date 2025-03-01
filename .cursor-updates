@@ -42,4 +42,4 @@
 - Completed section 2.1 Next.js i18n Setup by creating comprehensive Storybook documentation for the internationalization system, explaining language detection, translation hooks, and best practices.
 - Fixed Storybook error in LanguageSwitcher component by creating a mock I18nProvider and updating the I18nSystem documentation with Storybook usage guidelines.
 - Fixed Storybook configuration for i18n components by updating mockI18n.ts, LanguageSwitcher.stories.tsx, and I18nSystem.stories.tsx to properly support Storybook 8.x syntax and ensure components render correctly with the i18n context.
-- Fixed AuthWrapper component in Storybook by implementing proper mocks for next-auth/react and next/navigation, ensuring the SessionProvider is correctly configured with a mock session.
+- Fixed AuthWrapper component in Storybook by directly mocking the next-auth/react module with a comprehensive implementation that provides useSession, SessionProvider, and other authentication functions.

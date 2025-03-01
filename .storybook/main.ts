@@ -29,8 +29,8 @@ const config: StorybookConfig = {
         ...config.resolve.alias,
         "@": path.resolve(__dirname, "../src"),
         "@/lib/i18n/client": path.resolve(__dirname, "./mockI18n"),
-        // We don't need to mock next-auth/react completely since we're using the real SessionProvider
-        // with a mock session in our decorator
+        // Mock next-auth/react with our implementation
+        "next-auth/react": path.resolve(__dirname, "./mockNextAuth"),
         "next/navigation": path.resolve(__dirname, "./mockNextNavigation"),
       };
     }
