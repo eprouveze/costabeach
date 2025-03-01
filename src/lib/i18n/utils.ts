@@ -1,7 +1,11 @@
-import { Locale, defaultLocale } from './config';
+import { Locale, defaultLocale, locales } from './config';
 
 // Cache for translations to avoid repeated fetching
-const translationCache: Record<Locale, any> = {};
+const translationCache: Record<Locale, any> = {
+  fr: {},
+  ar: {},
+  en: {}
+};
 
 /**
  * Load translations for a specific locale

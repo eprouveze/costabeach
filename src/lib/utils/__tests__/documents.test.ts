@@ -1,5 +1,17 @@
-import { generateS3FilePath, canManageDocumentCategory } from '../documents';
+import { generateS3FilePath, canManageDocumentCategory, getDownloadUrl } from '../documents';
 import { DocumentCategory, Language, Permission } from '@/lib/types';
+
+// Mock AWS SDK
+jest.mock('@aws-sdk/client-s3', () => ({
+  S3Client: jest.fn().mockImplementation(() => ({
+    send: jest.fn(),
+  })),
+  GetObjectCommand: jest.fn(),
+}));
+
+jest.mock('@aws-sdk/s3-request-presigner', () => ({
+  getSignedUrl: jest.fn().mockResolvedValue('https://example.com/signed-url'),
+}));
 
 describe('Document Utilities', () => {
   describe('generateS3FilePath', () => {
@@ -60,6 +72,46 @@ describe('Document Utilities', () => {
       const userPermissions: string[] = [];
       
       expect(canManageDocumentCategory(userPermissions, DocumentCategory.COMITE_DE_SUIVI)).toBe(false);
+    });
+  });
+  
+  describe('getDownloadUrl', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+      process.env.AWS_S3_BUCKET_NAME = 'test-bucket';
+      process.env.AWS_REGION = 'us-east-1';
+    });
+    
+    it('should generate a signed URL for a document', async () => {
+      const filePath = 'documents/legal/english/user123/test-document.pdf';
+      
+      const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+      const { GetObjectCommand } = require('@aws-sdk/client-s3');
+      
+      const url = await getDownloadUrl(filePath);
+      
+      expect(url).toBe('https://example.com/signed-url');
+      expect(GetObjectCommand).toHaveBeenCalledWith({
+        Bucket: 'test-bucket',
+        Key: filePath,
+      });
+      expect(getSignedUrl).toHaveBeenCalled();
+    });
+    
+    it('should throw an error if bucket name is not defined', async () => {
+      process.env.AWS_S3_BUCKET_NAME = '';
+      
+      const filePath = 'documents/legal/english/user123/test-document.pdf';
+      
+      await expect(getDownloadUrl(filePath)).rejects.toThrow('S3 bucket name is not defined');
+    });
+    
+    it('should throw an error if AWS region is not defined', async () => {
+      process.env.AWS_REGION = '';
+      
+      const filePath = 'documents/legal/english/user123/test-document.pdf';
+      
+      await expect(getDownloadUrl(filePath)).rejects.toThrow('AWS region is not defined');
     });
   });
 }); 

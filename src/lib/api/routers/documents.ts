@@ -129,17 +129,19 @@ export const documentsRouter = createTRPCRouter({
         language: z.nativeEnum(Language).optional(),
         limit: z.number().min(1).max(100).default(10),
         offset: z.number().min(0).default(0),
+        searchQuery: z.string().optional(),
       })
     )
     .query(async ({ input }) => {
-      const { category, language, limit, offset } = input;
+      const { category, language, limit, offset, searchQuery } = input;
       
       try {
         const documents = await getDocumentsByCategory(
           category,
           language,
           limit,
-          offset
+          offset,
+          searchQuery
         );
         
         return documents;

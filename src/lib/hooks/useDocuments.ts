@@ -1,23 +1,29 @@
+"use client";
+
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { api } from "@/lib/trpc/react";
 import { DocumentCategory, Language } from "@/lib/types";
+import { useRouter } from "next/navigation";
 
 export const useDocuments = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   
   const utils = api.useUtils();
+  const router = useRouter();
   
   // Get documents by category
   const useDocumentsByCategory = (
     category: DocumentCategory,
     language?: Language,
     limit: number = 10,
-    offset: number = 0
+    offset: number = 0,
+    searchQuery: string = ""
   ) => {
     const query = api.documents.getDocumentsByCategory.useQuery(
-      { category, language, limit, offset },
+      { category, language, limit, offset, searchQuery },
       {
         staleTime: 1000 * 60 * 5, // 5 minutes
       }
@@ -29,6 +35,33 @@ export const useDocuments = () => {
     }
     
     return query;
+  };
+
+  // Get documents (non-hook version)
+  const getDocuments = async (
+    category?: DocumentCategory,
+    language?: Language,
+    limit: number = 10,
+    offset: number = 0,
+    searchQuery: string = ""
+  ) => {
+    try {
+      setIsLoading(true);
+      const result = await utils.documents.getDocumentsByCategory.fetch({
+        category: category || DocumentCategory.COMITE_DE_SUIVI, // Default category
+        language,
+        limit,
+        offset,
+        searchQuery
+      });
+      return result;
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+      toast.error(`Error fetching documents: ${error instanceof Error ? error.message : "Unknown error"}`);
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   // Upload a document
@@ -166,12 +199,35 @@ export const useDocuments = () => {
     }
   };
   
+  const previewDocument = async (id: string): Promise<string | null> => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`/api/documents/${id}/preview`);
+      
+      if (!response.ok) {
+        throw new Error("Failed to preview document");
+      }
+      
+      const data = await response.json();
+      return data.previewUrl;
+    } catch (error) {
+      console.error("Error previewing document:", error);
+      toast.error("Failed to preview document");
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
   return {
     useDocumentsByCategory,
+    getDocuments,
     uploadDocument,
     downloadDocument,
     deleteDocument,
+    previewDocument,
     isUploading,
     uploadProgress,
+    isLoading,
   };
 };

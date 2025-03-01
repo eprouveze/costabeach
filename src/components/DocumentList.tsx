@@ -1,129 +1,142 @@
 "use client";
 
-import { useState } from "react";
-import { useDocuments } from "@/lib/hooks/useDocuments";
-import { DocumentCategory, Language } from "@/lib/types";
+import { useState, useEffect } from "react";
+import { Document, DocumentCategory, Language } from "@/lib/types";
 import { DocumentCard } from "./DocumentCard";
-import { Loader2, FileX } from "lucide-react";
+import { useDocuments } from "@/lib/hooks/useDocuments";
+import { Search, Filter, Loader } from "lucide-react";
 
 interface DocumentListProps {
-  category: DocumentCategory;
+  category?: DocumentCategory;
   language?: Language;
-  limit?: number;
+  initialDocuments?: Document[];
+  showSearch?: boolean;
+  showFilters?: boolean;
   showActions?: boolean;
-  className?: string;
+  limit?: number;
 }
 
 export const DocumentList = ({
   category,
   language,
-  limit = 10,
+  initialDocuments,
+  showSearch = true,
+  showFilters = true,
   showActions = true,
-  className = "",
+  limit
 }: DocumentListProps) => {
-  const [offset, setOffset] = useState(0);
-  
-  const { useDocumentsByCategory } = useDocuments();
-  const { data, isLoading, isError, refetch } = useDocumentsByCategory(
-    category,
-    language,
-    limit,
-    offset
-  );
-  
-  const handleNextPage = () => {
-    if (data && data.length === limit) {
-      setOffset(offset + limit);
+  const [documents, setDocuments] = useState<Document[]>(initialDocuments || []);
+  const [loading, setLoading] = useState(!initialDocuments);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredDocuments, setFilteredDocuments] = useState<Document[]>([]);
+  const { getDocuments } = useDocuments();
+
+  useEffect(() => {
+    if (!initialDocuments) {
+      fetchDocuments();
+    }
+  }, [category, language, initialDocuments]);
+
+  useEffect(() => {
+    if (documents.length > 0) {
+      filterDocuments();
+    }
+  }, [searchQuery, documents]);
+
+  const fetchDocuments = async () => {
+    setLoading(true);
+    try {
+      const fetchedDocuments = await getDocuments(category, language, undefined, undefined, searchQuery);
+      setDocuments(fetchedDocuments);
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+    } finally {
+      setLoading(false);
     }
   };
-  
-  const handlePreviousPage = () => {
-    if (offset >= limit) {
-      setOffset(offset - limit);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    fetchDocuments();
+  };
+
+  const filterDocuments = () => {
+    if (!searchQuery) {
+      setFilteredDocuments(documents);
+      return;
     }
+
+    const filtered = documents.filter(doc => 
+      doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (doc.description && doc.description.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+    
+    setFilteredDocuments(filtered);
   };
-  
-  const handleRefresh = () => {
-    refetch();
+
+  const handleDocumentDelete = (deletedId: string) => {
+    setDocuments(prev => prev.filter(doc => doc.id !== deletedId));
   };
-  
-  if (isLoading) {
-    return (
-      <div className={`flex justify-center items-center py-12 ${className}`}>
-        <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />
-        <span className="ml-2 text-gray-600 dark:text-gray-400">Loading documents...</span>
-      </div>
-    );
-  }
-  
-  if (isError) {
-    return (
-      <div className={`flex flex-col items-center py-12 ${className}`}>
-        <FileX className="h-12 w-12 text-red-500 mb-2" />
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
-          Failed to load documents
-        </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-          There was an error loading the documents. Please try again.
-        </p>
-        <button
-          onClick={handleRefresh}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        >
-          Retry
-        </button>
-      </div>
-    );
-  }
-  
-  if (!data || data.length === 0) {
-    return (
-      <div className={`flex flex-col items-center py-12 ${className}`}>
-        <FileX className="h-12 w-12 text-gray-400 mb-2" />
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
-          No documents found
-        </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          There are no documents in this category yet.
-        </p>
-      </div>
-    );
-  }
-  
+
+  const displayDocuments = filteredDocuments.length > 0 ? filteredDocuments : documents;
+  const limitedDocuments = limit ? displayDocuments.slice(0, limit) : displayDocuments;
+
   return (
-    <div className={className}>
-      <div className="grid grid-cols-1 gap-6">
-        {data.map((document: any) => (
-          <DocumentCard
-            key={document.id}
-            document={document}
-            showActions={showActions}
-            onDelete={handleRefresh}
-          />
-        ))}
-      </div>
-      
-      {limit > 0 && (
-        <div className="flex justify-between items-center mt-6">
+    <div className="space-y-4">
+      {showSearch && (
+        <form onSubmit={handleSearch} className="flex gap-2 mb-4">
+          <div className="relative flex-1">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search documents..."
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+            />
+          </div>
           <button
-            onClick={handlePreviousPage}
-            disabled={offset === 0}
-            className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            type="submit"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-blue-700 dark:hover:bg-blue-800"
           >
-            Previous
+            Search
           </button>
-          
-          <span className="text-sm text-gray-600 dark:text-gray-400">
-            Page {Math.floor(offset / limit) + 1}
-          </span>
-          
-          <button
-            onClick={handleNextPage}
-            disabled={!data || data.length < limit}
-            className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Next
-          </button>
+        </form>
+      )}
+
+      {showFilters && (
+        <div className="flex items-center gap-2 mb-4">
+          <Filter className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+          <span className="text-sm text-gray-500 dark:text-gray-400">Filters coming soon</span>
+        </div>
+      )}
+
+      {loading ? (
+        <div className="flex justify-center items-center py-12">
+          <Loader className="h-8 w-8 text-blue-500 animate-spin" />
+          <span className="ml-2 text-gray-600 dark:text-gray-300">Loading documents...</span>
+        </div>
+      ) : limitedDocuments.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {limitedDocuments.map((doc) => (
+            <DocumentCard
+              key={doc.id}
+              document={doc}
+              onDelete={() => handleDocumentDelete(doc.id)}
+              showActions={showActions}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <p className="text-gray-600 dark:text-gray-300">No documents found.</p>
+          {searchQuery && (
+            <p className="text-gray-500 dark:text-gray-400 mt-2">
+              Try adjusting your search query.
+            </p>
+          )}
         </div>
       )}
     </div>

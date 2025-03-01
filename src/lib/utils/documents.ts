@@ -135,7 +135,8 @@ export const getDocumentsByCategory = async (
   category: DocumentCategory,
   language?: Language,
   limit: number = 20,
-  offset: number = 0
+  offset: number = 0,
+  searchQuery?: string
 ): Promise<Document[]> => {
   // Convert the DocumentCategory enum to the Prisma enum value
   let prismaCategory;
@@ -175,6 +176,14 @@ export const getDocumentsByCategory = async (
   
   if (prismaLanguage) {
     where.language = prismaLanguage;
+  }
+  
+  // Add search functionality
+  if (searchQuery && searchQuery.trim() !== '') {
+    where.OR = [
+      { title: { contains: searchQuery, mode: 'insensitive' } },
+      { description: { contains: searchQuery, mode: 'insensitive' } }
+    ];
   }
   
   const documents = await prisma.document.findMany({
