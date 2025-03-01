@@ -1,17 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { AuthWrapper } from '../components/auth/AuthWrapper';
 
-const meta: Meta<typeof AuthWrapper> = {
+const meta = {
   title: 'Utilities/AuthWrapper',
   component: AuthWrapper,
   parameters: {
     layout: 'centered',
   },
   tags: ['autodocs'],
-};
+} satisfies Meta<typeof AuthWrapper>;
 
 export default meta;
-type Story = StoryObj<typeof AuthWrapper>;
+type Story = StoryObj<typeof meta>;
 
 const ProtectedContent = () => (
   <div className="p-4 bg-green-100 rounded-lg">

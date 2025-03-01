@@ -2,22 +2,8 @@ import type { Preview } from "@storybook/react";
 import "../src/app/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
-import { SessionProvider } from "next-auth/react";
 import { withI18nProvider } from "./mockI18n";
-
-// Initialize MSW
-// This is needed for the auth provider
-const mockSession = {
-  data: {
-    user: {
-      name: "Test User",
-      email: "test@example.com",
-      image: "https://avatars.githubusercontent.com/u/1234567?v=4",
-    },
-    expires: "2021-10-10T00:00:00.000Z",
-  },
-  status: "authenticated",
-};
+import { withSessionProvider } from "./mockNextAuth";
 
 const preview: Preview = {
   parameters: {
@@ -50,12 +36,11 @@ const preview: Preview = {
   },
   decorators: [
     withI18nProvider,
+    withSessionProvider,
     (Story) => (
-      <SessionProvider session={mockSession.data}>
-        <div className="p-4">
-          <Story />
-        </div>
-      </SessionProvider>
+      <div className="p-4">
+        <Story />
+      </div>
     ),
   ],
 };
