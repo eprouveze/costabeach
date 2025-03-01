@@ -18,8 +18,7 @@ const config: StorybookConfig = {
     options: {},
   },
   docs: {
-    autodocs: true,
-    defaultName: 'Documentation',
+    defaultName: 'Documentation'
   },
   staticDirs: ["../public"],
   webpackFinal: async (config) => {

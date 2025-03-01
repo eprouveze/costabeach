@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { trpc } from "@/lib/trpc/react";
+import { api } from "@/lib/trpc/react";
 import { DocumentCategory, Language } from "@/lib/types";
 
 export const useDocuments = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   
-  const utils = trpc.useUtils();
+  const utils = api.useUtils();
   
   // Get documents by category
   const useDocumentsByCategory = (
@@ -16,15 +16,19 @@ export const useDocuments = () => {
     limit: number = 10,
     offset: number = 0
   ) => {
-    return trpc.documents.getDocumentsByCategory.useQuery(
+    const query = api.documents.getDocumentsByCategory.useQuery(
       { category, language, limit, offset },
       {
         staleTime: 1000 * 60 * 5, // 5 minutes
-        onError: (error) => {
-          toast.error(`Error fetching documents: ${error.message}`);
-        },
       }
     );
+    
+    // Handle errors outside the query options
+    if (query.error) {
+      toast.error(`Error fetching documents: ${query.error.message}`);
+    }
+    
+    return query;
   };
   
   // Upload a document
@@ -46,7 +50,7 @@ export const useDocuments = () => {
     
     try {
       // Step 1: Get a signed URL for uploading
-      const getUploadUrlMutation = trpc.documents.getUploadUrl.useMutation();
+      const getUploadUrlMutation = api.documents.getUploadUrl.useMutation();
       const { uploadUrl, filePath } = await getUploadUrlMutation.mutateAsync({
         fileName: file.name,
         fileType: file.type,
@@ -89,7 +93,7 @@ export const useDocuments = () => {
       await uploadPromise;
       
       // Step 3: Create document record in database
-      const createDocumentMutation = trpc.documents.createDocument.useMutation();
+      const createDocumentMutation = api.documents.createDocument.useMutation();
       const document = await createDocumentMutation.mutateAsync({
         title,
         description,
@@ -98,7 +102,7 @@ export const useDocuments = () => {
         fileType: file.type,
         category,
         language,
-        published: true,
+        isPublished: true,
         parentDocumentId,
       });
       
@@ -121,10 +125,12 @@ export const useDocuments = () => {
   const downloadDocument = async (documentId: string, fileName: string) => {
     try {
       // Increment view count
-      await trpc.documents.incrementViewCount.mutate({ documentId });
+      const incrementViewCountMutation = api.documents.incrementViewCount.useMutation();
+      await incrementViewCountMutation.mutateAsync({ documentId });
       
       // Get download URL
-      const { downloadUrl } = await trpc.documents.getDownloadUrl.mutate({ documentId });
+      const getDownloadUrlMutation = api.documents.getDownloadUrl.useMutation();
+      const { downloadUrl } = await getDownloadUrlMutation.mutateAsync({ documentId });
       
       // Create a temporary link and trigger download
       const link = document.createElement("a");
@@ -145,7 +151,8 @@ export const useDocuments = () => {
   // Delete a document
   const deleteDocument = async (documentId: string, category: DocumentCategory) => {
     try {
-      await trpc.documents.deleteDocument.mutate({ documentId });
+      const deleteDocumentMutation = api.documents.deleteDocument.useMutation();
+      await deleteDocumentMutation.mutateAsync({ documentId });
       
       // Invalidate queries to refresh document lists
       utils.documents.getDocumentsByCategory.invalidate({ category });
@@ -167,4 +174,4 @@ export const useDocuments = () => {
     isUploading,
     uploadProgress,
   };
-}; 
+};

@@ -93,7 +93,7 @@ export const DocumentList = ({
   return (
     <div className={className}>
       <div className="grid grid-cols-1 gap-6">
-        {data.map((document) => (
+        {data.map((document: any) => (
           <DocumentCard
             key={document.id}
             document={document}

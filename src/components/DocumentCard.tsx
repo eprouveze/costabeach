@@ -66,10 +66,6 @@ export const DocumentCard = ({
         return "Société de Gestion";
       case DocumentCategory.LEGAL:
         return "Legal";
-      case DocumentCategory.FINANCIAL:
-        return "Financial";
-      case DocumentCategory.GENERAL:
-        return "General";
       default:
         return category;
     }

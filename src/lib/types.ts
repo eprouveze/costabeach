@@ -6,7 +6,8 @@ export enum DocumentCategory {
 
 export enum Language {
   FRENCH = 'french',
-  ARABIC = 'arabic'
+  ARABIC = 'arabic',
+  ENGLISH = 'english'
 }
 
 export enum Permission {

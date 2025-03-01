@@ -5,12 +5,19 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// This is the correct type for App Router route handlers in Next.js 15
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+// Use a different approach for the route handler
+export async function PUT(request: NextRequest) {
   try {
+    // Extract the ID from the URL
+    const id = request.nextUrl.pathname.split('/').pop();
+    
+    if (!id) {
+      return NextResponse.json(
+        { error: "Invalid ID" },
+        { status: 400 }
+      );
+    }
+
     const session = await getServerSession();
     
     // Check if user is authenticated and is an admin
@@ -37,7 +44,7 @@ export async function PUT(
 
     // Get the registration
     const registration = await prisma.ownerRegistration.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!registration) {
@@ -56,7 +63,7 @@ export async function PUT(
 
     // Update registration status
     const updatedRegistration = await prisma.ownerRegistration.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         status: action === "approve" ? "approved" : "rejected",
         notes: notes,

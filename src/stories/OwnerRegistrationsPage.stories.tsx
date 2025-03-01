@@ -65,6 +65,7 @@ const meta = {
     (Story) => (
       <SessionProvider session={{ 
         user: { 
+          id: "admin-user-id",
           email: "admin@costabeach.com",
           name: "Admin User",
           isAdmin: true 

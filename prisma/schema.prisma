@@ -121,6 +121,8 @@ enum DocumentCategory {
   comiteDeSuivi
   societeDeGestion
   legal
+  financial
+  general
 }
 
 model Document {

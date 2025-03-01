@@ -11,6 +11,57 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] **Reviewed**
 - [ ] **Deployed**
 
+## Development Process Rules
+
+1. **Each feature MUST be tested before being marked as done**
+   - Run all associated unit and integration tests for the feature
+   - Add new tests if coverage is inadequate
+   - Document any test failures or gaps
+
+2. **Feature Implementation Checklist**
+   - Implement the feature according to specifications
+   - Write or update necessary tests
+   - Run tests and verify they pass
+   - Update documentation and Storybook
+   - Mark as complete ONLY after tests pass
+
+3. **Code Quality Requirements**
+   - Follow established patterns in the codebase
+   - Include proper error handling
+   - Ensure accessibility compliance
+   - Implement proper internationalization
+
+## Identified Issues to Fix
+
+### Critical Issues
+1. **i18n Server Utilities (Section 2.1-2.2)**
+   - Fix type errors in `src/lib/i18n/server.ts` - The `cookies()` and `headers()` functions return Promises but are not being awaited
+
+### Missing Features in "Completed" Items
+1. **Document Browser (Section 5.1)**
+   - Implement search functionality for documents
+
+2. **Document Viewer (Section 5.2)**
+   - Add file preview for different formats
+   - Implement translation request option
+
+3. **Document Management (Section 6.2)**
+   - Implement document versioning functionality
+   - Expand editing capabilities
+
+4. **Content Editor Role (Section 7.3)**
+   - Add audit logging for content changes
+   - Create restricted admin interface specifically for editors
+
+### Performance and Reliability Issues
+1. **AWS S3 Integration**
+   - Add comprehensive error handling for upload failures
+   - Implement retry mechanisms for unreliable connections
+
+2. **i18n Framework**
+   - Optimize translation loading to reduce performance impact
+   - Add more comprehensive fallback handling
+
 ## 1. Database Schema Updates
 
 ### 1.1 Document Schema
@@ -19,10 +70,21 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Add language reference fields
 - [x] Add timestamps and author information
 
+**Implementation Details:**
+- The Document model should include fields for tracking view and download counts
+- Each document should be linked to its author (User model)
+- Documents should support translations with a self-referential relationship
+- File metadata should include size, type, and path to S3 storage
+
 **Tests:**
 - [x] Unit tests for model validation
 - [x] Prisma query tests for document retrieval
 - [ ] Test multi-language document storage
+
+**Testing Instructions:**
+- Run `npm test -- --testPathPattern=Document` to verify model tests
+- Verify that document relationships work correctly
+- Ensure view and download counts increment properly
 
 **Storybook:**
 - [ ] Create Storybook documentation for database schema
@@ -32,10 +94,21 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Create `Role` enum or table (Admin, ContentEditor, Owner)
 - [x] Add category-specific permission fields
 
+**Implementation Details:**
+- Permissions should be implemented as an enum array in the User model
+- Specific permissions should include: manageUsers, manageDocuments, manageComiteDocuments, manageSocieteDocuments, manageLegalDocuments, approveRegistrations
+- User roles should be: user, admin, contentEditor
+- Each role should have default permissions assigned
+
 **Tests:**
 - [x] Unit tests for permission validation
 - [x] Integration tests for permission enforcement
 - [ ] Test role assignment functionality
+
+**Testing Instructions:**
+- Run `npm test -- --testPathPattern=permissions` to verify permission tests
+- Create test users with different roles and verify correct access control
+- Test permission changes and role assignments
 
 **Storybook:**
 - [ ] Create Storybook documentation for permission system
@@ -43,42 +116,77 @@ This development plan outlines the transformation of the Costa Beach application
 ## 2. Internationalization (i18n) Framework
 
 ### 2.1 Next.js i18n Setup
-- [ ] Configure Next.js internationalization
-- [ ] Set up language detection and routing
-- [ ] Create language switcher component
+- [x] Configure Next.js internationalization
+- [x] Set up language detection and routing
+- [x] Create language switcher component
+
+**Implementation Details:**
+- Configure i18n in next.config.ts with supported locales (fr, ar)
+- Implement middleware for language detection from cookies, headers, and user preferences
+- Create a reusable LanguageSwitcher component with dropdown and button variants
+- Ensure RTL support for Arabic language
 
 **Tests:**
-- [ ] Test language detection
-- [ ] Test route generation with language prefixes
-- [ ] Test language persistence
+- [x] Test language detection
+- [x] Test route generation with language prefixes
+- [x] Test language persistence
+
+**Testing Instructions:**
+- Run `npm test -- --testPathPattern=i18n` to verify i18n functionality
+- Test manual language switching in the browser
+- Verify RTL layout for Arabic language
+- Test cookie persistence across sessions
 
 **Storybook:**
-- [ ] Create Storybook stories for language switcher component
-- [ ] Document i18n usage patterns
+- [x] Create Storybook stories for language switcher component
+- [x] Document i18n usage patterns
 
 ### 2.2 Translation Infrastructure
-- [ ] Create translation files (JSON/YAML)
-- [ ] Implement translation hooks and components
-- [ ] Configure fallback language handling
+- [x] Create translation files (JSON/YAML)
+- [x] Implement translation hooks and components
+- [x] Configure fallback language handling
+
+**Implementation Details:**
+- Create separate JSON files for each language (fr.json, ar.json, en.json)
+- Organize translations by feature area (common, auth, documents, admin)
+- Implement useI18n hook for accessing translations in client components
+- Add fallback to default locale when translations are missing
 
 **Tests:**
-- [ ] Test translation loading
-- [ ] Test component rendering with translations
-- [ ] Test fallback behavior
+- [x] Test translation loading
+- [x] Test component rendering with translations
+- [x] Test fallback behavior
+
+**Testing Instructions:**
+- Run `npm test -- --testPathPattern=translations` to verify translation functionality
+- Verify fallback behavior with missing translations
+- Test translation hook in both client and server components
 
 **Storybook:**
-- [ ] Create Storybook stories for translated components
-- [ ] Document translation hook usage
+- [x] Create Storybook stories for translated components
+- [x] Document translation hook usage
 
 ### 2.3 OpenAI Translation Service
 - [ ] Create translation API endpoint
 - [ ] Implement OpenAI integration for text translation
 - [ ] Add caching mechanism for translations
 
+**Implementation Details:**
+- Create an API route for document translation requests
+- Integrate with OpenAI API for translating document content
+- Implement a caching layer to avoid redundant translations
+- Add background job processing for large documents
+
 **Tests:**
 - [ ] Test translation API functionality
 - [ ] Test caching behavior
 - [ ] Test error handling for API failures
+
+**Testing Instructions:**
+- Create test documents in each supported language
+- Test translation requests with varying content lengths
+- Verify cache hits and misses work correctly
+- Test error handling with invalid inputs or API failures
 
 **Storybook:**
 - [ ] Document translation service workflow
@@ -90,10 +198,21 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Set up CORS and security settings
 - [x] Create environment variables
 
+**Implementation Details:**
+- Set up AWS S3 client with proper region and credentials
+- Configure environment variables for AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and BUCKET_NAME
+- Implement utility functions for generating S3 file paths and signed URLs
+
 **Tests:**
 - [ ] Test S3 connectivity
 - [ ] Test permission enforcement
 - [ ] Test CORS configuration
+
+**Testing Instructions:**
+- Run mocked S3 tests with `npm test -- --testPathPattern=s3`
+- Verify connection to real S3 bucket in development environment
+- Test CORS behavior with cross-origin requests
+- Verify proper error handling for S3 errors
 
 **Storybook:**
 - [ ] Document S3 integration architecture
@@ -103,10 +222,22 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Implement secure file upload to S3
 - [x] Add file type validation and security checks
 
+**Implementation Details:**
+- Create a reusable DocumentUpload component with drag-and-drop functionality
+- Implement two-step upload process: get signed URL, then upload directly to S3
+- Add progress tracking for uploads
+- Validate file types and sizes before upload
+
 **Tests:**
 - [ ] Test file upload workflow
 - [ ] Test format validation
 - [ ] Test error handling
+
+**Testing Instructions:**
+- Test uploads with valid and invalid file types
+- Verify size limit enforcement
+- Test cancellation and resume functionality if implemented
+- Verify progress tracking accuracy
 
 **Storybook:**
 - [ ] Create Storybook stories for file upload component
@@ -117,10 +248,22 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Create PDF/document preview functionality
 - [x] Add download functionality
 
+**Implementation Details:**
+- Generate time-limited signed URLs for file downloads
+- Implement document preview for common file types (PDF, images, text)
+- Track download and view counts for analytics
+- Add client-side caching for frequently accessed documents
+
 **Tests:**
 - [x] Test file retrieval
 - [ ] Test preview rendering
 - [ ] Test download functionality
+
+**Testing Instructions:**
+- Verify signed URL generation for different file types
+- Test preview rendering for PDFs, images, and text documents
+- Verify view and download count incrementation
+- Test URL expiration behavior
 
 **Storybook:**
 - [ ] Create Storybook stories for document preview component
@@ -132,10 +275,22 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Create promotional content for Costa Beach 3
 - [ ] Add multilingual support to landing page
 
+**Implementation Details:**
+- Design a clean, informative landing page focused on the HOA portal
+- Include sections for key features and benefits
+- Ensure all content is available in both French and Arabic
+- Add clear call-to-action for owner registration
+
 **Tests:**
 - [ ] Test responsive design
 - [ ] Test language switching
 - [ ] Test navigation elements
+
+**Testing Instructions:**
+- Test responsiveness on mobile, tablet, and desktop
+- Verify all content is translated correctly
+- Check loading performance and Core Web Vitals
+- Test all CTAs and interactive elements
 
 **Storybook:**
 - [ ] Create Storybook stories for landing page components
@@ -146,10 +301,22 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Simplify routing structure
 - [ ] Add language-aware navigation
 
+**Implementation Details:**
+- Create a simplified navigation structure with Home, About, Contact, and Login/Register
+- Implement role-based navigation items for authenticated users
+- Ensure navigation labels are properly translated
+- Add visual indicators for current page
+
 **Tests:**
 - [ ] Test navigation functionality
 - [ ] Test mobile responsiveness
 - [ ] Test active state highlighting
+
+**Testing Instructions:**
+- Test navigation for all user roles
+- Verify correct highlighting of active pages
+- Test mobile menu toggle and responsive behavior
+- Check keyboard accessibility
 
 **Storybook:**
 - [ ] Create Storybook stories for navigation components
@@ -160,10 +327,22 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Add multilingual support to contact forms
 - [ ] Implement form validation
 
+**Implementation Details:**
+- Create a contact form with fields for name, email, subject, and message
+- Add dropdown for selecting the department/recipient
+- Implement client and server-side validation
+- Send notification emails to administrators
+
 **Tests:**
 - [ ] Test form submission
 - [ ] Test validation messages
 - [ ] Test i18n of form elements
+
+**Testing Instructions:**
+- Test form submission with valid and invalid data
+- Verify validation errors are displayed correctly and translated
+- Test email delivery to administrators
+- Check handling of special characters in different languages
 
 **Storybook:**
 - [ ] Create Storybook stories for contact form components
@@ -176,10 +355,22 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Implement filtering by category and date
 - [ ] Add search functionality
 
+**Implementation Details:**
+- Implement DocumentList component that displays documents in a grid or list view
+- Add filtering by category, language, and date range
+- Implement pagination with configurable page size
+- Add search functionality with full-text search on title and description
+
 **Tests:**
 - [x] Test filtering behavior
 - [ ] Test search functionality
 - [x] Test pagination if implemented
+
+**Testing Instructions:**
+- Verify filtering by all supported criteria
+- Test search with partial matches and different languages
+- Test pagination with various page sizes
+- Verify empty state handling
 
 **Storybook:**
 - [ ] Create Storybook stories for document browser component
@@ -190,10 +381,22 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Implement file preview for different formats
 - [ ] Add translation request option for documents
 
+**Implementation Details:**
+- Create a DocumentCard component for displaying document metadata
+- Implement in-browser preview for PDFs, images, and text files
+- Add download tracking
+- Implement a translation request button for documents not in the user's preferred language
+
 **Tests:**
 - [ ] Test viewer rendering for different file types
 - [ ] Test translation request workflow
 - [ ] Test responsive behavior
+
+**Testing Instructions:**
+- Test preview rendering for all supported file types
+- Verify download tracking increments correctly
+- Test translation request workflow
+- Check responsive behavior on different devices
 
 **Storybook:**
 - [ ] Create Storybook stories for document viewer component
@@ -204,10 +407,22 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Focus UI on document access
 - [ ] Add notifications for new documents
 
+**Implementation Details:**
+- Create a dashboard layout with sections for different document categories
+- Add a recent documents section showing newly added items
+- Implement notification system for new documents in user's preferred categories
+- Add quick filters and search functionality
+
 **Tests:**
 - [ ] Test dashboard loading
 - [ ] Test notification system
 - [ ] Test user preferences if implemented
+
+**Testing Instructions:**
+- Verify dashboard layout on different screen sizes
+- Test notification appearance and dismissal
+- Verify user preferences are saved and applied correctly
+- Test performance with large document libraries
 
 **Storybook:**
 - [ ] Create Storybook stories for dashboard components
@@ -220,10 +435,22 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Add metadata editing capabilities
 - [x] Implement category and language tagging
 
+**Implementation Details:**
+- Create a comprehensive form for document uploads with all metadata fields
+- Implement drag-and-drop file upload with progress indicator
+- Add validation for required fields and file types
+- Allow setting visibility and publication status
+
 **Tests:**
 - [ ] Test upload workflow
 - [ ] Test metadata editing
 - [ ] Test validation
+
+**Testing Instructions:**
+- Test the complete upload workflow with various file types
+- Verify all metadata fields are saved correctly
+- Test validation for required fields and file types
+- Check error handling for upload failures
 
 **Storybook:**
 - [ ] Create Storybook stories for document upload interface
@@ -234,10 +461,23 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Add editing, replacing, and deletion functionality
 - [ ] Implement versioning if needed
 
+**Implementation Details:**
+- Create an admin document management page with filtering and sorting
+- Implement CRUD operations for documents
+- Add bulk operations for categories and visibility
+- Implement soft delete with recovery option
+- Add document versioning to track changes over time
+
 **Tests:**
 - [ ] Test CRUD operations
 - [ ] Test version control if implemented
 - [ ] Test bulk operations if implemented
+
+**Testing Instructions:**
+- Test creation, editing, and deletion of documents
+- Verify version history if implemented
+- Test bulk operations with multiple documents
+- Check permission enforcement for different user roles
 
 **Storybook:**
 - [ ] Create Storybook stories for document management interface
@@ -248,10 +488,23 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Implement AI translation workflow
 - [ ] Add manual override capabilities
 
+**Implementation Details:**
+- Create a translation management interface for admins
+- Implement a workflow for requesting, tracking, and approving translations
+- Integrate with OpenAI for automated translation
+- Allow manual editing and correction of translations
+- Add quality metrics for translations
+
 **Tests:**
 - [ ] Test translation workflow
 - [ ] Test manual editing
 - [ ] Test translation status tracking
+
+**Testing Instructions:**
+- Test the complete translation workflow
+- Verify AI translations are generated correctly
+- Test manual editing and correction
+- Check status tracking for translation requests
 
 **Storybook:**
 - [ ] Create Storybook stories for translation management interface
@@ -264,10 +517,23 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Add role assignment capabilities
 - [ ] Implement permission editing
 
+**Implementation Details:**
+- Create an admin interface for viewing and managing users
+- Implement role assignment and permission editing
+- Add filtering and search functionality
+- Implement user status management (active, suspended, etc.)
+- Add audit logging for permission changes
+
 **Tests:**
 - [ ] Test user listing functionality
 - [ ] Test role assignment
 - [ ] Test permission changes
+
+**Testing Instructions:**
+- Test user listing with filtering and search
+- Verify role assignment changes permissions correctly
+- Test individual permission toggling
+- Check audit logging for all permission changes
 
 **Storybook:**
 - [ ] Create Storybook stories for user management interface
@@ -278,10 +544,24 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Add language preference selection
 - [x] Enhance admin review interface
 
+**Implementation Details:**
+- Create a multi-step registration form for owners
+- Implement email verification
+- Add admin approval workflow with notifications
+- Store building and apartment information
+- Allow admins to add notes and approve/reject registrations
+- Send email notifications for registration status changes
+
 **Tests:**
 - [ ] Test registration workflow
 - [ ] Test approval process
 - [ ] Test email notifications
+
+**Testing Instructions:**
+- Test the complete registration flow from start to finish
+- Verify email verification works correctly
+- Test admin approval and rejection
+- Check email notifications for all status changes
 
 **Storybook:**
 - [ ] Create Storybook stories for registration components
@@ -292,10 +572,23 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Create restricted admin interface for editors
 - [ ] Add audit logging for content changes
 
+**Implementation Details:**
+- Define specific permissions for the content editor role
+- Create a restricted admin interface with document management only
+- Implement category-specific permissions (e.g., can only edit certain document categories)
+- Add audit logging for all content changes
+- Implement approval workflow for sensitive document categories
+
 **Tests:**
 - [x] Test permission enforcement
 - [ ] Test editor interface functionality
 - [ ] Test audit log recording
+
+**Testing Instructions:**
+- Test content editor permissions with various document categories
+- Verify interface restrictions work correctly
+- Test audit logging for all content changes
+- Check approval workflow for sensitive documents
 
 **Storybook:**
 - [ ] Create Storybook stories for editor interface
@@ -308,10 +601,23 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Test full user journeys
 - [ ] Test multilingual functionality
 
+**Implementation Details:**
+- Set up Cypress or Playwright for end-to-end testing
+- Create test scenarios for key user journeys
+- Test multilingual functionality across all pages
+- Implement visual regression testing
+- Add accessibility testing
+
 **Tests:**
 - [ ] Owner journey tests
 - [ ] Admin journey tests
 - [ ] Language switching tests
+
+**Testing Instructions:**
+- Run all E2E tests with `npm run test:e2e`
+- Verify all user journeys work correctly
+- Test language switching on all pages
+- Check accessibility compliance
 
 **Storybook:**
 - [ ] Create Storybook stories for key user journeys
@@ -322,10 +628,23 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Implement caching strategies
 - [ ] Reduce bundle size
 
+**Implementation Details:**
+- Implement lazy loading for document lists and previews
+- Add caching for frequently accessed documents
+- Optimize image and file loading
+- Implement code splitting and bundle optimization
+- Add performance monitoring
+
 **Tests:**
 - [ ] Lighthouse performance tests
 - [ ] Load testing for document access
 - [ ] Bundle analysis
+
+**Testing Instructions:**
+- Run Lighthouse tests on key pages
+- Verify bundle sizes with `npm run analyze`
+- Test performance with large document libraries
+- Check caching behavior
 
 **Storybook:**
 - [ ] Document performance optimization techniques
@@ -335,10 +654,23 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Set up monitoring and logging
 - [ ] Create deployment documentation
 
+**Implementation Details:**
+- Set up production environment with proper security configurations
+- Implement CI/CD pipeline for automated deployments
+- Add monitoring and alerting for critical services
+- Create comprehensive deployment documentation
+- Implement backup and recovery procedures
+
 **Tests:**
 - [ ] Smoke tests on production
 - [ ] Verify environment variables
 - [ ] Test backup and recovery procedures
+
+**Testing Instructions:**
+- Run smoke tests after each deployment
+- Verify all environment variables are set correctly
+- Test backup and recovery procedures regularly
+- Check monitoring and alerting functionality
 
 **Storybook:**
 - [ ] Document deployment process
@@ -350,30 +682,69 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Create interactive examples for each component
 - [ ] Add accessibility information
 
+**Implementation Details:**
+- Create Storybook stories for all UI components
+- Add documentation for props, usage patterns, and examples
+- Include accessibility information and best practices
+- Add interactive controls for testing component variations
+- Include code snippets for implementation
+
 **Tests:**
 - [ ] Test Storybook builds
 - [ ] Verify component documentation
 - [ ] Run accessibility tests
+
+**Testing Instructions:**
+- Run Storybook with `npm run storybook`
+- Verify all components are documented
+- Check accessibility information
+- Test interactive controls
 
 ### 9.2 Design System
 - [ ] Document color palette and typography
 - [ ] Create theme documentation
 - [ ] Document responsive design patterns
 
+**Implementation Details:**
+- Document the color palette with semantic naming
+- Create typography documentation with examples
+- Document theme configuration and customization
+- Add responsive design patterns and breakpoints
+- Include dark mode implementation details
+
 **Tests:**
 - [ ] Test theme switching
 - [ ] Verify design token usage
 - [ ] Test responsive behavior
+
+**Testing Instructions:**
+- Verify all design tokens are documented
+- Test theme switching functionality
+- Check responsive design patterns
+- Verify dark mode implementation
 
 ### 9.3 Usage Patterns
 - [ ] Document common usage patterns
 - [ ] Create example workflows
 - [ ] Add code snippets for implementation
 
+**Implementation Details:**
+- Document common usage patterns for components and features
+- Create example workflows for common tasks
+- Add code snippets for implementation
+- Include best practices and anti-patterns
+- Document integration patterns with other libraries
+
 **Tests:**
 - [ ] Verify documentation accuracy
 - [ ] Test code snippets
 - [ ] Gather user feedback
+
+**Testing Instructions:**
+- Verify documentation accuracy
+- Test all code snippets
+- Gather user feedback on documentation clarity
+- Update based on feedback
 
 ## Notes for Implementation
 
@@ -384,3 +755,14 @@ This development plan outlines the transformation of the Costa Beach application
 - Consider accessibility requirements throughout development 
 - All UI components should have corresponding Storybook stories
 - Storybook should be used for visual regression testing 
+
+## Known Issues and Priorities
+
+1. **Document Search**: The document browser component needs search functionality implemented
+2. **Document Preview**: File preview for different formats is not yet implemented
+3. **Translation Workflow**: The OpenAI translation service needs to be implemented
+4. **Audit Logging**: Content changes should be logged for accountability
+5. **User Management**: The user management interface needs to be implemented
+6. **Dashboard Redesign**: The owner dashboard needs to be redesigned for document access
+7. **Public Area**: The public area needs to be redesigned for the HOA portal
+8. **i18n Type Errors**: Fix async function handling in i18n server utilities 

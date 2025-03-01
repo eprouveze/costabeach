@@ -7,7 +7,7 @@ import { DocumentUpload } from "@/components/DocumentUpload";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function DocumentsPage() {
-  const [selectedCategory, setSelectedCategory] = useState<DocumentCategory>(DocumentCategory.GENERAL);
+  const [selectedCategory, setSelectedCategory] = useState<DocumentCategory>(DocumentCategory.COMITE_DE_SUIVI);
   const [selectedLanguage, setSelectedLanguage] = useState<Language | undefined>(undefined);
   const [showUploadForm, setShowUploadForm] = useState(false);
   
@@ -59,32 +59,22 @@ export default function DocumentsPage() {
           <DocumentUpload
             onSuccess={handleUploadSuccess}
             defaultCategory={selectedCategory}
-            defaultLanguage={selectedLanguage || Language.ENGLISH}
+            defaultLanguage={selectedLanguage || Language.FRENCH}
           />
         </div>
       )}
       
       <Tabs
-        defaultValue={DocumentCategory.GENERAL}
+        defaultValue={DocumentCategory.COMITE_DE_SUIVI}
         value={selectedCategory}
         onValueChange={handleCategoryChange}
         className="w-full"
       >
-        <TabsList className="grid grid-cols-2 md:grid-cols-5 mb-8">
-          <TabsTrigger value={DocumentCategory.GENERAL}>General</TabsTrigger>
+        <TabsList className="grid grid-cols-1 md:grid-cols-3 mb-8">
           <TabsTrigger value={DocumentCategory.COMITE_DE_SUIVI}>Comité de Suivi</TabsTrigger>
           <TabsTrigger value={DocumentCategory.SOCIETE_DE_GESTION}>Société de Gestion</TabsTrigger>
           <TabsTrigger value={DocumentCategory.LEGAL}>Legal</TabsTrigger>
-          <TabsTrigger value={DocumentCategory.FINANCIAL}>Financial</TabsTrigger>
         </TabsList>
-        
-        <TabsContent value={DocumentCategory.GENERAL}>
-          <DocumentList
-            category={DocumentCategory.GENERAL}
-            language={selectedLanguage}
-            limit={10}
-          />
-        </TabsContent>
         
         <TabsContent value={DocumentCategory.COMITE_DE_SUIVI}>
           <DocumentList
@@ -105,14 +95,6 @@ export default function DocumentsPage() {
         <TabsContent value={DocumentCategory.LEGAL}>
           <DocumentList
             category={DocumentCategory.LEGAL}
-            language={selectedLanguage}
-            limit={10}
-          />
-        </TabsContent>
-        
-        <TabsContent value={DocumentCategory.FINANCIAL}>
-          <DocumentList
-            category={DocumentCategory.FINANCIAL}
             language={selectedLanguage}
             limit={10}
           />

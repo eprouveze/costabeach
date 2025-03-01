@@ -77,19 +77,55 @@ export const createDocument = async (
   authorId: string,
   isPublished: boolean = true
 ): Promise<Document> => {
-  return prisma.document.create({
+  // Convert the DocumentCategory enum to the Prisma enum value
+  let prismaCategory;
+  switch (category) {
+    case DocumentCategory.COMITE_DE_SUIVI:
+      prismaCategory = 'comiteDeSuivi';
+      break;
+    case DocumentCategory.SOCIETE_DE_GESTION:
+      prismaCategory = 'societeDeGestion';
+      break;
+    case DocumentCategory.LEGAL:
+      prismaCategory = 'legal';
+      break;
+    default:
+      prismaCategory = 'comiteDeSuivi'; // Default fallback
+  }
+  
+  // Convert the Language enum to the Prisma enum value
+  let prismaLanguage;
+  switch (language) {
+    case Language.FRENCH:
+      prismaLanguage = 'french';
+      break;
+    case Language.ARABIC:
+      prismaLanguage = 'arabic';
+      break;
+    default:
+      prismaLanguage = 'french'; // Default fallback
+  }
+  
+  const document = await prisma.document.create({
     data: {
       title,
       description,
       filePath,
       fileSize,
       fileType,
-      category,
-      language,
+      category: prismaCategory as any,
+      language: prismaLanguage as any,
       authorId,
       isPublished,
     },
   });
+  
+  // Convert the document to the expected type
+  return {
+    ...document,
+    category: category,
+    language: language,
+  } as Document;
 };
 
 /**
@@ -101,13 +137,47 @@ export const getDocumentsByCategory = async (
   limit: number = 20,
   offset: number = 0
 ): Promise<Document[]> => {
-  const where: any = { category, isPublished: true };
-  
-  if (language) {
-    where.language = language;
+  // Convert the DocumentCategory enum to the Prisma enum value
+  let prismaCategory;
+  switch (category) {
+    case DocumentCategory.COMITE_DE_SUIVI:
+      prismaCategory = 'comiteDeSuivi';
+      break;
+    case DocumentCategory.SOCIETE_DE_GESTION:
+      prismaCategory = 'societeDeGestion';
+      break;
+    case DocumentCategory.LEGAL:
+      prismaCategory = 'legal';
+      break;
+    default:
+      prismaCategory = 'comiteDeSuivi'; // Default fallback
   }
   
-  return prisma.document.findMany({
+  // Convert the Language enum to the Prisma enum value if provided
+  let prismaLanguage;
+  if (language) {
+    switch (language) {
+      case Language.FRENCH:
+        prismaLanguage = 'french';
+        break;
+      case Language.ARABIC:
+        prismaLanguage = 'arabic';
+        break;
+      default:
+        prismaLanguage = 'french'; // Default fallback
+    }
+  }
+  
+  const where: any = { 
+    category: prismaCategory, 
+    isPublished: true 
+  };
+  
+  if (prismaLanguage) {
+    where.language = prismaLanguage;
+  }
+  
+  const documents = await prisma.document.findMany({
     where,
     orderBy: { createdAt: 'desc' },
     take: limit,
@@ -121,6 +191,13 @@ export const getDocumentsByCategory = async (
       },
     },
   });
+  
+  // Convert the documents to the expected type
+  return documents.map(doc => ({
+    ...doc,
+    category: category,
+    language: language || (doc.language === 'french' ? Language.FRENCH : Language.ARABIC),
+  })) as Document[];
 };
 
 /**

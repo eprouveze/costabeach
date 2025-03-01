@@ -11,6 +11,9 @@ import {
   canManageDocumentCategory
 } from "@/lib/utils/documents";
 import { DocumentCategory, Language, Permission } from "@/lib/types";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export const documentsRouter = createTRPCRouter({
   // Get a signed URL for uploading a document to S3
@@ -28,8 +31,14 @@ export const documentsRouter = createTRPCRouter({
       const { fileName, fileType, fileSize, category, language } = input;
       const userId = ctx.session.user.id;
       
+      // Get the user from the database to check permissions
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { permissions: true }
+      });
+      
       // Check if user has permission to upload documents in this category
-      const userPermissions = ctx.session.user.permissions || [];
+      const userPermissions = user?.permissions || [];
       if (!canManageDocumentCategory(userPermissions, category)) {
         throw new TRPCError({
           code: "FORBIDDEN",
@@ -67,15 +76,21 @@ export const documentsRouter = createTRPCRouter({
         fileType: z.string(),
         category: z.nativeEnum(DocumentCategory),
         language: z.nativeEnum(Language),
-        published: z.boolean().default(true),
+        isPublished: z.boolean().default(true),
         parentDocumentId: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
       
+      // Get the user from the database to check permissions
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { permissions: true }
+      });
+      
       // Check if user has permission to create documents in this category
-      const userPermissions = ctx.session.user.permissions || [];
+      const userPermissions = user?.permissions || [];
       if (!canManageDocumentCategory(userPermissions, input.category)) {
         throw new TRPCError({
           code: "FORBIDDEN",
@@ -84,10 +99,17 @@ export const documentsRouter = createTRPCRouter({
       }
       
       try {
-        const document = await createDocument({
-          ...input,
-          authorId: userId,
-        });
+        const document = await createDocument(
+          input.title,
+          input.description || null,
+          input.filePath,
+          input.fileSize,
+          input.fileType,
+          input.category,
+          input.language,
+          userId,
+          input.isPublished
+        );
         
         return document;
       } catch (error) {
@@ -145,7 +167,7 @@ export const documentsRouter = createTRPCRouter({
         await incrementDownloadCount(documentId);
         
         // Get document from database to get the file path
-        const document = await ctx.db.document.findUnique({
+        const document = await prisma.document.findUnique({
           where: { id: documentId },
           select: { filePath: true },
         });
@@ -203,13 +225,10 @@ export const documentsRouter = createTRPCRouter({
       const userId = ctx.session.user.id;
       
       try {
-        // Get document to check category and author
-        const document = await ctx.db.document.findUnique({
+        // Get the document to check category
+        const document = await prisma.document.findUnique({
           where: { id: documentId },
-          select: { 
-            category: true, 
-            authorId: true 
-          },
+          select: { category: true, authorId: true },
         });
         
         if (!document) {
@@ -219,11 +238,20 @@ export const documentsRouter = createTRPCRouter({
           });
         }
         
-        // Check if user has permission to delete this document
-        const userPermissions = ctx.session.user.permissions || [];
-        const isAuthor = document.authorId === userId;
+        // Get the user from the database to check permissions
+        const user = await prisma.user.findUnique({
+          where: { id: userId },
+          select: { permissions: true, isAdmin: true }
+        });
         
-        if (!isAuthor && !canManageDocumentCategory(userPermissions, document.category as DocumentCategory)) {
+        // Check if user has permission to delete this document
+        const userPermissions = user?.permissions || [];
+        const canDelete = 
+          user?.isAdmin || 
+          document.authorId === userId || 
+          canManageDocumentCategory(userPermissions, document.category as DocumentCategory);
+        
+        if (!canDelete) {
           throw new TRPCError({
             code: "FORBIDDEN",
             message: "You don't have permission to delete this document",
@@ -231,7 +259,7 @@ export const documentsRouter = createTRPCRouter({
         }
         
         // Delete document from database
-        await ctx.db.document.delete({
+        await prisma.document.delete({
           where: { id: documentId },
         });
         

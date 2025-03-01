@@ -15,8 +15,8 @@ interface DocumentUploadProps {
 
 export const DocumentUpload = ({
   onSuccess,
-  defaultCategory = DocumentCategory.GENERAL,
-  defaultLanguage = Language.ENGLISH,
+  defaultCategory = DocumentCategory.COMITE_DE_SUIVI,
+  defaultLanguage = Language.FRENCH,
 }: DocumentUploadProps) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
