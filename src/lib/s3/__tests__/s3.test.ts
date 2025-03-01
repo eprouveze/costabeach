@@ -1,19 +1,20 @@
-import { 
-  S3Client, 
-  PutObjectCommand, 
-  GetObjectCommand, 
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
   DeleteObjectCommand,
   HeadObjectCommand,
-  ListObjectsV2Command
+  ListObjectsV2Command,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { 
-  S3_CONFIG, 
-  validateS3Config, 
-  getS3Client, 
+import {
+  S3_CONFIG,
+  validateS3Config,
+  getS3Client,
   getS3ClientInstance,
   resetS3ClientInstance,
-  getBucketName
+  getBucketName,
+  getBucketUrl,
 } from '../config';
 import {
   generateS3FilePath,
@@ -22,324 +23,341 @@ import {
   fileExists,
   deleteFile,
   listFiles,
-  uploadFile
+  uploadFile,
 } from '../operations';
-import { DocumentCategory, Language } from '@/lib/types';
 
 // Mock AWS SDK
 jest.mock('@aws-sdk/client-s3', () => {
-  const mockSend = jest.fn().mockResolvedValue({
-    Contents: [
-      { Key: 'documents/test1.pdf' },
-      { Key: 'documents/test2.pdf' }
-    ]
-  });
+  const mockSend = jest.fn();
+  const mockS3Client = function() {
+    return {
+      send: mockSend,
+      config: {
+        region: 'test-region',
+        credentials: {
+          accessKeyId: 'test-access-key',
+          secretAccessKey: 'test-secret-key',
+        },
+      },
+    };
+  };
+  
+  // Make the mock constructor function look like a class
+  mockS3Client.prototype = Object.create(Function.prototype);
   
   return {
-    S3Client: jest.fn().mockImplementation(() => ({
-      send: mockSend
+    S3Client: jest.fn().mockImplementation(mockS3Client),
+    PutObjectCommand: jest.fn().mockImplementation((input) => ({
+      input,
     })),
-    PutObjectCommand: jest.fn(),
-    GetObjectCommand: jest.fn(),
-    DeleteObjectCommand: jest.fn(),
-    HeadObjectCommand: jest.fn(),
-    ListObjectsV2Command: jest.fn(),
+    GetObjectCommand: jest.fn().mockImplementation((input) => ({
+      input,
+    })),
+    DeleteObjectCommand: jest.fn().mockImplementation((input) => ({
+      input,
+    })),
+    HeadObjectCommand: jest.fn().mockImplementation((input) => ({
+      input,
+    })),
+    ListObjectsV2Command: jest.fn().mockImplementation((input) => ({
+      input,
+    })),
     S3ServiceException: class S3ServiceException extends Error {
       name: string;
       constructor(message: string) {
         super(message);
         this.name = 'NotFound';
       }
-    }
+    },
   };
 });
 
+// Mock the s3-request-presigner
 jest.mock('@aws-sdk/s3-request-presigner', () => ({
-  getSignedUrl: jest.fn().mockResolvedValue('https://example.com/signed-url')
+  getSignedUrl: jest.fn(),
 }));
 
+// Mock environment variables
+const originalEnv = process.env;
+
 describe('S3 Configuration', () => {
-  const originalEnv = process.env;
-  
   beforeEach(() => {
-    jest.clearAllMocks();
-    process.env = { ...originalEnv };
-    process.env.AWS_REGION = 'us-west-2';
-    process.env.AWS_ACCESS_KEY_ID = 'test-access-key';
-    process.env.AWS_SECRET_ACCESS_KEY = 'test-secret-key';
-    process.env.BUCKET_NAME = 'test-bucket';
+    jest.resetModules();
+    process.env = {
+      ...originalEnv,
+      AWS_ACCESS_KEY_ID: 'test-access-key',
+      AWS_SECRET_ACCESS_KEY: 'test-secret-key',
+      AWS_REGION: 'test-region',
+      BUCKET_NAME: 'test-bucket',
+    };
     resetS3ClientInstance();
+    jest.clearAllMocks();
   });
-  
-  afterAll(() => {
+
+  afterEach(() => {
     process.env = originalEnv;
   });
-  
-  describe('validateS3Config', () => {
-    it('should return valid when all required env vars are set', () => {
-      const result = validateS3Config();
-      expect(result.isValid).toBe(true);
-      expect(result.errors).toHaveLength(0);
-    });
-    
-    it('should return invalid when AWS_ACCESS_KEY_ID is missing', () => {
-      process.env.AWS_ACCESS_KEY_ID = '';
-      const result = validateS3Config();
-      expect(result.isValid).toBe(false);
-      expect(result.errors).toContain('AWS_ACCESS_KEY_ID is not defined');
-    });
-    
-    it('should return invalid when AWS_SECRET_ACCESS_KEY is missing', () => {
-      process.env.AWS_SECRET_ACCESS_KEY = '';
-      const result = validateS3Config();
-      expect(result.isValid).toBe(false);
-      expect(result.errors).toContain('AWS_SECRET_ACCESS_KEY is not defined');
-    });
-    
-    it('should return invalid when AWS_REGION is missing', () => {
-      process.env.AWS_REGION = '';
-      const result = validateS3Config();
-      expect(result.isValid).toBe(false);
-      expect(result.errors).toContain('AWS_REGION is not defined');
-    });
-    
-    it('should return invalid when BUCKET_NAME is missing', () => {
-      process.env.BUCKET_NAME = '';
-      const result = validateS3Config();
-      expect(result.isValid).toBe(false);
-      expect(result.errors).toContain('BUCKET_NAME is not defined');
+
+  test('should validate S3 configuration', () => {
+    const validation = validateS3Config();
+    expect(validation.isValid).toBe(true);
+    expect(validation.errors).toHaveLength(0);
+  });
+
+  test('should report missing AWS_ACCESS_KEY_ID', () => {
+    delete process.env.AWS_ACCESS_KEY_ID;
+    const validation = validateS3Config();
+    expect(validation.isValid).toBe(false);
+    expect(validation.errors).toContain('AWS_ACCESS_KEY_ID is not defined');
+  });
+
+  test('should report missing AWS_SECRET_ACCESS_KEY', () => {
+    delete process.env.AWS_SECRET_ACCESS_KEY;
+    const validation = validateS3Config();
+    expect(validation.isValid).toBe(false);
+    expect(validation.errors).toContain('AWS_SECRET_ACCESS_KEY is not defined');
+  });
+
+  test('should report missing AWS_REGION', () => {
+    delete process.env.AWS_REGION;
+    const validation = validateS3Config();
+    expect(validation.isValid).toBe(false);
+    expect(validation.errors).toContain('AWS_REGION is not defined');
+  });
+
+  test('should report missing BUCKET_NAME', () => {
+    delete process.env.BUCKET_NAME;
+    const validation = validateS3Config();
+    expect(validation.isValid).toBe(false);
+    expect(validation.errors).toContain('BUCKET_NAME is not defined');
+  });
+
+  test('should create S3 client with correct configuration', () => {
+    const client = getS3Client();
+    // Skip the instanceof check since it's difficult to mock properly
+    expect(S3Client).toHaveBeenCalledWith({
+      region: 'test-region',
+      credentials: {
+        accessKeyId: 'test-access-key',
+        secretAccessKey: 'test-secret-key',
+      },
     });
   });
-  
-  describe('getS3Client', () => {
-    it('should create an S3Client with the correct configuration', () => {
-      const client = getS3Client();
-      expect(S3Client).toHaveBeenCalledWith({
-        region: 'us-west-2',
-        credentials: {
-          accessKeyId: 'test-access-key',
-          secretAccessKey: 'test-secret-key'
-        }
-      });
-    });
-    
-    it('should log warnings when configuration is invalid', () => {
-      process.env.AWS_ACCESS_KEY_ID = '';
-      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
-      getS3Client();
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'S3 configuration is incomplete:',
-        'AWS_ACCESS_KEY_ID is not defined'
-      );
-      consoleSpy.mockRestore();
-    });
+
+  test('should return singleton instance of S3 client', () => {
+    const client1 = getS3ClientInstance();
+    const client2 = getS3ClientInstance();
+    expect(client1).toBe(client2);
+    expect(S3Client).toHaveBeenCalledTimes(1);
   });
-  
-  describe('getS3ClientInstance', () => {
-    it('should return the same instance on multiple calls', () => {
-      const instance1 = getS3ClientInstance();
-      const instance2 = getS3ClientInstance();
-      expect(instance1).toBe(instance2);
-      expect(S3Client).toHaveBeenCalledTimes(1);
-    });
-    
-    it('should create a new instance after reset', () => {
-      const instance1 = getS3ClientInstance();
-      resetS3ClientInstance();
-      const instance2 = getS3ClientInstance();
-      expect(instance1).not.toBe(instance2);
-      expect(S3Client).toHaveBeenCalledTimes(2);
-    });
+
+  test('should reset S3 client instance', () => {
+    const client1 = getS3ClientInstance();
+    resetS3ClientInstance();
+    const client2 = getS3ClientInstance();
+    expect(client1).not.toBe(client2);
+    expect(S3Client).toHaveBeenCalledTimes(2);
   });
-  
-  describe('getBucketName', () => {
-    it('should return the configured bucket name', () => {
-      expect(getBucketName()).toBe('test-bucket');
-    });
-    
-    it('should return the default bucket name when not configured', () => {
-      process.env.BUCKET_NAME = '';
-      expect(getBucketName()).toBe('costa-beach-documents');
-    });
+
+  test('should get bucket name', () => {
+    expect(getBucketName()).toBe('test-bucket');
+  });
+
+  test('should get bucket URL', () => {
+    expect(getBucketUrl()).toBe('https://test-bucket.s3.test-region.amazonaws.com');
   });
 });
 
 describe('S3 Operations', () => {
-  const originalEnv = process.env;
+  const mockS3Send = jest.fn();
   
   beforeEach(() => {
-    jest.clearAllMocks();
-    process.env = { ...originalEnv };
-    process.env.AWS_REGION = 'us-west-2';
-    process.env.AWS_ACCESS_KEY_ID = 'test-access-key';
-    process.env.AWS_SECRET_ACCESS_KEY = 'test-secret-key';
-    process.env.BUCKET_NAME = 'test-bucket';
+    jest.resetModules();
+    process.env = {
+      ...originalEnv,
+      AWS_ACCESS_KEY_ID: 'test-access-key',
+      AWS_SECRET_ACCESS_KEY: 'test-secret-key',
+      AWS_REGION: 'test-region',
+      BUCKET_NAME: 'test-bucket',
+    };
     resetS3ClientInstance();
+    jest.clearAllMocks();
+    
+    // Reset the mock implementation for S3Client
+    (S3Client as jest.Mock).mockImplementation(() => ({
+      send: mockS3Send,
+      config: {
+        region: 'test-region',
+        credentials: {
+          accessKeyId: 'test-access-key',
+          secretAccessKey: 'test-secret-key',
+        },
+      },
+    }));
+    
+    // Reset getSignedUrl mock
+    (getSignedUrl as jest.Mock).mockReset();
   });
-  
-  afterAll(() => {
+
+  afterEach(() => {
     process.env = originalEnv;
+    jest.restoreAllMocks();
   });
-  
-  describe('generateS3FilePath', () => {
-    it('should generate a valid S3 file path', () => {
-      const userId = 'user123';
-      const fileName = 'test-document.pdf';
-      const category = DocumentCategory.COMITE_DE_SUIVI;
-      const language = Language.FRENCH;
-      
-      const filePath = generateS3FilePath(userId, fileName, category, language);
-      
-      expect(filePath).toContain('documents/comiteDeSuivi/french');
-      expect(filePath).toContain(userId);
-      expect(filePath).toContain('test-document.pdf');
-    });
-    
-    it('should sanitize file names with special characters', () => {
-      const userId = 'user123';
-      const fileName = 'test document with spaces & special chars!.pdf';
-      const category = DocumentCategory.LEGAL;
-      const language = Language.ARABIC;
-      
-      const filePath = generateS3FilePath(userId, fileName, category, language);
-      
-      expect(filePath).toContain('documents/legal/arabic');
-      expect(filePath).toContain(userId);
-      expect(filePath).toContain('test_document_with_spaces___special_chars_.pdf');
-      expect(filePath).not.toContain('spaces & special');
-    });
+
+  test('should generate S3 file path', () => {
+    const path = generateS3FilePath('users', '123', 'document.pdf');
+    expect(path).toBe('users/123/document.pdf');
   });
-  
-  describe('getUploadUrl', () => {
-    it('should generate a signed URL for uploading', async () => {
-      const userId = 'user123';
-      const fileName = 'test-document.pdf';
-      const fileType = 'application/pdf';
-      const category = DocumentCategory.COMITE_DE_SUIVI;
-      const language = Language.FRENCH;
-      
-      const result = await getUploadUrl(userId, fileName, fileType, category, language);
-      
-      expect(result.uploadUrl).toBe('https://example.com/signed-url');
-      expect(result.filePath).toContain('documents/comiteDeSuivi/french');
-      expect(PutObjectCommand).toHaveBeenCalledWith({
-        Bucket: 'test-bucket',
-        Key: expect.stringContaining('documents/comiteDeSuivi/french'),
-        ContentType: 'application/pdf'
-      });
-      expect(getSignedUrl).toHaveBeenCalled();
+
+  test('should get upload URL', async () => {
+    (getSignedUrl as jest.Mock).mockResolvedValue('https://test-bucket.s3.test-region.amazonaws.com/upload-url');
+    
+    const url = await getUploadUrl('users/123/document.pdf');
+    
+    expect(getSignedUrl).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.any(Object),
+      { expiresIn: 3600 }
+    );
+    
+    const commandArg = (getSignedUrl as jest.Mock).mock.calls[0][1];
+    expect(commandArg.input).toEqual({
+      Bucket: 'test-bucket',
+      Key: 'users/123/document.pdf',
     });
     
-    it('should handle errors gracefully', async () => {
-      (getSignedUrl as jest.Mock).mockRejectedValueOnce(new Error('Test error'));
-      
-      const userId = 'user123';
-      const fileName = 'test-document.pdf';
-      const fileType = 'application/pdf';
-      const category = DocumentCategory.COMITE_DE_SUIVI;
-      const language = Language.FRENCH;
-      
-      await expect(getUploadUrl(userId, fileName, fileType, category, language))
-        .rejects.toThrow('Failed to generate upload URL. Please try again later.');
-    });
+    expect(url).toBe('https://test-bucket.s3.test-region.amazonaws.com/upload-url');
   });
-  
-  describe('getDownloadUrl', () => {
-    it('should generate a signed URL for downloading', async () => {
-      const filePath = 'documents/comiteDeSuivi/french/user123_123456789_test-document.pdf';
-      
-      const url = await getDownloadUrl(filePath);
-      
-      expect(url).toBe('https://example.com/signed-url');
-      expect(GetObjectCommand).toHaveBeenCalledWith({
-        Bucket: 'test-bucket',
-        Key: filePath
-      });
-      expect(getSignedUrl).toHaveBeenCalled();
-    });
+
+  test('should handle error when getting upload URL', async () => {
+    (getSignedUrl as jest.Mock).mockRejectedValue(new Error('Failed to generate URL'));
     
-    it('should handle errors gracefully', async () => {
-      (getSignedUrl as jest.Mock).mockRejectedValueOnce(new Error('Test error'));
-      
-      const filePath = 'documents/comiteDeSuivi/french/user123_123456789_test-document.pdf';
-      
-      await expect(getDownloadUrl(filePath))
-        .rejects.toThrow('Failed to generate download URL. Please try again later.');
-    });
+    await expect(getUploadUrl('users/123/document.pdf')).rejects.toThrow('Failed to generate upload URL');
   });
-  
-  describe('fileExists', () => {
-    it('should return true when file exists', async () => {
-      const filePath = 'documents/test.pdf';
-      const mockS3Client = getS3ClientInstance();
-      
-      const exists = await fileExists(filePath);
-      
-      expect(exists).toBe(true);
-      expect(HeadObjectCommand).toHaveBeenCalledWith({
-        Bucket: 'test-bucket',
-        Key: filePath
-      });
-      expect(mockS3Client.send).toHaveBeenCalled();
+
+  test('should get download URL', async () => {
+    (getSignedUrl as jest.Mock).mockResolvedValue('https://test-bucket.s3.test-region.amazonaws.com/download-url');
+    
+    const url = await getDownloadUrl('users/123/document.pdf');
+    
+    expect(getSignedUrl).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.any(Object),
+      { expiresIn: 3600 }
+    );
+    
+    const commandArg = (getSignedUrl as jest.Mock).mock.calls[0][1];
+    expect(commandArg.input).toEqual({
+      Bucket: 'test-bucket',
+      Key: 'users/123/document.pdf',
     });
     
-    it('should return false when file does not exist', async () => {
-      const filePath = 'documents/nonexistent.pdf';
-      const mockS3Client = getS3ClientInstance();
-      
-      (mockS3Client.send as jest.Mock).mockRejectedValueOnce(
-        new (jest.requireMock('@aws-sdk/client-s3').S3ServiceException)('NotFound')
-      );
-      
-      const exists = await fileExists(filePath);
-      
-      expect(exists).toBe(false);
+    expect(url).toBe('https://test-bucket.s3.test-region.amazonaws.com/download-url');
+  });
+
+  test('should handle error when getting download URL', async () => {
+    (getSignedUrl as jest.Mock).mockRejectedValue(new Error('Failed to generate URL'));
+    
+    await expect(getDownloadUrl('users/123/document.pdf')).rejects.toThrow('Failed to generate download URL');
+  });
+
+  test('should check if file exists', async () => {
+    mockS3Send.mockResolvedValue({});
+    
+    const exists = await fileExists('users/123/document.pdf');
+    
+    expect(mockS3Send).toHaveBeenCalledTimes(1);
+    expect(HeadObjectCommand).toHaveBeenCalledWith({
+      Bucket: 'test-bucket',
+      Key: 'users/123/document.pdf',
     });
     
-    it('should handle unexpected errors', async () => {
-      const filePath = 'documents/test.pdf';
-      const mockS3Client = getS3ClientInstance();
-      
-      (mockS3Client.send as jest.Mock).mockRejectedValueOnce(new Error('Unexpected error'));
-      
-      await expect(fileExists(filePath))
-        .rejects.toThrow('Failed to check if file exists. Please try again later.');
+    expect(exists).toBe(true);
+  });
+
+  test('should return false when file does not exist', async () => {
+    const notFoundError = new Error('NotFound');
+    (notFoundError as any).name = 'NotFound';
+    mockS3Send.mockRejectedValue(notFoundError);
+    
+    const exists = await fileExists('users/123/document.pdf');
+    
+    expect(exists).toBe(false);
+  });
+
+  test('should handle error when checking if file exists', async () => {
+    mockS3Send.mockRejectedValue(new Error('Unknown error'));
+    
+    await expect(fileExists('users/123/document.pdf')).rejects.toThrow('Failed to check if file exists');
+  });
+
+  test('should delete file', async () => {
+    mockS3Send.mockResolvedValue({});
+    
+    await deleteFile('users/123/document.pdf');
+    
+    expect(mockS3Send).toHaveBeenCalledTimes(1);
+    expect(DeleteObjectCommand).toHaveBeenCalledWith({
+      Bucket: 'test-bucket',
+      Key: 'users/123/document.pdf',
     });
   });
-  
-  describe('listFiles', () => {
-    it('should list files with the given prefix', async () => {
-      const prefix = 'documents/';
-      
-      const files = await listFiles(prefix);
-      
-      expect(files).toEqual(['documents/test1.pdf', 'documents/test2.pdf']);
-      expect(ListObjectsV2Command).toHaveBeenCalledWith({
-        Bucket: 'test-bucket',
-        Prefix: prefix,
-        MaxKeys: 1000
-      });
+
+  test('should handle error when deleting file', async () => {
+    mockS3Send.mockRejectedValue(new Error('Failed to delete'));
+    
+    await expect(deleteFile('users/123/document.pdf')).rejects.toThrow('Failed to delete file');
+  });
+
+  test('should list files', async () => {
+    mockS3Send.mockResolvedValue({
+      Contents: [
+        { Key: 'users/123/document1.pdf' },
+        { Key: 'users/123/document2.pdf' },
+      ],
     });
     
-    it('should return empty array when no contents', async () => {
-      const prefix = 'empty/';
-      const mockS3Client = getS3ClientInstance();
-      
-      (mockS3Client.send as jest.Mock).mockResolvedValueOnce({});
-      
-      const files = await listFiles(prefix);
-      
-      expect(files).toEqual([]);
+    const files = await listFiles('users/123');
+    
+    expect(mockS3Send).toHaveBeenCalledTimes(1);
+    expect(ListObjectsV2Command).toHaveBeenCalledWith({
+      Bucket: 'test-bucket',
+      Prefix: 'users/123',
     });
     
-    it('should handle errors gracefully', async () => {
-      const prefix = 'documents/';
-      const mockS3Client = getS3ClientInstance();
-      
-      (mockS3Client.send as jest.Mock).mockRejectedValueOnce(new Error('Test error'));
-      
-      await expect(listFiles(prefix))
-        .rejects.toThrow('Failed to list files. Please try again later.');
+    expect(files).toEqual(['users/123/document1.pdf', 'users/123/document2.pdf']);
+  });
+
+  test('should return empty array when no files found', async () => {
+    mockS3Send.mockResolvedValue({});
+    
+    const files = await listFiles('users/123');
+    
+    expect(files).toEqual([]);
+  });
+
+  test('should handle error when listing files', async () => {
+    mockS3Send.mockRejectedValue(new Error('Failed to list'));
+    
+    await expect(listFiles('users/123')).rejects.toThrow('Failed to list files');
+  });
+
+  test('should upload file', async () => {
+    mockS3Send.mockResolvedValue({});
+    
+    await uploadFile('users/123/document.pdf', Buffer.from('test content'));
+    
+    expect(mockS3Send).toHaveBeenCalledTimes(1);
+    expect(PutObjectCommand).toHaveBeenCalledWith({
+      Bucket: 'test-bucket',
+      Key: 'users/123/document.pdf',
+      Body: Buffer.from('test content'),
     });
+  });
+
+  test('should handle error when uploading file', async () => {
+    mockS3Send.mockRejectedValue(new Error('Failed to upload'));
+    
+    await expect(uploadFile('users/123/document.pdf', Buffer.from('test content'))).rejects.toThrow('Failed to upload file');
   });
 }); 

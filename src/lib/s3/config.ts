@@ -6,29 +6,37 @@ const DEFAULT_BUCKET_NAME = 'costa-beach-documents';
 
 // Environment variables for S3 configuration
 export const S3_CONFIG = {
-  region: process.env.AWS_REGION || DEFAULT_REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
-  bucketName: process.env.BUCKET_NAME || DEFAULT_BUCKET_NAME,
+  get region() {
+    return process.env.AWS_REGION || DEFAULT_REGION;
+  },
+  get accessKeyId() {
+    return process.env.AWS_ACCESS_KEY_ID || '';
+  },
+  get secretAccessKey() {
+    return process.env.AWS_SECRET_ACCESS_KEY || '';
+  },
+  get bucketName() {
+    return process.env.BUCKET_NAME || DEFAULT_BUCKET_NAME;
+  },
 };
 
 // Validate S3 configuration
 export const validateS3Config = (): { isValid: boolean; errors: string[] } => {
   const errors: string[] = [];
 
-  if (!S3_CONFIG.accessKeyId) {
+  if (!process.env.AWS_ACCESS_KEY_ID) {
     errors.push('AWS_ACCESS_KEY_ID is not defined');
   }
 
-  if (!S3_CONFIG.secretAccessKey) {
+  if (!process.env.AWS_SECRET_ACCESS_KEY) {
     errors.push('AWS_SECRET_ACCESS_KEY is not defined');
   }
 
-  if (!S3_CONFIG.region) {
+  if (!process.env.AWS_REGION) {
     errors.push('AWS_REGION is not defined');
   }
 
-  if (!S3_CONFIG.bucketName) {
+  if (!process.env.BUCKET_NAME) {
     errors.push('BUCKET_NAME is not defined');
   }
 
@@ -79,5 +87,7 @@ export const getBucketName = (): string => {
 
 // Get S3 bucket URL
 export const getBucketUrl = (): string => {
-  return `https://${S3_CONFIG.bucketName}.s3.${S3_CONFIG.region}.amazonaws.com`;
+  const bucketName = getBucketName();
+  const region = S3_CONFIG.region;
+  return `https://${bucketName}.s3.${region}.amazonaws.com`;
 }; 

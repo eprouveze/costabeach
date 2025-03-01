@@ -26,7 +26,8 @@
     "home": "Accueil",
     "documents": "Documents",
     "users": "Utilisateurs",
-    "admin": "Administration"
+    "admin": "Administration",
+    "contact": "Contact"
   },
   "auth": {
     "email": "Email",
@@ -95,5 +96,50 @@
       "contentEditor": "Éditeur de contenu",
       "user": "Utilisateur"
     }
+  },
+  "landing": {
+    "heroTitle": "Portail de l'Association des Propriétaires de Costa Beach 3",
+    "heroSubtitle": "Accédez aux documents importants, aux informations communautaires et aux ressources de l'association dans un espace sécurisé.",
+    "registerCTA": "S'inscrire en tant que Propriétaire",
+    "contactCTA": "Nous Contacter",
+    "featuresTitle": "Fonctionnalités du Portail",
+    "features": {
+      "documents": {
+        "title": "Accès aux Documents",
+        "description": "Accédez à tous les documents de l'association, procès-verbaux de réunions et informations juridiques en un seul endroit sécurisé."
+      },
+      "community": {
+        "title": "Informations Communautaires",
+        "description": "Restez informé des événements communautaires, des règles et des annonces importantes."
+      },
+      "notifications": {
+        "title": "Notifications Importantes",
+        "description": "Recevez des notifications opportunes concernant l'entretien, les réunions et autres mises à jour importantes."
+      },
+      "information": {
+        "title": "Support Multilingue",
+        "description": "Accédez à toutes les informations dans votre langue préférée grâce à notre support multilingue."
+      }
+    },
+    "aboutTitle": "À propos de Costa Beach 3",
+    "aboutDescription1": "Costa Beach 3 est une communauté résidentielle de premier plan située à Casablanca, au Maroc. Notre portail d'association offre aux propriétaires un accès facile aux informations et documents importants.",
+    "aboutDescription2": "En tant que propriétaire, vous aurez accès aux procès-verbaux des réunions, aux rapports financiers, aux calendriers d'entretien et à d'autres informations communautaires importantes via ce portail sécurisé.",
+    "learnMoreCTA": "En Savoir Plus",
+    "footer": {
+      "description": "Le portail officiel de l'association des propriétaires pour la communauté résidentielle Costa Beach 3.",
+      "quickLinks": "Liens Rapides",
+      "contact": "Coordonnées",
+      "copyright": "Tous droits réservés."
+    }
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "description": "Vous avez des questions sur l'association des propriétaires de Costa Beach 3 ? Contactez-nous et nous vous répondrons dans les plus brefs délais.",
+    "name": "Nom",
+    "email": "Email",
+    "subject": "Sujet",
+    "message": "Message",
+    "submit": "Envoyer le Message",
+    "messageSent": "Votre message a été envoyé avec succès !"
   }
 } 

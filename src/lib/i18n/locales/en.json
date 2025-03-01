@@ -26,7 +26,53 @@
     "login": "Login",
     "register": "Register",
     "welcome": "Welcome",
-    "language": "Language"
+    "language": "Language",
+    "contact": "Contact"
+  },
+  "landing": {
+    "heroTitle": "Costa Beach 3 Homeowners Association Portal",
+    "heroSubtitle": "Access important documents, community information, and HOA resources in one secure place.",
+    "registerCTA": "Register as Owner",
+    "contactCTA": "Contact Us",
+    "featuresTitle": "Portal Features",
+    "features": {
+      "documents": {
+        "title": "Document Access",
+        "description": "Access all HOA documents, meeting minutes, and legal information in one secure location."
+      },
+      "community": {
+        "title": "Community Information",
+        "description": "Stay informed about community events, rules, and important announcements."
+      },
+      "notifications": {
+        "title": "Important Notifications",
+        "description": "Receive timely notifications about maintenance, meetings, and other important updates."
+      },
+      "information": {
+        "title": "Multilingual Support",
+        "description": "Access all information in your preferred language with our multilingual support."
+      }
+    },
+    "aboutTitle": "About Costa Beach 3",
+    "aboutDescription1": "Costa Beach 3 is a premier residential community located in Casablanca, Morocco. Our HOA portal provides owners with easy access to important information and documents.",
+    "aboutDescription2": "As a homeowner, you'll have access to meeting minutes, financial reports, maintenance schedules, and other important community information through this secure portal.",
+    "learnMoreCTA": "Learn More",
+    "footer": {
+      "description": "The official homeowners association portal for Costa Beach 3 residential community.",
+      "quickLinks": "Quick Links",
+      "contact": "Contact Information",
+      "copyright": "All rights reserved."
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "description": "Have questions about Costa Beach 3 HOA? Get in touch with us and we'll get back to you as soon as possible.",
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "submit": "Send Message",
+    "messageSent": "Your message has been sent successfully!"
   },
   "auth": {
     "email": "Email",
