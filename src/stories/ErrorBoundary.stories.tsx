@@ -42,8 +42,6 @@ export const WithCustomFallback: Story = {
 export const WithErrorHandler: Story = {
   args: {
     children: <BuggyComponent />,
-    onError: fn((error, errorInfo) => {
-      console.log('Caught an error:', error, errorInfo);
-    }),
+    onError: fn(),
   },
 }; 

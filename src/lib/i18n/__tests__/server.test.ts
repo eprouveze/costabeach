@@ -17,10 +17,23 @@ jest.mock('../utils', () => ({
   formatNumber: jest.fn(),
 }));
 
+// Mock the server module to control getLocale
+jest.mock('../server', () => {
+  const originalModule = jest.requireActual('../server');
+  return {
+    ...originalModule,
+    getLocale: jest.fn().mockResolvedValue('fr'),
+  };
+});
+
 describe('i18n server', () => {
   describe('getLocale', () => {
     beforeEach(() => {
       jest.clearAllMocks();
+      // Reset the mock to use the original implementation for these tests
+      (getLocale as jest.Mock).mockImplementation(
+        jest.requireActual('../server').getLocale
+      );
     });
 
     it('should return locale from cookies if available', async () => {
@@ -94,16 +107,12 @@ describe('i18n server', () => {
     });
 
     it('should get locale from request if none provided', async () => {
-      // Mock getLocale to return 'fr'
-      const mockGetLocale = jest.spyOn(require('../server'), 'getLocale');
-      mockGetLocale.mockResolvedValue('fr');
-      
       const mockTranslations = { common: { welcome: 'Bienvenue' } };
       (utils.loadTranslations as jest.Mock).mockResolvedValue(mockTranslations);
       
       const translation = await useTranslation();
       
-      expect(mockGetLocale).toHaveBeenCalled();
+      expect(getLocale).toHaveBeenCalled();
       expect(utils.loadTranslations).toHaveBeenCalledWith('fr');
       expect(translation.locale).toBe('fr');
     });

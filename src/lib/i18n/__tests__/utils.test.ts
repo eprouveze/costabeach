@@ -69,11 +69,20 @@ describe('i18n utils', () => {
     it('should format dates according to locale', () => {
       const date = new Date('2023-01-15');
       
+      // Save original Intl
+      const originalIntl = global.Intl;
+      
       // Mock Intl.DateTimeFormat
       const mockFormat = jest.fn().mockReturnValue('15 janvier 2023');
-      global.Intl.DateTimeFormat = jest.fn().mockImplementation(() => ({
-        format: mockFormat,
-      }));
+      global.Intl = {
+        ...originalIntl,
+        DateTimeFormat: jest.fn().mockImplementation(() => ({
+          format: mockFormat,
+        })) as any,
+      };
+      
+      // Add supportedLocalesOf to the mock
+      (global.Intl.DateTimeFormat as any).supportedLocalesOf = jest.fn().mockReturnValue(['fr']);
 
       const result = formatDate(date, 'fr' as Locale);
       
@@ -83,6 +92,9 @@ describe('i18n utils', () => {
         day: 'numeric',
       });
       expect(result).toBe('15 janvier 2023');
+      
+      // Restore original Intl
+      global.Intl = originalIntl;
     });
   });
 
@@ -90,16 +102,28 @@ describe('i18n utils', () => {
     it('should format numbers according to locale', () => {
       const number = 1234.56;
       
+      // Save original Intl
+      const originalIntl = global.Intl;
+      
       // Mock Intl.NumberFormat
       const mockFormat = jest.fn().mockReturnValue('1 234,56');
-      global.Intl.NumberFormat = jest.fn().mockImplementation(() => ({
-        format: mockFormat,
-      }));
+      global.Intl = {
+        ...originalIntl,
+        NumberFormat: jest.fn().mockImplementation(() => ({
+          format: mockFormat,
+        })) as any,
+      };
+      
+      // Add supportedLocalesOf to the mock
+      (global.Intl.NumberFormat as any).supportedLocalesOf = jest.fn().mockReturnValue(['fr']);
 
       const result = formatNumber(number, 'fr' as Locale);
       
       expect(global.Intl.NumberFormat).toHaveBeenCalledWith('fr');
       expect(result).toBe('1 234,56');
+      
+      // Restore original Intl
+      global.Intl = originalIntl;
     });
   });
 }); 

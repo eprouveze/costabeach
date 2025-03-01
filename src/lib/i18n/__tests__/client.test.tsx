@@ -1,5 +1,6 @@
-import React from 'react';
+import * as React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import { I18nProvider, useI18n } from '../client';
 import { loadTranslations } from '../utils';
 import { defaultLocale } from '../config';
