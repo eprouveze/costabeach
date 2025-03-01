@@ -20,7 +20,7 @@ export function useSession() {
 
 // Mock the SessionProvider component
 export function SessionProvider({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return children;
 }
 
 // Mock the signIn function
@@ -52,6 +52,9 @@ export function getProviders() {
 }
 
 // Create a decorator that wraps stories with the SessionProvider
-export const withSessionProvider = (Story: React.ComponentType) => (
-  <Story />
-); 
+export const withSessionProvider = (Story: React.ComponentType) => {
+  const StoryWithSession = () => {
+    return React.createElement(Story, null);
+  };
+  return React.createElement(StoryWithSession, null);
+}; 
