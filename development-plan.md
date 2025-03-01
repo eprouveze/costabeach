@@ -68,9 +68,10 @@ This development plan outlines the transformation of the Costa Beach application
    - Add comprehensive error handling for upload failures
    - Implement retry mechanisms for unreliable connections
 
-2. **i18n Framework**
+2. **i18n Framework** ✅
    - Optimize translation loading to reduce performance impact
    - Add more comprehensive fallback handling
+   - Fixed test suite to properly mock router and translations
 
 ## 1. Database Schema Updates
 
@@ -151,7 +152,7 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Create Storybook stories for language switcher component
 - [x] Document i18n usage patterns
 
-### 2.2 Translation Infrastructure
+### 2.2 Translation Infrastructure ✅
 - [x] Create translation files (JSON/YAML)
 - [x] Implement translation hooks and components
 - [x] Configure fallback language handling
