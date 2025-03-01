@@ -1,6 +1,5 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
-import { Markdown } from '@storybook/blocks';
 
 const meta: Meta = {
   title: 'Documentation/Translation Service',
@@ -10,80 +9,95 @@ export default meta;
 
 export const Documentation = () => {
   return (
-    <Markdown>{`
-# Translation Service
+    <div className="prose max-w-none">
+      <h1>Translation Service</h1>
 
-The Costa Beach HOA Portal includes a comprehensive translation service that allows for seamless translation of documents and text between supported languages.
+      <p>The Costa Beach HOA Portal includes a comprehensive translation service that allows for seamless translation of documents and text between supported languages.</p>
 
-## Supported Languages
+      <h2>Supported Languages</h2>
 
-The system currently supports the following languages:
+      <p>The system currently supports the following languages:</p>
 
-- French (primary language)
-- Arabic
-- English
+      <ul>
+        <li>French (primary language)</li>
+        <li>Arabic</li>
+        <li>English</li>
+      </ul>
 
-## Features
+      <h2>Features</h2>
 
-### Text Translation
+      <h3>Text Translation</h3>
 
-The translation service can translate arbitrary text between any of the supported languages. This is useful for:
+      <p>The translation service can translate arbitrary text between any of the supported languages. This is useful for:</p>
 
-- Translating user-generated content
-- Providing on-the-fly translations of UI elements
-- Supporting multilingual communication
+      <ul>
+        <li>Translating user-generated content</li>
+        <li>Providing on-the-fly translations of UI elements</li>
+        <li>Supporting multilingual communication</li>
+      </ul>
 
-### Document Translation
+      <h3>Document Translation</h3>
 
-Documents can be translated between languages with the following capabilities:
+      <p>Documents can be translated between languages with the following capabilities:</p>
 
-- Automatic translation of document content for text-based files
-- Translation of document metadata (title, description) for all file types
-- Background processing for large documents
-- Caching to avoid redundant translations
+      <ul>
+        <li>Automatic translation of document content for text-based files</li>
+        <li>Translation of document metadata (title, description) for all file types</li>
+        <li>Background processing for large documents</li>
+        <li>Caching to avoid redundant translations</li>
+      </ul>
 
-## Technical Implementation
+      <h2>Technical Implementation</h2>
 
-### DeepL Integration
+      <h3>DeepL Integration</h3>
 
-The translation service uses DeepL's professional translation API to provide high-quality translations. The system:
+      <p>The translation service uses DeepL's professional translation API to provide high-quality translations. The system:</p>
 
-1. Uses DeepL's advanced neural machine translation technology
-2. Maintains formatting and structure of the original text
-3. Optimizes for natural, fluent translations in the target language
-4. Supports formality levels for appropriate tone in different contexts
+      <ol>
+        <li>Uses DeepL's advanced neural machine translation technology</li>
+        <li>Maintains formatting and structure of the original text</li>
+        <li>Optimizes for natural, fluent translations in the target language</li>
+        <li>Supports formality levels for appropriate tone in different contexts</li>
+      </ol>
 
-### DeepL API Parameters
+      <h3>DeepL API Parameters</h3>
 
-The translation service leverages DeepL's API parameters for optimal results:
+      <p>The translation service leverages DeepL's API parameters for optimal results:</p>
 
-- **formality**: Controls the level of formal language in the output (options: 'more', 'less', or 'default')
-- **context**: Can provide additional context to influence translation results without being translated itself
+      <ul>
+        <li><strong>formality</strong>: Controls the level of formal language in the output (options: 'more', 'less', or 'default')</li>
+        <li><strong>context</strong>: Can provide additional context to influence translation results without being translated itself</li>
+      </ul>
 
-### Caching System
+      <h3>Caching System</h3>
 
-To improve performance and reduce API costs, the translation service implements a caching system:
+      <p>To improve performance and reduce API costs, the translation service implements a caching system:</p>
 
-- Translations are cached in memory for 24 hours
-- Cache keys are based on the source text and target language
-- Long texts are truncated in the cache key to avoid memory issues
+      <ul>
+        <li>Translations are cached in memory for 24 hours</li>
+        <li>Cache keys are based on the source text and target language</li>
+        <li>Long texts are truncated in the cache key to avoid memory issues</li>
+      </ul>
 
-### Background Processing
+      <h3>Background Processing</h3>
 
-Document translations are processed in the background using Inngest:
+      <p>Document translations are processed in the background using Inngest:</p>
 
-1. User requests a document translation
-2. System checks if translation already exists
-3. If not, a background job is created
-4. User can check translation status while processing
-5. Once complete, the translated document is available for viewing
+      <ol>
+        <li>User requests a document translation</li>
+        <li>System checks if translation already exists</li>
+        <li>If not, a background job is created</li>
+        <li>User can check translation status while processing</li>
+        <li>Once complete, the translated document is available for viewing</li>
+      </ol>
 
-## Usage Examples
+      <h2>Usage Examples</h2>
 
-### Translating Text (Client-Side)
+      <h3>Translating Text (Client-Side)</h3>
 
-\`\`\`tsx
-import { trpc } from '@/lib/trpc/react';
+      <pre className="bg-gray-100 p-4 rounded-md overflow-auto">
+        <code className="language-tsx">
+{`import { trpc } from '@/lib/trpc/react';
 
 // In a React component
 const { mutate, isLoading } = trpc.translations.translateText.useMutation();
@@ -98,13 +112,15 @@ const handleTranslate = () => {
       console.log(data.translatedText); // "Bonjour le monde"
     }
   });
-};
-\`\`\`
+};`}
+        </code>
+      </pre>
 
-### Requesting Document Translation
+      <h3>Requesting Document Translation</h3>
 
-\`\`\`tsx
-import { trpc } from '@/lib/trpc/react';
+      <pre className="bg-gray-100 p-4 rounded-md overflow-auto">
+        <code className="language-tsx">
+{`import { trpc } from '@/lib/trpc/react';
 
 // In a React component
 const { mutate } = trpc.translations.requestDocumentTranslation.useMutation();
@@ -124,13 +140,15 @@ const handleRequestTranslation = (documentId) => {
       }
     }
   });
-};
-\`\`\`
+};`}
+        </code>
+      </pre>
 
-### Checking Translation Status
+      <h3>Checking Translation Status</h3>
 
-\`\`\`tsx
-import { trpc } from '@/lib/trpc/react';
+      <pre className="bg-gray-100 p-4 rounded-md overflow-auto">
+        <code className="language-tsx">
+{`import { trpc } from '@/lib/trpc/react';
 
 // In a React component
 const { data, refetch } = trpc.translations.getTranslationStatus.useQuery({
@@ -144,32 +162,37 @@ useEffect(() => {
     const interval = setInterval(refetch, 5000);
     return () => clearInterval(interval);
   }
-}, [data, refetch]);
-\`\`\`
+}, [data, refetch]);`}
+        </code>
+      </pre>
 
-### Controlling Translation Formality
+      <h3>Controlling Translation Formality</h3>
 
-For languages that support formality levels (like German, French, Italian, etc.), you can specify the desired level:
+      <p>For languages that support formality levels (like German, French, Italian, etc.), you can specify the desired level:</p>
 
-\`\`\`tsx
-// In the translations router
+      <pre className="bg-gray-100 p-4 rounded-md overflow-auto">
+        <code className="language-tsx">
+{`// In the translations router
 const translatedText = await translateText(
   text,
   sourceLanguage,
   targetLanguage,
   { formality: 'more' } // For more formal translations
-);
-\`\`\`
+);`}
+        </code>
+      </pre>
 
-## Best Practices
+      <h2>Best Practices</h2>
 
-1. **Avoid Unnecessary Translations**: Only translate content when needed to reduce API costs
-2. **Use Polling for Status Updates**: When waiting for document translations, use polling rather than webhooks
-3. **Handle Errors Gracefully**: Always provide fallback options if translations fail
-4. **Consider Content Size**: Very large documents may take longer to translate
-5. **Respect Rate Limits**: Be mindful of DeepL API rate limits when implementing translation features
-6. **Use Appropriate Formality**: Select the right formality level based on the content type and audience
-7. **Provide Context**: When translating domain-specific content, provide context to improve accuracy
-    `}</Markdown>
+      <ol>
+        <li><strong>Avoid Unnecessary Translations</strong>: Only translate content when needed to reduce API costs</li>
+        <li><strong>Use Polling for Status Updates</strong>: When waiting for document translations, use polling rather than webhooks</li>
+        <li><strong>Handle Errors Gracefully</strong>: Always provide fallback options if translations fail</li>
+        <li><strong>Consider Content Size</strong>: Very large documents may take longer to translate</li>
+        <li><strong>Respect Rate Limits</strong>: Be mindful of DeepL API rate limits when implementing translation features</li>
+        <li><strong>Use Appropriate Formality</strong>: Select the right formality level based on the content type and audience</li>
+        <li><strong>Provide Context</strong>: When translating domain-specific content, provide context to improve accuracy</li>
+      </ol>
+    </div>
   );
 }; 
