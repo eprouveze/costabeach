@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { fn } from '@storybook/test';
 import { ErrorBoundary } from '../components/error/ErrorBoundary';
 
 const meta: Meta<typeof ErrorBoundary> = {
@@ -41,8 +42,8 @@ export const WithCustomFallback: Story = {
 export const WithErrorHandler: Story = {
   args: {
     children: <BuggyComponent />,
-    onError: (error, errorInfo) => {
+    onError: fn((error, errorInfo) => {
       console.log('Caught an error:', error, errorInfo);
-    },
+    }),
   },
 }; 
