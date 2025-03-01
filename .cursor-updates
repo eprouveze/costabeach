@@ -51,3 +51,4 @@
 - Fixed i18n test suite by resolving async/await issues in server.ts, updating client tests to match URL format for locale changes, and ensuring proper translation function testing in server tests.
 - Updated development plan to mark section 2.2 Translation Infrastructure as completed and added a note about fixing the i18n test suite.
 - Completed section 2.3 OpenAI Translation Service by implementing text translation, document translation, caching mechanism, and Inngest background jobs; fixed type issues in translations utility and Inngest configuration to ensure all tests pass successfully.
+- Migrated from OpenAI to DeepL Translation API, implementing formality and context parameters, updating tests, and ensuring all translation functionality works correctly with comprehensive test coverage.

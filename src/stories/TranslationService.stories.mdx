@@ -35,13 +35,21 @@ Documents can be translated between languages with the following capabilities:
 
 ## Technical Implementation
 
-### OpenAI Integration
+### DeepL Integration
 
-The translation service uses OpenAI's advanced language models to provide high-quality translations. The system:
+The translation service uses DeepL's professional translation API to provide high-quality translations. The system:
 
-1. Uses the O1 model for optimal translation quality
+1. Uses DeepL's advanced neural machine translation technology
 2. Maintains formatting and structure of the original text
 3. Optimizes for natural, fluent translations in the target language
+4. Supports formality levels for appropriate tone in different contexts
+
+### DeepL API Parameters
+
+The translation service leverages DeepL's API parameters for optimal results:
+
+- **formality**: Controls the level of formal language in the output (options: 'more', 'less', or 'default')
+- **context**: Can provide additional context to influence translation results without being translated itself
 
 ### Caching System
 
@@ -130,10 +138,26 @@ useEffect(() => {
 }, [data, refetch]);
 ```
 
+### Controlling Translation Formality
+
+For languages that support formality levels (like German, French, Italian, etc.), you can specify the desired level:
+
+```tsx
+// In the translations router
+const translatedText = await translateText(
+  text,
+  sourceLanguage,
+  targetLanguage,
+  { formality: 'more' } // For more formal translations
+);
+```
+
 ## Best Practices
 
 1. **Avoid Unnecessary Translations**: Only translate content when needed to reduce API costs
 2. **Use Polling for Status Updates**: When waiting for document translations, use polling rather than webhooks
 3. **Handle Errors Gracefully**: Always provide fallback options if translations fail
 4. **Consider Content Size**: Very large documents may take longer to translate
-5. **Respect Rate Limits**: Be mindful of OpenAI API rate limits when implementing translation features 
+5. **Respect Rate Limits**: Be mindful of DeepL API rate limits when implementing translation features
+6. **Use Appropriate Formality**: Select the right formality level based on the content type and audience
+7. **Provide Context**: When translating domain-specific content, provide context to improve accuracy 

@@ -16,10 +16,12 @@ export const translationsRouter = createTRPCRouter({
         text: z.string(),
         sourceLanguage: z.nativeEnum(Language),
         targetLanguage: z.nativeEnum(Language),
+        formality: z.enum(['default', 'more', 'less']).optional(),
+        context: z.string().optional(),
       })
     )
     .mutation(async ({ input }) => {
-      const { text, sourceLanguage, targetLanguage } = input;
+      const { text, sourceLanguage, targetLanguage, formality, context } = input;
       
       if (sourceLanguage === targetLanguage) {
         return { translatedText: text };
@@ -29,7 +31,8 @@ export const translationsRouter = createTRPCRouter({
         const translatedText = await translateText(
           text,
           sourceLanguage,
-          targetLanguage
+          targetLanguage,
+          { formality, context }
         );
         
         return { translatedText };
