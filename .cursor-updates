@@ -38,3 +38,4 @@
 - Updated development plan with Git workflow instructions, including guidelines for creating commits after completing sections with successful tests and Storybook stories.
 - Fixed document-related tests by simplifying useDocuments.test.tsx, recreating DocumentPreview.test.tsx with proper mocks, and ensuring all tests pass successfully with proper skipping of problematic tests.
 - Completed section 1.1 Document Schema implementation with proper database model, tests, and Storybook documentation.
+- Completed section 1.2 User Permissions Schema implementation with enhanced tests for role assignment and permission management, and added comprehensive Storybook documentation for the permission system.

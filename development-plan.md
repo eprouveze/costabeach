@@ -99,7 +99,7 @@ This development plan outlines the transformation of the Costa Beach application
 **Storybook:**
 - [x] Create Storybook documentation for database schema
 
-### 1.2 User Permissions Schema
+### 1.2 User Permissions Schema ✅
 - [x] Update `User` model with permission fields
 - [x] Create `Role` enum or table (Admin, ContentEditor, Owner)
 - [x] Add category-specific permission fields
@@ -113,7 +113,7 @@ This development plan outlines the transformation of the Costa Beach application
 **Tests:**
 - [x] Unit tests for permission validation
 - [x] Integration tests for permission enforcement
-- [ ] Test role assignment functionality
+- [x] Test role assignment functionality
 
 **Testing Instructions:**
 - Run `npm test -- --testPathPattern=permissions` to verify permission tests
@@ -121,7 +121,7 @@ This development plan outlines the transformation of the Costa Beach application
 - Test permission changes and role assignments
 
 **Storybook:**
-- [ ] Create Storybook documentation for permission system
+- [x] Create Storybook documentation for permission system
 
 ## 2. Internationalization (i18n) Framework
 
