@@ -266,6 +266,8 @@ This development plan outlines the transformation of the Costa Beach application
 - Implement document preview for common file types (PDF, images, text)
 - Track download and view counts for analytics
 - Add client-side caching for frequently accessed documents
+- Created custom mock implementation for Storybook to ensure proper rendering without tRPC context
+- Optimized component display for desktop and mobile viewing
 
 **Tests:**
 - [x] Test file retrieval
@@ -280,6 +282,8 @@ This development plan outlines the transformation of the Costa Beach application
 
 **Storybook:**
 - [x] Create Storybook stories for document preview component
+- [x] Enhanced document preview stories with proper desktop layout and responsive sizing
+- [x] Implemented mock component for Storybook that doesn't require tRPC context
 
 ## 4. Public Area Redesign
 
