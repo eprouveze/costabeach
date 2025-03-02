@@ -61,23 +61,23 @@ export default function ContactPage() {
 
   return (
     <PublicLandingTemplate>
-      {/* Contact Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+      {/* Contact Hero Section - Smaller and more focused */}
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-10">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold mb-4">{t('contact.title')}</h1>
-          <p className="text-xl max-w-2xl mx-auto">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">{t('contact.title')}</h1>
+          <p className="text-lg md:text-xl max-w-2xl mx-auto">
             {t('contact.description')}
           </p>
         </div>
       </section>
       
-      {/* Contact Form and Info Section */}
-      <section className="py-12 px-4">
-        <div className="max-w-5xl mx-auto">
+      {/* Contact Form and Info Section - Moved higher up */}
+      <section className="py-8 px-4">
+        <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Contact Form */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
-              <h2 className="text-2xl font-semibold mb-6">{t("contact.submit")}</h2>
+            {/* Contact Form - Made more prominent */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 border-t-4 border-blue-600">
+              <h2 className="text-2xl font-bold mb-6 text-blue-700 dark:text-blue-400">{t("contact.submit")}</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium mb-2">
@@ -181,46 +181,46 @@ export default function ContactPage() {
 
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-300"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition duration-300 text-lg"
                 >
                   {t("contact.submit")}
                 </button>
               </form>
             </div>
 
-            {/* Contact Information */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
-              <h2 className="text-2xl font-semibold mb-6">{t("contact.contactInfo.title")}</h2>
+            {/* Contact Information - Enhanced styling */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+              <h2 className="text-2xl font-bold mb-6 text-blue-700 dark:text-blue-400">{t("contact.contactInfo.title")}</h2>
               
               <div className="space-y-6">
                 <div className="flex items-start">
-                  <MapPin className="w-5 h-5 text-blue-600 mt-1 mr-3" />
+                  <MapPin className="w-6 h-6 text-blue-600 mt-1 mr-3" />
                   <div>
-                    <p className="font-medium">Address</p>
+                    <p className="font-medium text-lg">Adresse</p>
                     <p className="text-gray-600 dark:text-gray-300">{t("contact.contactInfo.address")}</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start">
-                  <Phone className="w-5 h-5 text-blue-600 mt-1 mr-3" />
+                  <Phone className="w-6 h-6 text-blue-600 mt-1 mr-3" />
                   <div>
-                    <p className="font-medium">Phone</p>
+                    <p className="font-medium text-lg">Téléphone</p>
                     <p className="text-gray-600 dark:text-gray-300">{t("contact.contactInfo.phone")}</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start">
-                  <Mail className="w-5 h-5 text-blue-600 mt-1 mr-3" />
+                  <Mail className="w-6 h-6 text-blue-600 mt-1 mr-3" />
                   <div>
-                    <p className="font-medium">Email</p>
+                    <p className="font-medium text-lg">Email</p>
                     <p className="text-gray-600 dark:text-gray-300">{t("contact.contactInfo.email")}</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start">
-                  <Clock className="w-5 h-5 text-blue-600 mt-1 mr-3" />
+                  <Clock className="w-6 h-6 text-blue-600 mt-1 mr-3" />
                   <div>
-                    <p className="font-medium">Hours</p>
+                    <p className="font-medium text-lg">Heures d'ouverture</p>
                     <p className="text-gray-600 dark:text-gray-300">{t("contact.contactInfo.hours")}</p>
                   </div>
                 </div>

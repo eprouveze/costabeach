@@ -397,8 +397,11 @@ This development plan outlines the transformation of the Costa Beach application
 
 **Testing Instructions:**
 - Verify hero section appearance on mobile, tablet, and desktop devices
-- Test language switching and ensure all text elements are properly translated
-- Verify CTA buttons lead to correct destinations
+
+**Note on Development Server 404 Errors:**
+- Development server may show 404 errors for static assets (CSS, JS chunks) during hot reloading
+- These errors are expected during development and don't affect production builds
+- If encountering persistent 404s, clearing the Next.js cache (.next directory) resolves the issue
 
 **Storybook:**
 - [x] Create Storybook stories for hero section component

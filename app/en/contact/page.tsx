@@ -196,7 +196,7 @@ export default function ContactPage() {
                 <div className="flex items-start">
                   <MapPin className="w-6 h-6 text-blue-600 mt-1 mr-3" />
                   <div>
-                    <p className="font-medium text-lg">العنوان</p>
+                    <p className="font-medium text-lg">Address</p>
                     <p className="text-gray-600 dark:text-gray-300">{t("contact.contactInfo.address")}</p>
                   </div>
                 </div>
@@ -204,7 +204,7 @@ export default function ContactPage() {
                 <div className="flex items-start">
                   <Phone className="w-6 h-6 text-blue-600 mt-1 mr-3" />
                   <div>
-                    <p className="font-medium text-lg">الهاتف</p>
+                    <p className="font-medium text-lg">Phone</p>
                     <p className="text-gray-600 dark:text-gray-300">{t("contact.contactInfo.phone")}</p>
                   </div>
                 </div>
@@ -212,7 +212,7 @@ export default function ContactPage() {
                 <div className="flex items-start">
                   <Mail className="w-6 h-6 text-blue-600 mt-1 mr-3" />
                   <div>
-                    <p className="font-medium text-lg">البريد الإلكتروني</p>
+                    <p className="font-medium text-lg">Email</p>
                     <p className="text-gray-600 dark:text-gray-300">{t("contact.contactInfo.email")}</p>
                   </div>
                 </div>
@@ -220,7 +220,7 @@ export default function ContactPage() {
                 <div className="flex items-start">
                   <Clock className="w-6 h-6 text-blue-600 mt-1 mr-3" />
                   <div>
-                    <p className="font-medium text-lg">ساعات العمل</p>
+                    <p className="font-medium text-lg">Office Hours</p>
                     <p className="text-gray-600 dark:text-gray-300">{t("contact.contactInfo.hours")}</p>
                   </div>
                 </div>
