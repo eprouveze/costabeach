@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import ContactPage from "../../app/contact/page";
+import ContactPage from "../../app/fr/contact/page";
 
 const meta = {
   title: "Pages/ContactPage",
