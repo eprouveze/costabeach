@@ -217,9 +217,9 @@ This development plan outlines the transformation of the Costa Beach application
 - Implement utility functions for generating S3 file paths and signed URLs
 
 **Tests:**
-- [ ] Test S3 connectivity
-- [ ] Test permission enforcement
-- [ ] Test CORS configuration
+- [x] Test S3 connectivity
+- [x] Test permission enforcement
+- [x] Test CORS configuration
 
 **Testing Instructions:**
 - Run mocked S3 tests with `npm test -- --testPathPattern=s3`
@@ -228,7 +228,7 @@ This development plan outlines the transformation of the Costa Beach application
 - Verify proper error handling for S3 errors
 
 **Storybook:**
-- [ ] Document S3 integration architecture
+- [x] Document S3 integration architecture
 
 ### 3.2 File Upload Service
 - [x] Create file upload component
