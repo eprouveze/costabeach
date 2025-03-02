@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import PublicLandingTemplate from '@/components/templates/PublicLandingTemplate';
 import { useI18n } from '@/lib/i18n/client';
@@ -9,12 +9,20 @@ import { Phone, Mail, MapPin, Clock } from "lucide-react";
 export const dynamic = 'force-dynamic';
 
 export default function ContactPage() {
-  const { t } = useI18n();
+  const { t, locale, isLoading } = useI18n();
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [name, setName] = useState('');
   const [subject, setSubject] = useState('');
   const [department, setDepartment] = useState('');
+  
+  // Debug translations
+  useEffect(() => {
+    console.log('[ContactPage] Current locale:', locale);
+    console.log('[ContactPage] Is loading translations:', isLoading);
+    console.log('[ContactPage] Contact title translation:', t('contact.title'));
+    console.log('[ContactPage] Contact description translation:', t('contact.description'));
+  }, [locale, isLoading, t]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +45,19 @@ export default function ContactPage() {
     setSubject('');
     setDepartment('');
   };
+
+  // Show loading state while translations are loading
+  if (isLoading) {
+    return (
+      <PublicLandingTemplate>
+        <div className="py-12 px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <p className="text-xl">{t('common.loading')}</p>
+          </div>
+        </div>
+      </PublicLandingTemplate>
+    );
+  }
 
   return (
     <PublicLandingTemplate>

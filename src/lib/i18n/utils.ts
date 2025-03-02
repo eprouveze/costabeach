@@ -1,7 +1,22 @@
 import { Locale, defaultLocale, locales } from './config';
 
-// Initialize cache for translations to avoid repeated fetching
-const translationCache: Record<Locale, Record<string, any>> = {} as Record<Locale, Record<string, any>>;
+// Import all translation files directly
+import frTranslations from './locales/fr.json';
+import arTranslations from './locales/ar.json';
+import enTranslations from './locales/en.json';
+
+// Map of all translations
+const allTranslations: Record<Locale, Record<string, any>> = {
+  fr: frTranslations,
+  ar: arTranslations,
+  en: enTranslations,
+};
+
+// Cache for translations to avoid repeated fetching
+const translationCache: Record<Locale, Record<string, Record<string, any>>> = {} as Record<
+  Locale,
+  Record<string, Record<string, any>>
+>;
 
 // Initialize cache for each locale
 locales.forEach(locale => {
@@ -9,50 +24,54 @@ locales.forEach(locale => {
 });
 
 /**
- * Load translations for a specific locale and namespace
+ * Load translations for a specific locale
  */
 export async function loadTranslations(
-  locale: Locale, 
+  locale: Locale,
   namespace: string = 'common'
 ): Promise<Record<string, any>> {
+  console.log(`[loadTranslations] Loading translations for locale: ${locale}, namespace: ${namespace}`);
+  
   // Return from cache if available and has the namespace
   if (
     translationCache[locale] && 
     translationCache[locale][namespace]
   ) {
+    console.log(`[loadTranslations] Using cached translations for ${locale}`);
     return translationCache[locale][namespace];
   }
   
   try {
-    // Dynamic import of the translation file
-    const translations = await import(`./locales/${locale}.json`).then(
-      (module) => module.default
-    );
+    // Get translations from the pre-imported object
+    const translations = allTranslations[locale];
     
-    // Cache the translations
+    if (!translations) {
+      throw new Error(`No translations found for locale: ${locale}`);
+    }
+    
+    console.log(`[loadTranslations] Successfully loaded translations for ${locale}`);
+    console.log(`[loadTranslations] Translation keys:`, Object.keys(translations));
+    
+    // Initialize cache for this locale if it doesn't exist
     if (!translationCache[locale]) {
       translationCache[locale] = {};
     }
     
-    // If namespace is specified, return only that namespace
-    if (namespace !== 'common' && translations[namespace]) {
-      translationCache[locale][namespace] = translations[namespace];
-      return translations[namespace];
-    }
-    
-    // Otherwise cache and return all translations
-    translationCache[locale] = translations;
+    // Cache the translations
+    translationCache[locale][namespace] = translations;
     return translations;
   } catch (error) {
-    console.error(`Failed to load translations for ${locale}:`, error);
+    console.error(`[loadTranslations] Error loading translations for ${locale}:`, error);
     
     // Fallback to default locale if the requested locale fails
     if (locale !== defaultLocale) {
+      console.log(`[loadTranslations] Falling back to default locale: ${defaultLocale}`);
       console.warn(`Falling back to ${defaultLocale} translations`);
       return loadTranslations(defaultLocale, namespace);
     }
     
     // Return empty object if even default locale fails
+    console.error(`[loadTranslations] Failed to load even default locale translations`);
     return {};
   }
 }

@@ -88,3 +88,4 @@
 - Added missing translation keys for "auth.signIn" and "auth.signUp" in French and Arabic locale files.
 - Fixed Storybook error by removing react-toastify dependency from ContactForm story and marked section 4.3 (Contact Page Update) as completed in the development plan.
 - Created locale-specific contact pages for French and Arabic to properly display translated content instead of showing i18n tags.
+- Added missing contact page translations for French and Arabic locales, including department selection, contact information, and validation messages to ensure complete internationalization of the contact page.
