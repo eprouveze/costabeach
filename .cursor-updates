@@ -77,5 +77,5 @@
 - Fixed the 404 error on the home page by updating middleware to redirect the root path to include the default locale and creating locale-specific page files for each supported language (French, English, Arabic).
 - Fixed development server errors by removing the Turbopack flag from the dev script in package.json, which was causing ENOENT errors with temporary build manifest files.
 - Fixed language selector not working by resolving middleware conflicts and improving the locale switching implementation in the i18n client.
-- Fixed 404 error when switching languages by updating the root page.tsx to properly redirect to the default locale, ensuring consistent behavior across all language routes.
 - Fixed 404 error when switching languages by updating the root page.tsx to properly redirect to the default locale and adding the dynamic flag to all language-specific pages to ensure they're always server-rendered. Also improved the root layout to properly handle language and direction attributes based on the current locale.
+- Fixed persistent 404 errors by completely redesigning the middleware and routing strategy: simplified middleware to handle locale detection and redirection in a more direct way, fixed root page redirect, and ensured all language routes are properly configured with the dynamic flag. This ensures consistent behavior across all language routes.
