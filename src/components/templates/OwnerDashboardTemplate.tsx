@@ -1,7 +1,7 @@
 "use client";
 
 import { signOut } from "next-auth/react";
-import { Building2, Calendar, CreditCard, LayoutDashboard, LogOut, MessageSquare, Settings, Users } from "lucide-react";
+import { Bell, FileText, Folder, Home, LogOut, Search, Settings, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useI18n } from "@/lib/i18n/client";
@@ -11,12 +11,11 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
   const { t } = useI18n();
 
   const sidebarLinks = [
-    { href: "/owner-dashboard", label: t("navigation.dashboard"), icon: LayoutDashboard },
-    { href: "/owner-dashboard/properties", label: t("navigation.properties"), icon: Building2 },
-    { href: "/owner-dashboard/bookings", label: t("navigation.bookings"), icon: Calendar },
-    { href: "/owner-dashboard/guests", label: t("navigation.guests"), icon: Users },
-    { href: "/owner-dashboard/messages", label: t("navigation.messages"), icon: MessageSquare },
-    { href: "/owner-dashboard/payments", label: t("navigation.payments"), icon: CreditCard },
+    { href: "/owner-dashboard", label: t("navigation.dashboard"), icon: Home },
+    { href: "/owner-dashboard/documents", label: t("navigation.documents"), icon: FileText },
+    { href: "/owner-dashboard/categories", label: t("navigation.categories"), icon: Folder },
+    { href: "/owner-dashboard/notifications", label: t("navigation.notifications"), icon: Bell },
+    { href: "/owner-dashboard/profile", label: t("navigation.profile"), icon: User },
     { href: "/owner-dashboard/settings", label: t("navigation.settings"), icon: Settings },
   ];
 
@@ -64,6 +63,16 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
         <header className="bg-white border-b border-gray-200">
           <div className="px-4 h-16 flex items-center justify-between">
             <h1 className="text-xl font-semibold text-gray-800">{t("navigation.dashboard")}</h1>
+            
+            {/* Search Bar */}
+            <div className="relative w-64">
+              <input
+                type="text"
+                placeholder={t("common.searchDocuments")}
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+            </div>
           </div>
         </header>
 

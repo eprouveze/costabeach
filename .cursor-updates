@@ -109,3 +109,4 @@
 - Fixed Storybook issues by updating the mock ToastContainer component and removing incompatible addon-styling dependency.
 - Fixed DocumentTranslationWorkflow test by properly mocking the document with correct Language enum values and implementing error handling.
 - Fixed LanguageSwitcher component tests by adding proper mock for the Globe icon, updating the useI18n mock implementation, and implementing click outside functionality to close the dropdown menu.
+- Fixed "useI18n must be used within an I18nProvider" errors in multiple Storybook components by adding I18nProvider to story decorators and removing unsupported locale props from various components including OwnerDashboardPage, Footer, Header, OwnerPortalSidebar, and RTLComponents.
