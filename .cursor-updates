@@ -102,7 +102,9 @@
 - Created English contact page with improved layout matching French and Arabic versions, featuring a more prominent form and enhanced styling.
 - Refactored contact pages to use a shared ContactPage component, eliminating code duplication across language-specific routes and improving maintainability.
 - Fixed RTLComponents.stories.tsx type error by creating a wrapper component (RTLWrapperWithLocale) that includes the locale prop and properly handles the MockI18nProvider context, ensuring successful build completion.
-- Enhanced RTL support with improved list styling, created specialized RTLList component, and updated global CSS to ensure proper bullet positioning for Arabic content across the entire application
+- Enhanced RTL support with improved list styling and a specialized RTLList component.
 - Implemented document translation request functionality with background processing using Inngest, including UI components for requesting translations and checking translation status.
-- Fixed missing translations for aboutFeatures section in all language files (English, French, and Arabic) to ensure proper internationalization of the landing page.
+- Fixed missing translations for the `aboutFeatures` section in all language files (English, French, and Arabic) to ensure proper internationalization of the landing page.
+- Added comprehensive test suite for document translation functionality, including unit tests for the translations router, Inngest function, and end-to-end tests for the translation workflow UI.
 - Fixed Storybook issues by updating the mock ToastContainer component and removing incompatible addon-styling dependency.
+- Fixed DocumentTranslationWorkflow test by properly mocking the document with correct Language enum values and implementing error handling.

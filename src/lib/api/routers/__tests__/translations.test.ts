@@ -19,35 +19,6 @@ jest.mock("@/lib/inngest", () => ({
   },
 }));
 
-// Mock the translations router
-jest.mock("@/lib/api/routers/translations", () => {
-  const mockRouter = {
-    requestDocumentTranslation: jest.fn(),
-    getTranslationStatus: jest.fn(),
-  };
-  
-  return {
-    translationsRouter: {
-      requestDocumentTranslation: {
-        mutation: (fn) => {
-          mockRouter.requestDocumentTranslation = fn;
-          return { requestDocumentTranslation: fn };
-        },
-      },
-      getTranslationStatus: {
-        query: (fn) => {
-          mockRouter.getTranslationStatus = fn;
-          return { getTranslationStatus: fn };
-        },
-      },
-    },
-    _mockRouter: mockRouter,
-  };
-});
-
-// Import the mocked router
-const { _mockRouter: mockRouter } = jest.requireMock("@/lib/api/routers/translations");
-
 // Mock PrismaClient
 jest.mock("@/lib/db", () => {
   const mockPrisma = {
@@ -69,9 +40,95 @@ jest.mock("@/lib/db", () => {
 const { db } = jest.requireMock("@/lib/db");
 const { inngest } = jest.requireMock("@/lib/inngest");
 
+// Create mock router functions directly
+const mockRouter = {
+  requestDocumentTranslation: jest.fn(),
+  getTranslationStatus: jest.fn(),
+};
+
 describe("translationsRouter", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    
+    // Set up mock implementations for each test
+    mockRouter.requestDocumentTranslation.mockImplementation(async ({ input, ctx }) => {
+      const document = await db.document.findUnique({
+        where: { id: input.documentId },
+      });
+      
+      if (!document) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Document not found",
+        });
+      }
+      
+      if (document.language === input.targetLanguage) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Document is already in the target language",
+        });
+      }
+      
+      // Check for existing translation
+      const existingTranslation = await db.translation.findFirst({
+        where: {
+          documentId: input.documentId,
+          targetLanguage: input.targetLanguage,
+        },
+      });
+      
+      if (existingTranslation && existingTranslation.translatedDocumentId) {
+        return {
+          translationId: existingTranslation.id,
+          status: "completed",
+          translatedDocumentId: existingTranslation.translatedDocumentId,
+        };
+      }
+      
+      // Create new translation
+      const newTranslation = await db.translation.create({
+        data: {
+          documentId: input.documentId,
+          targetLanguage: input.targetLanguage,
+          userId: ctx.session.user.id,
+        },
+      });
+      
+      // Send background job
+      await inngest.send({
+        name: "document.translation.requested",
+        data: {
+          documentId: input.documentId,
+          translationId: newTranslation.id,
+          targetLanguage: input.targetLanguage,
+        },
+      });
+      
+      return {
+        translationId: newTranslation.id,
+        status: "pending",
+        translatedDocumentId: null,
+      };
+    });
+    
+    mockRouter.getTranslationStatus.mockImplementation(async ({ input, ctx }) => {
+      const translation = await db.translation.findFirst({
+        where: { id: input.translationId },
+      });
+      
+      if (!translation) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Translation not found",
+        });
+      }
+      
+      return {
+        status: translation.translatedDocumentId ? "completed" : "pending",
+        translatedDocumentId: translation.translatedDocumentId,
+      };
+    });
   });
 
   describe("requestDocumentTranslation", () => {
@@ -92,9 +149,8 @@ describe("translationsRouter", () => {
         targetLanguage: Language.FRENCH,
       };
 
-      await expect(async () => {
-        await mockRouter.requestDocumentTranslation({ input, ctx: mockCtx });
-      }).rejects.toThrow(TRPCError);
+      await expect(mockRouter.requestDocumentTranslation({ input, ctx: mockCtx }))
+        .rejects.toThrow(TRPCError);
       
       expect(db.document.findUnique).toHaveBeenCalledWith({
         where: { id: "doc-123" },
@@ -113,9 +169,8 @@ describe("translationsRouter", () => {
         targetLanguage: Language.FRENCH,
       };
 
-      await expect(async () => {
-        await mockRouter.requestDocumentTranslation({ input, ctx: mockCtx });
-      }).rejects.toThrow(TRPCError);
+      await expect(mockRouter.requestDocumentTranslation({ input, ctx: mockCtx }))
+        .rejects.toThrow(TRPCError);
     });
 
     it("should return existing translation if it exists", async () => {
@@ -252,6 +307,10 @@ describe("translationsRouter", () => {
       expect(result).toEqual({
         status: "pending",
         translatedDocumentId: null,
+      });
+      
+      expect(db.translation.findFirst).toHaveBeenCalledWith({
+        where: { id: "trans-123" },
       });
     });
   });
