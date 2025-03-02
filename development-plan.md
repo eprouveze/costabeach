@@ -317,8 +317,8 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Added comprehensive responsive design documentation in Storybook
 
 ### 4.2 Navigation Structure
-- [ ] Update header and navigation components
-- [ ] Simplify routing structure
+- [x] Update header and navigation components
+- [x] Simplify routing structure
 - [x] Add language-aware navigation
 
 **Implementation Details:**

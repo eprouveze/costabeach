@@ -6,7 +6,20 @@ import { locales, defaultLocale } from "@/lib/i18n";
 const LOCALE_COOKIE = "NEXT_LOCALE";
 
 // Public paths that don't require authentication
-const publicPaths = ["/", "/owner-login", "/owner-register"];
+const publicPaths = [
+  "/", 
+  "/owner-login", 
+  "/owner-register",
+  "/fr",
+  "/en",
+  "/ar",
+  "/fr/owner-login",
+  "/fr/owner-register",
+  "/en/owner-login",
+  "/en/owner-register",
+  "/ar/owner-login",
+  "/ar/owner-register"
+];
 
 // Middleware function to handle locale detection
 function handleLocale(request: NextRequest, response: NextResponse) {
@@ -53,6 +66,12 @@ function handleLocale(request: NextRequest, response: NextResponse) {
 // Custom middleware function
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  
+  // Redirect root path to include the default locale
+  if (pathname === '/') {
+    const url = new URL(`/${defaultLocale}`, req.url);
+    return NextResponse.redirect(url);
+  }
   
   // Create the initial response
   let response = NextResponse.next();
