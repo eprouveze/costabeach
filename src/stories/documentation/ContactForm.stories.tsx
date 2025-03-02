@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { MockI18nProvider } from '../utils/MockI18nProvider';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 // Mock translations for Storybook
 const mockTranslations = {
@@ -202,8 +200,6 @@ const ContactFormDocumentation = () => {
         <li className="mb-2">Error messages are associated with their respective fields using aria-describedby</li>
         <li className="mb-2">The form can be navigated and submitted using only the keyboard</li>
       </ul>
-      
-      <ToastContainer position="bottom-right" />
     </div>
   );
 };
