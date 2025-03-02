@@ -63,7 +63,9 @@
     "registrationSuccess": "Votre demande d'inscription a été soumise avec succès. Nous vous contacterons une fois qu'elle aura été examinée.",
     "registrationPending": "Votre demande d'inscription est en cours d'examen.",
     "registrationApproved": "Votre demande d'inscription a été approuvée. Vous pouvez maintenant vous connecter.",
-    "registrationRejected": "Votre demande d'inscription a été rejetée."
+    "registrationRejected": "Votre demande d'inscription a été rejetée.",
+    "signIn": "Se connecter",
+    "signUp": "S'inscrire"
   },
   "documents": {
     "title": "Documents",

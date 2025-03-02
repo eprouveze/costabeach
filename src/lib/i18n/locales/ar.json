@@ -88,6 +88,8 @@
     "resetPassword": "إعادة تعيين كلمة المرور",
     "confirmPassword": "تأكيد كلمة المرور",
     "username": "اسم المستخدم",
+    "signIn": "تسجيل الدخول",
+    "signUp": "إنشاء حساب",
     "rememberMe": "تذكرني",
     "loginSuccess": "تم تسجيل الدخول بنجاح",
     "loginError": "فشل تسجيل الدخول",

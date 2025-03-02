@@ -84,3 +84,4 @@
 - Made language-specific pages always server-rendered with dynamic = 'force-dynamic'
 - Fixed language selector functionality to correctly switch between languages
 - Updated development plan to mark language-aware navigation as completed
+- Fixed I18nProvider context by properly integrating ClientLayout in app/layout.tsx, resolving "useI18n must be used within an I18nProvider" errors.
