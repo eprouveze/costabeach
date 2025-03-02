@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import AboutSection from '@/components/AboutSection';
 import React from 'react';
+import { MockI18nProvider } from './utils/MockI18nProvider';
 
 // Mock translations for the component
-const mockTranslations: Record<string, string> = {
+const mockTranslations = {
   'landing.aboutTitle': 'About Costa Beach 3',
   'landing.aboutSubtitle': 'A premier beachfront community in Casablanca, Morocco',
   'landing.aboutHistory.title': 'Our Community History',
@@ -32,21 +33,6 @@ const mockTranslations: Record<string, string> = {
   'landing.learnMoreCTA': 'Learn More',
 };
 
-// Manual mock for useI18n
-// This replaces the Jest mock with a manual implementation
-import * as i18nClient from '@/lib/i18n/client';
-
-// Save the original module
-const originalModule = { ...i18nClient };
-
-// Override the useI18n function for Storybook
-(i18nClient as any).useI18n = () => ({
-  t: (key: string) => mockTranslations[key] || key,
-});
-
-// Override the I18nProvider component for Storybook
-(i18nClient as any).I18nProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>;
-
 const meta: Meta<typeof AboutSection> = {
   title: 'Components/AboutSection',
   component: AboutSection,
@@ -55,9 +41,11 @@ const meta: Meta<typeof AboutSection> = {
   },
   decorators: [
     (Story) => (
-      <div className="bg-white">
-        <Story />
-      </div>
+      <MockI18nProvider messages={mockTranslations}>
+        <div className="bg-white">
+          <Story />
+        </div>
+      </MockI18nProvider>
     ),
   ],
 };

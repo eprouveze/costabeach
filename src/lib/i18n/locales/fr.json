@@ -195,23 +195,23 @@
   },
   "contact": {
     "title": "Contactez-nous",
-    "description": "Vous avez des questions sur l'association des propriétaires de Costa Beach 3 ? Contactez-nous et nous vous répondrons dans les plus brefs délais.",
+    "description": "Vous avez des questions sur l'association des propriétaires de Costa Beach 3? Contactez-nous et nous vous répondrons dans les plus brefs délais.",
     "name": "Nom",
     "email": "Email",
     "subject": "Sujet",
     "message": "Message",
-    "submit": "Envoyer le Message",
-    "messageSent": "Votre message a été envoyé avec succès !",
+    "submit": "Envoyer le message",
+    "messageSent": "Votre message a été envoyé avec succès!",
     "department": "Département",
     "departments": {
-      "general": "Demandes Générales",
-      "management": "Gestion de l'Association",
+      "general": "Renseignements généraux",
+      "management": "Gestion de l'association",
       "maintenance": "Maintenance",
-      "financial": "Questions Financières",
-      "legal": "Affaires Juridiques"
+      "financial": "Questions financières",
+      "legal": "Affaires juridiques"
     },
     "contactInfo": {
-      "title": "Informations de Contact",
+      "title": "Informations de contact",
       "address": "Costa Beach 3, Casablanca, Maroc",
       "phone": "+212 522 123 456",
       "email": "info@costabeach3.com",
@@ -225,5 +225,25 @@
       "messageRequired": "Veuillez entrer votre message",
       "departmentRequired": "Veuillez sélectionner un département"
     }
+  },
+  "registration": {
+    "title": "Inscription des propriétaires",
+    "subtitle": "Inscrivez-vous pour accéder au portail des propriétaires",
+    "fullName": "Nom complet",
+    "emailAddress": "Adresse email",
+    "buildingNumber": "Numéro de bâtiment",
+    "apartmentNumber": "Numéro d'appartement",
+    "phoneNumber": "Numéro de téléphone",
+    "namePlaceholder": "Jean Dupont",
+    "emailPlaceholder": "vous@exemple.com",
+    "buildingPlaceholder": "Numéro de bâtiment",
+    "apartmentPlaceholder": "Numéro d'appartement",
+    "phonePlaceholder": "+212 600 000 000",
+    "submit": "Soumettre l'inscription",
+    "submitting": "Soumission en cours...",
+    "successMessage": "Inscription soumise avec succès! Un administrateur examinera votre demande.",
+    "errorMessage": "Échec de la soumission de l'inscription. Veuillez réessayer.",
+    "alreadyHaveAccount": "Vous avez déjà un compte?",
+    "signIn": "Se connecter"
   }
 } 

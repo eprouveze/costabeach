@@ -156,6 +156,26 @@
       "departmentRequired": "Please select a department"
     }
   },
+  "registration": {
+    "title": "Owner Registration",
+    "subtitle": "Register for access to the owner portal",
+    "fullName": "Full Name",
+    "emailAddress": "Email Address",
+    "buildingNumber": "Building Number",
+    "apartmentNumber": "Apartment Number",
+    "phoneNumber": "Phone Number",
+    "namePlaceholder": "John Doe",
+    "emailPlaceholder": "you@example.com",
+    "buildingPlaceholder": "Building number",
+    "apartmentPlaceholder": "Apartment number",
+    "phonePlaceholder": "+1 (555) 000-0000",
+    "submit": "Submit Registration",
+    "submitting": "Submitting...",
+    "successMessage": "Registration submitted successfully! An admin will review your application.",
+    "errorMessage": "Failed to submit registration. Please try again.",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in"
+  },
   "auth": {
     "email": "Email",
     "password": "Password",

@@ -300,10 +300,10 @@
     "department": "القسم",
     "departments": {
       "general": "استفسارات عامة",
-      "management": "إدارة جمعية المالكين",
+      "management": "إدارة جمعية الملاك",
       "maintenance": "الصيانة",
       "financial": "أسئلة مالية",
-      "legal": "مسائل قانونية"
+      "legal": "الشؤون القانونية"
     },
     "contactInfo": {
       "title": "معلومات الاتصال",
@@ -314,11 +314,31 @@
     },
     "validation": {
       "nameRequired": "الرجاء إدخال اسمك",
-      "emailRequired": "الرجاء إدخال عنوان بريدك الإلكتروني",
-      "emailInvalid": "الرجاء إدخال عنوان بريد إلكتروني صالح",
+      "emailRequired": "الرجاء إدخال بريدك الإلكتروني",
+      "emailInvalid": "الرجاء إدخال بريد إلكتروني صالح",
       "subjectRequired": "الرجاء إدخال موضوع",
       "messageRequired": "الرجاء إدخال رسالتك",
       "departmentRequired": "الرجاء اختيار قسم"
     }
+  },
+  "registration": {
+    "title": "تسجيل المالك",
+    "subtitle": "سجل للوصول إلى بوابة المالك",
+    "fullName": "الاسم الكامل",
+    "emailAddress": "البريد الإلكتروني",
+    "buildingNumber": "رقم المبنى",
+    "apartmentNumber": "رقم الشقة",
+    "phoneNumber": "رقم الهاتف",
+    "namePlaceholder": "محمد أحمد",
+    "emailPlaceholder": "you@example.com",
+    "buildingPlaceholder": "رقم المبنى",
+    "apartmentPlaceholder": "رقم الشقة",
+    "phonePlaceholder": "+212 600 000 000",
+    "submit": "إرسال التسجيل",
+    "submitting": "جاري الإرسال...",
+    "successMessage": "تم إرسال التسجيل بنجاح! سيقوم المسؤول بمراجعة طلبك.",
+    "errorMessage": "فشل في إرسال التسجيل. يرجى المحاولة مرة أخرى.",
+    "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
+    "signIn": "تسجيل الدخول"
   }
 } 

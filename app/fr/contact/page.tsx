@@ -61,16 +61,23 @@ export default function ContactPage() {
 
   return (
     <PublicLandingTemplate>
-      <section className="py-12 px-4 bg-gray-50">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6 text-center">{t('contact.title')}</h1>
-          <p className="text-gray-600 mb-8 text-center max-w-2xl mx-auto">
+      {/* Contact Hero Section */}
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h1 className="text-4xl font-bold mb-4">{t('contact.title')}</h1>
+          <p className="text-xl max-w-2xl mx-auto">
             {t('contact.description')}
           </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        </div>
+      </section>
+      
+      {/* Contact Form and Info Section */}
+      <section className="py-12 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Contact Form */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
+              <h2 className="text-2xl font-semibold mb-6">{t("contact.submit")}</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium mb-2">
@@ -183,7 +190,7 @@ export default function ContactPage() {
 
             {/* Contact Information */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
-              <h2 className="text-xl font-semibold mb-6">{t("contact.contactInfo.title")}</h2>
+              <h2 className="text-2xl font-semibold mb-6">{t("contact.contactInfo.title")}</h2>
               
               <div className="space-y-6">
                 <div className="flex items-start">

@@ -5,9 +5,11 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { useI18n } from "@/lib/i18n/client";
 
 export default function OwnerRegistrationPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const [isLoading, setIsLoading] = React.useState(false);
   const [formData, setFormData] = React.useState({
     name: "",
@@ -34,10 +36,10 @@ export default function OwnerRegistrationPage() {
         throw new Error("Registration failed");
       }
 
-      toast.success("Registration submitted successfully! An admin will review your application.");
+      toast.success(t("registration.successMessage"));
       router.push("/owner-login");
     } catch (error) {
-      toast.error("Failed to submit registration. Please try again.");
+      toast.error(t("registration.errorMessage"));
     } finally {
       setIsLoading(false);
     }
@@ -57,18 +59,18 @@ export default function OwnerRegistrationPage() {
         className="group absolute left-4 top-4 flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200"
       >
         <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-        Back
+        {t("common.back")}
       </Link>
 
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600">
-              Owner Registration
+              {t("registration.title")}
             </span>
           </h1>
           <p className="mt-3 text-neutral-600 dark:text-neutral-300">
-            Register for access to the owner portal
+            {t("registration.subtitle")}
           </p>
         </div>
 
@@ -79,7 +81,7 @@ export default function OwnerRegistrationPage() {
                 htmlFor="name"
                 className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
               >
-                Full Name
+                {t("registration.fullName")}
               </label>
               <div className="mt-2">
                 <input
@@ -90,7 +92,7 @@ export default function OwnerRegistrationPage() {
                   value={formData.name}
                   onChange={handleChange}
                   className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 shadow-sm dark:bg-neutral-800 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400"
-                  placeholder="John Doe"
+                  placeholder={t("registration.namePlaceholder")}
                   disabled={isLoading}
                 />
               </div>
@@ -101,7 +103,7 @@ export default function OwnerRegistrationPage() {
                 htmlFor="email"
                 className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
               >
-                Email Address
+                {t("registration.emailAddress")}
               </label>
               <div className="mt-2">
                 <input
@@ -112,7 +114,7 @@ export default function OwnerRegistrationPage() {
                   value={formData.email}
                   onChange={handleChange}
                   className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 shadow-sm dark:bg-neutral-800 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400"
-                  placeholder="you@example.com"
+                  placeholder={t("registration.emailPlaceholder")}
                   disabled={isLoading}
                 />
               </div>
@@ -123,7 +125,7 @@ export default function OwnerRegistrationPage() {
                 htmlFor="buildingNumber"
                 className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
               >
-                Building Number
+                {t("registration.buildingNumber")}
               </label>
               <div className="mt-2">
                 <input
@@ -134,7 +136,7 @@ export default function OwnerRegistrationPage() {
                   value={formData.buildingNumber}
                   onChange={handleChange}
                   className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 shadow-sm dark:bg-neutral-800 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400"
-                  placeholder="Building number"
+                  placeholder={t("registration.buildingPlaceholder")}
                   disabled={isLoading}
                 />
               </div>
@@ -145,7 +147,7 @@ export default function OwnerRegistrationPage() {
                 htmlFor="apartmentNumber"
                 className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
               >
-                Apartment Number
+                {t("registration.apartmentNumber")}
               </label>
               <div className="mt-2">
                 <input
@@ -156,7 +158,7 @@ export default function OwnerRegistrationPage() {
                   value={formData.apartmentNumber}
                   onChange={handleChange}
                   className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 shadow-sm dark:bg-neutral-800 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400"
-                  placeholder="Apartment number"
+                  placeholder={t("registration.apartmentPlaceholder")}
                   disabled={isLoading}
                 />
               </div>
@@ -167,7 +169,7 @@ export default function OwnerRegistrationPage() {
                 htmlFor="phoneNumber"
                 className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
               >
-                Phone Number
+                {t("registration.phoneNumber")}
               </label>
               <div className="mt-2">
                 <input
@@ -178,7 +180,7 @@ export default function OwnerRegistrationPage() {
                   value={formData.phoneNumber}
                   onChange={handleChange}
                   className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 shadow-sm dark:bg-neutral-800 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400"
-                  placeholder="+1 (555) 000-0000"
+                  placeholder={t("registration.phonePlaceholder")}
                   disabled={isLoading}
                 />
               </div>
@@ -189,18 +191,18 @@ export default function OwnerRegistrationPage() {
               disabled={isLoading}
               className="w-full rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-3 text-sm font-medium text-white transition-all hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? "Submitting..." : "Submit Registration"}
+              {isLoading ? t("registration.submitting") : t("registration.submit")}
             </button>
           </form>
 
           <div className="mt-6">
             <p className="text-center text-sm text-neutral-600 dark:text-neutral-400">
-              Already have an account?{" "}
+              {t("registration.alreadyHaveAccount")}{" "}
               <Link
                 href="/owner-login"
                 className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500"
               >
-                Sign in
+                {t("registration.signIn")}
               </Link>
             </p>
           </div>
