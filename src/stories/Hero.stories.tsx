@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import Hero from '@/components/Hero';
-import { I18nProvider } from '@/lib/i18n/client';
+import { MockI18nProvider } from './utils/MockI18nProvider';
 
 // Mock translations for Storybook
 const mockTranslations = {
@@ -18,13 +18,12 @@ const meta: Meta<typeof Hero> = {
   },
   decorators: [
     (Story) => (
-      <I18nProvider 
+      <MockI18nProvider 
         locale="en" 
-        translations={mockTranslations} 
-        namespaces={['common']}
+        messages={mockTranslations}
       >
         <Story />
-      </I18nProvider>
+      </MockI18nProvider>
     ),
   ],
 };
@@ -63,18 +62,17 @@ export const Desktop: Story = {
 export const French: Story = {
   decorators: [
     (Story) => (
-      <I18nProvider 
+      <MockI18nProvider 
         locale="fr" 
-        translations={{
+        messages={{
           'landing.heroTitle': 'Portail de l\'Association des Propriétaires de Costa Beach 3',
           'landing.heroSubtitle': 'Accédez aux documents importants, aux informations communautaires et aux ressources de l\'association dans un espace sécurisé.',
           'landing.registerCTA': 'S\'inscrire en tant que Propriétaire',
           'landing.contactCTA': 'Nous Contacter',
-        }} 
-        namespaces={['common']}
+        }}
       >
         <Story />
-      </I18nProvider>
+      </MockI18nProvider>
     ),
   ],
 };
@@ -82,20 +80,19 @@ export const French: Story = {
 export const Arabic: Story = {
   decorators: [
     (Story) => (
-      <I18nProvider 
+      <MockI18nProvider 
         locale="ar" 
-        translations={{
+        messages={{
           'landing.heroTitle': 'بوابة جمعية ملاك كوستا بيتش 3',
           'landing.heroSubtitle': 'الوصول إلى المستندات المهمة ومعلومات المجتمع وموارد الجمعية في مكان آمن واحد.',
           'landing.registerCTA': 'التسجيل كمالك',
           'landing.contactCTA': 'اتصل بنا',
-        }} 
-        namespaces={['common']}
+        }}
       >
         <div dir="rtl">
           <Story />
         </div>
-      </I18nProvider>
+      </MockI18nProvider>
     ),
   ],
 }; 

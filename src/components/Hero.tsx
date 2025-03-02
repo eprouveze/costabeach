@@ -17,7 +17,7 @@ export default function Hero({ className = "" }: HeroProps) {
       {/* Hero Background Image */}
       <div className="absolute inset-0">
         <Image
-          src="/images/costa-beach-hero.jpg"
+          src="/images/hero-banner.jpeg"
           alt="Costa Beach 3"
           fill
           priority

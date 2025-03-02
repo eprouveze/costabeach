@@ -1,0 +1,1 @@
+<h1>W3TC Minify Error</h1><p>Enable debug mode to see error message.</p>

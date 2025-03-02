@@ -5,6 +5,7 @@ import { FileText, Users, Bell, Info } from "lucide-react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n/client";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import Hero from "@/components/Hero";
 
 interface PublicLandingTemplateProps {
   children?: React.ReactNode;
@@ -37,33 +38,7 @@ export default function PublicLandingTemplate({ children }: PublicLandingTemplat
       </header>
 
       {/* Hero Section */}
-      <div className="relative bg-blue-600 h-[500px]">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-400 opacity-90" />
-        <div className="relative container mx-auto px-4 h-full flex flex-col justify-center">
-          <h1 className="text-5xl font-bold text-white mb-6 max-w-2xl">
-            {t("landing.heroTitle")}
-          </h1>
-          <p className="text-xl text-white/90 mb-8 max-w-xl">
-            {t("landing.heroSubtitle")}
-          </p>
-          
-          {/* CTA Buttons */}
-          <div className="flex flex-wrap gap-4">
-            <Link 
-              href="/owner-register" 
-              className="bg-white text-blue-600 px-6 py-3 rounded-md hover:bg-gray-100 transition-colors font-medium"
-            >
-              {t("landing.registerCTA")}
-            </Link>
-            <Link 
-              href="/contact" 
-              className="bg-blue-700 text-white px-6 py-3 rounded-md hover:bg-blue-800 transition-colors font-medium"
-            >
-              {t("landing.contactCTA")}
-            </Link>
-          </div>
-        </div>
-      </div>
+      <Hero />
 
       {/* Features Section */}
       <div className="container mx-auto px-4 py-16">

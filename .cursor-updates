@@ -91,3 +91,4 @@
 - Added missing contact page translations for French and Arabic locales, including department selection, contact information, and validation messages to ensure complete internationalization of the contact page.
 - Fixed translation loading by updating I18nProvider to use static imports instead of dynamic imports for better reliability
 - Completed section 4.4 Hero Section implementation with Costa Beach image background, responsive design, and multilingual support in Storybook stories.
+- Updated Hero component to use the hero-banner.jpeg image for the banner background, enhancing the visual appeal of the landing page.
