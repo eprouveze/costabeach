@@ -1,73 +1,85 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import OwnerDashboardTemplate from "@/components/templates/OwnerDashboardTemplate";
-import { trpc } from "@/lib/trpc/react";
+import { api } from "@/lib/trpc/react";
 import { DocumentCategory, Language } from "@/lib/types";
 import { Folder, FileText, ChevronRight, Users, Scale, Search } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
+import { formatDistanceToNow } from "date-fns";
+import { fr, ar, enUS } from "date-fns/locale";
 
 export default function CategoriesPage() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [userLanguage, setUserLanguage] = useState<Language>(Language.FRENCH);
   const [searchQuery, setSearchQuery] = useState<string>("");
   
+  // Set user language based on locale
+  useEffect(() => {
+    if (locale === "fr") {
+      setUserLanguage(Language.FRENCH);
+    } else if (locale === "ar") {
+      setUserLanguage(Language.ARABIC);
+    } else {
+      setUserLanguage(Language.ENGLISH);
+    }
+  }, [locale]);
+  
   // Fetch document counts for each category
-  const { data: comiteDocuments, isLoading: isLoadingComite } = trpc.documents.getDocumentsByCategory.useQuery({
+  const comiteDocuments = api.documents.getDocumentsByCategory.useQuery({
     category: DocumentCategory.COMITE_DE_SUIVI,
     language: userLanguage,
+    limit: 3
   });
   
-  const { data: societeDocuments, isLoading: isLoadingSociete } = trpc.documents.getDocumentsByCategory.useQuery({
+  const societeDocuments = api.documents.getDocumentsByCategory.useQuery({
     category: DocumentCategory.SOCIETE_DE_GESTION,
     language: userLanguage,
+    limit: 3
   });
   
-  const { data: legalDocuments, isLoading: isLoadingLegal } = trpc.documents.getDocumentsByCategory.useQuery({
+  const legalDocuments = api.documents.getDocumentsByCategory.useQuery({
     category: DocumentCategory.LEGAL,
     language: userLanguage,
+    limit: 3
   });
   
   // Define categories with their details
   const categories = [
     {
-      id: "comiteDeSuivi",
+      id: DocumentCategory.COMITE_DE_SUIVI,
       name: t("documents.categories.comiteDeSuivi"),
-      description: t("documents.categoryDescriptions.comiteDeSuivi"),
-      icon: <Users className="w-6 h-6 text-blue-600" />,
+      icon: <Users className="h-8 w-8 text-blue-500" />,
       color: "bg-blue-100",
-      count: comiteDocuments?.length || 0,
-      isLoading: isLoadingComite,
-      category: DocumentCategory.COMITE_DE_SUIVI
+      link: "/owner-dashboard/documents?category=COMITE_DE_SUIVI",
+      count: comiteDocuments.data?.length || 0,
+      isLoading: comiteDocuments.isLoading
     },
     {
-      id: "societeDeGestion",
+      id: DocumentCategory.SOCIETE_DE_GESTION,
       name: t("documents.categories.societeDeGestion"),
-      description: t("documents.categoryDescriptions.societeDeGestion"),
-      icon: <Folder className="w-6 h-6 text-green-600" />,
+      icon: <Folder className="h-8 w-8 text-green-500" />,
       color: "bg-green-100",
-      count: societeDocuments?.length || 0,
-      isLoading: isLoadingSociete,
-      category: DocumentCategory.SOCIETE_DE_GESTION
+      link: "/owner-dashboard/documents?category=SOCIETE_DE_GESTION",
+      count: societeDocuments.data?.length || 0,
+      isLoading: societeDocuments.isLoading
     },
     {
-      id: "legal",
+      id: DocumentCategory.LEGAL,
       name: t("documents.categories.legal"),
-      description: t("documents.categoryDescriptions.legal"),
-      icon: <Scale className="w-6 h-6 text-purple-600" />,
+      icon: <Scale className="h-8 w-8 text-purple-500" />,
       color: "bg-purple-100",
-      count: legalDocuments?.length || 0,
-      isLoading: isLoadingLegal,
-      category: DocumentCategory.LEGAL
+      link: "/owner-dashboard/documents?category=LEGAL",
+      count: legalDocuments.data?.length || 0,
+      isLoading: legalDocuments.isLoading
     }
   ];
   
   // Filter categories based on search query
   const filteredCategories = searchQuery
     ? categories.filter(category => 
-        category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        category.description.toLowerCase().includes(searchQuery.toLowerCase())
+        category.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : categories;
   
@@ -75,11 +87,11 @@ export default function CategoriesPage() {
   const getRecentDocuments = (category: DocumentCategory) => {
     switch (category) {
       case DocumentCategory.COMITE_DE_SUIVI:
-        return comiteDocuments?.slice(0, 3) || [];
+        return comiteDocuments.data || [];
       case DocumentCategory.SOCIETE_DE_GESTION:
-        return societeDocuments?.slice(0, 3) || [];
+        return societeDocuments.data || [];
       case DocumentCategory.LEGAL:
-        return legalDocuments?.slice(0, 3) || [];
+        return legalDocuments.data || [];
       default:
         return [];
     }
@@ -87,10 +99,10 @@ export default function CategoriesPage() {
   
   // Format date for display
   const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString(userLanguage === Language.FRENCH ? 'fr-FR' : 'ar-MA', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    const dateLocale = locale === "fr" ? fr : locale === "ar" ? ar : enUS;
+    return formatDistanceToNow(new Date(date), { 
+      addSuffix: true,
+      locale: dateLocale
     });
   };
 
@@ -125,7 +137,6 @@ export default function CategoriesPage() {
                       </div>
                       <div>
                         <h2 className="text-xl font-medium text-gray-900">{category.name}</h2>
-                        <p className="text-gray-600 mt-1">{category.description}</p>
                         <div className="mt-2 text-sm text-gray-500">
                           {category.isLoading ? (
                             <span>{t("common.loading")}</span>
@@ -137,7 +148,7 @@ export default function CategoriesPage() {
                     </div>
                     
                     <Link
-                      href={`/owner-dashboard/documents?category=${category.id}`}
+                      href={category.link}
                       className="flex items-center space-x-1 text-blue-600 hover:text-blue-800"
                     >
                       <span>{t("documents.viewAll")}</span>
@@ -163,8 +174,8 @@ export default function CategoriesPage() {
                       </div>
                     ) : (
                       <div className="space-y-3">
-                        {getRecentDocuments(category.category).length > 0 ? (
-                          getRecentDocuments(category.category).map((doc) => (
+                        {getRecentDocuments(category.id).length > 0 ? (
+                          getRecentDocuments(category.id).map((doc) => (
                             <Link 
                               key={doc.id} 
                               href={`/owner-dashboard/documents/${doc.id}`}
@@ -185,9 +196,9 @@ export default function CategoriesPage() {
                       </div>
                     )}
                     
-                    {!category.isLoading && getRecentDocuments(category.category).length > 0 && (
+                    {!category.isLoading && getRecentDocuments(category.id).length > 0 && (
                       <Link
-                        href={`/owner-dashboard/documents?category=${category.id}`}
+                        href={category.link}
                         className="mt-4 inline-block text-sm text-blue-600 hover:text-blue-800"
                       >
                         {t("documents.seeAllInCategory", { category: category.name })}

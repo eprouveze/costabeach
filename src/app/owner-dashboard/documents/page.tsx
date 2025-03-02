@@ -1,62 +1,69 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-import OwnerDashboardTemplate from "@/components/templates/OwnerDashboardTemplate";
-import { trpc } from "@/lib/trpc/react";
-import { DocumentCategory, Language } from "@/lib/types";
-import { FileText, Download, Eye, Filter, Search } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
+import { api } from "@/lib/trpc/react";
+import { DocumentCategory, Language } from "@/lib/types";
+import { useSearchParams } from "next/navigation";
+import { 
+  FileText, 
+  Download, 
+  Eye, 
+  Search, 
+  Filter, 
+  X,
+  ChevronDown,
+  ChevronUp
+} from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import { fr, ar, enUS } from "date-fns/locale";
 
 export default function DocumentsPage() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const searchParams = useSearchParams();
+  const categoryParam = searchParams.get('category');
+  
   const [userLanguage, setUserLanguage] = useState<Language>(Language.FRENCH);
-  const [selectedCategory, setSelectedCategory] = useState<DocumentCategory | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<DocumentCategory | null>(
+    categoryParam as DocumentCategory || null
+  );
+  const [sortField, setSortField] = useState<string>("createdAt");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   
-  // Get category from URL if present
+  // Set up mutations
+  const incrementViewCount = api.documents.incrementViewCount.useMutation();
+  const getDownloadUrl = api.documents.getDownloadUrl.useMutation();
+
+  // Set user language based on locale
   useEffect(() => {
-    const categoryParam = searchParams.get("category");
-    if (categoryParam) {
-      switch (categoryParam) {
-        case "comiteDeSuivi":
-          setSelectedCategory(DocumentCategory.COMITE_DE_SUIVI);
-          break;
-        case "societeDeGestion":
-          setSelectedCategory(DocumentCategory.SOCIETE_DE_GESTION);
-          break;
-        case "legal":
-          setSelectedCategory(DocumentCategory.LEGAL);
-          break;
-        default:
-          setSelectedCategory(null);
-      }
+    if (locale === "fr") {
+      setUserLanguage(Language.FRENCH);
+    } else if (locale === "ar") {
+      setUserLanguage(Language.ARABIC);
+    } else {
+      setUserLanguage(Language.ENGLISH);
     }
-  }, [searchParams]);
-  
+  }, [locale]);
+
   // Fetch documents based on selected category
-  const { data: documents, isLoading, refetch } = trpc.documents.getDocumentsByCategory.useQuery({
+  const { data: documents, isLoading } = api.documents.getDocumentsByCategory.useQuery({
     category: selectedCategory || DocumentCategory.COMITE_DE_SUIVI,
     language: userLanguage,
-    limit: 20,
-    searchQuery: searchQuery || undefined,
+    searchQuery: searchQuery
+  }, {
+    enabled: !!selectedCategory || !categoryParam
   });
-  
-  // Refetch when category or search changes
-  useEffect(() => {
-    refetch();
-  }, [selectedCategory, searchQuery, refetch]);
-  
+
   // Format date for display
   const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString(userLanguage === Language.FRENCH ? 'fr-FR' : 'ar-MA', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    const dateLocale = locale === "fr" ? fr : locale === "ar" ? ar : enUS;
+    return formatDistanceToNow(new Date(date), { 
+      addSuffix: true,
+      locale: dateLocale
     });
   };
-  
+
   // Format file size
   const formatFileSize = (bytes: number) => {
     if (bytes < 1024) return bytes + ' B';
@@ -67,7 +74,7 @@ export default function DocumentsPage() {
   // Handle document view
   const handleViewDocument = (documentId: string) => {
     // Increment view count
-    trpc.documents.incrementViewCount.mutate({ documentId });
+    incrementViewCount.mutate({ documentId });
     // Navigate to document view page
     window.open(`/owner-dashboard/documents/${documentId}`, '_blank');
   };
@@ -75,7 +82,7 @@ export default function DocumentsPage() {
   // Handle document download
   const handleDownloadDocument = async (documentId: string) => {
     try {
-      const result = await trpc.documents.getDownloadUrl.mutate({ documentId });
+      const result = await getDownloadUrl.mutateAsync({ documentId });
       if (result.downloadUrl) {
         window.open(result.downloadUrl, '_blank');
       }
@@ -84,102 +91,235 @@ export default function DocumentsPage() {
     }
   };
 
+  // Handle category change
+  const handleCategoryChange = (category: DocumentCategory) => {
+    setSelectedCategory(category);
+  };
+
+  // Handle sort change
+  const handleSortChange = (field: string) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("desc");
+    }
+  };
+
+  // Sort documents
+  const sortedDocuments = documents ? [...documents].sort((a, b) => {
+    let comparison = 0;
+    
+    switch (sortField) {
+      case "title":
+        comparison = a.title.localeCompare(b.title);
+        break;
+      case "createdAt":
+        comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        break;
+      case "viewCount":
+        comparison = a.viewCount - b.viewCount;
+        break;
+      case "downloadCount":
+        comparison = a.downloadCount - b.downloadCount;
+        break;
+      default:
+        comparison = 0;
+    }
+    
+    return sortDirection === "asc" ? comparison : -comparison;
+  }) : [];
+
+  // Get category name
+  const getCategoryName = (category: DocumentCategory) => {
+    switch (category) {
+      case DocumentCategory.COMITE_DE_SUIVI:
+        return t("documents.categories.comiteDeSuivi");
+      case DocumentCategory.SOCIETE_DE_GESTION:
+        return t("documents.categories.societeDeGestion");
+      case DocumentCategory.LEGAL:
+        return t("documents.categories.legal");
+      default:
+        return category;
+    }
+  };
+
   return (
-    <main className="min-h-screen">
-      <OwnerDashboardTemplate>
-        <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <h1 className="text-2xl font-semibold text-gray-800">{t("documents.title")}</h1>
-          
-          <div className="flex flex-col md:flex-row gap-3">
-            {/* Category Filter */}
-            <div className="relative">
-              <select
-                value={selectedCategory || ""}
-                onChange={(e) => {
-                  if (e.target.value === "") {
-                    setSelectedCategory(null);
-                  } else {
-                    setSelectedCategory(e.target.value as DocumentCategory);
-                  }
-                }}
-                className="appearance-none pl-10 pr-4 py-2 rounded-lg border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full md:w-48"
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">{t("documents.title")}</h1>
+      
+      {/* Search and filters */}
+      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1 relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              placeholder={t("documents.searchPlaceholder")}
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && (
+              <button
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                onClick={() => setSearchQuery("")}
               >
-                <option value="">{t("documents.allCategories")}</option>
-                <option value={DocumentCategory.COMITE_DE_SUIVI}>{t("documents.categories.comiteDeSuivi")}</option>
-                <option value={DocumentCategory.SOCIETE_DE_GESTION}>{t("documents.categories.societeDeGestion")}</option>
-                <option value={DocumentCategory.LEGAL}>{t("documents.categories.legal")}</option>
-              </select>
-              <Filter className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-            </div>
-            
-            {/* Search */}
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t("documents.searchPlaceholder")}
-                className="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full md:w-64"
-              />
-              <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-            </div>
+                <X className="h-4 w-4 text-gray-400" />
+              </button>
+            )}
+          </div>
+          
+          <div className="flex gap-2">
+            <button
+              className={`px-4 py-2 rounded-md ${selectedCategory === null ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+              onClick={() => setSelectedCategory(null)}
+            >
+              {t("documents.allCategories")}
+            </button>
+            <button
+              className={`px-4 py-2 rounded-md ${selectedCategory === DocumentCategory.COMITE_DE_SUIVI ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+              onClick={() => handleCategoryChange(DocumentCategory.COMITE_DE_SUIVI)}
+            >
+              {t("documents.categories.comiteDeSuivi")}
+            </button>
+            <button
+              className={`px-4 py-2 rounded-md ${selectedCategory === DocumentCategory.SOCIETE_DE_GESTION ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+              onClick={() => handleCategoryChange(DocumentCategory.SOCIETE_DE_GESTION)}
+            >
+              {t("documents.categories.societeDeGestion")}
+            </button>
+            <button
+              className={`px-4 py-2 rounded-md ${selectedCategory === DocumentCategory.LEGAL ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+              onClick={() => handleCategoryChange(DocumentCategory.LEGAL)}
+            >
+              {t("documents.categories.legal")}
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      {/* Documents list */}
+      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        {/* Table header */}
+        <div className="grid grid-cols-12 gap-4 p-4 border-b border-gray-200 bg-gray-50">
+          <div className="col-span-5 font-medium text-gray-700">
+            <button 
+              className="flex items-center" 
+              onClick={() => handleSortChange("title")}
+            >
+              {t("documents.documentName")}
+              {sortField === "title" && (
+                sortDirection === "asc" ? 
+                <ChevronUp className="ml-1 h-4 w-4" /> : 
+                <ChevronDown className="ml-1 h-4 w-4" />
+              )}
+            </button>
+          </div>
+          <div className="col-span-2 font-medium text-gray-700">
+            <button 
+              className="flex items-center" 
+              onClick={() => handleSortChange("createdAt")}
+            >
+              {t("documents.uploadDate")}
+              {sortField === "createdAt" && (
+                sortDirection === "asc" ? 
+                <ChevronUp className="ml-1 h-4 w-4" /> : 
+                <ChevronDown className="ml-1 h-4 w-4" />
+              )}
+            </button>
+          </div>
+          <div className="col-span-2 font-medium text-gray-700">
+            {t("documents.category")}
+          </div>
+          <div className="col-span-1 font-medium text-gray-700">
+            <button 
+              className="flex items-center" 
+              onClick={() => handleSortChange("viewCount")}
+            >
+              {t("documents.views")}
+              {sortField === "viewCount" && (
+                sortDirection === "asc" ? 
+                <ChevronUp className="ml-1 h-4 w-4" /> : 
+                <ChevronDown className="ml-1 h-4 w-4" />
+              )}
+            </button>
+          </div>
+          <div className="col-span-2 font-medium text-gray-700 text-right">
+            {t("documents.actions")}
           </div>
         </div>
         
-        {/* Documents List */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          {isLoading ? (
-            <div className="p-6 text-center text-gray-500">{t("common.loading")}</div>
-          ) : documents && documents.length > 0 ? (
-            <div className="divide-y divide-gray-200">
-              {documents.map((doc) => (
-                <div key={doc.id} className="p-4 hover:bg-gray-50">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start space-x-3">
-                      <div className="p-2 bg-blue-100 rounded-lg">
-                        <FileText className="w-6 h-6 text-blue-600" />
-                      </div>
-                      <div>
-                        <h3 className="font-medium text-gray-900">{doc.title}</h3>
-                        <p className="text-sm text-gray-500 mt-1">{doc.description}</p>
-                        <div className="flex items-center mt-2 text-xs text-gray-500">
-                          <span>{formatDate(doc.createdAt)}</span>
-                          <span className="mx-2">•</span>
-                          <span>{formatFileSize(doc.fileSize)}</span>
-                          <span className="mx-2">•</span>
-                          <span className="capitalize">{t(`documents.categories.${doc.category}`)}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => handleViewDocument(doc.id)}
-                        className="flex items-center space-x-1 text-blue-600 hover:text-blue-800"
-                      >
-                        <Eye className="w-4 h-4" />
-                        <span>{t("documents.view")}</span>
-                      </button>
-                      <button
-                        onClick={() => handleDownloadDocument(doc.id)}
-                        className="flex items-center space-x-1 text-blue-600 hover:text-blue-800"
-                      >
-                        <Download className="w-4 h-4" />
-                        <span>{t("documents.download")}</span>
-                      </button>
-                    </div>
-                  </div>
+        {/* Table body */}
+        {isLoading ? (
+          <div className="p-8 text-center">
+            <div className="animate-pulse space-y-4">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="grid grid-cols-12 gap-4">
+                  <div className="col-span-5 h-6 bg-gray-200 rounded"></div>
+                  <div className="col-span-2 h-6 bg-gray-200 rounded"></div>
+                  <div className="col-span-2 h-6 bg-gray-200 rounded"></div>
+                  <div className="col-span-1 h-6 bg-gray-200 rounded"></div>
+                  <div className="col-span-2 h-6 bg-gray-200 rounded"></div>
                 </div>
               ))}
             </div>
-          ) : (
-            <div className="p-6 text-center text-gray-500">
-              {searchQuery 
-                ? t("documents.noSearchResults", { query: searchQuery }) 
-                : t("documents.noDocuments")}
-            </div>
-          )}
-        </div>
-      </OwnerDashboardTemplate>
-    </main>
+          </div>
+        ) : sortedDocuments.length === 0 ? (
+          <div className="p-8 text-center text-gray-500">
+            {searchQuery ? t("documents.noSearchResults") : t("documents.noDocuments")}
+          </div>
+        ) : (
+          <div className="divide-y divide-gray-200">
+            {sortedDocuments.map((doc) => (
+              <div key={doc.id} className="grid grid-cols-12 gap-4 p-4 hover:bg-gray-50">
+                <div className="col-span-5">
+                  <div className="flex items-start">
+                    <FileText className="h-5 w-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h3 className="font-medium text-gray-900">{doc.title}</h3>
+                      <p className="text-sm text-gray-500 mt-1">{doc.description}</p>
+                      <div className="text-xs text-gray-500 mt-1">{formatFileSize(doc.fileSize)}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-span-2 text-gray-500 self-center">
+                  {formatDate(doc.createdAt)}
+                </div>
+                <div className="col-span-2 self-center">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    {getCategoryName(doc.category)}
+                  </span>
+                </div>
+                <div className="col-span-1 text-gray-500 self-center">
+                  <div className="flex items-center">
+                    <Eye className="h-4 w-4 mr-1" />
+                    <span>{doc.viewCount}</span>
+                  </div>
+                </div>
+                <div className="col-span-2 flex justify-end space-x-2 self-center">
+                  <button
+                    onClick={() => handleViewDocument(doc.id)}
+                    className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-full"
+                    title={t("documents.view")}
+                  >
+                    <Eye className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={() => handleDownloadDocument(doc.id)}
+                    className="p-2 text-green-600 hover:text-green-800 hover:bg-green-50 rounded-full"
+                    title={t("documents.download")}
+                  >
+                    <Download className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 } 

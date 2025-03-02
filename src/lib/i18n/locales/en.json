@@ -28,7 +28,8 @@
     "welcome": "Welcome",
     "language": "Language",
     "contact": "Contact",
-    "siteTitle": "Costa Beach 3"
+    "siteTitle": "Costa Beach 3",
+    "clearSearch": "Clear Search"
   },
   "navigation": {
     "home": "Home",
@@ -203,7 +204,7 @@
     "passwordRequirements": "Password must be at least 8 characters long and include a number and a special character."
   },
   "documents": {
-    "title": "Title",
+    "title": "Documents",
     "description": "Description",
     "category": "Category",
     "language": "Language",
@@ -220,18 +221,45 @@
     "noDocuments": "No documents found",
     "uploadNew": "Upload New Document",
     "categories": {
+      "title": "Document Categories",
       "financial": "Financial",
       "legal": "Legal",
       "maintenance": "Maintenance",
       "meeting": "Meeting",
-      "general": "General"
+      "general": "General",
+      "comiteDeSuivi": "Monitoring Committee",
+      "societeDeGestion": "Management Company",
+      "legal": "Legal Documents"
+    },
+    "categoryDescriptions": {
+      "comiteDeSuivi": "Documents related to the monitoring committee, including meeting minutes and reports",
+      "societeDeGestion": "Documents from the management company, including financial reports and communications",
+      "legal": "Legal documents, contracts, and regulations related to the property"
     },
     "uploadSuccess": "Document uploaded successfully",
     "deleteSuccess": "Document deleted successfully",
     "updateSuccess": "Document updated successfully",
     "confirmDelete": "Are you sure you want to delete this document?",
     "dropzone": "Drag and drop files here, or click to select files",
-    "maxSize": "Maximum file size: 10MB"
+    "maxSize": "Maximum file size: 10MB",
+    "recentDocuments": "Recent Documents",
+    "viewAll": "View All",
+    "allCategories": "All Categories",
+    "searchPlaceholder": "Search documents...",
+    "searchCategoriesPlaceholder": "Search categories...",
+    "noSearchResults": "No documents found for '{{query}}'",
+    "documentCount": "{{count}} documents",
+    "noDocumentsInCategory": "No documents in this category",
+    "seeAllInCategory": "See all in {{category}}",
+    "noMatchingCategories": "No matching categories found",
+    "tryDifferentSearch": "Try a different search term or clear the search",
+    "viewingDocument": "Viewing Document",
+    "uploadedOn": "Uploaded on {{date}}",
+    "errorLoadingDocument": "Error loading document",
+    "errorDownloadingDocument": "Error downloading document",
+    "unableToPreview": "Unable to preview document",
+    "previewNotAvailable": "Preview is not available for this document type",
+    "downloadInstead": "Download Instead"
   },
   "admin": {
     "users": "Users",
@@ -253,5 +281,68 @@
     "resetPassword": "Reset Password",
     "setPermissions": "Set Permissions",
     "systemSettings": "System Settings"
+  },
+  "dashboard": {
+    "welcome": "Welcome back",
+    "overview": "Dashboard Overview",
+    "recentDocuments": "Recent Documents",
+    "viewAllDocuments": "View All Documents",
+    "documentCategories": "Document Categories",
+    "notifications": "Notifications",
+    "viewAllNotifications": "View All Notifications",
+    "noNotifications": "No new notifications",
+    "searchDocuments": "Search documents...",
+    "documentCounts": {
+      "comiteDeSuivi": "{{count}} Monitoring Committee documents",
+      "societeDeGestion": "{{count}} Management Company documents",
+      "legal": "{{count}} Legal documents"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "unreadCount": "{{count}} unread notifications",
+    "allRead": "All notifications read",
+    "markAllAsRead": "Mark all as read",
+    "markAsRead": "Mark as read",
+    "delete": "Delete",
+    "view": "View",
+    "newDocument": "New Document",
+    "newDocumentMessage": "A new document '{{title}}' has been uploaded",
+    "upcomingMeeting": "Upcoming Meeting",
+    "upcomingMeetingMessage": "Reminder: HOA meeting scheduled for {{date}}",
+    "systemUpdate": "System Update",
+    "systemUpdateMessage": "The portal has been updated with new features",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "daysAgo": "{{days}} days ago",
+    "noNotifications": "No Notifications",
+    "noNotificationsMessage": "You don't have any notifications at the moment",
+    "markedAsRead": "Notification marked as read",
+    "deleted": "Notification deleted",
+    "allMarkedAsRead": "All notifications marked as read"
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Manage your account settings and preferences",
+    "personalInfo": "Personal Information",
+    "name": "Name",
+    "email": "Email",
+    "saveChanges": "Save Changes",
+    "profileUpdated": "Profile updated successfully",
+    "languagePreferences": "Language Preferences",
+    "french": "French",
+    "arabic": "Arabic",
+    "languageUpdated": "Language preference updated",
+    "notifications": "Notifications",
+    "enableNotifications": "Enable notifications",
+    "notificationsEnabled": "Notifications enabled",
+    "notificationsDisabled": "Notifications disabled",
+    "security": "Security",
+    "twoFactorAuth": "Two-factor authentication",
+    "twoFactorEnabled": "Two-factor authentication enabled",
+    "twoFactorDisabled": "Two-factor authentication disabled",
+    "logout": "Log out",
+    "loggingOut": "Logging out...",
+    "imageUpdated": "Profile image updated"
   }
 } 

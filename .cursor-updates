@@ -110,3 +110,8 @@
 - Fixed DocumentTranslationWorkflow test by properly mocking the document with correct Language enum values and implementing error handling.
 - Fixed LanguageSwitcher component tests by adding proper mock for the Globe icon, updating the useI18n mock implementation, and implementing click outside functionality to close the dropdown menu.
 - Fixed "useI18n must be used within an I18nProvider" errors in multiple Storybook components by adding I18nProvider to story decorators and removing unsupported locale props from various components including OwnerDashboardPage, Footer, Header, OwnerPortalSidebar, and RTLComponents.
+- Implemented Owner Dashboard Redesign (section 4.4) with focus on document access instead of property management, including document categories, recent documents, and notifications sections.
+- Created document-focused pages for the owner dashboard including documents listing, document viewer, categories, notifications, and profile pages.
+- Fixed i18n implementation to support parameters in translations, allowing for dynamic content in translated strings.
+- Fixed tRPC mutation syntax in document-related pages to use useMutation hooks correctly with mutate and mutateAsync methods.
+- Successfully built the project with all TypeScript errors resolved and proper implementation of the Owner Dashboard Redesign.

@@ -20,7 +20,7 @@ const staticTranslations: Record<Locale, Record<string, any>> = {
 type I18nContextType = {
   locale: Locale;
   setLocale: (locale: Locale) => void;
-  t: (key: string) => string;
+  t: (key: string, params?: Record<string, any>) => string;
   isLoading: boolean;
   isRTL: boolean;
 };
@@ -93,7 +93,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     // We don't need to load translations here as the page will reload
   };
 
-  const t = (key: string): string => {
+  const t = (key: string, params?: Record<string, any>): string => {
     if (!translations || Object.keys(translations).length === 0) {
       console.log(`[I18nProvider] Translation lookup failed - no translations loaded for key: ${key}`);
       return key;
@@ -114,6 +114,13 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     if (typeof result !== "string") {
       console.log(`[I18nProvider] Translation result is not a string for key: ${key}, type:`, typeof result);
       return key;
+    }
+    
+    // Replace parameters in the translation string
+    if (params) {
+      return Object.entries(params).reduce((str, [paramKey, paramValue]) => {
+        return str.replace(new RegExp(`{{\\s*${paramKey}\\s*}}`, 'g'), String(paramValue));
+      }, result);
     }
     
     return result;
