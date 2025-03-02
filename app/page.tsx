@@ -1,5 +1,8 @@
-import PublicLandingTemplate from '@/components/templates/PublicLandingTemplate';
+import { redirect } from 'next/navigation';
+import { defaultLocale } from '@/lib/i18n';
 
-export default function HomePage() {
-  return <PublicLandingTemplate />;
+export const dynamic = 'force-dynamic';
+
+export default function RootPage() {
+  redirect(`/${defaultLocale}`);
 } 
