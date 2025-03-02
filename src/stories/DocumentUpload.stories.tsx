@@ -489,83 +489,163 @@ const uploadFile = async (file: File) => {
             </pre>
           </div>
         </div>
+      </div>
+      
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold mb-4">File Validation</h2>
+        <p className="mb-4">
+          The document upload component includes comprehensive file validation:
+        </p>
         
         <div className="mb-4">
-          <h3 className="text-lg font-medium mb-2">3. Server-side: Create Document Record</h3>
+          <h3 className="text-lg font-medium mb-2">File Type Validation</h3>
+          <p className="mb-2">
+            Only specific file types are allowed for upload:
+          </p>
+          <ul className="list-disc pl-6 mb-4">
+            <li>PDF documents (.pdf)</li>
+            <li>Microsoft Office documents (.doc, .docx, .xls, .xlsx, .ppt, .pptx)</li>
+            <li>Text files (.txt, .csv)</li>
+            <li>Images (.jpg, .jpeg, .png)</li>
+          </ul>
           <div className="bg-gray-100 p-4 rounded-md mb-4 overflow-x-auto">
             <pre className="text-sm">
-{`// API route handler
-import { db } from '@/lib/db';
+{`// File type validation
+import { validateFileType } from '@/lib/utils/fileValidation';
 
-export async function POST(req: Request) {
-  const { 
-    title, 
-    description, 
-    filePath, 
-    fileSize, 
-    fileType, 
-    category, 
-    language 
-  } = await req.json();
-  
-  // Get the user ID from the session
-  const userId = await getUserIdFromSession();
-  
-  try {
-    // Create a document record in the database
-    const document = await db.document.create({
-      data: {
-        title,
-        description,
-        filePath,
-        fileSize,
-        fileType,
-        category,
-        language,
-        authorId: userId,
-        viewCount: 0,
-        downloadCount: 0
-      }
-    });
-    
-    return Response.json({ document });
-  } catch (error) {
-    console.error('Error creating document:', error);
-    return Response.json(
-      { error: 'Failed to create document' },
-      { status: 500 }
-    );
+const handleFile = (file: File) => {
+  // Validate file type
+  if (!validateFileType(file)) {
+    toast.error('File type not allowed');
+    return;
   }
-}`}
+  
+  // Continue with upload...
+};`}
+            </pre>
+          </div>
+        </div>
+        
+        <div className="mb-4">
+          <h3 className="text-lg font-medium mb-2">File Size Validation</h3>
+          <p className="mb-2">
+            Files are limited to a maximum size (default: 10MB):
+          </p>
+          <div className="bg-gray-100 p-4 rounded-md mb-4 overflow-x-auto">
+            <pre className="text-sm">
+{`// File size validation
+import { validateFileSize } from '@/lib/utils/fileValidation';
+
+const handleFile = (file: File) => {
+  // Validate file size
+  if (!validateFileSize(file, 10)) { // 10MB limit
+    toast.error('File too large. Maximum size: 10MB');
+    return;
+  }
+  
+  // Continue with upload...
+};`}
             </pre>
           </div>
         </div>
       </div>
       
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Security Considerations</h2>
-        <ul className="list-disc pl-6 mb-4">
-          <li className="mb-2">
-            <strong>Signed URLs</strong>: URLs expire after a short time (typically 15 minutes for uploads)
-          </li>
-          <li className="mb-2">
-            <strong>Content Type Validation</strong>: The content type is specified in the signed URL and enforced by S3
-          </li>
-          <li className="mb-2">
-            <strong>Path Sanitization</strong>: File paths are generated server-side to prevent path traversal attacks
-          </li>
-          <li className="mb-2">
-            <strong>File Size Limits</strong>: Both client and server enforce file size limits
-          </li>
-        </ul>
+        <h2 className="text-xl font-semibold mb-4">Error Handling</h2>
+        <p className="mb-4">
+          The upload process includes comprehensive error handling:
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-gray-100 p-4 rounded-md">
+            <h3 className="text-md font-medium mb-2">Client-side Errors</h3>
+            <ul className="list-disc pl-6">
+              <li>Invalid file type</li>
+              <li>File size exceeds limit</li>
+              <li>Network errors during upload</li>
+              <li>Upload cancellation</li>
+              <li>Server response errors</li>
+            </ul>
+          </div>
+          
+          <div className="bg-gray-100 p-4 rounded-md">
+            <h3 className="text-md font-medium mb-2">Server-side Errors</h3>
+            <ul className="list-disc pl-6">
+              <li>S3 connection issues</li>
+              <li>Permission errors</li>
+              <li>Invalid file path</li>
+              <li>Database errors</li>
+              <li>Authentication failures</li>
+            </ul>
+          </div>
+        </div>
       </div>
       
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Example Implementation</h2>
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold mb-4">Upload Progress Tracking</h2>
         <p className="mb-4">
-          Below is an example of the document upload component in action:
+          The upload component provides real-time progress tracking:
         </p>
-        <DocumentUploadForm />
+        
+        <div className="bg-gray-100 p-4 rounded-md mb-4 overflow-x-auto">
+          <pre className="text-sm">
+{`// Progress tracking with XMLHttpRequest
+const uploadFile = async (file: File, uploadUrl: string) => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    
+    // Track upload progress
+    xhr.upload.addEventListener('progress', (event) => {
+      if (event.lengthComputable) {
+        const percentComplete = Math.round((event.loaded / event.total) * 100);
+        setUploadProgress(percentComplete);
+      }
+    });
+    
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        resolve();
+      } else {
+        reject(new Error(\`Upload failed with status \${xhr.status}\`));
+      }
+    };
+    
+    xhr.onerror = () => {
+      reject(new Error('Upload failed'));
+    };
+    
+    xhr.open('PUT', uploadUrl);
+    xhr.setRequestHeader('Content-Type', file.type);
+    xhr.send(file);
+  });
+};`}
+          </pre>
+        </div>
+      </div>
+      
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold mb-4">Security Considerations</h2>
+        <p className="mb-4">
+          The S3 upload implementation includes several security measures:
+        </p>
+        
+        <ul className="list-disc pl-6 mb-4">
+          <li className="mb-2">
+            <span className="font-medium">Signed URLs:</span> Time-limited, single-use URLs prevent unauthorized uploads
+          </li>
+          <li className="mb-2">
+            <span className="font-medium">Content Type Validation:</span> File types are validated both client-side and server-side
+          </li>
+          <li className="mb-2">
+            <span className="font-medium">File Size Limits:</span> Prevents denial of service through large file uploads
+          </li>
+          <li className="mb-2">
+            <span className="font-medium">Permission Checks:</span> Users can only upload to categories they have permission for
+          </li>
+          <li className="mb-2">
+            <span className="font-medium">CORS Configuration:</span> S3 bucket is configured to only accept uploads from authorized domains
+          </li>
+        </ul>
       </div>
     </div>
   );
