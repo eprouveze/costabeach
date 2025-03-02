@@ -78,3 +78,4 @@
 - Fixed development server errors by removing the Turbopack flag from the dev script in package.json, which was causing ENOENT errors with temporary build manifest files.
 - Fixed language selector not working by resolving middleware conflicts and improving the locale switching implementation in the i18n client.
 - Fixed 404 error when switching languages by updating the root page.tsx to properly redirect to the default locale, ensuring consistent behavior across all language routes.
+- Fixed 404 error when switching languages by updating the root page.tsx to properly redirect to the default locale and adding the dynamic flag to all language-specific pages to ensure they're always server-rendered. Also improved the root layout to properly handle language and direction attributes based on the current locale.

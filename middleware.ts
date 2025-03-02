@@ -53,6 +53,9 @@ function handleLocale(request: NextRequest, response: NextResponse) {
     });
   }
   
+  // Set HTML lang attribute
+  response.headers.set("x-html-lang", locale);
+  
   // Set HTML dir attribute for RTL languages (Arabic)
   if (locale === "ar") {
     response.headers.set("x-html-dir", "rtl");
