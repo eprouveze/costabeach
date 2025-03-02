@@ -1,6 +1,10 @@
 // Add any global test setup here
 require('@testing-library/jest-dom');
 
+// Make React available globally (helps with "React is not defined" errors)
+const React = require('react');
+global.React = React;
+
 // Mock Next.js router
 jest.mock('next/router', () => ({
   useRouter: () => ({

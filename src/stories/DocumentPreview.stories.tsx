@@ -8,11 +8,13 @@ const mockDocuments = [
     title: 'Annual Budget Report 2023',
     description: 'Financial report for the fiscal year 2023 including budget allocations and expenditures.',
     filePath: 'documents/financial/budget-2023.pdf',
+    fileUrl: 'https://example.com/documents/financial/budget-2023.pdf',
     fileSize: 2457600, // 2.4 MB
     fileType: 'application/pdf',
     category: 'financial',
     language: 'fr',
     createdAt: '2023-05-15T10:30:00Z',
+    updatedAt: '2023-05-15T10:30:00Z',
     author: {
       id: '101',
       name: 'Sophie Martin',
@@ -26,11 +28,13 @@ const mockDocuments = [
     title: 'HOA Meeting Minutes - March 2023',
     description: 'Minutes from the quarterly homeowners association meeting held on March 10, 2023.',
     filePath: 'documents/meeting/minutes-march-2023.docx',
+    fileUrl: 'https://example.com/documents/meeting/minutes-march-2023.docx',
     fileSize: 1228800, // 1.2 MB
     fileType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     category: 'meeting',
     language: 'fr',
     createdAt: '2023-03-15T14:45:00Z',
+    updatedAt: '2023-03-15T14:45:00Z',
     author: {
       id: '102',
       name: 'Jean Dupont',
@@ -44,11 +48,13 @@ const mockDocuments = [
     title: 'Pool Maintenance Schedule',
     description: 'Schedule for regular maintenance of the community pool and guidelines for residents.',
     filePath: 'documents/announcement/pool-maintenance.jpg',
+    fileUrl: 'https://example.com/documents/announcement/pool-maintenance.jpg',
     fileSize: 512000, // 500 KB
     fileType: 'image/jpeg',
     category: 'announcement',
     language: 'fr',
     createdAt: '2023-06-01T09:15:00Z',
+    updatedAt: '2023-06-01T09:15:00Z',
     author: {
       id: '103',
       name: 'Ahmed Benali',
@@ -62,11 +68,13 @@ const mockDocuments = [
     title: 'Property Rules and Regulations',
     description: 'Official rules and regulations for Costa Beach property owners and residents.',
     filePath: 'documents/legal/rules-regulations.pdf',
+    fileUrl: 'https://example.com/documents/legal/rules-regulations.pdf',
     fileSize: 3686400, // 3.5 MB
     fileType: 'application/pdf',
     category: 'legal',
     language: 'fr',
     createdAt: '2023-01-10T11:20:00Z',
+    updatedAt: '2023-01-10T11:20:00Z',
     author: {
       id: '101',
       name: 'Sophie Martin',
@@ -78,7 +86,29 @@ const mockDocuments = [
 ];
 
 // Mock component to display a document preview
-const DocumentPreview = ({ document, onRequestTranslation }) => {
+interface DocumentPreviewProps {
+  document: {
+    id: string;
+    title: string;
+    description: string;
+    fileUrl: string;
+    fileType: string;
+    fileSize: number;
+    language: string;
+    category: string;
+    createdAt: string;
+    updatedAt: string;
+    viewCount: number;
+    downloadCount: number;
+    author: {
+      name: string;
+      id?: string;
+    };
+  };
+  onRequestTranslation: (documentId: string) => void;
+}
+
+const DocumentPreview = ({ document, onRequestTranslation }: DocumentPreviewProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
   const [error, setError] = useState('');
@@ -277,10 +307,10 @@ const DocumentPreview = ({ document, onRequestTranslation }) => {
 
 // Mock component to display a list of documents with preview
 const DocumentBrowser = () => {
-  const [selectedDocument, setSelectedDocument] = useState(null);
+  const [selectedDocument, setSelectedDocument] = useState(mockDocuments[0]);
   const [translationRequested, setTranslationRequested] = useState(false);
   
-  const handleRequestTranslation = (documentId) => {
+  const handleRequestTranslation = (documentId: string) => {
     // In a real implementation, this would call the API to request a translation
     // await fetch(`/api/documents/${documentId}/request-translation`, { method: 'POST' });
     

@@ -3,9 +3,12 @@ export default {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   transform: {
-    '^.+\\.tsx?$': ['ts-jest', {
+    '^.+\\.(ts|tsx|js|jsx)$': ['ts-jest', {
       tsconfig: 'tsconfig.json',
       useESM: true,
+      babelConfig: {
+        presets: ['@babel/preset-react']
+      }
     }],
   },
   moduleNameMapper: {
@@ -31,12 +34,4 @@ export default {
       statements: 70,
     },
   },
-  // Add Babel configuration for JSX support
-  globals: {
-    'ts-jest': {
-      babelConfig: {
-        presets: ['@babel/preset-react']
-      }
-    }
-  }
 } 

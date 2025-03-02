@@ -2,6 +2,24 @@ import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { toast } from 'react-toastify';
 
+// Define the props interface for the DocumentUpload component
+interface DocumentUploadProps {
+  onUploadComplete: (fileData: { 
+    id: string;
+    title: string;
+    description: string;
+    fileUrl: string;
+    fileType: string;
+    fileSize: number;
+    category: string;
+    language: string;
+  }) => void;
+  maxSizeMB?: number;
+  allowedFileTypes?: string[];
+  category?: string;
+  language?: string;
+}
+
 // Mock component to demonstrate document upload functionality
 const DocumentUpload = ({
   onUploadComplete,
@@ -9,7 +27,7 @@ const DocumentUpload = ({
   allowedFileTypes = ['application/pdf', 'image/jpeg', 'image/png', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
   category = 'legal',
   language = 'fr',
-}) => {
+}: DocumentUploadProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -110,10 +128,12 @@ const DocumentUpload = ({
       
       if (onUploadComplete) {
         onUploadComplete({
-          fileName: file.name,
+          id: Math.random().toString(36).substring(2, 15),
+          title: file.name,
+          description: `Uploaded file: ${file.name}`,
+          fileUrl: `https://example.com/documents/${category}/${file.name}`,
           fileSize: file.size,
           fileType: file.type,
-          filePath: `documents/${category}/${file.name}`,
           category,
           language
         });
@@ -213,9 +233,27 @@ const DocumentUploadForm = () => {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('legal');
   const [language, setLanguage] = useState('fr');
-  const [uploadedFile, setUploadedFile] = useState<any>(null);
+  const [uploadedFile, setUploadedFile] = useState<{
+    id: string;
+    title: string;
+    description: string;
+    fileUrl: string;
+    fileType: string;
+    fileSize: number;
+    category: string;
+    language: string;
+  } | null>(null);
   
-  const handleUploadComplete = (fileData: any) => {
+  const handleUploadComplete = (fileData: {
+    id: string;
+    title: string;
+    description: string;
+    fileUrl: string;
+    fileType: string;
+    fileSize: number;
+    category: string;
+    language: string;
+  }) => {
     setUploadedFile(fileData);
   };
   
@@ -320,7 +358,7 @@ const DocumentUploadForm = () => {
         {uploadedFile && (
           <div className="mb-6 p-3 bg-green-50 border border-green-200 rounded-md">
             <p className="text-sm text-green-800">
-              File uploaded: {uploadedFile.fileName} ({(uploadedFile.fileSize / (1024 * 1024)).toFixed(2)} MB)
+              File uploaded: {uploadedFile.title} ({(uploadedFile.fileSize / (1024 * 1024)).toFixed(2)} MB)
             </p>
           </div>
         )}
