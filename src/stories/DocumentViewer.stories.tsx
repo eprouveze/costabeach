@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Meta, StoryObj } from '@storybook/react';
 import { DocumentPreview } from '@/components/DocumentPreview';
 import { Document, DocumentCategory, Language } from '@/lib/types';
-import { TRPCReactProvider } from '@/lib/trpc/react';
 import { I18nProvider } from '@/lib/i18n/client';
+import { MockTRPCProvider } from '@/lib/mocks/mockTrpc';
 
 // Mock document data
 const mockDocument: Document = {
@@ -65,11 +65,11 @@ const meta: Meta<typeof DocumentPreview> = {
   decorators: [
     (Story) => (
       <I18nProvider>
-        <TRPCReactProvider>
+        <MockTRPCProvider>
           <div className="w-full max-w-4xl">
             <Story />
           </div>
-        </TRPCReactProvider>
+        </MockTRPCProvider>
       </I18nProvider>
     ),
   ],

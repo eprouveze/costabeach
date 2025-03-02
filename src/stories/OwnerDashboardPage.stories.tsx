@@ -3,6 +3,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 import OwnerDashboardPage from "@/app/owner-dashboard/page";
 import { I18nProvider } from "@/lib/i18n/client";
+import { MockTRPCProvider } from "@/lib/mocks/mockTrpc";
 
 const meta: Meta<typeof OwnerDashboardPage> = {
   title: "Owner Portal/OwnerDashboardPage",
@@ -10,10 +11,15 @@ const meta: Meta<typeof OwnerDashboardPage> = {
   decorators: [
     (Story) => (
       <I18nProvider>
-        <Story />
+        <MockTRPCProvider>
+          <Story />
+        </MockTRPCProvider>
       </I18nProvider>
     ),
   ],
+  parameters: {
+    layout: 'fullscreen',
+  },
 };
 
 export default meta;

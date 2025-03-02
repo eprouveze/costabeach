@@ -115,3 +115,4 @@
 - Fixed i18n implementation to support parameters in translations, allowing for dynamic content in translated strings.
 - Fixed tRPC mutation syntax in document-related pages to use useMutation hooks correctly with mutate and mutateAsync methods.
 - Successfully built the project with all TypeScript errors resolved and proper implementation of the Owner Dashboard Redesign.
+- Fixed tRPC context error in Storybook by creating a MockTRPCProvider component that provides mock data and functions for tRPC hooks, resolving the "Unable to find tRPC Context" error in OwnerDashboardPage and DocumentViewer stories.
