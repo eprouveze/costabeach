@@ -26,7 +26,7 @@ window.open = jest.fn();
 
 describe('DocumentPreview Component', () => {
   const mockPreviewDocument = jest.fn().mockResolvedValue('https://example.com/preview');
-  const mockDownloadDocument = jest.fn().mockResolvedValue('https://example.com/download');
+  const mockDownloadDocument = jest.fn().mockResolvedValue(true);
   
   const mockDocument = {
     id: '123',
@@ -54,10 +54,10 @@ describe('DocumentPreview Component', () => {
     (useDocuments as jest.Mock).mockReturnValue({
       previewDocument: mockPreviewDocument,
       downloadDocument: mockDownloadDocument,
+      isLoading: false
     });
   });
   
-  // Simple test that doesn't require JSX rendering
   it('should have the correct props structure', () => {
     // Verify that DocumentPreview is a valid component
     expect(typeof DocumentPreview).toBe('function');
@@ -71,50 +71,132 @@ describe('DocumentPreview Component', () => {
     expect(mockDocument.title).toBe('Test Document');
   });
   
-  // Skip tests that use JSX for now
-  it.skip('should render the document preview', async () => {
-    render(React.createElement(DocumentPreview, { 
-      document: mockDocument, 
-      onClose: jest.fn() 
-    }));
+  it('should render the document preview for PDF', async () => {
+    const user = userEvent.setup();
+    
+    render(
+      <DocumentPreview 
+        document={mockDocument} 
+        onClose={jest.fn()} 
+      />
+    );
     
     // Check if the document title is displayed
-    expect(screen.getByText('Test Document')).toBeInTheDocument();
+    expect(screen.getByTestId('document-title')).toHaveTextContent('Test Document');
     
     // Check if the loading state is shown initially
-    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+    expect(screen.getByTestId('loading-state')).toBeInTheDocument();
     
     // Wait for the preview URL to be loaded
     await waitFor(() => {
       expect(mockPreviewDocument).toHaveBeenCalledWith('123');
     });
+    
+    // Mock the successful loading of preview
+    mockPreviewDocument.mockResolvedValueOnce('https://example.com/preview');
+    
+    // Retry loading the preview
+    const retryButton = screen.getByTestId('retry-button');
+    await user.click(retryButton);
+    
+    await waitFor(() => {
+      expect(mockPreviewDocument).toHaveBeenCalledTimes(2);
+    });
   });
   
-  it.skip('should call onClose when close button is clicked', async () => {
+  it('should call onClose when close button is clicked', async () => {
+    const user = userEvent.setup();
     const mockOnClose = jest.fn();
-    render(React.createElement(DocumentPreview, { 
-      document: mockDocument, 
-      onClose: mockOnClose 
-    }));
     
-    const closeButton = screen.getByRole('button', { name: /close/i });
-    userEvent.click(closeButton);
+    render(
+      <DocumentPreview 
+        document={mockDocument} 
+        onClose={mockOnClose} 
+      />
+    );
+    
+    const closeButton = screen.getByTestId('close-button');
+    await user.click(closeButton);
     
     expect(mockOnClose).toHaveBeenCalled();
   });
   
-  it.skip('should handle download button click', async () => {
-    render(React.createElement(DocumentPreview, { 
-      document: mockDocument, 
-      onClose: jest.fn() 
-    }));
+  it('should handle download button click', async () => {
+    const user = userEvent.setup();
     
-    const downloadButton = screen.getByRole('button', { name: /download/i });
-    userEvent.click(downloadButton);
+    render(
+      <DocumentPreview 
+        document={mockDocument} 
+        onClose={jest.fn()} 
+      />
+    );
+    
+    const downloadButton = screen.getByTestId('download-button');
+    await user.click(downloadButton);
     
     await waitFor(() => {
-      expect(mockDownloadDocument).toHaveBeenCalledWith('123');
-      expect(window.open).toHaveBeenCalledWith('https://example.com/download', '_blank');
+      expect(mockDownloadDocument).toHaveBeenCalledWith('123', 'Test Document');
     });
+  });
+  
+  it('should render image preview for image files', async () => {
+    const imageDocument = {
+      ...mockDocument,
+      fileType: 'image/jpeg',
+      filePath: 'test/image.jpg'
+    };
+    
+    mockPreviewDocument.mockResolvedValueOnce('https://example.com/image-preview');
+    
+    render(
+      <DocumentPreview 
+        document={imageDocument} 
+        onClose={jest.fn()} 
+      />
+    );
+    
+    await waitFor(() => {
+      expect(mockPreviewDocument).toHaveBeenCalledWith('123');
+    });
+  });
+  
+  it('should show unsupported file type message for non-previewable files', async () => {
+    const docxDocument = {
+      ...mockDocument,
+      fileType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      filePath: 'test/document.docx'
+    };
+    
+    mockPreviewDocument.mockResolvedValueOnce(null);
+    
+    render(
+      <DocumentPreview 
+        document={docxDocument} 
+        onClose={jest.fn()} 
+      />
+    );
+    
+    await waitFor(() => {
+      expect(mockPreviewDocument).toHaveBeenCalledWith('123');
+      expect(screen.getByText(/Preview not available for this file type/i)).toBeInTheDocument();
+    });
+  });
+  
+  it('should show translation request button when provided', async () => {
+    const user = userEvent.setup();
+    const mockRequestTranslation = jest.fn();
+    
+    render(
+      <DocumentPreview 
+        document={mockDocument} 
+        onClose={jest.fn()} 
+        onRequestTranslation={mockRequestTranslation}
+      />
+    );
+    
+    const translationButton = screen.getByTestId('request-translation-button');
+    await user.click(translationButton);
+    
+    expect(mockRequestTranslation).toHaveBeenCalled();
   });
 }); 

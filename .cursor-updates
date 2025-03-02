@@ -68,3 +68,4 @@
 - Added file type and size validation with comprehensive test coverage
 - Verified build stability after implementing file upload service components
 - Completed section 3.2 File Upload Service with comprehensive tests for file upload workflow, format validation, and error handling
+- Fixed type errors in DocumentPreview.stories.tsx by updating mock documents to match the Document interface from types.ts, ensuring proper typing for author properties, and fixing onRequestTranslation prop to accept documentId parameter.

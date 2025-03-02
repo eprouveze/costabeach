@@ -35,43 +35,20 @@ export async function GET(
       }
     }
     
-    // Check if preview is available for this file type
-    const previewableTypes = [
-      'application/pdf',
-      'image/jpeg',
-      'image/png',
-      'image/gif',
-      'image/svg+xml',
-      'text/plain',
-      'text/html',
-      'application/json'
-    ];
-    
-    const fileType = document.fileType.toLowerCase();
-    const canPreview = previewableTypes.some(type => fileType.includes(type));
-    
-    if (!canPreview) {
-      return NextResponse.json(
-        { error: "Preview not available for this file type" },
-        { status: 400 }
-      );
-    }
-    
-    // Increment the view count
+    // Increment the download count
     await prisma.document.update({
       where: { id: documentId },
-      data: { viewCount: { increment: 1 } },
+      data: { downloadCount: { increment: 1 } },
     });
     
-    // Generate a signed URL for the document with inline content disposition
-    // Use a shorter expiration time for previews (15 minutes)
-    const previewUrl = await getDownloadUrl(document.filePath, 15 * 60, false);
+    // Generate a signed URL for the document with content disposition header
+    const downloadUrl = await getDownloadUrl(document.filePath);
     
-    return NextResponse.json({ previewUrl });
+    return NextResponse.json({ downloadUrl });
   } catch (error) {
-    console.error("Error generating preview URL:", error);
+    console.error("Error generating download URL:", error);
     return NextResponse.json(
-      { error: "Failed to generate preview URL" },
+      { error: "Failed to generate download URL" },
       { status: 500 }
     );
   }

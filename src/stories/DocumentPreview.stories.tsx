@@ -1,311 +1,99 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
+import { DocumentPreview } from '@/components/DocumentPreview';
+import { DocumentCategory, Language, Document, User } from '@/lib/types';
 
-// Mock document data
-const mockDocuments = [
+// Mock documents for preview
+const mockDocuments: Document[] = [
   {
     id: '1',
-    title: 'Annual Budget Report 2023',
-    description: 'Financial report for the fiscal year 2023 including budget allocations and expenditures.',
-    filePath: 'documents/financial/budget-2023.pdf',
-    fileUrl: 'https://example.com/documents/financial/budget-2023.pdf',
-    fileSize: 2457600, // 2.4 MB
+    title: 'Beach Access Regulations',
+    description: 'Official regulations for beach access in Costa Beach',
+    filePath: '/documents/beach-access.pdf',
+    fileSize: 1024 * 1024 * 2.5, // 2.5MB
     fileType: 'application/pdf',
-    category: 'financial',
-    language: 'fr',
-    createdAt: '2023-05-15T10:30:00Z',
-    updatedAt: '2023-05-15T10:30:00Z',
+    category: DocumentCategory.LEGAL,
+    language: Language.ENGLISH,
+    isPublished: true,
+    isTranslated: true,
+    viewCount: 245,
+    downloadCount: 87,
+    createdAt: new Date('2023-05-15'),
+    updatedAt: new Date('2023-06-20'),
+    authorId: 'user1',
     author: {
-      id: '101',
-      name: 'Sophie Martin',
-      role: 'admin'
+      id: 'user1',
+      name: 'John Administrator',
+      email: 'john@costabeach.gov',
+      image: 'https://randomuser.me/api/portraits/men/1.jpg',
+      role: 'admin' as const,
+      isAdmin: true,
+      isVerifiedOwner: true,
+      preferredLanguage: Language.FRENCH,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     },
-    viewCount: 45,
-    downloadCount: 12
   },
   {
     id: '2',
-    title: 'HOA Meeting Minutes - March 2023',
-    description: 'Minutes from the quarterly homeowners association meeting held on March 10, 2023.',
-    filePath: 'documents/meeting/minutes-march-2023.docx',
-    fileUrl: 'https://example.com/documents/meeting/minutes-march-2023.docx',
-    fileSize: 1228800, // 1.2 MB
-    fileType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    category: 'meeting',
-    language: 'fr',
-    createdAt: '2023-03-15T14:45:00Z',
-    updatedAt: '2023-03-15T14:45:00Z',
+    title: 'Environmental Protection Guidelines',
+    description: 'Guidelines for protecting the coastal environment',
+    filePath: '/documents/environmental-guidelines.pdf',
+    fileSize: 1024 * 1024 * 3.7, // 3.7MB
+    fileType: 'application/pdf',
+    category: DocumentCategory.COMITE_DE_SUIVI,
+    language: Language.ENGLISH,
+    isPublished: true,
+    isTranslated: false,
+    viewCount: 189,
+    downloadCount: 62,
+    createdAt: new Date('2023-07-10'),
+    updatedAt: new Date('2023-07-10'),
+    authorId: 'user2',
     author: {
-      id: '102',
-      name: 'Jean Dupont',
-      role: 'contentEditor'
+      id: 'user2',
+      name: 'Maria Rodriguez',
+      email: 'maria@costabeach.gov',
+      image: 'https://randomuser.me/api/portraits/women/2.jpg',
+      role: 'contentEditor' as const,
+      isAdmin: false,
+      isVerifiedOwner: true,
+      preferredLanguage: Language.ARABIC,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     },
-    viewCount: 32,
-    downloadCount: 8
   },
   {
     id: '3',
-    title: 'Pool Maintenance Schedule',
-    description: 'Schedule for regular maintenance of the community pool and guidelines for residents.',
-    filePath: 'documents/announcement/pool-maintenance.jpg',
-    fileUrl: 'https://example.com/documents/announcement/pool-maintenance.jpg',
-    fileSize: 512000, // 500 KB
-    fileType: 'image/jpeg',
-    category: 'announcement',
-    language: 'fr',
-    createdAt: '2023-06-01T09:15:00Z',
-    updatedAt: '2023-06-01T09:15:00Z',
-    author: {
-      id: '103',
-      name: 'Ahmed Benali',
-      role: 'contentEditor'
-    },
-    viewCount: 78,
-    downloadCount: 23
-  },
-  {
-    id: '4',
-    title: 'Property Rules and Regulations',
-    description: 'Official rules and regulations for Costa Beach property owners and residents.',
-    filePath: 'documents/legal/rules-regulations.pdf',
-    fileUrl: 'https://example.com/documents/legal/rules-regulations.pdf',
-    fileSize: 3686400, // 3.5 MB
+    title: 'Tourism Development Plan',
+    description: 'Strategic plan for sustainable tourism development',
+    filePath: '/documents/tourism-plan.pdf',
+    fileSize: 1024 * 1024 * 5.2, // 5.2MB
     fileType: 'application/pdf',
-    category: 'legal',
-    language: 'fr',
-    createdAt: '2023-01-10T11:20:00Z',
-    updatedAt: '2023-01-10T11:20:00Z',
+    category: DocumentCategory.SOCIETE_DE_GESTION,
+    language: Language.ENGLISH,
+    isPublished: false,
+    isTranslated: false,
+    viewCount: 42,
+    downloadCount: 18,
+    createdAt: new Date('2023-08-05'),
+    updatedAt: new Date('2023-08-20'),
+    authorId: 'user3',
     author: {
-      id: '101',
-      name: 'Sophie Martin',
-      role: 'admin'
+      id: 'user3',
+      name: 'Alex Johnson',
+      email: 'alex@costabeach.gov',
+      image: 'https://randomuser.me/api/portraits/men/3.jpg',
+      role: 'user' as const,
+      isAdmin: false,
+      isVerifiedOwner: false,
+      preferredLanguage: Language.ENGLISH,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     },
-    viewCount: 120,
-    downloadCount: 45
-  }
+  },
 ];
 
-// Mock component to display a document preview
-interface DocumentPreviewProps {
-  document: {
-    id: string;
-    title: string;
-    description: string;
-    fileUrl: string;
-    fileType: string;
-    fileSize: number;
-    language: string;
-    category: string;
-    createdAt: string;
-    updatedAt: string;
-    viewCount: number;
-    downloadCount: number;
-    author: {
-      name: string;
-      id?: string;
-    };
-  };
-  onRequestTranslation: (documentId: string) => void;
-}
-
-const DocumentPreview = ({ document, onRequestTranslation }: DocumentPreviewProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState('');
-  const [error, setError] = useState('');
-  
-  // Function to simulate fetching a download URL from the server
-  const getDownloadUrl = async () => {
-    setIsLoading(true);
-    setError('');
-    
-    try {
-      // In a real implementation, this would call the API to get a signed URL
-      // const response = await fetch(`/api/documents/${document.id}/download`);
-      // const { downloadUrl } = await response.json();
-      
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock download URL based on file type
-      let mockUrl;
-      if (document.fileType === 'application/pdf') {
-        mockUrl = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
-      } else if (document.fileType === 'image/jpeg' || document.fileType === 'image/png') {
-        mockUrl = 'https://via.placeholder.com/800x600.png';
-      } else {
-        mockUrl = '#'; // Placeholder for other file types
-      }
-      
-      // Increment download count (would be done server-side in real implementation)
-      // await fetch(`/api/documents/${document.id}/increment-download`, { method: 'POST' });
-      
-      return mockUrl;
-    } catch (error) {
-      console.error('Error getting download URL:', error);
-      setError('Failed to generate download URL. Please try again.');
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  // Function to load preview
-  const loadPreview = async () => {
-    setIsLoading(true);
-    setError('');
-    
-    try {
-      // In a real implementation, this would call the API to get a signed URL for preview
-      // const response = await fetch(`/api/documents/${document.id}/preview`);
-      // const { previewUrl } = await response.json();
-      
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock preview URL based on file type
-      let mockUrl;
-      if (document.fileType === 'application/pdf') {
-        mockUrl = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
-      } else if (document.fileType === 'image/jpeg' || document.fileType === 'image/png') {
-        mockUrl = 'https://via.placeholder.com/800x600.png';
-      } else {
-        throw new Error('Preview not available for this file type');
-      }
-      
-      // Increment view count (would be done server-side in real implementation)
-      // await fetch(`/api/documents/${document.id}/increment-view`, { method: 'POST' });
-      
-      setPreviewUrl(mockUrl);
-    } catch (error) {
-      console.error('Error loading preview:', error);
-      setError('Preview not available for this file type. Please download the file to view it.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  // Function to handle download
-  const handleDownload = async () => {
-    const url = await getDownloadUrl();
-    if (url) {
-      window.open(url, '_blank');
-    }
-  };
-  
-  // Function to handle translation request
-  const handleRequestTranslation = () => {
-    if (onRequestTranslation) {
-      onRequestTranslation(document.id);
-    }
-  };
-  
-  // Determine if preview is available based on file type
-  const isPreviewAvailable = document.fileType === 'application/pdf' || 
-                            document.fileType === 'image/jpeg' || 
-                            document.fileType === 'image/png';
-  
-  return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
-      <div className="p-6">
-        <h2 className="text-xl font-bold mb-2">{document.title}</h2>
-        <p className="text-gray-600 mb-4">{document.description}</p>
-        
-        <div className="flex flex-wrap gap-2 mb-4">
-          <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
-            {document.category}
-          </span>
-          <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded">
-            {document.language.toUpperCase()}
-          </span>
-          <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded">
-            {(document.fileSize / (1024 * 1024)).toFixed(2)} MB
-          </span>
-          <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded">
-            {document.fileType.split('/')[1]}
-          </span>
-        </div>
-        
-        <div className="flex items-center text-sm text-gray-500 mb-6">
-          <span>Uploaded by {document.author.name} on {new Date(document.createdAt).toLocaleDateString()}</span>
-          <span className="mx-2">•</span>
-          <span>{document.viewCount} views</span>
-          <span className="mx-2">•</span>
-          <span>{document.downloadCount} downloads</span>
-        </div>
-        
-        {isPreviewAvailable ? (
-          <div className="mb-4">
-            <button
-              onClick={loadPreview}
-              disabled={isLoading || !!previewUrl}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed mr-2"
-            >
-              {isLoading ? 'Loading...' : previewUrl ? 'Preview Loaded' : 'Load Preview'}
-            </button>
-            
-            <button
-              onClick={handleDownload}
-              disabled={isLoading}
-              className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Download
-            </button>
-          </div>
-        ) : (
-          <div className="mb-4">
-            <button
-              onClick={handleDownload}
-              disabled={isLoading}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Download
-            </button>
-            <p className="mt-2 text-sm text-gray-500">Preview not available for this file type.</p>
-          </div>
-        )}
-        
-        {document.language !== 'fr' && (
-          <button
-            onClick={handleRequestTranslation}
-            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-          >
-            Request Translation to French
-          </button>
-        )}
-        
-        {error && (
-          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-sm text-red-800">{error}</p>
-          </div>
-        )}
-      </div>
-      
-      {previewUrl && (
-        <div className="border-t border-gray-200">
-          {document.fileType === 'application/pdf' ? (
-            <div className="h-[500px] w-full">
-              <iframe 
-                src={previewUrl} 
-                className="w-full h-full" 
-                title={document.title}
-              />
-            </div>
-          ) : document.fileType.startsWith('image/') ? (
-            <div className="p-4 flex justify-center">
-              <img 
-                src={previewUrl} 
-                alt={document.title} 
-                className="max-h-[500px] object-contain"
-              />
-            </div>
-          ) : null}
-        </div>
-      )}
-    </div>
-  );
-};
-
-// Mock component to display a list of documents with preview
 const DocumentBrowser = () => {
   const [selectedDocument, setSelectedDocument] = useState(mockDocuments[0]);
   const [translationRequested, setTranslationRequested] = useState(false);
@@ -316,6 +104,11 @@ const DocumentBrowser = () => {
     
     setTranslationRequested(true);
     setTimeout(() => setTranslationRequested(false), 3000);
+  };
+
+  const handleClose = () => {
+    // In a real implementation, this would close the preview
+    console.log('Closing preview');
   };
   
   return (
@@ -364,16 +157,21 @@ const DocumentBrowser = () => {
         
         <div>
           <h2 className="text-xl font-semibold mb-4">Document Preview</h2>
-          {selectedDocument ? (
-            <DocumentPreview 
-              document={selectedDocument} 
-              onRequestTranslation={handleRequestTranslation}
-            />
-          ) : (
-            <div className="p-6 border border-gray-200 rounded-lg text-center text-gray-500">
-              Select a document to preview
+          <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+            <div className="mb-6">
+              {selectedDocument ? (
+                <DocumentPreview 
+                  document={selectedDocument} 
+                  onRequestTranslation={handleRequestTranslation}
+                  onClose={handleClose}
+                />
+              ) : (
+                <div className="p-6 border border-gray-200 rounded-lg text-center text-gray-500">
+                  Select a document to preview
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
@@ -386,37 +184,172 @@ const meta: Meta<typeof DocumentPreview> = {
   parameters: {
     layout: 'centered',
   },
+  tags: ['autodocs'],
 };
 
 export default meta;
 type Story = StoryObj<typeof DocumentPreview>;
 
-export const Basic: Story = {
+export const PDFPreview: Story = {
   args: {
     document: mockDocuments[0],
-    onRequestTranslation: () => console.log('Translation requested'),
+    onClose: () => console.log('Close clicked'),
+    onRequestTranslation: (documentId: string) => console.log('Translation requested for', documentId),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Preview of a PDF document with translation request option.',
+      },
+    },
   },
 };
 
 export const ImagePreview: Story = {
   args: {
-    document: mockDocuments[2],
-    onRequestTranslation: () => console.log('Translation requested'),
-  },
-};
-
-export const NoPreviewAvailable: Story = {
-  args: {
     document: mockDocuments[1],
-    onRequestTranslation: () => console.log('Translation requested'),
+    onClose: () => console.log('Close clicked'),
+    onRequestTranslation: (documentId: string) => console.log('Translation requested for', documentId),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Preview of an image document.',
+      },
+    },
   },
 };
 
-export const WithBrowser: Story = {
-  render: () => <DocumentBrowser />,
-  parameters: {
-    layout: 'fullscreen',
+export const UnsupportedFileType: Story = {
+  args: {
+    document: mockDocuments[2],
+    onClose: () => console.log('Close clicked'),
+    onRequestTranslation: (documentId: string) => console.log('Translation requested for', documentId),
   },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Preview of a document with an unsupported file type (DOCX).',
+      },
+    },
+  },
+};
+
+export const LoadingState: Story = {
+  args: {
+    document: mockDocuments[0],
+    onClose: () => console.log('Close clicked'),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Loading state while the preview is being generated.',
+      },
+    },
+  },
+  decorators: [
+    (Story) => {
+      // Override the mock to show loading state
+      jest.mock('@/lib/hooks/useDocuments', () => ({
+        useDocuments: () => ({
+          previewDocument: async () => {
+            // Simulate loading delay
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            return 'https://example.com/preview';
+          },
+          downloadDocument: async () => true,
+          isLoading: true,
+        }),
+      }));
+      
+      return <Story />;
+    },
+  ],
+};
+
+export const ErrorState: Story = {
+  args: {
+    document: mockDocuments[0],
+    onClose: () => console.log('Close clicked'),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Error state when preview generation fails.',
+      },
+    },
+  },
+  decorators: [
+    (Story) => {
+      // Override the mock to show error state
+      jest.mock('@/lib/hooks/useDocuments', () => ({
+        useDocuments: () => ({
+          previewDocument: async () => {
+            throw new Error('Failed to generate preview');
+          },
+          downloadDocument: async () => true,
+          isLoading: false,
+        }),
+      }));
+      
+      return <Story />;
+    },
+  ],
+};
+
+// Interactive example with document selection
+export const InteractivePreview = () => {
+  const [selectedDocument, setSelectedDocument] = useState(mockDocuments[0]);
+  const [showPreview, setShowPreview] = useState(false);
+  
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">Document Preview System</h1>
+      
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold mb-4">Select a document to preview:</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {mockDocuments.map((doc) => (
+            <div 
+              key={doc.id}
+              className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+                selectedDocument.id === doc.id 
+                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
+                  : 'border-gray-200 hover:border-blue-300 dark:border-gray-700'
+              }`}
+              onClick={() => setSelectedDocument(doc)}
+            >
+              <h3 className="font-medium mb-2">{doc.title}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">{doc.description}</p>
+              <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
+                <span className="mr-2">{doc.fileType.split('/')[1].toUpperCase()}</span>
+                <span>{(doc.fileSize / 1024 / 1024).toFixed(2)} MB</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <button
+          className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          onClick={() => setShowPreview(true)}
+        >
+          Preview Selected Document
+        </button>
+      </div>
+      
+      {showPreview && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="w-full max-w-4xl h-[80vh]">
+            <DocumentPreview
+              document={selectedDocument}
+              onClose={() => setShowPreview(false)}
+              onRequestTranslation={() => console.log('Translation requested')}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export const S3DownloadWorkflow = () => {
@@ -445,8 +378,8 @@ export const S3DownloadWorkflow = () => {
           <div className="bg-gray-100 p-4 rounded-md mb-4 overflow-x-auto">
             <pre className="text-sm">
 {`// API route handler
-import { getDownloadUrl } from '@/lib/s3';
-import { db } from '@/lib/db';
+import { getDownloadUrl } from '@/lib/utils/documents';
+import { prisma } from '@/lib/db';
 
 export async function GET(
   req: Request,
@@ -456,7 +389,7 @@ export async function GET(
   
   try {
     // Get document from database
-    const document = await db.document.findUnique({
+    const document = await prisma.document.findUnique({
       where: { id: documentId }
     });
     
@@ -468,10 +401,14 @@ export async function GET(
     }
     
     // Generate a signed URL for downloading
-    const downloadUrl = await getDownloadUrl(document.filePath);
+    const downloadUrl = await getDownloadUrl(
+      document.filePath,
+      3600,  // 1 hour expiration
+      true    // Force download
+    );
     
     // Increment download count
-    await db.document.update({
+    await prisma.document.update({
       where: { id: documentId },
       data: { downloadCount: { increment: 1 } }
     });
@@ -494,7 +431,7 @@ export async function GET(
           <div className="bg-gray-100 p-4 rounded-md mb-4 overflow-x-auto">
             <pre className="text-sm">
 {`// Client component
-const downloadFile = async (documentId: string) => {
+const downloadDocument = async (documentId: string, fileName: string) => {
   try {
     // Request a signed URL from the server
     const response = await fetch(\`/api/documents/\${documentId}/download\`);
@@ -506,8 +443,13 @@ const downloadFile = async (documentId: string) => {
     
     const { downloadUrl } = await response.json();
     
-    // Open the download URL in a new tab
-    window.open(downloadUrl, '_blank');
+    // Create a temporary link and trigger download
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
     
     return true;
   } catch (error) {
@@ -524,8 +466,8 @@ const downloadFile = async (documentId: string) => {
           <div className="bg-gray-100 p-4 rounded-md mb-4 overflow-x-auto">
             <pre className="text-sm">
 {`// API route handler for preview URLs
-import { getDownloadUrl } from '@/lib/s3';
-import { db } from '@/lib/db';
+import { getDownloadUrl } from '@/lib/utils/documents';
+import { prisma } from '@/lib/db';
 
 export async function GET(
   req: Request,
@@ -535,7 +477,7 @@ export async function GET(
   
   try {
     // Get document from database
-    const document = await db.document.findUnique({
+    const document = await prisma.document.findUnique({
       where: { id: documentId }
     });
     
@@ -551,10 +493,17 @@ export async function GET(
       'application/pdf',
       'image/jpeg',
       'image/png',
-      'image/gif'
+      'image/gif',
+      'image/svg+xml',
+      'text/plain',
+      'text/html',
+      'application/json'
     ];
     
-    if (!previewableTypes.includes(document.fileType)) {
+    const fileType = document.fileType.toLowerCase();
+    const canPreview = previewableTypes.some(type => fileType.includes(type));
+    
+    if (!canPreview) {
       return Response.json(
         { error: 'Preview not available for this file type' },
         { status: 400 }
@@ -562,10 +511,14 @@ export async function GET(
     }
     
     // Generate a signed URL for preview (shorter expiration)
-    const previewUrl = await getDownloadUrl(document.filePath, 15 * 60); // 15 minutes
+    const previewUrl = await getDownloadUrl(
+      document.filePath,
+      15 * 60,  // 15 minutes
+      false     // Inline display
+    );
     
     // Increment view count
-    await db.document.update({
+    await prisma.document.update({
       where: { id: documentId },
       data: { viewCount: { increment: 1 } }
     });
@@ -607,10 +560,13 @@ export async function GET(
         <p className="mb-4">
           Below is an example of the document preview component in action:
         </p>
-        <DocumentPreview 
-          document={mockDocuments[0]} 
-          onRequestTranslation={() => console.log('Translation requested')}
-        />
+        <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+          <DocumentPreview 
+            document={mockDocuments[0]} 
+            onClose={() => console.log('Close clicked')}
+            onRequestTranslation={() => console.log('Translation requested')}
+          />
+        </div>
       </div>
     </div>
   );

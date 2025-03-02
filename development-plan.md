@@ -256,9 +256,9 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Create Storybook stories for file upload component
 - [x] Document upload workflow
 
-### 3.3 File Access and Preview
+### 3.3 File Access and Preview ✅
 - [x] Implement secure file access through signed URLs
-- [ ] Create PDF/document preview functionality
+- [x] Create PDF/document preview functionality
 - [x] Add download functionality
 
 **Implementation Details:**
@@ -269,8 +269,8 @@ This development plan outlines the transformation of the Costa Beach application
 
 **Tests:**
 - [x] Test file retrieval
-- [ ] Test preview rendering
-- [ ] Test download functionality
+- [x] Test preview rendering
+- [x] Test download functionality
 
 **Testing Instructions:**
 - Verify signed URL generation for different file types
@@ -279,7 +279,7 @@ This development plan outlines the transformation of the Costa Beach application
 - Test URL expiration behavior
 
 **Storybook:**
-- [ ] Create Storybook stories for document preview component
+- [x] Create Storybook stories for document preview component
 
 ## 4. Public Area Redesign
 

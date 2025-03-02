@@ -54,13 +54,22 @@ export const getUploadUrl = async (
 /**
  * Get a signed URL for downloading a file from S3
  */
-export const getDownloadUrl = async (filePath: string): Promise<string> => {
+export const getDownloadUrl = async (
+  filePath: string,
+  expiresIn: number = 3600,
+  forceDownload: boolean = true
+): Promise<string> => {
+  const fileName = filePath.split('/').pop() || 'download';
+  
   const command = new GetObjectCommand({
     Bucket: bucketName,
     Key: filePath,
+    ResponseContentDisposition: forceDownload 
+      ? `attachment; filename="${encodeURIComponent(fileName)}"` 
+      : `inline; filename="${encodeURIComponent(fileName)}"`,
   });
   
-  return getSignedUrl(s3Client, command, { expiresIn: 3600 });
+  return getSignedUrl(s3Client, command, { expiresIn });
 };
 
 /**

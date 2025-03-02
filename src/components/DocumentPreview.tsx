@@ -8,7 +8,7 @@ import { X, Download, Languages, Loader } from "lucide-react";
 interface DocumentPreviewProps {
   document: Document;
   onClose: () => void;
-  onRequestTranslation?: () => void;
+  onRequestTranslation?: (documentId: string) => void;
   className?: string;
 }
 
@@ -155,7 +155,7 @@ export const DocumentPreview = ({
         <div className="flex items-center space-x-2">
           {onRequestTranslation && (
             <button
-              onClick={onRequestTranslation}
+              onClick={() => onRequestTranslation(document.id)}
               className="p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 rounded-full"
               title="Request Translation"
               data-testid="request-translation-button"
