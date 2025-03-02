@@ -99,3 +99,4 @@
 - Fixed layout issues in the French and Arabic contact pages by improving spacing, adjusting content position, and enhancing visual hierarchy.
 - Fixed AboutSection Storybook rendering error by implementing proper MockI18nProvider with comprehensive mock translations.
 - Created English contact page with improved layout matching French and Arabic versions, featuring a more prominent form and enhanced styling.
+- Refactored contact pages to use a shared ContactPage component, eliminating code duplication across language-specific routes and improving maintainability.
