@@ -4,30 +4,32 @@ import { useState } from "react";
 import { NavItem } from "@/components/molecules/NavItem";
 import { TextField } from "@/components/molecules/TextField";
 import { Search, Home, FileText, Settings, Users } from "lucide-react";
+import { useI18n } from "@/lib/i18n/client";
 
 interface OwnerPortalSidebarProps {
   onNavigate?: (path: string) => void;
   currentPath?: string;
 }
 
-const navigationItems = [
-  { icon: Home, label: "Dashboard", path: "/owner/dashboard" },
-  { icon: FileText, label: "Documents", path: "/owner/documents" },
-  { icon: Users, label: "Community", path: "/owner/community" },
-  { icon: Settings, label: "Settings", path: "/owner/settings" },
-];
-
 export function OwnerPortalSidebar({ onNavigate, currentPath = "/owner/dashboard" }: OwnerPortalSidebarProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const { t } = useI18n();
+
+  const navigationItems = [
+    { icon: Home, label: t("navigation.dashboard"), path: "/owner/dashboard" },
+    { icon: FileText, label: t("navigation.documents"), path: "/owner/documents" },
+    { icon: Users, label: t("navigation.community"), path: "/owner/community" },
+    { icon: Settings, label: t("navigation.settings"), path: "/owner/settings" },
+  ];
 
   return (
     <aside className="w-64 h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-4 flex flex-col">
       <div className="mb-6">
         <TextField
           icon={Search}
-          label="Search"
+          label={t("common.search")}
           name="search"
-          placeholder="Search..."
+          placeholder={`${t("common.search")}...`}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full"

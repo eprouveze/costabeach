@@ -44,7 +44,25 @@
     "documents": "المستندات",
     "users": "المستخدمون",
     "admin": "الإدارة",
-    "contact": "اتصل بنا"
+    "contact": "اتصل بنا",
+    "siteTitle": "كوستا بيتش 3"
+  },
+  "navigation": {
+    "home": "الرئيسية",
+    "about": "حول",
+    "documents": "المستندات",
+    "contact": "اتصل بنا",
+    "ownerPortal": "بوابة المالك",
+    "toggleMenu": "تبديل القائمة",
+    "dashboard": "لوحة التحكم",
+    "community": "المجتمع",
+    "settings": "الإعدادات",
+    "properties": "العقارات",
+    "bookings": "الحجوزات",
+    "guests": "الضيوف",
+    "messages": "الرسائل",
+    "payments": "المدفوعات",
+    "signOut": "تسجيل الخروج"
   },
   "auth": {
     "email": "البريد الإلكتروني",

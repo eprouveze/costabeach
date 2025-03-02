@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { NavItem } from "../molecules/NavItem";
-import { Menu, X, Home, Building2, Mail, User } from "lucide-react";
+import LanguageSwitcher from "../LanguageSwitcher";
+import { Menu, X, Home, FileText, Mail, User, Info } from "lucide-react";
+import { useI18n } from "@/lib/i18n/client";
 
 interface HeaderProps {
   className?: string;
@@ -10,54 +13,81 @@ interface HeaderProps {
 
 export const Header = ({ className = "" }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const { t } = useI18n();
+
+  // Close mobile menu when navigating
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
 
   const navItems = [
-    { label: "Home", href: "/", icon: Home },
-    { label: "Property", href: "/property", icon: Building2 },
-    { label: "Contact", href: "/contact", icon: Mail },
-    { label: "Owner Portal", href: "/owner", icon: User },
+    { label: t("navigation.home"), href: "/", icon: Home },
+    { label: t("navigation.about"), href: "/about", icon: Info },
+    { label: t("navigation.documents"), href: "/documents", icon: FileText },
+    { label: t("navigation.contact"), href: "/contact", icon: Mail },
+    { label: t("navigation.ownerPortal"), href: "/owner-login", icon: User },
   ];
 
+  // Check if a nav item is active
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return pathname === href;
+    }
+    return pathname.startsWith(href);
+  };
+
   return (
-    <header className={`w-full bg-white shadow-sm ${className}`}>
+    <header className={`w-full bg-white dark:bg-gray-800 shadow-sm ${className}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold text-gray-900">Costabeach</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {t("common.siteTitle")}
+            </h1>
           </div>
           
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            {navItems.map((item) => (
-              <NavItem
-                key={item.href}
-                href={item.href}
-                label={item.label}
-                icon={item.icon}
-              />
-            ))}
-          </nav>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <nav className="md:hidden py-4">
-            <div className="flex flex-col space-y-4">
+          <div className="hidden md:flex items-center space-x-4">
+            <nav className="flex space-x-4 mr-4">
               {navItems.map((item) => (
                 <NavItem
                   key={item.href}
                   href={item.href}
                   label={item.label}
                   icon={item.icon}
+                  isActive={isActive(item.href)}
+                />
+              ))}
+            </nav>
+            <LanguageSwitcher variant="dropdown" />
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center">
+            <LanguageSwitcher variant="dropdown" className="mr-2" />
+            <button
+              className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label={t("navigation.toggleMenu")}
+              aria-expanded={isMenuOpen}
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <nav className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex flex-col space-y-2">
+              {navItems.map((item) => (
+                <NavItem
+                  key={item.href}
+                  href={item.href}
+                  label={item.label}
+                  icon={item.icon}
+                  isActive={isActive(item.href)}
                   className="block px-4 py-2 text-base"
                 />
               ))}

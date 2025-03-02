@@ -27,7 +27,25 @@
     "register": "Register",
     "welcome": "Welcome",
     "language": "Language",
-    "contact": "Contact"
+    "contact": "Contact",
+    "siteTitle": "Costa Beach 3"
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "documents": "Documents",
+    "contact": "Contact",
+    "ownerPortal": "Owner Portal",
+    "toggleMenu": "Toggle Menu",
+    "dashboard": "Dashboard",
+    "community": "Community",
+    "settings": "Settings",
+    "properties": "Properties",
+    "bookings": "Bookings",
+    "guests": "Guests",
+    "messages": "Messages",
+    "payments": "Payments",
+    "signOut": "Sign Out"
   },
   "landing": {
     "heroTitle": "Costa Beach 3 Homeowners Association Portal",

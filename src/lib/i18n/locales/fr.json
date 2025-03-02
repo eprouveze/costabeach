@@ -27,7 +27,25 @@
     "documents": "Documents",
     "users": "Utilisateurs",
     "admin": "Administration",
-    "contact": "Contact"
+    "contact": "Contact",
+    "siteTitle": "Costa Beach 3"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "about": "À propos",
+    "documents": "Documents",
+    "contact": "Contact",
+    "ownerPortal": "Portail Propriétaire",
+    "toggleMenu": "Basculer le menu",
+    "dashboard": "Tableau de bord",
+    "community": "Communauté",
+    "settings": "Paramètres",
+    "properties": "Propriétés",
+    "bookings": "Réservations",
+    "guests": "Invités",
+    "messages": "Messages",
+    "payments": "Paiements",
+    "signOut": "Déconnexion"
   },
   "auth": {
     "email": "Email",

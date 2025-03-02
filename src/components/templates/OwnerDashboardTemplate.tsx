@@ -4,19 +4,21 @@ import { signOut } from "next-auth/react";
 import { Building2, Calendar, CreditCard, LayoutDashboard, LogOut, MessageSquare, Settings, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const sidebarLinks = [
-  { href: "/owner-dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/owner-dashboard/properties", label: "Properties", icon: Building2 },
-  { href: "/owner-dashboard/bookings", label: "Bookings", icon: Calendar },
-  { href: "/owner-dashboard/guests", label: "Guests", icon: Users },
-  { href: "/owner-dashboard/messages", label: "Messages", icon: MessageSquare },
-  { href: "/owner-dashboard/payments", label: "Payments", icon: CreditCard },
-  { href: "/owner-dashboard/settings", label: "Settings", icon: Settings },
-];
+import { useI18n } from "@/lib/i18n/client";
 
 export default function OwnerDashboardTemplate({ children }: { children?: React.ReactNode }) {
   const pathname = usePathname();
+  const { t } = useI18n();
+
+  const sidebarLinks = [
+    { href: "/owner-dashboard", label: t("navigation.dashboard"), icon: LayoutDashboard },
+    { href: "/owner-dashboard/properties", label: t("navigation.properties"), icon: Building2 },
+    { href: "/owner-dashboard/bookings", label: t("navigation.bookings"), icon: Calendar },
+    { href: "/owner-dashboard/guests", label: t("navigation.guests"), icon: Users },
+    { href: "/owner-dashboard/messages", label: t("navigation.messages"), icon: MessageSquare },
+    { href: "/owner-dashboard/payments", label: t("navigation.payments"), icon: CreditCard },
+    { href: "/owner-dashboard/settings", label: t("navigation.settings"), icon: Settings },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -24,7 +26,7 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
       <aside className="w-64 bg-white border-r border-gray-200 fixed h-full">
         <div className="p-6">
           <Link href="/" className="text-xl font-bold text-blue-600">
-            Costa Beach
+            {t("common.siteTitle")}
           </Link>
         </div>
         <nav className="mt-6">
@@ -51,7 +53,7 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
             className="w-full flex items-center gap-3 px-6 py-3 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50"
           >
             <LogOut className="w-5 h-5" />
-            Sign Out
+            {t("navigation.signOut")}
           </button>
         </nav>
       </aside>
@@ -61,7 +63,7 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
         {/* Header */}
         <header className="bg-white border-b border-gray-200">
           <div className="px-4 h-16 flex items-center justify-between">
-            <h1 className="text-xl font-semibold text-gray-800">Owner Dashboard</h1>
+            <h1 className="text-xl font-semibold text-gray-800">{t("navigation.dashboard")}</h1>
           </div>
         </header>
 

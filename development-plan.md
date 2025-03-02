@@ -319,7 +319,7 @@ This development plan outlines the transformation of the Costa Beach application
 ### 4.2 Navigation Structure
 - [ ] Update header and navigation components
 - [ ] Simplify routing structure
-- [ ] Add language-aware navigation
+- [x] Add language-aware navigation
 
 **Implementation Details:**
 - Create a simplified navigation structure with Home, About, Contact, and Login/Register

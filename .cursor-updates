@@ -72,3 +72,5 @@
 - Created mock implementation of useDocuments hook for Storybook to resolve tRPC context issues, fixed DocumentPreview.stories.tsx to use correct prop names and enum values, and ensured successful build completion.
 - Fixed Storybook rendering issue in DocumentPreview.stories.tsx by replacing Jest mocks with a custom MockedDocumentPreview component that simulates the behavior of the actual component without requiring tRPC context.
 - Improved DocumentPreview component display in Storybook by adjusting layout to 'padded', increasing preview container height to 600px, and setting minimum width to ensure proper desktop viewing experience.
+- Updated development plan to mark completed features (search functionality, file preview) and identified pending items before starting Navigation Structure implementation.
+- Added navigation translation strings to all locale files (en.json, fr.json, ar.json) and updated Header, OwnerPortalSidebar, and OwnerDashboardTemplate components to use these translations, ensuring proper internationalization of navigation elements.
