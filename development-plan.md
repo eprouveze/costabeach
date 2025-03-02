@@ -683,24 +683,34 @@ This development plan outlines the transformation of the Costa Beach application
 
 [DELETED]
 
-### 4.4 Owner Dashboard Redesign
-- [ ] Remove property management sections
-- [ ] Focus UI on document access
-- [ ] Add notifications for new documents
+### 4.4 Owner Dashboard Redesign ✅
+- [x] Remove property management sections
+- [x] Focus UI on document access
+- [x] Add notifications for new documents
 
 **Implementation Details:**
-- Create a dashboard layout with sections for different document categories
-- Add a recent documents section showing newly added items
-- Implement notification system for new documents in user's preferred categories
-- Add quick filters and search functionality
+- Created a dashboard layout with sections for different document categories
+- Added a recent documents section showing newly added items
+- Implemented notification system for new documents in user's preferred categories
+- Added quick filters and search functionality
+- Ensured proper internationalization support for all dashboard elements
+- Fixed authentication flow for owner login with email-based authentication
+- Created document-focused pages for the owner dashboard
 
 **Tests:**
-- [ ] Test dashboard loading
-- [ ] Test notification system
-- [ ] Test user preferences if implemented
+- [x] Test dashboard loading
+- [x] Test notification system
+- [x] Test user authentication flow
 
 **Testing Instructions:**
 - Verify dashboard layout on different screen sizes
+- Test owner login flow with email authentication
+- Verify document categories and recent documents display correctly
+- Check notification system for new documents
+
+**Storybook:**
+- [x] Create Storybook stories for dashboard components
+- [x] Document dashboard layout and components
 
 ### 4.5 Storybook Component Context Providers
 - [x] Ensure all components using `useI18n` are wrapped with `I18nProvider`

@@ -2,7 +2,7 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createTRPCReact } from '@trpc/react-query';
 import { type AppRouter } from '@/lib/api/root';
-import { DocumentCategory, Language, type Document } from '@/lib/types';
+import { DocumentCategory, Language, type Document, Permission } from '@/lib/types';
 
 // Create a mock tRPC instance
 export const api = createTRPCReact<AppRouter>();
@@ -29,7 +29,13 @@ const mockDocuments: Document[] = [
       id: 'user1',
       name: 'Admin User',
       email: 'admin@example.com',
-      role: 'admin'
+      role: 'admin',
+      isAdmin: true,
+      isVerifiedOwner: true,
+      preferredLanguage: Language.FRENCH,
+      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30), // 30 days ago
+      updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
+      permissions: [Permission.MANAGE_DOCUMENTS, Permission.MANAGE_USERS]
     }
   },
   {
@@ -52,7 +58,13 @@ const mockDocuments: Document[] = [
       id: 'user1',
       name: 'Admin User',
       email: 'admin@example.com',
-      role: 'admin'
+      role: 'admin',
+      isAdmin: true,
+      isVerifiedOwner: true,
+      preferredLanguage: Language.FRENCH,
+      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30), // 30 days ago
+      updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
+      permissions: [Permission.MANAGE_DOCUMENTS, Permission.MANAGE_USERS]
     }
   },
   {
@@ -75,7 +87,13 @@ const mockDocuments: Document[] = [
       id: 'user1',
       name: 'Admin User',
       email: 'admin@example.com',
-      role: 'admin'
+      role: 'admin',
+      isAdmin: true,
+      isVerifiedOwner: true,
+      preferredLanguage: Language.FRENCH,
+      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30), // 30 days ago
+      updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
+      permissions: [Permission.MANAGE_DOCUMENTS, Permission.MANAGE_USERS]
     }
   }
 ];

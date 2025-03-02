@@ -116,3 +116,4 @@
 - Fixed tRPC mutation syntax in document-related pages to use useMutation hooks correctly with mutate and mutateAsync methods.
 - Successfully built the project with all TypeScript errors resolved and proper implementation of the Owner Dashboard Redesign.
 - Fixed tRPC context error in Storybook by creating a MockTRPCProvider component that provides mock data and functions for tRPC hooks, resolving the "Unable to find tRPC Context" error in OwnerDashboardPage and DocumentViewer stories.
+- Fixed owner login 500 error by updating database schema with Prisma db push and creating an approved owner registration.
