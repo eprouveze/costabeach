@@ -215,6 +215,7 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Refactor page components to use shared implementations
 - [ ] Create language-specific routes for all pages
 - [ ] Ensure consistent i18n patterns across the application
+- [ ] Improve RTL (Right-to-Left) support for Arabic content
 
 **Implementation Details:**
 - Create shared page components in `src/components/pages/` directory
@@ -222,39 +223,52 @@ This development plan outlines the transformation of the Costa Beach application
 - Update language-specific routes to import and render shared components
 - Ensure all text content uses the `useI18n` hook for translations
 - Add proper redirection from root routes to language-specific routes
+- Create RTL utility functions for consistent handling of text alignment, list styles, and flex direction
+- Add RTL-specific CSS rules to handle punctuation and list bullet positioning
+- Apply RTL classes to components based on the current locale
 
 **Phase 1: Owner Registration Page**
 - [ ] Create `src/components/pages/OwnerRegistrationPage.tsx` shared component
 - [ ] Create language-specific routes (`app/fr/owner-register/page.tsx`, etc.)
 - [ ] Update root route to redirect to default locale
+- [ ] Apply RTL utilities for proper Arabic display
 
 **Phase 2: Owner Login Page**
 - [ ] Add i18n support to the current implementation
 - [ ] Create `src/components/pages/OwnerLoginPage.tsx` shared component
 - [ ] Create language-specific routes (`app/fr/owner-login/page.tsx`, etc.)
 - [ ] Update root route to redirect to default locale
+- [ ] Apply RTL utilities for proper Arabic display
 
 **Phase 3: Property Detail Page**
 - [ ] Add i18n support to the current implementation
 - [ ] Create `src/components/pages/PropertyDetailPage.tsx` shared component
 - [ ] Create language-specific routes (`app/fr/property-detail/page.tsx`, etc.)
 - [ ] Update root route to redirect to default locale
+- [ ] Apply RTL utilities for proper Arabic display
 
 **Tests:**
 - [ ] Test language switching on all pages
 - [ ] Verify correct translations in all languages
 - [ ] Test URL structure and navigation between pages
 - [ ] Test redirection from root routes to language-specific routes
+- [ ] Verify proper RTL layout in Arabic, including text alignment, list bullets, and punctuation
 
 **Testing Instructions:**
 - Verify all pages render correctly in each language
 - Test language switching functionality on each page
 - Check that URLs maintain the correct language prefix
 - Verify that root routes redirect to the appropriate language-specific route
+- For Arabic pages, verify that:
+  - Text is properly right-aligned
+  - List bullets appear on the right side
+  - Punctuation appears on the correct side of text
+  - Layout flows from right to left
 
 **Storybook:**
 - [ ] Update Storybook stories for refactored components
 - [ ] Document i18n implementation patterns and best practices
+- [ ] Add examples of RTL layout handling
 
 ## 3. AWS S3 File Storage Integration
 

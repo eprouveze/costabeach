@@ -10,4 +10,34 @@
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-rgb));
+}
+
+/* RTL Support */
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="rtl"] ul:not(.reset-rtl) {
+  padding-right: 1.5rem;
+  padding-left: 0;
+}
+
+[dir="rtl"] ol:not(.reset-rtl) {
+  padding-right: 1.5rem;
+  padding-left: 0;
+}
+
+[dir="rtl"] .rtl-list li::before {
+  margin-left: 0.5rem;
+  margin-right: 0;
+}
+
+/* Custom RTL list style */
+.rtl-list {
+  list-style-position: inside;
+}
+
+/* Fix for punctuation in RTL text */
+[dir="rtl"] .rtl-text {
+  unicode-bidi: plaintext;
 } 
