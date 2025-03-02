@@ -141,11 +141,18 @@ This development plan outlines the transformation of the Costa Beach application
 - Implement middleware for language detection from cookies, headers, and user preferences
 - Create a reusable LanguageSwitcher component with dropdown and button variants
 - Ensure RTL support for Arabic language
+- Implement click outside functionality for dropdown menu
+- Add proper handling for RTL positioning of dropdown menu
+- Enhance LanguageSwitcher component with proper RTL support for dropdown positioning
+- Implement click outside functionality for dropdown menus to improve user experience
 
 **Tests:**
 - [x] Test language detection
 - [x] Test route generation with language prefixes
 - [x] Test language persistence
+- [x] Test LanguageSwitcher dropdown and buttons variants
+- [x] Test click outside functionality for dropdown menu
+- [x] Test RTL support for dropdown positioning
 
 **Testing Instructions:**
 - Run `npm test -- --testPathPattern=i18n` to verify i18n functionality
@@ -612,6 +619,8 @@ This development plan outlines the transformation of the Costa Beach application
 - Create RTL utility functions for consistent handling of text alignment, list styles, and flex direction
 - Add RTL-specific CSS rules to handle punctuation and list bullet positioning
 - Apply RTL classes to components based on the current locale
+- Enhance LanguageSwitcher component with proper RTL support for dropdown positioning
+- Implement click outside functionality for dropdown menus to improve user experience
 
 **Tests:**
 - [ ] Test language switching on all pages
