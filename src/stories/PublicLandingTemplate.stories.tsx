@@ -41,4 +41,118 @@ export const WithChildren: Story = {
       </div>
     ),
   },
+};
+
+// Responsive variants to demonstrate the component at different viewport sizes
+export const Mobile: Story = {
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile',
+    },
+    docs: {
+      description: {
+        story: 'This shows how the landing page appears on mobile devices (375px width).',
+      },
+    },
+  },
+  args: {},
+};
+
+export const Tablet: Story = {
+  parameters: {
+    viewport: {
+      defaultViewport: 'tablet',
+    },
+    docs: {
+      description: {
+        story: 'This shows how the landing page appears on tablet devices (768px width).',
+      },
+    },
+  },
+  args: {},
+};
+
+export const Desktop: Story = {
+  parameters: {
+    viewport: {
+      defaultViewport: 'desktop',
+    },
+    docs: {
+      description: {
+        story: 'This shows how the landing page appears on desktop screens (1440px width).',
+      },
+    },
+  },
+  args: {},
+};
+
+export const LargeDesktop: Story = {
+  parameters: {
+    viewport: {
+      defaultViewport: 'desktop',
+      defaultOrientation: 'landscape',
+    },
+    docs: {
+      description: {
+        story: 'This shows how the landing page appears on large desktop screens (1440px width).',
+      },
+    },
+  },
+  args: {},
+};
+
+export const ResponsiveGuide: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+## Responsive Design Implementation
+
+The PublicLandingTemplate implements responsive design with the following breakpoints:
+
+- **Mobile (< 768px)**: 
+  - Single column layout
+  - Stacked navigation items
+  - Reduced font sizes
+  - Full-width feature cards
+
+- **Tablet (768px - 1023px)**:
+  - Two-column layout for feature cards
+  - Improved spacing
+  - Horizontal navigation
+
+- **Desktop (1024px+)**:
+  - Four-column layout for feature cards
+  - Three-column footer
+  - Optimized spacing and typography
+
+### Key Responsive Elements
+
+1. **Navigation Header**:
+   - On mobile, the navigation items stack or collapse into a hamburger menu
+   - On larger screens, navigation displays horizontally
+
+2. **Hero Section**:
+   - Text size and spacing adjusts based on viewport
+   - CTA buttons stack on mobile, display inline on larger screens
+
+3. **Features Grid**:
+   - Changes from 1 column (mobile) → 2 columns (tablet) → 4 columns (desktop)
+
+4. **Footer**:
+   - Single column on mobile
+   - Three columns on larger screens
+
+### Testing Responsive Behavior
+
+Use the viewport controls in Storybook to test how the component responds to different screen sizes. The following viewports are available:
+
+- **Mobile**: 375px × 667px
+- **Tablet**: 768px × 1024px
+- **Desktop**: 1440px × 900px
+        `,
+      },
+    },
+  },
+  args: {},
 }; 
