@@ -72,8 +72,49 @@
       }
     },
     "aboutTitle": "About Costa Beach 3",
+    "aboutSubtitle": "A premier beachfront community in Casablanca, Morocco",
     "aboutDescription1": "Costa Beach 3 is a premier residential community located in Casablanca, Morocco. Our HOA portal provides owners with easy access to important information and documents.",
     "aboutDescription2": "As a homeowner, you'll have access to meeting minutes, financial reports, maintenance schedules, and other important community information through this secure portal.",
+    "aboutHistory": {
+      "title": "Our Community History",
+      "paragraph1": "Costa Beach 3 was established in 2010 as a premium residential community, designed to provide residents with a luxurious beachfront living experience while maintaining a strong sense of community.",
+      "paragraph2": "Over the years, our community has grown and evolved, with continuous improvements to amenities and services to ensure the highest quality of life for our residents."
+    },
+    "aboutFeatures": {
+      "modern": {
+        "title": "Modern Architecture",
+        "description": "Contemporary design with spacious layouts and premium finishes throughout the property."
+      },
+      "beach": {
+        "title": "Beachfront Access",
+        "description": "Direct access to a pristine private beach with stunning views of the Atlantic Ocean."
+      },
+      "amenities": {
+        "title": "Premium Amenities",
+        "description": "Swimming pools, fitness center, gardens, and recreational areas for all residents."
+      },
+      "location": {
+        "title": "Prime Location",
+        "description": "Conveniently located with easy access to shopping, dining, and entertainment options."
+      }
+    },
+    "aboutCommunity": {
+      "title": "Community Highlights",
+      "services": {
+        "title": "Services & Management",
+        "item1": "24/7 security and concierge services",
+        "item2": "Professional property management",
+        "item3": "Regular maintenance of common areas",
+        "item4": "Dedicated resident support team"
+      },
+      "lifestyle": {
+        "title": "Lifestyle & Activities",
+        "item1": "Community events and gatherings",
+        "item2": "Beachfront activities and water sports",
+        "item3": "Fitness classes and wellness programs",
+        "item4": "Family-friendly environment"
+      }
+    },
     "learnMoreCTA": "Learn More",
     "footer": {
       "description": "The official homeowners association portal for Costa Beach 3 residential community.",

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useI18n } from "@/lib/i18n/client";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import Hero from "@/components/Hero";
+import AboutSection from "@/components/AboutSection";
 
 interface PublicLandingTemplateProps {
   children?: React.ReactNode;
@@ -89,31 +90,7 @@ export default function PublicLandingTemplate({ children }: PublicLandingTemplat
       </div>
 
       {/* About Costa Beach Section */}
-      <div className="bg-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
-              {t("landing.aboutTitle")}
-            </h2>
-            <div className="prose prose-lg mx-auto">
-              <p className="text-gray-600 mb-4">
-                {t("landing.aboutDescription1")}
-              </p>
-              <p className="text-gray-600 mb-4">
-                {t("landing.aboutDescription2")}
-              </p>
-              <div className="mt-8 text-center">
-                <Link
-                  href="/contact"
-                  className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium"
-                >
-                  {t("landing.learnMoreCTA")}
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <AboutSection />
 
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-12">

@@ -142,9 +142,50 @@
       }
     },
     "aboutTitle": "À propos de Costa Beach 3",
-    "aboutDescription1": "Costa Beach 3 est une communauté résidentielle de premier plan située à Casablanca, au Maroc. Notre portail d'association offre aux propriétaires un accès facile aux informations et documents importants.",
-    "aboutDescription2": "En tant que propriétaire, vous aurez accès aux procès-verbaux des réunions, aux rapports financiers, aux calendriers d'entretien et à d'autres informations communautaires importantes via ce portail sécurisé.",
-    "learnMoreCTA": "En Savoir Plus",
+    "aboutSubtitle": "Une communauté de premier plan en bord de mer à Casablanca, Maroc",
+    "aboutDescription1": "Costa Beach 3 est une communauté résidentielle de premier plan située à Casablanca, au Maroc. Notre portail HOA offre aux propriétaires un accès facile aux informations et documents importants.",
+    "aboutDescription2": "En tant que propriétaire, vous aurez accès aux procès-verbaux des réunions, aux rapports financiers, aux calendriers d'entretien et à d'autres informations importantes sur la communauté via ce portail sécurisé.",
+    "aboutHistory": {
+      "title": "L'histoire de notre communauté",
+      "paragraph1": "Costa Beach 3 a été créée en 2010 en tant que communauté résidentielle haut de gamme, conçue pour offrir aux résidents une expérience de vie luxueuse en bord de mer tout en maintenant un fort sentiment de communauté.",
+      "paragraph2": "Au fil des ans, notre communauté s'est développée et a évolué, avec des améliorations continues des équipements et des services pour assurer la meilleure qualité de vie à nos résidents."
+    },
+    "aboutFeatures": {
+      "modern": {
+        "title": "Architecture moderne",
+        "description": "Design contemporain avec des agencements spacieux et des finitions haut de gamme dans toute la propriété."
+      },
+      "beach": {
+        "title": "Accès direct à la plage",
+        "description": "Accès direct à une plage privée immaculée avec une vue imprenable sur l'océan Atlantique."
+      },
+      "amenities": {
+        "title": "Équipements premium",
+        "description": "Piscines, centre de fitness, jardins et espaces de loisirs pour tous les résidents."
+      },
+      "location": {
+        "title": "Emplacement privilégié",
+        "description": "Idéalement situé avec un accès facile aux commerces, restaurants et options de divertissement."
+      }
+    },
+    "aboutCommunity": {
+      "title": "Points forts de la communauté",
+      "services": {
+        "title": "Services et gestion",
+        "item1": "Services de sécurité et de conciergerie 24h/24 et 7j/7",
+        "item2": "Gestion professionnelle de la propriété",
+        "item3": "Entretien régulier des espaces communs",
+        "item4": "Équipe de soutien dédiée aux résidents"
+      },
+      "lifestyle": {
+        "title": "Mode de vie et activités",
+        "item1": "Événements et rassemblements communautaires",
+        "item2": "Activités de plage et sports nautiques",
+        "item3": "Cours de fitness et programmes de bien-être",
+        "item4": "Environnement familial"
+      }
+    },
+    "learnMoreCTA": "En savoir plus",
     "footer": {
       "description": "Le portail officiel de l'association des propriétaires pour la communauté résidentielle Costa Beach 3.",
       "quickLinks": "Liens Rapides",
