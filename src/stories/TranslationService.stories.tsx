@@ -1,8 +1,16 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
+import { I18nProvider } from '@/lib/i18n/client';
 
 const meta: Meta = {
   title: 'Documentation/Translation Service',
+  decorators: [
+    (Story) => (
+      <I18nProvider>
+        <Story />
+      </I18nProvider>
+    ),
+  ],
 };
 
 export default meta;

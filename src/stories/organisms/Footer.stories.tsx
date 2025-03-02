@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Footer } from '../../components/organisms/Footer';
+import { I18nProvider } from '@/lib/i18n/client';
 
 const meta: Meta<typeof Footer> = {
   title: 'Organisms/Footer',
@@ -7,6 +8,13 @@ const meta: Meta<typeof Footer> = {
   parameters: {
     layout: 'fullscreen',
   },
+  decorators: [
+    (Story) => (
+      <I18nProvider>
+        <Story />
+      </I18nProvider>
+    ),
+  ],
   tags: ['autodocs'],
 };
 

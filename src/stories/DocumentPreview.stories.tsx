@@ -2,6 +2,7 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { DocumentPreview } from '@/components/DocumentPreview';
 import { DocumentCategory, Language, Document } from '@/lib/types';
+import { I18nProvider } from '@/lib/i18n/client';
 
 // Create a mock component that wraps DocumentPreview and provides the mock implementation
 const MockedDocumentPreview = (props: any) => {
@@ -221,9 +222,11 @@ const meta: Meta<typeof MockedDocumentPreview> = {
   tags: ['autodocs'],
   decorators: [
     (Story) => (
-      <div className="w-full" style={{ minWidth: '800px' }}>
-        <Story />
-      </div>
+      <I18nProvider>
+        <div className="w-full" style={{ minWidth: '800px' }}>
+          <Story />
+        </div>
+      </I18nProvider>
     ),
   ],
 };

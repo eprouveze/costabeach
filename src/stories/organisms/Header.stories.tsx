@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Header } from '../../components/organisms/Header';
+import { I18nProvider } from '@/lib/i18n/client';
 
 const meta: Meta<typeof Header> = {
   title: 'Organisms/Header',
@@ -27,6 +28,13 @@ const meta: Meta<typeof Header> = {
       },
     },
   },
+  decorators: [
+    (Story) => (
+      <I18nProvider>
+        <Story />
+      </I18nProvider>
+    ),
+  ],
   tags: ['autodocs'],
 };
 

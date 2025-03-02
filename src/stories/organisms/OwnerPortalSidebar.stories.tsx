@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { OwnerPortalSidebar } from "@/components/organisms/OwnerPortalSidebar";
 import { action } from '@storybook/addon-actions';
+import { I18nProvider } from '@/lib/i18n/client';
 
 const meta: Meta<typeof OwnerPortalSidebar> = {
   title: "Organisms/OwnerPortalSidebar",
@@ -8,6 +9,13 @@ const meta: Meta<typeof OwnerPortalSidebar> = {
   parameters: {
     layout: "fullscreen",
   },
+  decorators: [
+    (Story) => (
+      <I18nProvider>
+        <Story />
+      </I18nProvider>
+    ),
+  ],
   tags: ["autodocs"],
 };
 

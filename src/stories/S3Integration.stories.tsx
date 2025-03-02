@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
+import { I18nProvider } from '@/lib/i18n/client';
 
 const S3IntegrationDocs = () => {
   return (
@@ -241,6 +242,13 @@ const meta: Meta<typeof S3IntegrationDocs> = {
   parameters: {
     layout: 'fullscreen',
   },
+  decorators: [
+    (Story) => (
+      <I18nProvider>
+        <Story />
+      </I18nProvider>
+    ),
+  ],
 };
 
 export default meta;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { toast } from 'react-toastify';
+import { I18nProvider } from '@/lib/i18n/client';
 
 // Define the props interface for the DocumentUpload component
 interface DocumentUploadProps {
@@ -383,6 +384,13 @@ const meta: Meta<typeof DocumentUpload> = {
   parameters: {
     layout: 'centered',
   },
+  decorators: [
+    (Story) => (
+      <I18nProvider>
+        <Story />
+      </I18nProvider>
+    ),
+  ],
 };
 
 export default meta;

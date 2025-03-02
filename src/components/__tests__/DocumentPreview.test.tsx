@@ -2,15 +2,33 @@
  * @jest-environment jsdom
  */
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { DocumentPreview } from '../DocumentPreview';
 import { useDocuments } from '@/lib/hooks/useDocuments';
 import { DocumentCategory, Language } from '@/lib/types';
+import { renderWithTRPC } from '@/lib/test-utils';
 
 // Mock the useDocuments hook
 jest.mock('@/lib/hooks/useDocuments', () => ({
   useDocuments: jest.fn(),
+}));
+
+// Mock trpc
+jest.mock('@/lib/trpc/client', () => ({
+  trpc: {
+    translations: {
+      getTranslationStatus: {
+        useQuery: jest.fn().mockReturnValue({
+          data: { status: 'completed' },
+          isLoading: false,
+          error: null,
+        }),
+      },
+    },
+    createClient: jest.fn(),
+    Provider: ({ children }) => <>{children}</>,
+  },
 }));
 
 // Mock fetch
@@ -74,7 +92,7 @@ describe('DocumentPreview Component', () => {
   it('should render the document preview for PDF', async () => {
     const user = userEvent.setup();
     
-    render(
+    renderWithTRPC(
       <DocumentPreview 
         document={mockDocument} 
         onClose={jest.fn()} 
@@ -108,7 +126,7 @@ describe('DocumentPreview Component', () => {
     const user = userEvent.setup();
     const mockOnClose = jest.fn();
     
-    render(
+    renderWithTRPC(
       <DocumentPreview 
         document={mockDocument} 
         onClose={mockOnClose} 
@@ -124,7 +142,7 @@ describe('DocumentPreview Component', () => {
   it('should handle download button click', async () => {
     const user = userEvent.setup();
     
-    render(
+    renderWithTRPC(
       <DocumentPreview 
         document={mockDocument} 
         onClose={jest.fn()} 
@@ -148,7 +166,7 @@ describe('DocumentPreview Component', () => {
     
     mockPreviewDocument.mockResolvedValueOnce('https://example.com/image-preview');
     
-    render(
+    renderWithTRPC(
       <DocumentPreview 
         document={imageDocument} 
         onClose={jest.fn()} 
@@ -169,7 +187,7 @@ describe('DocumentPreview Component', () => {
     
     mockPreviewDocument.mockResolvedValueOnce(null);
     
-    render(
+    renderWithTRPC(
       <DocumentPreview 
         document={docxDocument} 
         onClose={jest.fn()} 
@@ -186,7 +204,7 @@ describe('DocumentPreview Component', () => {
     const user = userEvent.setup();
     const mockRequestTranslation = jest.fn();
     
-    render(
+    renderWithTRPC(
       <DocumentPreview 
         document={mockDocument} 
         onClose={jest.fn()} 

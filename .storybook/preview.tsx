@@ -1,8 +1,9 @@
+import React from 'react';
 import type { Preview } from "@storybook/react";
 import "../src/app/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
-import { withI18nProvider } from "./mockI18n.tsx";
+import { I18nProvider } from '../src/lib/i18n/client';
 
 const preview: Preview = {
   parameters: {
@@ -34,11 +35,10 @@ const preview: Preview = {
     },
   },
   decorators: [
-    withI18nProvider,
     (Story) => (
-      <div className="p-4">
+      <I18nProvider>
         <Story />
-      </div>
+      </I18nProvider>
     ),
   ],
 };

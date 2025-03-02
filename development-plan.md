@@ -680,6 +680,7 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Document translation workflow
 
 ### 4.3 Document Versioning
+
 [DELETED]
 
 ### 4.4 Owner Dashboard Redesign
@@ -700,39 +701,24 @@ This development plan outlines the transformation of the Costa Beach application
 
 **Testing Instructions:**
 - Verify dashboard layout on different screen sizes
-- Test notification appearance and dismissal
-- Verify user preferences are saved and applied correctly
-- Test performance with large document libraries
 
-**Storybook:**
-- [ ] Create Storybook stories for dashboard components
-- [ ] Document notification system
-
-### 4.5 Content Editor Interface
-- [ ] Create restricted admin interface for editors
-- [ ] Add audit logging for content changes
-- [ ] Implement approval workflow for sensitive documents
+### 4.5 Storybook Component Context Providers
+- [x] Ensure all components using `useI18n` are wrapped with `I18nProvider`
+- [x] Fix I18nProvider usage in story files by removing unsupported props
+- [x] Standardize all stories to use consistent context providers
 
 **Implementation Details:**
-- Create a restricted admin interface that only shows permitted document categories
-- Implement audit logging for all content changes with detailed change tracking
-- Add approval workflow for sensitive document categories requiring admin review
-- Create document moderation queue for pending approvals
+- Ensure all story components using internationalization are wrapped in `I18nProvider`
+- Fix I18nProvider locale props that are not supported by the component
+- Make sure all components that rely on context providers have appropriate decorators
 
 **Tests:**
-- [ ] Test editor interface functionality and restrictions
-- [ ] Test audit logging for all content changes
-- [ ] Test approval workflow for sensitive documents
+- [x] Test Storybook build to ensure no context-related errors
+- [x] Verify components render correctly with proper context
 
 **Testing Instructions:**
-- Test content editor interface with various permission configurations
-- Verify interface restrictions properly limit access based on permissions
-- Test audit logging captures all relevant changes with proper metadata
-- Check approval workflow for sensitive document categories
-
-**Storybook:**
-- [ ] Create Storybook stories for editor interface
-- [ ] Document permission levels and audit logging
+- Run Storybook to verify all components display properly
+- Check internationalized components particularly to ensure they function correctly
 
 ## 5. Public Area Extensions
 

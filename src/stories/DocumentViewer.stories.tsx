@@ -3,6 +3,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import { DocumentPreview } from '@/components/DocumentPreview';
 import { Document, DocumentCategory, Language } from '@/lib/types';
 import { TRPCReactProvider } from '@/lib/trpc/react';
+import { I18nProvider } from '@/lib/i18n/client';
 
 // Mock document data
 const mockDocument: Document = {
@@ -55,44 +56,6 @@ const mockUseDocuments = () => {
   };
 };
 
-// Mock the trpc hooks
-jest.mock('@/lib/trpc/react', () => ({
-  trpc: {
-    translations: {
-      getTranslationStatus: {
-        useQuery: () => ({
-          data: { status: 'completed', documentId: '2' },
-          isLoading: false,
-          error: null,
-        }),
-      },
-      requestDocumentTranslation: {
-        useMutation: () => ({
-          mutateAsync: async () => {
-            return new Promise((resolve) => {
-              setTimeout(() => {
-                resolve({ success: true, message: 'Translation requested' });
-              }, 1000);
-            });
-          },
-        }),
-      },
-    },
-    useContext: () => ({
-      documents: {
-        getDocumentsByCategory: {
-          invalidate: () => Promise.resolve(),
-        },
-      },
-    }),
-  },
-}));
-
-// Mock the useDocuments hook
-jest.mock('@/lib/hooks/useDocuments', () => ({
-  useDocuments: () => mockUseDocuments(),
-}));
-
 const meta: Meta<typeof DocumentPreview> = {
   title: 'Components/DocumentViewer',
   component: DocumentPreview,
@@ -101,17 +64,20 @@ const meta: Meta<typeof DocumentPreview> = {
   },
   decorators: [
     (Story) => (
-      <TRPCReactProvider>
-        <div className="w-full max-w-4xl">
-          <Story />
-        </div>
-      </TRPCReactProvider>
+      <I18nProvider>
+        <TRPCReactProvider>
+          <div className="w-full max-w-4xl">
+            <Story />
+          </div>
+        </TRPCReactProvider>
+      </I18nProvider>
     ),
   ],
   tags: ['autodocs'],
 };
 
 export default meta;
+
 type Story = StoryObj<typeof DocumentPreview>;
 
 export const Default: Story = {

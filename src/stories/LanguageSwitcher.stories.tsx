@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import React from 'react';
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { I18nProvider } from "@/lib/i18n/client";
 
@@ -28,9 +29,11 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div className="p-4 min-h-[200px] flex items-start">
-        <Story />
-      </div>
+      <I18nProvider>
+        <div className="p-4 min-h-[200px] flex items-start">
+          <Story />
+        </div>
+      </I18nProvider>
     ),
   ],
 } satisfies Meta<typeof LanguageSwitcher>;
