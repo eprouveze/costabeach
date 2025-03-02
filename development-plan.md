@@ -211,6 +211,51 @@ This development plan outlines the transformation of the Costa Beach application
 
 **Note:** There are some TypeScript issues that need to be resolved in a future update. The core functionality is implemented and working as expected.
 
+### 2.4 i18n Code Refactoring
+- [ ] Refactor page components to use shared implementations
+- [ ] Create language-specific routes for all pages
+- [ ] Ensure consistent i18n patterns across the application
+
+**Implementation Details:**
+- Create shared page components in `src/components/pages/` directory
+- Move duplicated code from language-specific routes to shared components
+- Update language-specific routes to import and render shared components
+- Ensure all text content uses the `useI18n` hook for translations
+- Add proper redirection from root routes to language-specific routes
+
+**Phase 1: Owner Registration Page**
+- [ ] Create `src/components/pages/OwnerRegistrationPage.tsx` shared component
+- [ ] Create language-specific routes (`app/fr/owner-register/page.tsx`, etc.)
+- [ ] Update root route to redirect to default locale
+
+**Phase 2: Owner Login Page**
+- [ ] Add i18n support to the current implementation
+- [ ] Create `src/components/pages/OwnerLoginPage.tsx` shared component
+- [ ] Create language-specific routes (`app/fr/owner-login/page.tsx`, etc.)
+- [ ] Update root route to redirect to default locale
+
+**Phase 3: Property Detail Page**
+- [ ] Add i18n support to the current implementation
+- [ ] Create `src/components/pages/PropertyDetailPage.tsx` shared component
+- [ ] Create language-specific routes (`app/fr/property-detail/page.tsx`, etc.)
+- [ ] Update root route to redirect to default locale
+
+**Tests:**
+- [ ] Test language switching on all pages
+- [ ] Verify correct translations in all languages
+- [ ] Test URL structure and navigation between pages
+- [ ] Test redirection from root routes to language-specific routes
+
+**Testing Instructions:**
+- Verify all pages render correctly in each language
+- Test language switching functionality on each page
+- Check that URLs maintain the correct language prefix
+- Verify that root routes redirect to the appropriate language-specific route
+
+**Storybook:**
+- [ ] Update Storybook stories for refactored components
+- [ ] Document i18n implementation patterns and best practices
+
 ## 3. AWS S3 File Storage Integration
 
 ### 3.1 AWS S3 Configuration
@@ -964,7 +1009,7 @@ This development plan outlines the transformation of the Costa Beach application
 
 1. **Document Search**: The document browser component needs search functionality implemented
 2. **Document Preview**: File preview for different formats is not yet implemented
-3. **Translation Workflow**: The OpenAI translation service needs to be implemented
+3. **i18n Code Refactoring**: Page components need to be refactored to use shared implementations with proper i18n support
 4. **Audit Logging**: Content changes should be logged for accountability
 5. **User Management**: The user management interface needs to be implemented
 6. **Dashboard Redesign**: The owner dashboard needs to be redesigned for document access
