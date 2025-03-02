@@ -151,6 +151,15 @@
       "paragraph2": "Au fil des ans, notre communauté s'est développée et a évolué, avec des améliorations continues des équipements et des services pour assurer la meilleure qualité de vie à nos résidents."
     },
     "aboutFeatures": {
+      "title": "Caractéristiques de la Propriété",
+      "architecture": {
+        "title": "Architecture Moderne",
+        "description": "Design contemporain avec des agencements spacieux et des finitions haut de gamme dans toute la propriété."
+      },
+      "beachfront": {
+        "title": "Accès Direct à la Plage",
+        "description": "Accès direct à une plage privée immaculée avec une vue imprenable sur l'océan Atlantique."
+      },
       "modern": {
         "title": "Architecture moderne",
         "description": "Design contemporain avec des agencements spacieux et des finitions haut de gamme dans toute la propriété."

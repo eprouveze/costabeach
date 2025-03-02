@@ -81,6 +81,15 @@
       "paragraph2": "Over the years, our community has grown and evolved, with continuous improvements to amenities and services to ensure the highest quality of life for our residents."
     },
     "aboutFeatures": {
+      "title": "Property Features",
+      "architecture": {
+        "title": "Modern Architecture",
+        "description": "Contemporary design with spacious layouts and premium finishes throughout the property."
+      },
+      "beachfront": {
+        "title": "Beachfront Access",
+        "description": "Direct access to a pristine private beach with stunning views of the Atlantic Ocean."
+      },
       "modern": {
         "title": "Modern Architecture",
         "description": "Contemporary design with spacious layouts and premium finishes throughout the property."

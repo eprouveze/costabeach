@@ -103,3 +103,4 @@
 - Refactored contact pages to use a shared ContactPage component, eliminating code duplication across language-specific routes and improving maintainability.
 - Fixed RTLComponents.stories.tsx type error by creating a wrapper component (RTLWrapperWithLocale) that includes the locale prop and properly handles the MockI18nProvider context, ensuring successful build completion.
 - Enhanced RTL support with improved list styling, created specialized RTLList component, and updated global CSS to ensure proper bullet positioning for Arabic content across the entire application
+- Implemented document translation request functionality with background processing using Inngest, including UI components for requesting translations and checking translation status.
