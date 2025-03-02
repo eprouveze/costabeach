@@ -73,6 +73,7 @@
 - Fixed Storybook rendering issue in DocumentPreview.stories.tsx by replacing Jest mocks with a custom MockedDocumentPreview component that simulates the behavior of the actual component without requiring tRPC context.
 - Improved DocumentPreview component display in Storybook by adjusting layout to 'padded', increasing preview container height to 600px, and setting minimum width to ensure proper desktop viewing experience.
 - Updated development plan to mark completed features (search functionality, file preview) and identified pending items before starting Navigation Structure implementation.
-- Added navigation translation strings to all locale files (en.json, fr.json, ar.json) and updated Header, OwnerPortalSidebar, and OwnerDashboardTemplate components to use these translations, ensuring proper internationalization of navigation elements.
-- Fixed 404 error on the home page by updating middleware to redirect the root path to include the default locale and creating locale-specific page files for each supported language (fr, en, ar).
+- Added navigation translation strings to all locale files (en.json, fr.json, ar.json) and updated components (Header, OwnerPortalSidebar, OwnerDashboardTemplate) to utilize these translations for proper internationalization.
+- Fixed the 404 error on the home page by updating middleware to redirect the root path to include the default locale and creating locale-specific page files for each supported language (French, English, Arabic).
 - Fixed development server errors by removing the Turbopack flag from the dev script in package.json, which was causing ENOENT errors with temporary build manifest files.
+- Fixed language selector not working by resolving middleware conflicts and improving the locale switching implementation in the i18n client.

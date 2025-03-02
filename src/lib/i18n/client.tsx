@@ -51,13 +51,24 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     
     // Update URL to reflect locale change
     const segments = pathname.split("/");
+    
+    // Create a new path with the new locale
+    let newPath: string;
+    
     if (locales.includes(segments[1] as Locale)) {
+      // Replace the existing locale
       segments[1] = newLocale;
+      newPath = segments.join("/");
     } else {
-      segments.splice(1, 0, newLocale);
+      // Add the locale if it doesn't exist
+      newPath = `/${newLocale}${pathname}`;
     }
     
-    router.push(segments.join("/"));
+    // Set a cookie to remember the locale preference
+    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=${60 * 60 * 24 * 365}`;
+    
+    // Navigate to the new URL
+    router.push(newPath);
     
     // Load new translations
     loadTranslations(newLocale)

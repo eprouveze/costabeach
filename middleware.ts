@@ -67,9 +67,26 @@ function handleLocale(request: NextRequest, response: NextResponse) {
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   
+  // Check if the pathname starts with a locale
+  const pathnameHasLocale = locales.some(
+    locale => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)
+  );
+  
   // Redirect root path to include the default locale
   if (pathname === '/') {
     const url = new URL(`/${defaultLocale}`, req.url);
+    return NextResponse.redirect(url);
+  }
+  
+  // Redirect paths without locale prefix to include the locale
+  if (!pathnameHasLocale && 
+      !pathname.startsWith("/_next") && 
+      !pathname.startsWith("/api") && 
+      !pathname.startsWith("/static") && 
+      pathname !== "/favicon.ico") {
+    // Get locale from cookie or default
+    const locale = req.cookies.get(LOCALE_COOKIE)?.value || defaultLocale;
+    const url = new URL(`/${locale}${pathname}`, req.url);
     return NextResponse.redirect(url);
   }
   
@@ -93,9 +110,12 @@ export function middleware(req: NextRequest) {
   const isAuthenticated = !!authCookie;
 
   // If the user is trying to access a protected route but is not authenticated,
-  // redirect them to the login page
-  if (pathname.startsWith("/owner-dashboard") && !isAuthenticated) {
-    const redirectUrl = new URL("/owner-login", req.url);
+  // redirect them to the login page with the correct locale
+  if (pathname.includes("/owner-dashboard") && !isAuthenticated) {
+    // Extract locale from the current path
+    const pathLocale = pathname.split("/")[1];
+    const locale = locales.includes(pathLocale as any) ? pathLocale : defaultLocale;
+    const redirectUrl = new URL(`/${locale}/owner-login`, req.url);
     return NextResponse.redirect(redirectUrl);
   }
 
@@ -106,7 +126,6 @@ export function middleware(req: NextRequest) {
 // Only run middleware on pages, not on API routes or static files
 export const config = {
   matcher: [
-    "/owner-dashboard/:path*",
     "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)",
   ],
 }; 
