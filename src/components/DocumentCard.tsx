@@ -12,9 +12,12 @@ import {
   Globe, 
   Calendar, 
   FileType, 
-  HardDrive
+  HardDrive,
+  Languages
 } from "lucide-react";
 import { DocumentPreview } from "./DocumentPreview";
+import { trpc } from "@/lib/trpc/client";
+import { toast } from "react-toastify";
 
 interface DocumentCardProps {
   document: Document;
@@ -29,7 +32,10 @@ export const DocumentCard = ({
 }: DocumentCardProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
   const { downloadDocument, deleteDocument } = useDocuments();
+  const requestTranslation = trpc.translations.requestDocumentTranslation.useMutation();
+  const utils = trpc.useContext();
   
   const handleDownload = async () => {
     await downloadDocument(document.id, document.title);
@@ -54,9 +60,33 @@ export const DocumentCard = ({
     setShowPreview(false);
   };
   
-  const handleRequestTranslation = () => {
-    // This would be implemented in the future
-    alert("Translation request functionality will be implemented soon.");
+  const handleRequestTranslation = async (documentId: string) => {
+    try {
+      setIsTranslating(true);
+      // Get the user's preferred language or use a default
+      const userPreferredLanguage = document.language === Language.ENGLISH 
+        ? Language.FRENCH 
+        : Language.ENGLISH;
+      
+      await requestTranslation.mutateAsync({
+        documentId,
+        targetLanguage: userPreferredLanguage,
+      }, {
+        onSuccess: () => {
+          toast.success(`Translation to ${getLanguageLabel(userPreferredLanguage)} requested successfully`);
+          // Invalidate queries to refresh document list
+          utils.documents.getDocumentsByCategory.invalidate();
+        },
+        onError: (error) => {
+          toast.error(`Translation request failed: ${error.message}`);
+        }
+      });
+    } catch (error) {
+      console.error("Translation request error:", error);
+      toast.error("Failed to request translation. Please try again later.");
+    } finally {
+      setIsTranslating(false);
+    }
   };
   
   const getFileIcon = (fileType: string) => {
@@ -168,6 +198,17 @@ export const DocumentCard = ({
               <Download className="h-4 w-4 mr-1" />
               Download
             </button>
+            
+            {document.language !== Language.ENGLISH && document.language !== Language.FRENCH && document.language !== Language.ARABIC && (
+              <button
+                onClick={() => handleRequestTranslation(document.id)}
+                disabled={isTranslating}
+                className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 mr-4 flex items-center text-sm disabled:opacity-50"
+              >
+                <Languages className="h-4 w-4 mr-1" />
+                {isTranslating ? "Requesting..." : "Translate"}
+              </button>
+            )}
             
             {onDelete && (
               <button
