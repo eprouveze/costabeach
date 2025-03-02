@@ -47,14 +47,14 @@ const MockedDocumentPreview = (props: any) => {
   return (
     <div>
       {isLoading ? (
-        <div className="flex items-center justify-center h-64 bg-gray-100 rounded-lg">
+        <div className="flex items-center justify-center h-[600px] bg-gray-100 rounded-lg">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mb-2"></div>
             <p className="text-gray-600">Loading preview...</p>
           </div>
         </div>
       ) : previewUrl ? (
-        <div className="relative h-96 bg-gray-100 rounded-lg overflow-hidden">
+        <div className="relative h-[600px] bg-gray-100 rounded-lg overflow-hidden">
           {props.document.fileType.includes('pdf') ? (
             <iframe src={previewUrl} className="w-full h-full" title={props.document.title} />
           ) : props.document.fileType.includes('image') ? (
@@ -97,7 +97,7 @@ const MockedDocumentPreview = (props: any) => {
           )}
         </div>
       ) : (
-        <div className="flex items-center justify-center h-64 bg-gray-100 rounded-lg">
+        <div className="flex items-center justify-center h-[600px] bg-gray-100 rounded-lg">
           <p className="text-gray-600">Preview not available</p>
         </div>
       )}
@@ -216,12 +216,12 @@ const meta: Meta<typeof MockedDocumentPreview> = {
   title: 'Components/DocumentPreview',
   component: MockedDocumentPreview,
   parameters: {
-    layout: 'centered',
+    layout: 'padded',
   },
   tags: ['autodocs'],
   decorators: [
     (Story) => (
-      <div className="w-full max-w-4xl">
+      <div className="w-full" style={{ minWidth: '800px' }}>
         <Story />
       </div>
     ),

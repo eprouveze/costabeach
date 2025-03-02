@@ -71,3 +71,4 @@
 - Fixed type errors in DocumentPreview.stories.tsx by updating mock documents to match the Document interface from types.ts, ensuring proper typing for author properties, and fixing onRequestTranslation prop to accept documentId parameter.
 - Created mock implementation of useDocuments hook for Storybook to resolve tRPC context issues, fixed DocumentPreview.stories.tsx to use correct prop names and enum values, and ensured successful build completion.
 - Fixed Storybook rendering issue in DocumentPreview.stories.tsx by replacing Jest mocks with a custom MockedDocumentPreview component that simulates the behavior of the actual component without requiring tRPC context.
+- Improved DocumentPreview component display in Storybook by adjusting layout to 'padded', increasing preview container height to 600px, and setting minimum width to ensure proper desktop viewing experience.
