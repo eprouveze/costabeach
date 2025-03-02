@@ -77,7 +77,9 @@ This development plan outlines the transformation of the Costa Beach application
    - Fixed test suite to properly mock router and translations
    - Added detailed validation for contact form in all supported languages
 
-## 1. Database Schema Updates
+## Reordered Implementation Plan
+
+## 1. Completed Core Infrastructure
 
 ### 1.1 Document Schema ✅
 - [x] Create `Document` table with fields for title, description, file path, category, language, etc.
@@ -128,9 +130,7 @@ This development plan outlines the transformation of the Costa Beach application
 **Storybook:**
 - [x] Create Storybook documentation for permission system
 
-## 2. Internationalization (i18n) Framework
-
-### 2.1 Next.js i18n Setup ✅
+### 1.3 Next.js i18n Setup ✅
 - [x] Configure Next.js internationalization
 - [x] Set up language detection and routing
 - [x] Create language switcher component
@@ -156,7 +156,7 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Create Storybook stories for language switcher component
 - [x] Document i18n usage patterns
 
-### 2.2 Translation Infrastructure ✅
+### 1.4 Translation Infrastructure ✅
 - [x] Create translation files (JSON/YAML)
 - [x] Implement translation hooks and components
 - [x] Configure fallback language handling
@@ -184,13 +184,13 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Create Storybook stories for translated components
 - [x] Document translation hook usage
 
-### 2.3 OpenAI Translation Service ✅
+### 1.5 DeepL Translation Service ✅
 - [x] Create translation API endpoint
-- [x] Implement OpenAI integration for text translation
+- [x] Implement DeepL integration for text translation
 - [x] Add caching mechanism for translations
 
 **Implementation Details:**
-- Created a comprehensive translation service with OpenAI integration
+- Created a comprehensive translation service with DeepL integration
 - Implemented in-memory caching to avoid redundant API calls
 - Added background job processing with Inngest for document translations
 - Created tRPC endpoints for text and document translation
@@ -209,70 +209,7 @@ This development plan outlines the transformation of the Costa Beach application
 **Storybook:**
 - [x] Document translation service workflow
 
-**Note:** There are some TypeScript issues that need to be resolved in a future update. The core functionality is implemented and working as expected.
-
-### 2.4 i18n Code Refactoring
-- [ ] Refactor page components to use shared implementations
-- [ ] Create language-specific routes for all pages
-- [ ] Ensure consistent i18n patterns across the application
-- [ ] Improve RTL (Right-to-Left) support for Arabic content
-
-**Implementation Details:**
-- Create shared page components in `src/components/pages/` directory
-- Move duplicated code from language-specific routes to shared components
-- Update language-specific routes to import and render shared components
-- Ensure all text content uses the `useI18n` hook for translations
-- Add proper redirection from root routes to language-specific routes
-- Create RTL utility functions for consistent handling of text alignment, list styles, and flex direction
-- Add RTL-specific CSS rules to handle punctuation and list bullet positioning
-- Apply RTL classes to components based on the current locale
-
-**Phase 1: Owner Registration Page**
-- [ ] Create `src/components/pages/OwnerRegistrationPage.tsx` shared component
-- [ ] Create language-specific routes (`app/fr/owner-register/page.tsx`, etc.)
-- [ ] Update root route to redirect to default locale
-- [ ] Apply RTL utilities for proper Arabic display
-
-**Phase 2: Owner Login Page**
-- [ ] Add i18n support to the current implementation
-- [ ] Create `src/components/pages/OwnerLoginPage.tsx` shared component
-- [ ] Create language-specific routes (`app/fr/owner-login/page.tsx`, etc.)
-- [ ] Update root route to redirect to default locale
-- [ ] Apply RTL utilities for proper Arabic display
-
-**Phase 3: Property Detail Page**
-- [ ] Add i18n support to the current implementation
-- [ ] Create `src/components/pages/PropertyDetailPage.tsx` shared component
-- [ ] Create language-specific routes (`app/fr/property-detail/page.tsx`, etc.)
-- [ ] Update root route to redirect to default locale
-- [ ] Apply RTL utilities for proper Arabic display
-
-**Tests:**
-- [ ] Test language switching on all pages
-- [ ] Verify correct translations in all languages
-- [ ] Test URL structure and navigation between pages
-- [ ] Test redirection from root routes to language-specific routes
-- [ ] Verify proper RTL layout in Arabic, including text alignment, list bullets, and punctuation
-
-**Testing Instructions:**
-- Verify all pages render correctly in each language
-- Test language switching functionality on each page
-- Check that URLs maintain the correct language prefix
-- Verify that root routes redirect to the appropriate language-specific route
-- For Arabic pages, verify that:
-  - Text is properly right-aligned
-  - List bullets appear on the right side
-  - Punctuation appears on the correct side of text
-  - Layout flows from right to left
-
-**Storybook:**
-- [ ] Update Storybook stories for refactored components
-- [ ] Document i18n implementation patterns and best practices
-- [ ] Add examples of RTL layout handling
-
-## 3. AWS S3 File Storage Integration
-
-### 3.1 AWS S3 Configuration
+### 1.6 AWS S3 Configuration ✅
 - [x] Configure S3 bucket policies
 - [x] Set up CORS and security settings
 - [x] Create environment variables
@@ -296,7 +233,7 @@ This development plan outlines the transformation of the Costa Beach application
 **Storybook:**
 - [x] Document S3 integration architecture
 
-### 3.2 File Upload Service
+### 1.7 File Upload Service ✅
 - [x] Create file upload component
 - [x] Implement secure file upload to S3
 - [x] Add file type validation and security checks
@@ -322,7 +259,7 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Create Storybook stories for file upload component
 - [x] Document upload workflow
 
-### 3.3 File Access and Preview ✅
+### 1.8 File Access and Preview ✅
 - [x] Implement secure file access through signed URLs
 - [x] Create PDF/document preview functionality
 - [x] Add download functionality
@@ -351,9 +288,37 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Enhanced document preview stories with proper desktop layout and responsive sizing
 - [x] Implemented mock component for Storybook that doesn't require tRPC context
 
-## 4. Public Area Redesign
+### 1.9 Owner Registration Flow ✅
+- [x] Update owner registration and approval workflow
+- [x] Add language preference selection
+- [x] Enhance admin review interface
 
-### 4.1 Landing Page Redesign ✅
+**Implementation Details:**
+- Create a multi-step registration form for owners
+- Implement email verification
+- Add admin approval workflow with notifications
+- Store building and apartment information
+- Allow admins to add notes and approve/reject registrations
+- Send email notifications for registration status changes
+
+**Tests:**
+- [x] Test registration workflow
+- [x] Test approval process
+- [x] Test email notifications
+
+**Testing Instructions:**
+- Test the complete registration flow from start to finish
+- Verify email verification works correctly
+- Test admin approval and rejection
+- Check email notifications for all status changes
+
+**Storybook:**
+- [x] Create Storybook stories for registration components
+- [x] Document approval workflow
+
+## 2. Completed Public Area Components
+
+### 2.1 Landing Page Redesign ✅
 - [x] Remove property search functionality
 - [x] Create promotional content for Costa Beach 3
 - [x] Add multilingual support to landing page
@@ -381,7 +346,7 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Enhanced Storybook stories with responsive viewport demonstrations (Mobile, Tablet, Desktop)
 - [x] Added comprehensive responsive design documentation in Storybook
 
-### 4.2 Navigation Structure ✅
+### 2.2 Navigation Structure ✅
 - [x] Update header and navigation components
 - [x] Simplify routing structure
 - [x] Add language-aware navigation
@@ -407,7 +372,7 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Create Storybook stories for navigation components
 - [x] Document navigation patterns
 
-### 4.3 Contact Page Update ✅
+### 2.3 Contact Page Update ✅
 - [x] Update contact page with HOA-specific information
 - [x] Add multilingual support to contact forms
 - [x] Implement form validation
@@ -436,7 +401,7 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Create Storybook stories for contact form components
 - [x] Document form validation patterns
 
-### 4.4 Hero Section
+### 2.4 Hero Section ✅
 - [x] Create multilingual hero section with high-quality image of Costa Beach 3
 - [x] Implement welcome message in French and Arabic
 - [x] Add brief community description
@@ -457,16 +422,11 @@ This development plan outlines the transformation of the Costa Beach application
 **Testing Instructions:**
 - Verify hero section appearance on mobile, tablet, and desktop devices
 
-**Note on Development Server 404 Errors:**
-- Development server may show 404 errors for static assets (CSS, JS chunks) during hot reloading
-- These errors are expected during development and don't affect production builds
-- If encountering persistent 404s, clearing the Next.js cache (.next directory) resolves the issue
-
 **Storybook:**
 - [x] Create Storybook stories for hero section component
 - [x] Document responsive behavior and language variants
 
-### 4.5 About Costa Beach 3 Section
+### 2.5 About Costa Beach 3 Section ✅
 - [x] Import and adapt existing "About" content from WordPress site
 - [x] Add visual elements showcasing the property
 - [x] Include community history and description
@@ -495,7 +455,296 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Create Storybook stories for About section component
 - [x] Document content layout patterns and responsive behavior
 
-### 4.6 HOA Services Section
+## 3. Completed Document Management System
+
+### 3.1 Document Browser ✅
+- [x] Create document browser component
+- [x] Implement filtering by category and date
+- [x] Add search functionality
+
+**Implementation Details:**
+- Implement DocumentList component that displays documents in a grid or list view
+- Add filtering by category, language, and date range
+- Implement pagination with configurable page size
+- Add search functionality with full-text search on title and description
+- Implemented client-side filtering and server-side search capabilities
+- Integrated with the document router to support search queries
+
+**Tests:**
+- [x] Test filtering behavior
+- [x] Test search functionality
+- [x] Test pagination if implemented
+
+**Testing Instructions:**
+- Verify filtering by all supported criteria
+- Test search with partial matches and different languages
+- Test pagination with various page sizes
+- Verify empty state handling
+
+**Storybook:**
+- [x] Create Storybook stories for document browser component
+- [x] Document filtering and pagination behavior
+
+### 3.2 Document Viewer ✅
+- [x] Create document viewer component
+- [x] Implement file preview for different formats
+- [ ] Add translation request option for documents
+
+**Implementation Details:**
+- Create a DocumentCard component for displaying document metadata
+- Implement in-browser preview for PDFs, images, and text files
+- Add download tracking
+- Implement a translation request button for documents not in the user's preferred language
+- Added support for various file types (PDF, images, text, HTML, JSON)
+- Implemented fallback behavior for unsupported file types
+
+**Tests:**
+- [x] Test viewer rendering for different file types
+- [ ] Test translation request workflow
+- [x] Test responsive behavior
+
+**Testing Instructions:**
+- Test preview rendering for all supported file types
+- Verify download tracking increments correctly
+- Test translation request workflow
+- Check responsive behavior on different devices
+
+**Storybook:**
+- [ ] Create Storybook stories for document viewer component
+- [ ] Document viewer interactions
+
+### 3.3 Document Upload Interface ✅
+- [x] Create document upload interface for admins
+- [x] Add metadata editing capabilities
+- [x] Implement category and language tagging
+
+**Implementation Details:**
+- Create a comprehensive form for document uploads with all metadata fields
+- Implement drag-and-drop file upload with progress indicator
+- Add validation for required fields and file types
+- Allow setting visibility and publication status
+
+**Tests:**
+- [x] Test upload workflow
+- [x] Test metadata editing
+- [x] Test validation
+
+**Testing Instructions:**
+- Test the complete upload workflow with various file types
+- Verify all metadata fields are saved correctly
+- Test validation for required fields and file types
+- Check error handling for upload failures
+
+**Storybook:**
+- [ ] Create Storybook stories for document upload interface
+- [ ] Document metadata editing workflow
+
+### 3.4 Document Management ✅
+- [x] Create document listing and management interface
+- [x] Add editing, replacing, and deletion functionality
+- [ ] Implement versioning if needed
+
+**Implementation Details:**
+- Create an admin document management page with filtering and sorting
+- Implement CRUD operations for documents
+- Add bulk operations for categories and visibility
+- Implement soft delete with recovery option
+- Add document versioning to track changes over time
+
+**Tests:**
+- [x] Test CRUD operations
+- [ ] Test version control if implemented
+- [x] Test bulk operations if implemented
+
+**Testing Instructions:**
+- Test creation, editing, and deletion of documents
+- Verify version history if implemented
+- Test bulk operations with multiple documents
+- Check permission enforcement for different user roles
+
+**Storybook:**
+- [ ] Create Storybook stories for document management interface
+- [ ] Document CRUD operations
+
+### 3.5. Content Editor Role ✅
+- [x] Implement content editor permissions
+- [ ] Create restricted admin interface for editors
+- [ ] Add audit logging for content changes
+
+**Implementation Details:**
+- Define specific permissions for the content editor role
+- Create a restricted admin interface with document management only
+- Implement category-specific permissions (e.g., can only edit certain document categories)
+- Add audit logging for all content changes
+- Implement approval workflow for sensitive document categories
+
+**Tests:**
+- [x] Test permission enforcement
+- [ ] Test editor interface functionality
+- [ ] Test audit log recording
+
+**Testing Instructions:**
+- Test content editor permissions with various document categories
+- Verify interface restrictions work correctly
+- Test audit logging for all content changes
+- Check approval workflow for sensitive documents
+
+**Storybook:**
+- [ ] Create Storybook stories for editor interface
+- [ ] Document permission levels
+
+## 4. Priority Enhancements and Features
+
+### 4.1 i18n Code Refactoring
+- [ ] Refactor page components to use shared implementations
+- [ ] Create language-specific routes for all pages
+- [ ] Ensure consistent i18n patterns across the application
+- [ ] Improve RTL (Right-to-Left) support for Arabic content
+
+**Implementation Details:**
+- Create shared page components in `src/components/pages/` directory
+- Move duplicated code from language-specific routes to shared components
+- Update language-specific routes to import and render shared components
+- Ensure all text content uses the `useI18n` hook for translations
+- Add proper redirection from root routes to language-specific routes
+- Create RTL utility functions for consistent handling of text alignment, list styles, and flex direction
+- Add RTL-specific CSS rules to handle punctuation and list bullet positioning
+- Apply RTL classes to components based on the current locale
+
+**Tests:**
+- [ ] Test language switching on all pages
+- [ ] Verify correct translations in all languages
+- [ ] Test URL structure and navigation between pages
+- [ ] Test redirection from root routes to language-specific routes
+- [ ] Verify proper RTL layout in Arabic, including text alignment, list bullets, and punctuation
+
+**Testing Instructions:**
+- Verify all pages render correctly in each language
+- Test language switching functionality on each page
+- Check that URLs maintain the correct language prefix
+- Verify that root routes redirect to the appropriate language-specific route
+- For Arabic pages, verify that:
+  - Text is properly right-aligned
+  - List bullets appear on the right side
+  - Punctuation appears on the correct side of text
+  - Layout flows from right to left
+
+**Storybook:**
+- [ ] Update Storybook stories for refactored components
+- [ ] Document i18n implementation patterns and best practices
+- [ ] Add examples of RTL layout handling
+
+### 4.2 Document Viewer Translation Request
+- [ ] Add translation request option for documents
+- [ ] Implement translation request workflow
+- [ ] Add user notification for completed translations
+
+**Implementation Details:**
+- Add translation request button to document viewer for documents not in user's preferred language
+- Create translation request workflow that queues document for translation
+- Implement notification system to alert users when translations are ready
+- Add translation status indicators to document cards
+- Ensure translation preview works correctly for all supported document types
+
+**Tests:**
+- [ ] Test translation request UI and functionality
+- [ ] Test translation workflow from request to completion
+- [ ] Test notification system for completed translations
+- [ ] Test translation preview for different document types
+
+**Testing Instructions:**
+- Test requesting translations for various document types
+- Verify translation status is properly tracked and displayed
+- Check notification delivery when translations are complete
+- Test previewing translated documents of different formats
+
+**Storybook:**
+- [ ] Create Storybook stories for translation request component
+- [ ] Document translation workflow
+
+### 4.3 Document Versioning
+- [ ] Implement document versioning functionality
+- [ ] Create version history view
+- [ ] Add restore previous version capability
+
+**Implementation Details:**
+- Add version tracking to document model with version number and change history
+- Implement versioning logic to create new versions when documents are updated
+- Create version history view that shows all previous versions with timestamps and author info
+- Add capability to restore previous versions
+- Implement differential storage to optimize storage usage
+
+**Tests:**
+- [ ] Test version creation during document updates
+- [ ] Test version history display
+- [ ] Test version restoration functionality
+- [ ] Test permission enforcement for version management
+
+**Testing Instructions:**
+- Test creating new document versions through updates
+- Verify version history displays correctly with proper metadata
+- Test restoring previous versions
+- Verify permissions are properly enforced for version management
+
+**Storybook:**
+- [ ] Create Storybook stories for version history component
+- [ ] Document versioning workflow
+
+### 4.4 Owner Dashboard Redesign
+- [ ] Remove property management sections
+- [ ] Focus UI on document access
+- [ ] Add notifications for new documents
+
+**Implementation Details:**
+- Create a dashboard layout with sections for different document categories
+- Add a recent documents section showing newly added items
+- Implement notification system for new documents in user's preferred categories
+- Add quick filters and search functionality
+
+**Tests:**
+- [ ] Test dashboard loading
+- [ ] Test notification system
+- [ ] Test user preferences if implemented
+
+**Testing Instructions:**
+- Verify dashboard layout on different screen sizes
+- Test notification appearance and dismissal
+- Verify user preferences are saved and applied correctly
+- Test performance with large document libraries
+
+**Storybook:**
+- [ ] Create Storybook stories for dashboard components
+- [ ] Document notification system
+
+### 4.5 Content Editor Interface
+- [ ] Create restricted admin interface for editors
+- [ ] Add audit logging for content changes
+- [ ] Implement approval workflow for sensitive documents
+
+**Implementation Details:**
+- Create a restricted admin interface that only shows permitted document categories
+- Implement audit logging for all content changes with detailed change tracking
+- Add approval workflow for sensitive document categories requiring admin review
+- Create document moderation queue for pending approvals
+
+**Tests:**
+- [ ] Test editor interface functionality and restrictions
+- [ ] Test audit logging for all content changes
+- [ ] Test approval workflow for sensitive documents
+
+**Testing Instructions:**
+- Test content editor interface with various permission configurations
+- Verify interface restrictions properly limit access based on permissions
+- Test audit logging captures all relevant changes with proper metadata
+- Check approval workflow for sensitive document categories
+
+**Storybook:**
+- [ ] Create Storybook stories for editor interface
+- [ ] Document permission levels and audit logging
+
+## 5. Public Area Extensions
+
+### 5.1 HOA Services Section
 - [ ] Create service cards for document access and key HOA functions
 - [ ] Implement community announcements preview
 - [ ] Add contact information component
@@ -523,7 +772,7 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Create Storybook stories for service cards component
 - [ ] Document announcement and calendar components
 
-### 4.7 Location Section
+### 5.2 Location Section
 - [ ] Implement interactive map showing Costa Beach 3 location
 - [ ] Add information about nearby amenities and attractions
 - [ ] Include transportation information
@@ -550,7 +799,7 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Create Storybook stories for location section component
 - [ ] Document map integration and responsive behavior
 
-### 4.8 Photo Gallery
+### 5.3 Photo Gallery
 - [ ] Create responsive photo gallery grid
 - [ ] Implement category-based organization (Common Areas, Beach, Facilities)
 - [ ] Add lightbox viewer for full-size images
@@ -579,7 +828,7 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Create Storybook stories for photo gallery component
 - [ ] Document category filtering and lightbox interactions
 
-### 4.9 Enhanced Footer
+### 5.4 Enhanced Footer
 - [ ] Design and implement enhanced footer with contact information
 - [ ] Add quick links to important pages
 - [ ] Include language switcher component
@@ -607,154 +856,17 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Create Storybook stories for footer component
 - [ ] Document responsive behavior and language switching
 
-## 5. Owner Portal Document System
+## 6. Advanced Features
 
-### 5.1 Document Browser
-- [x] Create document browser component
-- [x] Implement filtering by category and date
-- [x] Add search functionality
-
-**Implementation Details:**
-- Implement DocumentList component that displays documents in a grid or list view
-- Add filtering by category, language, and date range
-- Implement pagination with configurable page size
-- Add search functionality with full-text search on title and description
-- Implemented client-side filtering and server-side search capabilities
-- Integrated with the document router to support search queries
-
-**Tests:**
-- [x] Test filtering behavior
-- [x] Test search functionality
-- [x] Test pagination if implemented
-
-**Testing Instructions:**
-- Verify filtering by all supported criteria
-- Test search with partial matches and different languages
-- Test pagination with various page sizes
-- Verify empty state handling
-
-**Storybook:**
-- [ ] Create Storybook stories for document browser component
-- [ ] Document filtering and pagination behavior
-
-### 5.2 Document Viewer
-- [x] Create document viewer component
-- [x] Implement file preview for different formats
-- [ ] Add translation request option for documents
-
-**Implementation Details:**
-- Create a DocumentCard component for displaying document metadata
-- Implement in-browser preview for PDFs, images, and text files
-- Add download tracking
-- Implement a translation request button for documents not in the user's preferred language
-- Added support for various file types (PDF, images, text, HTML, JSON)
-- Implemented fallback behavior for unsupported file types
-
-**Tests:**
-- [x] Test viewer rendering for different file types
-- [ ] Test translation request workflow
-- [x] Test responsive behavior
-
-**Testing Instructions:**
-- Test preview rendering for all supported file types
-- Verify download tracking increments correctly
-- Test translation request workflow
-- Check responsive behavior on different devices
-
-**Storybook:**
-- [ ] Create Storybook stories for document viewer component
-- [ ] Document viewer interactions
-
-### 5.3 Owner Dashboard Redesign
-- [ ] Remove property management sections
-- [ ] Focus UI on document access
-- [ ] Add notifications for new documents
-
-**Implementation Details:**
-- Create a dashboard layout with sections for different document categories
-- Add a recent documents section showing newly added items
-- Implement notification system for new documents in user's preferred categories
-- Add quick filters and search functionality
-
-**Tests:**
-- [ ] Test dashboard loading
-- [ ] Test notification system
-- [ ] Test user preferences if implemented
-
-**Testing Instructions:**
-- Verify dashboard layout on different screen sizes
-- Test notification appearance and dismissal
-- Verify user preferences are saved and applied correctly
-- Test performance with large document libraries
-
-**Storybook:**
-- [ ] Create Storybook stories for dashboard components
-- [ ] Document notification system
-
-## 6. Admin Document Management
-
-### 6.1 Document Upload Interface
-- [x] Create document upload interface for admins
-- [x] Add metadata editing capabilities
-- [x] Implement category and language tagging
-
-**Implementation Details:**
-- Create a comprehensive form for document uploads with all metadata fields
-- Implement drag-and-drop file upload with progress indicator
-- Add validation for required fields and file types
-- Allow setting visibility and publication status
-
-**Tests:**
-- [ ] Test upload workflow
-- [ ] Test metadata editing
-- [ ] Test validation
-
-**Testing Instructions:**
-- Test the complete upload workflow with various file types
-- Verify all metadata fields are saved correctly
-- Test validation for required fields and file types
-- Check error handling for upload failures
-
-**Storybook:**
-- [ ] Create Storybook stories for document upload interface
-- [ ] Document metadata editing workflow
-
-### 6.2 Document Management
-- [x] Create document listing and management interface
-- [x] Add editing, replacing, and deletion functionality
-- [ ] Implement versioning if needed
-
-**Implementation Details:**
-- Create an admin document management page with filtering and sorting
-- Implement CRUD operations for documents
-- Add bulk operations for categories and visibility
-- Implement soft delete with recovery option
-- Add document versioning to track changes over time
-
-**Tests:**
-- [ ] Test CRUD operations
-- [ ] Test version control if implemented
-- [ ] Test bulk operations if implemented
-
-**Testing Instructions:**
-- Test creation, editing, and deletion of documents
-- Verify version history if implemented
-- Test bulk operations with multiple documents
-- Check permission enforcement for different user roles
-
-**Storybook:**
-- [ ] Create Storybook stories for document management interface
-- [ ] Document CRUD operations
-
-### 6.3 Translation Management
+### 6.1 Translation Management
 - [ ] Create interface for requesting/reviewing translations
-- [ ] Implement AI translation workflow
+- [ ] Implement AI translation workflow with DeepL
 - [ ] Add manual override capabilities
 
 **Implementation Details:**
 - Create a translation management interface for admins
 - Implement a workflow for requesting, tracking, and approving translations
-- Integrate with OpenAI for automated translation
+- Integrate with DeepL for automated translation
 - Allow manual editing and correction of translations
 - Add quality metrics for translations
 
@@ -773,9 +885,7 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Create Storybook stories for translation management interface
 - [ ] Document translation workflow
 
-## 7. User and Permission Management
-
-### 7.1 User Management Interface
+### 6.2 User Management Interface
 - [ ] Create user listing and management interface
 - [ ] Add role assignment capabilities
 - [ ] Implement permission editing
@@ -802,64 +912,9 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Create Storybook stories for user management interface
 - [ ] Document permission editing workflow
 
-### 7.2 Owner Registration Flow
-- [x] Update owner registration and approval workflow
-- [x] Add language preference selection
-- [x] Enhance admin review interface
+## 7. Testing, Optimization, and Documentation
 
-**Implementation Details:**
-- Create a multi-step registration form for owners
-- Implement email verification
-- Add admin approval workflow with notifications
-- Store building and apartment information
-- Allow admins to add notes and approve/reject registrations
-- Send email notifications for registration status changes
-
-**Tests:**
-- [ ] Test registration workflow
-- [ ] Test approval process
-- [ ] Test email notifications
-
-**Testing Instructions:**
-- Test the complete registration flow from start to finish
-- Verify email verification works correctly
-- Test admin approval and rejection
-- Check email notifications for all status changes
-
-**Storybook:**
-- [ ] Create Storybook stories for registration components
-- [ ] Document approval workflow
-
-### 7.3 Content Editor Role
-- [x] Implement content editor permissions
-- [ ] Create restricted admin interface for editors
-- [ ] Add audit logging for content changes
-
-**Implementation Details:**
-- Define specific permissions for the content editor role
-- Create a restricted admin interface with document management only
-- Implement category-specific permissions (e.g., can only edit certain document categories)
-- Add audit logging for all content changes
-- Implement approval workflow for sensitive document categories
-
-**Tests:**
-- [x] Test permission enforcement
-- [ ] Test editor interface functionality
-- [ ] Test audit log recording
-
-**Testing Instructions:**
-- Test content editor permissions with various document categories
-- Verify interface restrictions work correctly
-- Test audit logging for all content changes
-- Check approval workflow for sensitive documents
-
-**Storybook:**
-- [ ] Create Storybook stories for editor interface
-- [ ] Document permission levels
-
-## 8. Testing and Deployment
-
-### 8.1 Integration Testing
+### 7.1 Integration Testing
 - [ ] Create end-to-end test suite
 - [ ] Test full user journeys
 - [ ] Test multilingual functionality
@@ -886,7 +941,7 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Create Storybook stories for key user journeys
 - [ ] Document testing approach
 
-### 8.2 Performance Optimization
+### 7.2 Performance Optimization
 - [ ] Optimize document loading and preview
 - [ ] Implement caching strategies
 - [ ] Reduce bundle size
@@ -912,7 +967,79 @@ This development plan outlines the transformation of the Costa Beach application
 **Storybook:**
 - [ ] Document performance optimization techniques
 
-### 8.3 Production Deployment
+### 7.3 AWS S3 Integration Improvements
+- [ ] Add comprehensive retry mechanisms for unreliable connections
+- [ ] Improve error handling with specific error messages
+- [ ] Implement recovery options for failed uploads/downloads
+
+**Implementation Details:**
+- Add exponential backoff and retry logic for S3 operations
+- Create detailed error messages for common S3 failures
+- Implement recovery options for interrupted uploads
+- Add logging and monitoring for S3 operations
+- Improve performance with optimized transfer settings
+
+**Tests:**
+- [ ] Test retry mechanisms with simulated failures
+- [ ] Test error handling for various error scenarios
+- [ ] Test recovery options for interrupted operations
+
+**Testing Instructions:**
+- Simulate network failures to test retry mechanisms
+- Verify error messages are clear and actionable
+- Test recovery from interrupted uploads and downloads
+- Check performance with large files and unreliable connections
+
+**Storybook:**
+- [ ] Document S3 integration best practices and error handling
+
+### 7.4 Component Documentation
+- [ ] Document all UI components in Storybook
+- [ ] Create interactive examples for each component
+- [ ] Add accessibility information
+
+**Implementation Details:**
+- Create Storybook stories for all UI components
+- Add documentation for props, usage patterns, and examples
+- Include accessibility information and best practices
+- Add interactive controls for testing component variations
+- Include code snippets for implementation
+
+**Tests:**
+- [ ] Test Storybook builds
+- [ ] Verify component documentation
+- [ ] Run accessibility tests
+
+**Testing Instructions:**
+- Run Storybook with `npm run storybook`
+- Verify all components are documented
+- Check accessibility information
+- Test interactive controls
+
+### 7.5 Design System
+- [ ] Document color palette and typography
+- [ ] Create theme documentation
+- [ ] Document responsive design patterns
+
+**Implementation Details:**
+- Document the color palette with semantic naming
+- Create typography documentation with examples
+- Document theme configuration and customization
+- Add responsive design patterns and breakpoints
+- Include dark mode implementation details
+
+**Tests:**
+- [ ] Test theme switching
+- [ ] Verify design token usage
+- [ ] Test responsive behavior
+
+**Testing Instructions:**
+- Verify all design tokens are documented
+- Test theme switching functionality
+- Check responsive design patterns
+- Verify dark mode implementation
+
+### 7.6 Production Deployment
 - [ ] Configure production environment
 - [ ] Set up monitoring and logging
 - [ ] Create deployment documentation
@@ -938,77 +1065,6 @@ This development plan outlines the transformation of the Costa Beach application
 **Storybook:**
 - [ ] Document deployment process
 
-## 9. Storybook Documentation
-
-### 9.1 Component Documentation
-- [ ] Document all UI components in Storybook
-- [ ] Create interactive examples for each component
-- [ ] Add accessibility information
-
-**Implementation Details:**
-- Create Storybook stories for all UI components
-- Add documentation for props, usage patterns, and examples
-- Include accessibility information and best practices
-- Add interactive controls for testing component variations
-- Include code snippets for implementation
-
-**Tests:**
-- [ ] Test Storybook builds
-- [ ] Verify component documentation
-- [ ] Run accessibility tests
-
-**Testing Instructions:**
-- Run Storybook with `npm run storybook`
-- Verify all components are documented
-- Check accessibility information
-- Test interactive controls
-
-### 9.2 Design System
-- [ ] Document color palette and typography
-- [ ] Create theme documentation
-- [ ] Document responsive design patterns
-
-**Implementation Details:**
-- Document the color palette with semantic naming
-- Create typography documentation with examples
-- Document theme configuration and customization
-- Add responsive design patterns and breakpoints
-- Include dark mode implementation details
-
-**Tests:**
-- [ ] Test theme switching
-- [ ] Verify design token usage
-- [ ] Test responsive behavior
-
-**Testing Instructions:**
-- Verify all design tokens are documented
-- Test theme switching functionality
-- Check responsive design patterns
-- Verify dark mode implementation
-
-### 9.3 Usage Patterns
-- [ ] Document common usage patterns
-- [ ] Create example workflows
-- [ ] Add code snippets for implementation
-
-**Implementation Details:**
-- Document common usage patterns for components and features
-- Create example workflows for common tasks
-- Add code snippets for implementation
-- Include best practices and anti-patterns
-- Document integration patterns with other libraries
-
-**Tests:**
-- [ ] Verify documentation accuracy
-- [ ] Test code snippets
-- [ ] Gather user feedback
-
-**Testing Instructions:**
-- Verify documentation accuracy
-- Test all code snippets
-- Gather user feedback on documentation clarity
-- Update based on feedback
-
 ## Notes for Implementation
 
 - All user-facing text must support both French and Arabic
@@ -1018,14 +1074,3 @@ This development plan outlines the transformation of the Costa Beach application
 - Consider accessibility requirements throughout development 
 - All UI components should have corresponding Storybook stories
 - Storybook should be used for visual regression testing 
-
-## Known Issues and Priorities
-
-1. **Document Search**: The document browser component needs search functionality implemented
-2. **Document Preview**: File preview for different formats is not yet implemented
-3. **i18n Code Refactoring**: Page components need to be refactored to use shared implementations with proper i18n support
-4. **Audit Logging**: Content changes should be logged for accountability
-5. **User Management**: The user management interface needs to be implemented
-6. **Dashboard Redesign**: The owner dashboard needs to be redesigned for document access
-7. **Public Area**: The public area needs to be redesigned for the HOA portal
-8. **i18n Type Errors**: Fix async function handling in i18n server utilities 
