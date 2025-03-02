@@ -673,32 +673,7 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Document translation workflow
 
 ### 4.3 Document Versioning
-- [ ] Implement document versioning functionality
-- [ ] Create version history view
-- [ ] Add restore previous version capability
-
-**Implementation Details:**
-- Add version tracking to document model with version number and change history
-- Implement versioning logic to create new versions when documents are updated
-- Create version history view that shows all previous versions with timestamps and author info
-- Add capability to restore previous versions
-- Implement differential storage to optimize storage usage
-
-**Tests:**
-- [ ] Test version creation during document updates
-- [ ] Test version history display
-- [ ] Test version restoration functionality
-- [ ] Test permission enforcement for version management
-
-**Testing Instructions:**
-- Test creating new document versions through updates
-- Verify version history displays correctly with proper metadata
-- Test restoring previous versions
-- Verify permissions are properly enforced for version management
-
-**Storybook:**
-- [ ] Create Storybook stories for version history component
-- [ ] Document versioning workflow
+[DELETED]
 
 ### 4.4 Owner Dashboard Redesign
 - [ ] Remove property management sections

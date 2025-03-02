@@ -53,7 +53,7 @@ export default function RootLayout({ children }) {
               For Storybook, we've implemented a global mock for the I18n system. This is done through:
             </p>
             <ol className="list-decimal pl-6 mt-2 mb-2">
-              <li>A mock implementation in <code>.storybook/mockI18n.ts</code></li>
+              <li>A mock implementation in <code>.storybook/mockI18n.tsx</code></li>
               <li>A webpack alias in <code>.storybook/main.ts</code> that redirects imports</li>
               <li>A global decorator in <code>.storybook/preview.tsx</code></li>
             </ol>
@@ -62,14 +62,44 @@ export default function RootLayout({ children }) {
               work correctly in Storybook without needing individual mocks in each story.
             </p>
             <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md mt-2 overflow-x-auto">
-              {`// .storybook/mockI18n.ts
-export const useI18n = () => ({
-  locale: "fr",
-  setLocale: (newLocale) => console.log(\`Setting locale to \${newLocale}\`),
-  t: (key) => key,
-  isLoading: false,
-  isRTL: false,
-});
+              {`// .storybook/mockI18n.tsx
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { Locale, defaultLocale } from '../src/lib/i18n/config';
+
+type I18nContextType = {
+  locale: Locale;
+  setLocale: (locale: Locale) => void;
+  t: (key: string) => string;
+  isLoading: boolean;
+  isRTL: boolean;
+};
+
+const I18nContext = createContext<I18nContextType | null>(null);
+
+export function useI18n() {
+  const context = useContext(I18nContext);
+  if (!context) {
+    throw new Error("useI18n must be used within an I18nProvider");
+  }
+  return context;
+}
+
+export function I18nProvider({ children }: { children: ReactNode }) {
+  const [locale, setLocale] = useState<Locale>(defaultLocale);
+  const isRTL = locale === 'ar';
+  
+  return (
+    <I18nContext.Provider value={{
+      locale,
+      setLocale: (newLocale) => setLocale(newLocale),
+      t: (key) => key,
+      isLoading: false,
+      isRTL
+    }}>
+      {children}
+    </I18nContext.Provider>
+  );
+}
 
 // .storybook/main.ts (in webpackFinal)
 config.resolve.alias = {

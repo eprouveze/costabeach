@@ -3,7 +3,7 @@
 import * as React from "react";
 import { createContext, useContext, useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { Locale, defaultLocale, locales } from "./config";
+import { Locale, defaultLocale, locales, localeDirections } from "./config";
 import { loadTranslations } from "./utils";
 
 // Import translations directly
@@ -22,6 +22,7 @@ type I18nContextType = {
   setLocale: (locale: Locale) => void;
   t: (key: string) => string;
   isLoading: boolean;
+  isRTL: boolean;
 };
 
 const I18nContext = createContext<I18nContextType | null>(null);
@@ -31,6 +32,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(defaultLocale);
   const [translations, setTranslations] = useState<Record<string, any>>(staticTranslations[defaultLocale] || {});
   const [isLoading, setIsLoading] = useState(false);
+  const isRTL = locale === 'ar';
 
   useEffect(() => {
     // Extract locale from pathname or use default
@@ -118,7 +120,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <I18nContext.Provider value={{ locale, setLocale, t, isLoading }}>
+    <I18nContext.Provider value={{ locale, setLocale, t, isLoading, isRTL }}>
       {children}
     </I18nContext.Provider>
   );

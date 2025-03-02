@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useI18n } from "@/lib/i18n/client";
 import { Locale, locales, localeNames } from "@/lib/i18n/config";
 import { Globe } from "lucide-react";
@@ -14,12 +14,10 @@ export default function LanguageSwitcher({
   variant = "dropdown",
   className = "",
 }: LanguageSwitcherProps) {
-  const { locale, setLocale, t } = useI18n();
+  const { locale, setLocale, t, isRTL } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   
-  // Check if the current locale is RTL
-  const isRTL = locale === 'ar';
-
   // Toggle dropdown
   const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -31,6 +29,25 @@ export default function LanguageSwitcher({
     setLocale(newLocale);
     closeDropdown();
   };
+
+  // Handle click outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+
+    // Add event listener when dropdown is open
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    // Clean up event listener
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   // Render buttons variant
   if (variant === "buttons") {
@@ -56,7 +73,7 @@ export default function LanguageSwitcher({
 
   // Render dropdown variant (default)
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${className}`} ref={dropdownRef}>
       <button
         onClick={toggleDropdown}
         className="flex items-center space-x-1 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
@@ -69,41 +86,31 @@ export default function LanguageSwitcher({
       </button>
 
       {isOpen && (
-        <>
-          {/* Backdrop to close dropdown when clicking outside */}
-          <div
-            className="fixed inset-0 z-10"
-            onClick={closeDropdown}
-            aria-hidden="true"
-          />
-
-          {/* Dropdown menu */}
-          <div
-            className={`absolute z-20 mt-1 w-40 rounded-md bg-white dark:bg-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${
-              isRTL ? "right-0" : "left-0"
-            }`}
-            role="menu"
-            aria-orientation="vertical"
-            aria-labelledby="language-menu-button"
-          >
-            <div className="py-1" role="none">
-              {locales.map((loc) => (
-                <button
-                  key={loc}
-                  onClick={() => handleLanguageChange(loc)}
-                  className={`block w-full text-left px-4 py-2 text-sm ${
-                    locale === loc
-                      ? "bg-gray-100 dark:bg-gray-800 text-primary"
-                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-                  }`}
-                  role="menuitem"
-                >
-                  {localeNames[loc]}
-                </button>
-              ))}
-            </div>
+        <div
+          className={`absolute z-20 mt-1 w-40 rounded-md bg-white dark:bg-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${
+            isRTL ? "right-0" : "left-0"
+          }`}
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="language-menu-button"
+        >
+          <div className="py-1" role="none">
+            {locales.map((loc) => (
+              <button
+                key={loc}
+                onClick={() => handleLanguageChange(loc)}
+                className={`block w-full text-left px-4 py-2 text-sm ${
+                  locale === loc
+                    ? "bg-gray-100 dark:bg-gray-800 text-primary"
+                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                }`}
+                role="menuitem"
+              >
+                {localeNames[loc]}
+              </button>
+            ))}
           </div>
-        </>
+        </div>
       )}
     </div>
   );

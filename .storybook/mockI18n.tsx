@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState } from "react";
-import { Locale, locales, defaultLocale } from "../src/lib/i18n/config";
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { Locale, defaultLocale, locales, localeNames } from '../src/lib/i18n/config';
 
 // Define the same type as in the real implementation
 type I18nContextType = {
@@ -11,7 +11,7 @@ type I18nContextType = {
 };
 
 // Create a mock I18n context
-export const I18nContext = createContext<I18nContextType | null>(null);
+const I18nContext = createContext<I18nContextType | null>(null);
 
 // Make sure the context has the same name as the real one
 I18nContext.displayName = "I18nContext";
@@ -26,22 +26,24 @@ export function useI18n() {
 }
 
 // Create a mock I18nProvider component
-export function I18nProvider({ children }: { children: React.ReactNode }) {
+export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocale] = useState<Locale>(defaultLocale);
-  
-  const value: I18nContextType = {
-    locale,
-    setLocale: (newLocale: Locale) => {
-      console.log(`Setting locale to ${newLocale}`);
-      setLocale(newLocale);
-    },
-    t: (key: string) => key,
-    isLoading: false,
-    isRTL: locale === "ar",
+  const [isLoading, setIsLoading] = useState(false);
+
+  const isRTL = locale === 'ar';
+
+  const mockSetLocale = (newLocale: Locale) => {
+    console.log(`[Mock] Setting locale to ${newLocale}`);
+    setLocale(newLocale);
   };
-  
+
+  const t = (key: string): string => {
+    // For Storybook, just return the key as the translation
+    return key;
+  };
+
   return (
-    <I18nContext.Provider value={value}>
+    <I18nContext.Provider value={{ locale, setLocale: mockSetLocale, t, isLoading, isRTL }}>
       {children}
     </I18nContext.Provider>
   );
@@ -52,4 +54,11 @@ export const withI18nProvider = (Story: React.ComponentType) => (
   <I18nProvider>
     <Story />
   </I18nProvider>
-); 
+);
+
+// For direct imports in Storybook stories
+export default {
+  useI18n,
+  I18nProvider,
+  withI18nProvider,
+}; 

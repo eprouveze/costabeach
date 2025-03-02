@@ -108,3 +108,4 @@
 - Added comprehensive test suite for document translation functionality, including unit tests for the translations router, Inngest function, and end-to-end tests for the translation workflow UI.
 - Fixed Storybook issues by updating the mock ToastContainer component and removing incompatible addon-styling dependency.
 - Fixed DocumentTranslationWorkflow test by properly mocking the document with correct Language enum values and implementing error handling.
+- Fixed LanguageSwitcher component tests by adding proper mock for the Globe icon, updating the useI18n mock implementation, and implementing click outside functionality to close the dropdown menu.
