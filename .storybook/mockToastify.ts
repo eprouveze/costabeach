@@ -6,4 +6,7 @@ const toast = {
   warning: (message: string) => console.log('Toast warning:', message),
 };
 
-export { toast }; 
+// Mock ToastContainer component
+const ToastContainer = () => null;
+
+export { toast, ToastContainer }; 

@@ -70,7 +70,6 @@
     "@storybook/addon-interactions": "^8.6.3",
     "@storybook/addon-links": "^8.6.3",
     "@storybook/addon-onboarding": "^8.6.3",
-    "@storybook/addon-styling": "^2.0.0",
     "@storybook/addon-styling-webpack": "^1.0.1",
     "@storybook/addon-themes": "^8.6.3",
     "@storybook/addon-viewport": "^8.6.3",
