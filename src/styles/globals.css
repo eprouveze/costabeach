@@ -40,4 +40,169 @@ body {
 /* Fix for punctuation in RTL text */
 [dir="rtl"] .rtl-text {
   unicode-bidi: plaintext;
+}
+
+/* Additional RTL Support */
+[dir="rtl"] .flex-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .flex-row-reverse {
+  flex-direction: row;
+}
+
+[dir="rtl"] .space-x-1 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+[dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+[dir="rtl"] .space-x-3 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+[dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+[dir="rtl"] .space-x-5 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+[dir="rtl"] .space-x-6 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+[dir="rtl"] .space-x-8 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+[dir="rtl"] .space-x-10 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+[dir="rtl"] .space-x-12 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+/* RTL form elements */
+[dir="rtl"] input,
+[dir="rtl"] textarea {
+  text-align: right;
+}
+
+/* RTL table elements */
+[dir="rtl"] th,
+[dir="rtl"] td {
+  text-align: right;
+}
+
+/* RTL grid layout */
+[dir="rtl"] .grid-flow-col {
+  grid-auto-flow: column-reverse;
+}
+
+/* RTL transforms */
+[dir="rtl"] .rotate-90 {
+  --tw-rotate: -90deg;
+}
+
+[dir="rtl"] .rotate-180 {
+  --tw-rotate: 180deg;
+}
+
+[dir="rtl"] .rotate-270 {
+  --tw-rotate: -270deg;
+}
+
+/* RTL shadows */
+[dir="rtl"] .shadow-lg {
+  --tw-shadow-x: -1px;
+}
+
+/* RTL borders */
+[dir="rtl"] .border-l {
+  border-left-width: 0;
+  border-right-width: 1px;
+}
+
+[dir="rtl"] .border-r {
+  border-right-width: 0;
+  border-left-width: 1px;
+}
+
+/* RTL rounded corners */
+[dir="rtl"] .rounded-tl {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0.25rem;
+}
+
+[dir="rtl"] .rounded-tr {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0.25rem;
+}
+
+[dir="rtl"] .rounded-bl {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0.25rem;
+}
+
+[dir="rtl"] .rounded-br {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0.25rem;
+}
+
+/* RTL icons */
+[dir="rtl"] .transform-flip-x {
+  transform: scaleX(-1);
+}
+
+/* RTL input groups */
+[dir="rtl"] .input-group-prepend {
+  order: 2;
+}
+
+[dir="rtl"] .input-group-append {
+  order: 1;
+}
+
+/* RTL dropdown menus */
+[dir="rtl"] .dropdown-menu {
+  right: 0;
+  left: auto;
+  text-align: right;
+}
+
+/* RTL tooltips */
+[dir="rtl"] .tooltip {
+  direction: rtl;
+  text-align: right;
+}
+
+/* RTL modal dialogs */
+[dir="rtl"] .modal-header .close {
+  margin: -1rem auto -1rem -1rem;
+}
+
+/* RTL pagination */
+[dir="rtl"] .pagination {
+  flex-direction: row-reverse;
+}
+
+/* RTL breadcrumbs */
+[dir="rtl"] .breadcrumb-item + .breadcrumb-item::before {
+  padding-right: 0;
+  padding-left: 0.5rem;
+}
+
+[dir="rtl"] .breadcrumb-item + .breadcrumb-item {
+  padding-right: 0.5rem;
+  padding-left: 0;
+}
+
+/* RTL progress bars */
+[dir="rtl"] .progress-bar {
+  float: right;
 } 
