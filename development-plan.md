@@ -51,9 +51,10 @@ This development plan outlines the transformation of the Costa Beach application
    - Added client-side filtering and server-side search capabilities
    - Integrated with the document router to support search queries
 
-2. **Document Viewer (Section 5.2)** ⚠️
+2. **Document Viewer (Section 5.2)** ✅
    - Added file preview for different formats (PDF, images, text, HTML)
-   - Still need to implement translation request option
+   - Implemented translation request option with background processing
+   - Created UI components for requesting translations and checking status
 
 3. **Document Management (Section 6.2)**
    - Implement document versioning functionality
@@ -488,7 +489,7 @@ This development plan outlines the transformation of the Costa Beach application
 ### 3.2 Document Viewer ✅
 - [x] Create document viewer component
 - [x] Implement file preview for different formats
-- [ ] Add translation request option for documents
+- [x] Add translation request option for documents
 
 **Implementation Details:**
 - Create a DocumentCard component for displaying document metadata
@@ -497,10 +498,11 @@ This development plan outlines the transformation of the Costa Beach application
 - Implement a translation request button for documents not in the user's preferred language
 - Added support for various file types (PDF, images, text, HTML, JSON)
 - Implemented fallback behavior for unsupported file types
+- Integrated with translation service to request document translations
 
 **Tests:**
 - [x] Test viewer rendering for different file types
-- [ ] Test translation request workflow
+- [x] Test translation request workflow
 - [x] Test responsive behavior
 
 **Testing Instructions:**
@@ -510,8 +512,8 @@ This development plan outlines the transformation of the Costa Beach application
 - Check responsive behavior on different devices
 
 **Storybook:**
-- [ ] Create Storybook stories for document viewer component
-- [ ] Document viewer interactions
+- [x] Create Storybook stories for document viewer component
+- [x] Document viewer interactions
 
 ### 3.3 Document Upload Interface ✅
 - [x] Create document upload interface for admins
@@ -634,10 +636,10 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Document i18n implementation patterns and best practices
 - [ ] Add examples of RTL layout handling
 
-### 4.2 Document Viewer Translation Request
-- [ ] Add translation request option for documents
-- [ ] Implement translation request workflow
-- [ ] Add user notification for completed translations
+### 4.2 Document Viewer Translation Request ✅
+- [x] Add translation request option for documents
+- [x] Implement translation request workflow
+- [x] Add user notification for completed translations
 
 **Implementation Details:**
 - Add translation request button to document viewer for documents not in user's preferred language
@@ -645,12 +647,15 @@ This development plan outlines the transformation of the Costa Beach application
 - Implement notification system to alert users when translations are ready
 - Add translation status indicators to document cards
 - Ensure translation preview works correctly for all supported document types
+- Implemented background job processing with Inngest for document translations
+- Created tRPC procedures for requesting and checking translation status
+- Added polling mechanism to update UI when translation is complete
 
 **Tests:**
-- [ ] Test translation request UI and functionality
-- [ ] Test translation workflow from request to completion
-- [ ] Test notification system for completed translations
-- [ ] Test translation preview for different document types
+- [x] Test translation request UI and functionality
+- [x] Test translation workflow from request to completion
+- [x] Test notification system for completed translations
+- [x] Test translation preview for different document types
 
 **Testing Instructions:**
 - Test requesting translations for various document types
@@ -659,8 +664,8 @@ This development plan outlines the transformation of the Costa Beach application
 - Test previewing translated documents of different formats
 
 **Storybook:**
-- [ ] Create Storybook stories for translation request component
-- [ ] Document translation workflow
+- [x] Create Storybook stories for translation request component
+- [x] Document translation workflow
 
 ### 4.3 Document Versioning
 - [ ] Implement document versioning functionality
