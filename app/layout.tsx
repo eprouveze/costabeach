@@ -1,6 +1,7 @@
 import '@/styles/globals.css';
 import { Inter } from 'next/font/google';
 import ClientLayout from '@/components/ClientLayout';
+import { ReactNode } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -9,12 +10,13 @@ export const metadata = {
   description: 'Official portal for Costa Beach 3 homeowners, providing access to documents, community information, and property management resources.',
 };
 
+// Use a more generic type to avoid conflicts with Next.js generated types
 export default function RootLayout({
   children,
   params,
 }: {
-  children: React.ReactNode;
-  params: { locale?: string };
+  children: ReactNode;
+  params: any; // Using any to avoid type conflicts
 }) {
   // Extract the locale from params, defaulting to 'fr'
   const locale = params.locale || 'fr';

@@ -85,3 +85,4 @@
 - Fixed language selector functionality to correctly switch between languages
 - Updated development plan to mark language-aware navigation as completed
 - Fixed I18nProvider context by properly integrating ClientLayout in app/layout.tsx, resolving "useI18n must be used within an I18nProvider" errors.
+- Fixed missing "auth.signIn" and "auth.signUp" translation keys in French and Arabic locale files to ensure proper display of login and registration buttons.

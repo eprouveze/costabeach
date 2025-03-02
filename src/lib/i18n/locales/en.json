@@ -90,7 +90,30 @@
     "subject": "Subject",
     "message": "Message",
     "submit": "Send Message",
-    "messageSent": "Your message has been sent successfully!"
+    "messageSent": "Your message has been sent successfully!",
+    "department": "Department",
+    "departments": {
+      "general": "General Inquiries",
+      "management": "HOA Management",
+      "maintenance": "Maintenance",
+      "financial": "Financial Questions",
+      "legal": "Legal Matters"
+    },
+    "contactInfo": {
+      "title": "Contact Information",
+      "address": "Costa Beach 3, Casablanca, Morocco",
+      "phone": "+212 522 123 456",
+      "email": "info@costabeach3.com",
+      "hours": "Office Hours: Monday-Friday, 9:00 AM - 5:00 PM"
+    },
+    "validation": {
+      "nameRequired": "Please enter your name",
+      "emailRequired": "Please enter your email address",
+      "emailInvalid": "Please enter a valid email address",
+      "subjectRequired": "Please enter a subject",
+      "messageRequired": "Please enter your message",
+      "departmentRequired": "Please select a department"
+    }
   },
   "auth": {
     "email": "Email",

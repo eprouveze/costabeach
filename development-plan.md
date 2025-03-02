@@ -316,7 +316,7 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Enhanced Storybook stories with responsive viewport demonstrations (Mobile, Tablet, Desktop)
 - [x] Added comprehensive responsive design documentation in Storybook
 
-### 4.2 Navigation Structure
+### 4.2 Navigation Structure ✅
 - [x] Update header and navigation components
 - [x] Simplify routing structure
 - [x] Add language-aware navigation
@@ -339,8 +339,8 @@ This development plan outlines the transformation of the Costa Beach application
 - Check keyboard accessibility
 
 **Storybook:**
-- [ ] Create Storybook stories for navigation components
-- [ ] Document navigation patterns
+- [x] Create Storybook stories for navigation components
+- [x] Document navigation patterns
 
 ### 4.3 Contact Page Update
 - [ ] Update contact page with HOA-specific information
@@ -367,6 +367,171 @@ This development plan outlines the transformation of the Costa Beach application
 **Storybook:**
 - [ ] Create Storybook stories for contact form components
 - [ ] Document form validation patterns
+
+### 4.4 Hero Section
+- [ ] Create multilingual hero section with high-quality image of Costa Beach 3
+- [ ] Implement welcome message in French and Arabic
+- [ ] Add brief community description
+- [ ] Create clear call-to-action for owner login/registration
+
+**Implementation Details:**
+- Design a responsive hero section with background image of Costa Beach 3
+- Create multilingual welcome heading with property branding
+- Add concise, impactful description that communicates the portal's purpose
+- Implement a prominent CTA button for owners to access the portal
+- Ensure proper responsive behavior on all device sizes
+
+**Tests:**
+- [ ] Test responsive layout on various screen sizes
+- [ ] Test translations in French and Arabic
+- [ ] Test CTA button functionality and tracking
+
+**Testing Instructions:**
+- Verify hero section appearance on mobile, tablet, and desktop devices
+- Test language switching and ensure all text elements are properly translated
+- Verify CTA button leads to correct destination and any analytics tracking is working
+
+**Storybook:**
+- [ ] Create Storybook stories for hero section component
+- [ ] Document responsive behavior and language variants
+
+### 4.5 About Costa Beach 3 Section
+- [ ] Import and adapt existing "About" content from WordPress site
+- [ ] Add visual elements showcasing the property
+- [ ] Include community history and description
+- [ ] Highlight special features and amenities
+
+**Implementation Details:**
+- Create an "About" section with content migrated from the WordPress site
+- Implement a responsive layout with text and image placement
+- Add property highlights with icons or visual indicators
+- Ensure all content is available in both French and Arabic
+
+**Tests:**
+- [ ] Test content display at various screen sizes
+- [ ] Test image loading and optimization
+- [ ] Test translations of imported content
+
+**Testing Instructions:**
+- Verify content is properly formatted and displays correctly on all devices
+- Test image loading performance and responsive resizing
+- Ensure all migrated content is properly translated and displays correctly
+
+**Storybook:**
+- [ ] Create Storybook stories for About section component
+- [ ] Document content layout patterns and responsive behavior
+
+### 4.6 HOA Services Section
+- [ ] Create service cards for document access and key HOA functions
+- [ ] Implement community announcements preview
+- [ ] Add contact information component
+- [ ] Create important dates/calendar preview
+
+**Implementation Details:**
+- Design service cards with icons representing key HOA functions
+- Create a community announcements preview showing recent items
+- Include a contact information component with key contact details
+- Add a calendar preview showing upcoming important dates
+- Ensure all components are responsive and properly translated
+
+**Tests:**
+- [ ] Test service cards layout and responsiveness
+- [ ] Test announcement previews with sample content
+- [ ] Test calendar display with various date formats
+
+**Testing Instructions:**
+- Verify service cards display correctly on all screen sizes
+- Test announcement previews with different content lengths
+- Check calendar display with various date formats and language settings
+- Verify all interactive elements function correctly
+
+**Storybook:**
+- [ ] Create Storybook stories for service cards component
+- [ ] Document announcement and calendar components
+
+### 4.7 Location Section
+- [ ] Implement interactive map showing Costa Beach 3 location
+- [ ] Add information about nearby amenities and attractions
+- [ ] Include transportation information
+
+**Implementation Details:**
+- Integrate a map component (Google Maps or similar) showing property location
+- Create a responsive layout for displaying location information
+- Add information on nearby amenities with distance indicators
+- Include transportation options and directions
+- Ensure map is responsive and performant on mobile devices
+
+**Tests:**
+- [ ] Test map loading and interactions
+- [ ] Test responsive behavior on various devices
+- [ ] Test information display in different languages
+
+**Testing Instructions:**
+- Verify map loads correctly and displays the proper location
+- Test interactive features like zoom and pan
+- Check that nearby amenity information displays correctly
+- Verify proper translations of location information
+
+**Storybook:**
+- [ ] Create Storybook stories for location section component
+- [ ] Document map integration and responsive behavior
+
+### 4.8 Photo Gallery
+- [ ] Create responsive photo gallery grid
+- [ ] Implement category-based organization (Common Areas, Beach, Facilities)
+- [ ] Add lightbox viewer for full-size images
+- [ ] Implement lazy loading for performance
+
+**Implementation Details:**
+- Design a responsive grid layout for displaying property photos
+- Implement category filtering with tabs or dropdown
+- Add lightbox functionality for viewing full-size images
+- Implement lazy loading to improve performance
+- Ensure images are optimized for web display
+
+**Tests:**
+- [ ] Test gallery grid on various screen sizes
+- [ ] Test category filtering functionality
+- [ ] Test lightbox interactions and keyboard navigation
+- [ ] Test image loading performance
+
+**Testing Instructions:**
+- Verify gallery displays correctly on all screen sizes
+- Test category filtering to ensure it shows correct images
+- Check lightbox functionality for viewing full-size images
+- Verify lazy loading improves performance on slow connections
+
+**Storybook:**
+- [ ] Create Storybook stories for photo gallery component
+- [ ] Document category filtering and lightbox interactions
+
+### 4.9 Enhanced Footer
+- [ ] Design and implement enhanced footer with contact information
+- [ ] Add quick links to important pages
+- [ ] Include language switcher component
+- [ ] Add social media links if applicable
+
+**Implementation Details:**
+- Create a comprehensive footer design with multiple sections
+- Include contact information, quick links, and legal disclaimers
+- Add language switcher component for easy language changes
+- Implement social media links if available
+- Ensure responsive layout and proper spacing on all devices
+
+**Tests:**
+- [ ] Test footer layout on various screen sizes
+- [ ] Test all links for correct destinations
+- [ ] Test language switcher functionality
+
+**Testing Instructions:**
+- Verify footer displays correctly on all screen sizes
+- Test all links to ensure they lead to correct destinations
+- Check language switcher updates the UI correctly
+- Verify contact information is displayed correctly and actionable
+
+**Storybook:**
+- [ ] Create Storybook stories for footer component
+- [ ] Document responsive behavior and language switching
 
 ## 5. Owner Portal Document System
 
