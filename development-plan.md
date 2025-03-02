@@ -619,8 +619,6 @@ This development plan outlines the transformation of the Costa Beach application
 - Create RTL utility functions for consistent handling of text alignment, list styles, and flex direction
 - Add RTL-specific CSS rules to handle punctuation and list bullet positioning
 - Apply RTL classes to components based on the current locale
-- Enhance LanguageSwitcher component with proper RTL support for dropdown positioning
-- Implement click outside functionality for dropdown menus to improve user experience
 
 **Tests:**
 - [ ] Test language switching on all pages
