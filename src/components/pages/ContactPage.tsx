@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 import PublicLandingTemplate from '@/components/templates/PublicLandingTemplate';
 import { useI18n } from '@/lib/i18n/client';
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
+import RTLWrapper from '@/components/RTLWrapper';
+import { getIconMarginClass } from '@/lib/utils/rtl';
 
 export default function ContactPage() {
   const { t, locale, isLoading } = useI18n();
@@ -13,6 +15,9 @@ export default function ContactPage() {
   const [name, setName] = useState('');
   const [subject, setSubject] = useState('');
   const [department, setDepartment] = useState('');
+  
+  // Get the appropriate icon margin class based on locale
+  const iconMarginClass = getIconMarginClass(locale);
   
   // Debug translations
   useEffect(() => {
@@ -216,9 +221,9 @@ export default function ContactPage() {
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
               <h2 className="text-2xl font-bold mb-6 text-blue-700 dark:text-blue-400">{t("contact.contactInfo.title")}</h2>
               
-              <div className="space-y-6">
+              <RTLWrapper applyTextAlign={true} applyFlexDirection={true} applyListStyle={true} className="space-y-6">
                 <div className="flex items-start">
-                  <MapPin className="w-6 h-6 text-blue-600 mt-1 mr-3" />
+                  <MapPin className={`w-6 h-6 text-blue-600 mt-1 ${iconMarginClass}`} />
                   <div>
                     <p className="font-medium text-lg">{labels.address}</p>
                     <p className="text-gray-600 dark:text-gray-300">{t("contact.contactInfo.address")}</p>
@@ -226,7 +231,7 @@ export default function ContactPage() {
                 </div>
                 
                 <div className="flex items-start">
-                  <Phone className="w-6 h-6 text-blue-600 mt-1 mr-3" />
+                  <Phone className={`w-6 h-6 text-blue-600 mt-1 ${iconMarginClass}`} />
                   <div>
                     <p className="font-medium text-lg">{labels.phone}</p>
                     <p className="text-gray-600 dark:text-gray-300">{t("contact.contactInfo.phone")}</p>
@@ -234,7 +239,7 @@ export default function ContactPage() {
                 </div>
                 
                 <div className="flex items-start">
-                  <Mail className="w-6 h-6 text-blue-600 mt-1 mr-3" />
+                  <Mail className={`w-6 h-6 text-blue-600 mt-1 ${iconMarginClass}`} />
                   <div>
                     <p className="font-medium text-lg">{labels.email}</p>
                     <p className="text-gray-600 dark:text-gray-300">{t("contact.contactInfo.email")}</p>
@@ -242,13 +247,13 @@ export default function ContactPage() {
                 </div>
                 
                 <div className="flex items-start">
-                  <Clock className="w-6 h-6 text-blue-600 mt-1 mr-3" />
+                  <Clock className={`w-6 h-6 text-blue-600 mt-1 ${iconMarginClass}`} />
                   <div>
                     <p className="font-medium text-lg">{labels.hours}</p>
                     <p className="text-gray-600 dark:text-gray-300">{t("contact.contactInfo.hours")}</p>
                   </div>
                 </div>
-              </div>
+              </RTLWrapper>
               
               <div className="mt-8">
                 <div className="aspect-w-16 aspect-h-9">

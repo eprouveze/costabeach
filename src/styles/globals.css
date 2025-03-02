@@ -17,19 +17,25 @@ body {
   text-align: right;
 }
 
+/* Enhanced RTL list styling */
 [dir="rtl"] ul:not(.reset-rtl) {
   padding-right: 1.5rem;
   padding-left: 0;
+  list-style-position: inside;
 }
 
 [dir="rtl"] ol:not(.reset-rtl) {
   padding-right: 1.5rem;
   padding-left: 0;
+  list-style-position: inside;
 }
 
-[dir="rtl"] .rtl-list li::before {
+/* Ensure list markers appear on the right side in RTL mode */
+[dir="rtl"] ul:not(.reset-rtl) li::marker,
+[dir="rtl"] ol:not(.reset-rtl) li::marker {
   margin-left: 0.5rem;
   margin-right: 0;
+  unicode-bidi: isolate;
 }
 
 /* Custom RTL list style */

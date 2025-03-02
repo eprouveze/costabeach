@@ -11,6 +11,7 @@ interface RTLWrapperProps {
   applyFlexDirection?: boolean;
   applyTextDirection?: boolean;
   applyListStyle?: boolean;
+  as?: React.ElementType;
 }
 
 /**
@@ -24,9 +25,11 @@ export default function RTLWrapper({
   applyFlexDirection = false,
   applyTextDirection = true,
   applyListStyle = false,
+  as: Component = "div",
 }: RTLWrapperProps) {
   const { locale } = useI18n();
   const rtlClasses = getRTLClasses(locale);
+  const isRTL = locale === 'ar';
   
   // Build the className string based on the props
   let classNames = className;
@@ -43,9 +46,17 @@ export default function RTLWrapper({
     classNames += ` ${rtlClasses.textDirection}`;
   }
   
-  if (applyListStyle) {
+  // Apply list style classes specifically for ul and ol elements
+  if (Component === 'ul' || Component === 'ol' || applyListStyle) {
     classNames += ` ${rtlClasses.listStyle}`;
+    
+    // Add padding for RTL lists
+    if (isRTL) {
+      classNames += ' pr-5 pl-0';
+    } else {
+      classNames += ' pl-5 pr-0';
+    }
   }
   
-  return <div className={classNames}>{children}</div>;
+  return <Component className={classNames}>{children}</Component>;
 } 
