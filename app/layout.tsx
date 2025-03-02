@@ -1,32 +1,34 @@
 import '@/styles/globals.css';
-import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { getLocale } from '@/lib/i18n/server';
-import { localeDirections } from '@/lib/i18n';
+import ClientLayout from '@/components/ClientLayout';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata: Metadata = {
+export const metadata = {
   title: 'Costa Beach 3 - Homeowners Association Portal',
-  description: 'The official portal for Costa Beach 3 Homeowners Association. Access documents, community information, and HOA resources.',
+  description: 'Official portal for Costa Beach 3 homeowners, providing access to documents, community information, and property management resources.',
 };
 
-import ClientLayout from '@/components/ClientLayout';
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: { locale?: string };
 }) {
-  // Get the locale from server utilities
-  const locale = await getLocale();
-  const htmlDir = localeDirections[locale] || 'ltr';
-
+  // Extract the locale from params, defaulting to 'fr'
+  const locale = params.locale || 'fr';
+  
+  // Set RTL direction for Arabic
+  const dir = locale === 'ar' ? 'rtl' : 'ltr';
+  
   return (
-    <html lang={locale} dir={htmlDir}>
+    <html lang={locale} dir={dir}>
       <body className={inter.className}>
-        <ClientLayout>{children}</ClientLayout>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
       </body>
     </html>
   );
-} 
+}

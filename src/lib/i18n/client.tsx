@@ -24,11 +24,13 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Extract locale from pathname or use default
-    const pathLocale = pathname.split("/")[1] as Locale;
-    const currentLocale = locales.includes(pathLocale as Locale) 
+    const pathSegments = pathname.split("/").filter(Boolean); // Remove empty segments
+    const pathLocale = pathSegments.length > 0 ? pathSegments[0] as Locale : null;
+    const currentLocale = pathLocale && locales.includes(pathLocale as Locale) 
       ? pathLocale as Locale 
       : defaultLocale;
     
+    console.log('[I18nProvider] Current locale from path:', currentLocale);
     setLocaleState(currentLocale);
     
     // Load translations for the current locale
@@ -46,43 +48,39 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   const setLocale = (newLocale: Locale) => {
     if (newLocale === locale) return;
     
+    console.log(`[I18nProvider] Switching locale from ${locale} to ${newLocale}`);
     setIsLoading(true);
     setLocaleState(newLocale);
     
     // Update URL to reflect locale change
-    const segments = pathname.split("/");
+    const pathSegments = pathname.split("/").filter(Boolean); // Remove empty segments
     
     // Create a new path with the new locale
     let newPath: string;
     
-    if (locales.includes(segments[1] as Locale)) {
+    if (pathSegments.length > 0 && locales.includes(pathSegments[0] as Locale)) {
       // Replace the existing locale
-      segments[1] = newLocale;
-      newPath = segments.join("/");
+      pathSegments[0] = newLocale;
+      newPath = `/${pathSegments.join("/")}`;
     } else {
       // Add the locale if it doesn't exist
-      newPath = `/${newLocale}${pathname}`;
+      newPath = `/${newLocale}${pathname.startsWith('/') ? pathname : `/${pathname}`}`;
     }
+    
+    console.log(`[I18nProvider] New path after locale change: ${newPath}`);
     
     // Set a cookie to remember the locale preference
     document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=${60 * 60 * 24 * 365}`;
     
-    // Navigate to the new URL
-    router.push(newPath);
+    // Use window.location.href for a full page navigation, which is more reliable than router.push
+    window.location.href = newPath;
     
-    // Load new translations
-    loadTranslations(newLocale)
-      .then((data) => {
-        setTranslations(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Failed to load translations:", error);
-        setIsLoading(false);
-      });
+    // We don't need to load translations here as the page will reload
   };
 
   const t = (key: string): string => {
+    if (!translations) return key;
+    
     const keys = key.split(".");
     let result = translations;
     
