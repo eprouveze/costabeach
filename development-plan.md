@@ -242,9 +242,9 @@ This development plan outlines the transformation of the Costa Beach application
 - Validate file types and sizes before upload
 
 **Tests:**
-- [ ] Test file upload workflow
-- [ ] Test format validation
-- [ ] Test error handling
+- [x] Test file upload workflow
+- [x] Test format validation
+- [x] Test error handling
 
 **Testing Instructions:**
 - Test uploads with valid and invalid file types
@@ -253,8 +253,8 @@ This development plan outlines the transformation of the Costa Beach application
 - Verify progress tracking accuracy
 
 **Storybook:**
-- [ ] Create Storybook stories for file upload component
-- [ ] Document upload workflow
+- [x] Create Storybook stories for file upload component
+- [x] Document upload workflow
 
 ### 3.3 File Access and Preview
 - [x] Implement secure file access through signed URLs
