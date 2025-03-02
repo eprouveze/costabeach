@@ -656,12 +656,17 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Test translation workflow from request to completion
 - [x] Test notification system for completed translations
 - [x] Test translation preview for different document types
+- [x] Test translation router endpoints
+- [x] Test Inngest background job processing
+- [x] Test end-to-end translation workflow
 
 **Testing Instructions:**
 - Test requesting translations for various document types
 - Verify translation status is properly tracked and displayed
 - Check notification delivery when translations are complete
 - Test previewing translated documents of different formats
+- Run tests with `npm test -- --testPathPattern=translations` to verify translation functionality
+- Run tests with `npm test -- --testPathPattern=DocumentTranslationWorkflow` to verify end-to-end workflow
 
 **Storybook:**
 - [x] Create Storybook stories for translation request component
