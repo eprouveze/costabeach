@@ -255,6 +255,29 @@
     "subject": "الموضوع",
     "message": "الرسالة",
     "submit": "إرسال الرسالة",
-    "messageSent": "تم إرسال رسالتك بنجاح!"
+    "messageSent": "تم إرسال رسالتك بنجاح!",
+    "department": "القسم",
+    "departments": {
+      "general": "استفسارات عامة",
+      "management": "إدارة جمعية المالكين",
+      "maintenance": "الصيانة",
+      "financial": "أسئلة مالية",
+      "legal": "مسائل قانونية"
+    },
+    "contactInfo": {
+      "title": "معلومات الاتصال",
+      "address": "كوستا بيتش 3، الدار البيضاء، المغرب",
+      "phone": "+212 522 123 456",
+      "email": "info@costabeach3.com",
+      "hours": "ساعات العمل: الاثنين-الجمعة، 9:00 صباحًا - 5:00 مساءً"
+    },
+    "validation": {
+      "nameRequired": "الرجاء إدخال اسمك",
+      "emailRequired": "الرجاء إدخال عنوان بريدك الإلكتروني",
+      "emailInvalid": "الرجاء إدخال عنوان بريد إلكتروني صالح",
+      "subjectRequired": "الرجاء إدخال موضوع",
+      "messageRequired": "الرجاء إدخال رسالتك",
+      "departmentRequired": "الرجاء اختيار قسم"
+    }
   }
 } 
