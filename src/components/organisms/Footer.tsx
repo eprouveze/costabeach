@@ -2,53 +2,54 @@
 
 import { Button } from "../atoms/Button";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { useI18n } from "@/lib/i18n/client";
+import RTLList from "@/components/RTLList";
+import RTLText from "@/components/RTLText";
 
 interface FooterProps {
   className?: string;
 }
 
 export const Footer = ({ className = "" }: FooterProps) => {
+  const { t } = useI18n();
+
   return (
     <footer className={`bg-gray-900 text-white py-12 ${className}`}>
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Contact Information */}
           <div>
-            <h3 className="text-xl font-semibold mb-4">Contact Us</h3>
-            <div className="space-y-4">
-              <div className="flex items-center">
-                <Mail className="w-5 h-5 mr-2" />
-                <a href="mailto:info@costabeach.com" className="hover:text-gray-300">
-                  info@costabeach.com
-                </a>
-              </div>
-              <div className="flex items-center">
-                <Phone className="w-5 h-5 mr-2" />
-                <a href="tel:+1234567890" className="hover:text-gray-300">
-                  (123) 456-7890
-                </a>
-              </div>
-              <div className="flex items-center">
-                <MapPin className="w-5 h-5 mr-2" />
-                <p>Costa Beach, FL 12345</p>
-              </div>
-            </div>
+            <h3 className="text-xl font-semibold mb-4">{t("footer.contactInfo.title")}</h3>
+            <RTLList className="space-y-2">
+              <li className="flex items-start">
+                <span className="mr-2">📍</span>
+                <RTLText>{t("footer.contactInfo.address")}</RTLText>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2">📞</span>
+                <RTLText>{t("footer.contactInfo.phone")}</RTLText>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2">✉️</span>
+                <RTLText>{t("footer.contactInfo.email")}</RTLText>
+              </li>
+            </RTLList>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
+            <h3 className="text-xl font-semibold mb-4">{t("footer.quickLinks.title")}</h3>
+            <RTLList className="space-y-2">
               <li>
-                <a href="/property" className="hover:text-gray-300">Property Details</a>
+                <a href="/property" className="hover:text-gray-300">{t("footer.quickLinks.property")}</a>
               </li>
               <li>
-                <a href="/owner" className="hover:text-gray-300">Owner Portal</a>
+                <a href="/gallery" className="hover:text-gray-300">{t("footer.quickLinks.gallery")}</a>
               </li>
               <li>
-                <a href="/contact" className="hover:text-gray-300">Contact</a>
+                <a href="/contact" className="hover:text-gray-300">{t("footer.quickLinks.contact")}</a>
               </li>
-            </ul>
+            </RTLList>
           </div>
 
           {/* Newsletter Signup */}

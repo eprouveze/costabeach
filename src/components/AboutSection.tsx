@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useI18n } from "@/lib/i18n/client";
 import { Building, Waves, Sun, Map } from "lucide-react";
 import { getTextAlignClass, getListStyleClass, getFlexDirectionClass } from "@/lib/utils/rtl";
+import RTLList from '@/components/RTLList';
+import RTLText from "./RTLText";
 
 interface AboutSectionProps {
   className?: string;
@@ -45,12 +47,12 @@ export default function AboutSection({ className = "" }: AboutSectionProps) {
             <h3 className="text-2xl font-semibold text-gray-800 mb-4">
               {t("landing.aboutHistory.title")}
             </h3>
-            <p className="text-gray-600 mb-4 rtl-text">
+            <RTLText className="text-gray-600 mb-4">
               {t("landing.aboutHistory.paragraph1")}
-            </p>
-            <p className="text-gray-600 mb-6 rtl-text">
+            </RTLText>
+            <RTLText className="text-gray-600 mb-6">
               {t("landing.aboutHistory.paragraph2")}
-            </p>
+            </RTLText>
             <Link
               href="#"
               className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition duration-300"
@@ -66,60 +68,52 @@ export default function AboutSection({ className = "" }: AboutSectionProps) {
             {t("landing.aboutFeatures.title")}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-blue-50 p-6 rounded-lg">
-              <div className={`flex ${flexDirectionClass} items-center mb-4`}>
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Building className="w-6 h-6 text-blue-600" />
-                </div>
-                <h4 className={`text-xl font-semibold text-gray-800 ${locale === 'ar' ? 'mr-4' : 'ml-4'}`}>
-                  {t("landing.aboutFeatures.modern.title")}
-                </h4>
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <div className="flex justify-center mb-4">
+                <Building className="w-12 h-12 text-blue-600" />
               </div>
-              <p className={`text-gray-600 rtl-text ${textAlignClass}`}>
-                {t("landing.aboutFeatures.modern.description")}
-              </p>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                {t("landing.aboutFeatures.architecture.title")}
+              </h3>
+              <RTLText className="text-gray-600">
+                {t("landing.aboutFeatures.architecture.description")}
+              </RTLText>
             </div>
             
-            <div className="bg-blue-50 p-6 rounded-lg">
-              <div className={`flex ${flexDirectionClass} items-center mb-4`}>
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Waves className="w-6 h-6 text-blue-600" />
-                </div>
-                <h4 className={`text-xl font-semibold text-gray-800 ${locale === 'ar' ? 'mr-4' : 'ml-4'}`}>
-                  {t("landing.aboutFeatures.beach.title")}
-                </h4>
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <div className="flex justify-center mb-4">
+                <Waves className="w-12 h-12 text-blue-600" />
               </div>
-              <p className={`text-gray-600 rtl-text ${textAlignClass}`}>
-                {t("landing.aboutFeatures.beach.description")}
-              </p>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                {t("landing.aboutFeatures.beachfront.title")}
+              </h3>
+              <RTLText className="text-gray-600">
+                {t("landing.aboutFeatures.beachfront.description")}
+              </RTLText>
             </div>
             
-            <div className="bg-blue-50 p-6 rounded-lg">
-              <div className={`flex ${flexDirectionClass} items-center mb-4`}>
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Sun className="w-6 h-6 text-blue-600" />
-                </div>
-                <h4 className={`text-xl font-semibold text-gray-800 ${locale === 'ar' ? 'mr-4' : 'ml-4'}`}>
-                  {t("landing.aboutFeatures.amenities.title")}
-                </h4>
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <div className="flex justify-center mb-4">
+                <Sun className="w-12 h-12 text-blue-600" />
               </div>
-              <p className={`text-gray-600 rtl-text ${textAlignClass}`}>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                {t("landing.aboutFeatures.amenities.title")}
+              </h3>
+              <RTLText className="text-gray-600">
                 {t("landing.aboutFeatures.amenities.description")}
-              </p>
+              </RTLText>
             </div>
             
-            <div className="bg-blue-50 p-6 rounded-lg">
-              <div className={`flex ${flexDirectionClass} items-center mb-4`}>
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Map className="w-6 h-6 text-blue-600" />
-                </div>
-                <h4 className={`text-xl font-semibold text-gray-800 ${locale === 'ar' ? 'mr-4' : 'ml-4'}`}>
-                  {t("landing.aboutFeatures.location.title")}
-                </h4>
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <div className="flex justify-center mb-4">
+                <Map className="w-12 h-12 text-blue-600" />
               </div>
-              <p className={`text-gray-600 rtl-text ${textAlignClass}`}>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                {t("landing.aboutFeatures.location.title")}
+              </h3>
+              <RTLText className="text-gray-600">
                 {t("landing.aboutFeatures.location.description")}
-              </p>
+              </RTLText>
             </div>
           </div>
         </div>
@@ -134,23 +128,23 @@ export default function AboutSection({ className = "" }: AboutSectionProps) {
               <h4 className="text-xl font-semibold text-gray-800 mb-2">
                 {t("landing.aboutCommunity.services.title")}
               </h4>
-              <ul className={`list-disc space-y-2 text-gray-600 ${listStyleClass} ${locale === 'ar' ? 'pr-5' : 'pl-5'}`}>
-                <li className="rtl-text">{t("landing.aboutCommunity.services.item1")}</li>
-                <li className="rtl-text">{t("landing.aboutCommunity.services.item2")}</li>
-                <li className="rtl-text">{t("landing.aboutCommunity.services.item3")}</li>
-                <li className="rtl-text">{t("landing.aboutCommunity.services.item4")}</li>
-              </ul>
+              <RTLList type="ul" listStyleType="disc" className="space-y-2 text-gray-600">
+                <li>{t("landing.aboutCommunity.services.item1")}</li>
+                <li>{t("landing.aboutCommunity.services.item2")}</li>
+                <li>{t("landing.aboutCommunity.services.item3")}</li>
+                <li>{t("landing.aboutCommunity.services.item4")}</li>
+              </RTLList>
             </div>
             <div className={textAlignClass}>
               <h4 className="text-xl font-semibold text-gray-800 mb-2">
                 {t("landing.aboutCommunity.lifestyle.title")}
               </h4>
-              <ul className={`list-disc space-y-2 text-gray-600 ${listStyleClass} ${locale === 'ar' ? 'pr-5' : 'pl-5'}`}>
-                <li className="rtl-text">{t("landing.aboutCommunity.lifestyle.item1")}</li>
-                <li className="rtl-text">{t("landing.aboutCommunity.lifestyle.item2")}</li>
-                <li className="rtl-text">{t("landing.aboutCommunity.lifestyle.item3")}</li>
-                <li className="rtl-text">{t("landing.aboutCommunity.lifestyle.item4")}</li>
-              </ul>
+              <RTLList type="ul" listStyleType="disc" className="space-y-2 text-gray-600">
+                <li>{t("landing.aboutCommunity.lifestyle.item1")}</li>
+                <li>{t("landing.aboutCommunity.lifestyle.item2")}</li>
+                <li>{t("landing.aboutCommunity.lifestyle.item3")}</li>
+                <li>{t("landing.aboutCommunity.lifestyle.item4")}</li>
+              </RTLList>
             </div>
           </div>
         </div>

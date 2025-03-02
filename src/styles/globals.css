@@ -46,6 +46,17 @@ body {
 /* Fix for punctuation in RTL text */
 [dir="rtl"] .rtl-text {
   unicode-bidi: plaintext;
+  text-align: right;
+  direction: rtl;
+}
+
+/* Ensure punctuation appears on the correct side in RTL mode */
+[dir="rtl"] .rtl-text::after {
+  unicode-bidi: isolate;
+}
+
+[dir="rtl"] .rtl-text::before {
+  unicode-bidi: isolate;
 }
 
 /* Additional RTL Support */

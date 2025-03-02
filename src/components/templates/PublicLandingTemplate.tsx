@@ -7,6 +7,7 @@ import { useI18n } from "@/lib/i18n/client";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import Hero from "@/components/Hero";
 import AboutSection from "@/components/AboutSection";
+import RTLList from "@/components/RTLList";
 
 interface PublicLandingTemplateProps {
   children?: React.ReactNode;

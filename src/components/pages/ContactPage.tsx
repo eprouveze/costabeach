@@ -7,6 +7,7 @@ import { useI18n } from '@/lib/i18n/client';
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import RTLWrapper from '@/components/RTLWrapper';
 import { getIconMarginClass } from '@/lib/utils/rtl';
+import RTLText from '@/components/RTLText';
 
 export default function ContactPage() {
   const { t, locale, isLoading } = useI18n();
@@ -226,7 +227,9 @@ export default function ContactPage() {
                   <MapPin className={`w-6 h-6 text-blue-600 mt-1 ${iconMarginClass}`} />
                   <div>
                     <p className="font-medium text-lg">{labels.address}</p>
-                    <p className="text-gray-600 dark:text-gray-300">{t("contact.contactInfo.address")}</p>
+                    <RTLText className="text-gray-600 dark:text-gray-300">
+                      {t("contact.contactInfo.address")}
+                    </RTLText>
                   </div>
                 </div>
                 
@@ -234,7 +237,9 @@ export default function ContactPage() {
                   <Phone className={`w-6 h-6 text-blue-600 mt-1 ${iconMarginClass}`} />
                   <div>
                     <p className="font-medium text-lg">{labels.phone}</p>
-                    <p className="text-gray-600 dark:text-gray-300">{t("contact.contactInfo.phone")}</p>
+                    <RTLText className="text-gray-600 dark:text-gray-300">
+                      {t("contact.contactInfo.phone")}
+                    </RTLText>
                   </div>
                 </div>
                 
@@ -242,7 +247,9 @@ export default function ContactPage() {
                   <Mail className={`w-6 h-6 text-blue-600 mt-1 ${iconMarginClass}`} />
                   <div>
                     <p className="font-medium text-lg">{labels.email}</p>
-                    <p className="text-gray-600 dark:text-gray-300">{t("contact.contactInfo.email")}</p>
+                    <RTLText className="text-gray-600 dark:text-gray-300">
+                      {t("contact.contactInfo.email")}
+                    </RTLText>
                   </div>
                 </div>
                 
@@ -250,7 +257,9 @@ export default function ContactPage() {
                   <Clock className={`w-6 h-6 text-blue-600 mt-1 ${iconMarginClass}`} />
                   <div>
                     <p className="font-medium text-lg">{labels.hours}</p>
-                    <p className="text-gray-600 dark:text-gray-300">{t("contact.contactInfo.hours")}</p>
+                    <RTLText className="text-gray-600 dark:text-gray-300">
+                      {t("contact.contactInfo.hours")}
+                    </RTLText>
                   </div>
                 </div>
               </RTLWrapper>
