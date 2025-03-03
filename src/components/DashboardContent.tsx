@@ -28,6 +28,7 @@ export function DashboardContent() {
   
   const [userLanguage, setUserLanguage] = useState<Language>(Language.FRENCH);
   const [viewingDocumentId, setViewingDocumentId] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
   
   // Set user language based on locale
   useEffect(() => {
@@ -63,7 +64,7 @@ export function DashboardContent() {
   }
 
   // Fetch documents based on selected category
-  const { data: documents, isLoading, error } = api.documents.getDocumentsByCategory.useQuery({
+  const { data: documents, isLoading, error, refetch } = api.documents.getDocumentsByCategory.useQuery({
     category,
     language: userLanguage,
     searchQuery
@@ -73,12 +74,25 @@ export function DashboardContent() {
     retryDelay: 1000,
     onError: (err) => {
       console.error("Error fetching documents:", err);
-      toast.error(`Error loading documents: ${err.message}`);
+      toast.error(`${t("documents.errorLoading") || "Error loading documents"}: ${err.message}`);
+      
+      // If we haven't retried too many times, try again after a delay
+      if (retryCount < 3) {
+        setTimeout(() => {
+          setRetryCount(prev => prev + 1);
+          refetch();
+        }, 2000);
+      }
     }
   });
 
   // Get download URL mutation
-  const getDownloadUrl = api.documents.getDownloadUrl.useMutation();
+  const getDownloadUrl = api.documents.getDownloadUrl.useMutation({
+    onError: (err) => {
+      console.error("Error getting download URL:", err);
+      toast.error(`${t("documents.errorDownloading") || "Error downloading document"}: ${err.message}`);
+    }
+  });
   
   // Format date for display
   const formatDate = (date: Date) => {
@@ -110,8 +124,13 @@ export function DashboardContent() {
 
   // Cast functions with "any" to bypass TypeScript's strict checking
   const handleViewDocument = ((document: any) => {
-    const documentId = document.id;
-    window.open(`/owner-dashboard/documents/${documentId}`, '_blank');
+    try {
+      const documentId = document.id;
+      window.open(`/${locale}/owner-dashboard/documents/${documentId}`, '_blank');
+    } catch (error: any) {
+      console.error("Error viewing document:", error);
+      toast.error(t("documents.errorViewing") || "Error viewing document");
+    }
   }) as any;
   
   // Cast functions with "any" to bypass TypeScript's strict checking
@@ -121,9 +140,12 @@ export function DashboardContent() {
       const result = await getDownloadUrl.mutateAsync({ documentId });
       if (result && result.downloadUrl) {
         window.open(result.downloadUrl, '_blank');
+      } else {
+        throw new Error(t("documents.noDownloadUrl") || "No download URL available");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error downloading document:", error);
+      toast.error(`${t("documents.errorDownloading") || "Error downloading document"}: ${error.message || t("common.unknownError") || "Unknown error"}`);
     }
   }) as any;
 
@@ -151,7 +173,17 @@ export function DashboardContent() {
   if (error) {
     return (
       <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded" data-testid="error-message">
-        <p>{t("common.error")}: {error.message}</p>
+        <p className="font-bold">{t("common.error") || "Error"}</p>
+        <p>{error.message}</p>
+        <button 
+          onClick={() => {
+            setRetryCount(prev => prev + 1);
+            refetch();
+          }}
+          className="mt-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-800 rounded transition-colors"
+        >
+          {t("common.retry") || "Retry"}
+        </button>
       </div>
     );
   }
@@ -160,8 +192,8 @@ export function DashboardContent() {
   if (!documents || documents.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow p-6 text-center" data-testid="empty-state">
-        <h2 className="text-xl font-medium mb-2">{t("documents.noDocuments")}</h2>
-        <p className="text-gray-500">{t("documents.noDocumentsInCategory")}</p>
+        <h2 className="text-xl font-medium mb-2">{t("documents.noDocuments") || "No Documents"}</h2>
+        <p className="text-gray-500">{t("documents.noDocumentsInCategory") || "There are no documents in this category."}</p>
       </div>
     );
   }
@@ -171,7 +203,7 @@ export function DashboardContent() {
       <h2 className="text-2xl font-bold mb-4">
         {categoryParam 
           ? t(`documents.categories.${categoryParam.toLowerCase()}`) || categoryParam
-          : t("documents.title")}
+          : t("documents.title") || "Documents"}
       </h2>
       <DocumentList 
         initialDocuments={formattedDocuments} 

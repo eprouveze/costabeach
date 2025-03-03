@@ -22,7 +22,12 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
   useEffect(() => {
     async function checkAuth() {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) {
+          console.error('Session error:', sessionError);
+          throw new Error(`Session error: ${sessionError.message}`);
+        }
         
         if (!session && requireAuth) {
           // Get the current locale from the URL
@@ -37,60 +42,91 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
         }
         
         if (session) {
-          // Get user data from the database
-          const { data: userData, error: userError } = await supabase
-            .from('users')
-            .select('*')
-            .eq('id', session.user.id)
-            .single();
-            
-          if (userError) {
-            console.error('Error fetching user data:', userError);
-            
-            // If user doesn't exist in the database, create a default user record
-            if (userError.code === 'PGRST116') { // PostgreSQL error for "no rows returned"
-              console.log('User not found in database, creating default record');
+          try {
+            // Get user data from the database
+            const { data: userData, error: userError } = await supabase
+              .from('users')
+              .select('*')
+              .eq('id', session.user.id)
+              .single();
               
-              // Get user metadata from auth
-              const { data: { user: authUser } } = await supabase.auth.getUser();
+            if (userError) {
+              console.error('Error fetching user data:', userError);
               
-              if (authUser) {
-                // Create a default user record
-                const { data: newUser, error: createError } = await supabase
-                  .from('users')
-                  .insert([
-                    {
-                      id: authUser.id,
-                      email: authUser.email,
-                      name: authUser.user_metadata?.name || authUser.email?.split('@')[0] || 'User',
-                      role: 'user',
-                      is_verified_owner: false,
-                      preferred_language: authUser.user_metadata?.preferred_language || 'french',
-                      permissions: []
-                    }
-                  ])
-                  .select()
-                  .single();
+              // If user doesn't exist in the database, create a default user record
+              if (userError.code === 'PGRST116') { // PostgreSQL error for "no rows returned"
+                console.log('User not found in database, creating default record');
                 
-                if (createError) {
-                  console.error('Error creating user record:', createError);
-                } else if (newUser) {
-                  setUser({
-                    ...newUser,
-                    email: authUser.email || '',
-                  } as AuthUser);
+                try {
+                  // Get user metadata from auth
+                  const { data: { user: authUser }, error: authUserError } = await supabase.auth.getUser();
+                  
+                  if (authUserError) {
+                    console.error('Error getting auth user:', authUserError);
+                    throw new Error(`Auth user error: ${authUserError.message}`);
+                  }
+                  
+                  if (authUser) {
+                    // Create a default user record
+                    const { data: newUser, error: createError } = await supabase
+                      .from('users')
+                      .insert([
+                        {
+                          id: authUser.id,
+                          email: authUser.email,
+                          name: authUser.user_metadata?.name || authUser.email?.split('@')[0] || 'User',
+                          role: 'user',
+                          is_verified_owner: false,
+                          preferred_language: authUser.user_metadata?.preferred_language || 'french',
+                          permissions: []
+                        }
+                      ])
+                      .select()
+                      .single();
+                    
+                    if (createError) {
+                      console.error('Error creating user record:', createError);
+                      throw new Error(`Error creating user record: ${createError.message}`);
+                    } else if (newUser) {
+                      setUser({
+                        ...newUser,
+                        email: authUser.email || '',
+                      } as AuthUser);
+                    } else {
+                      console.error('No user data returned after creation');
+                      throw new Error('No user data returned after creation');
+                    }
+                  } else {
+                    console.error('No auth user found');
+                    throw new Error('No auth user found');
+                  }
+                } catch (createUserError: any) {
+                  console.error('Error in user creation process:', createUserError);
+                  throw new Error(`Error in user creation: ${createUserError.message || JSON.stringify(createUserError)}`);
                 }
+              } else {
+                // For other database errors
+                throw new Error(`Database error: ${userError.message}`);
               }
+            } else if (userData) {
+              setUser({
+                ...userData,
+                email: session.user.email || '',
+              } as AuthUser);
+            } else {
+              console.error('No user data returned');
+              throw new Error('No user data returned');
             }
-          } else if (userData) {
-            setUser({
-              ...userData,
-              email: session.user.email || '',
-            } as AuthUser);
+          } catch (userDataError: any) {
+            console.error('Error processing user data:', userDataError);
+            toast.error(`Error loading user data: ${userDataError.message || 'Unknown error'}`);
+            // Don't throw here to allow the app to continue with limited functionality
           }
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Auth check error:', error);
+        toast.error(`Authentication error: ${error.message || 'Unknown error'}`);
+        // Don't set loading to false here to allow the error to be displayed
       } finally {
         setLoading(false);
       }
