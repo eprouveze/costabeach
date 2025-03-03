@@ -1,5 +1,13 @@
 # Cursor Updates
 
+## Created PublicPageTemplate Storybook Story (2024-03-03)
+
+Added a comprehensive Storybook story for the PublicPageTemplate component with various examples and responsive variants:
+1. Created a Default story with simple content
+2. Added a WithContent story showing rich content example
+3. Implemented Mobile, Tablet, and Desktop viewport variants
+4. Added a ResponsiveGuide with detailed documentation about the template's responsive behavior
+
 ## Dynamic Port Handling in NextAuth (2024-03-26)
 
 Fixed email verification links to work with dynamic ports in development. When Next.js assigns different ports (e.g., when 3000 is busy), the auth system now:
