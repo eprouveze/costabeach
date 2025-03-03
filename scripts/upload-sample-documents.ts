@@ -3,6 +3,7 @@ import { config } from "dotenv";
 import fs from "fs";
 import path from "path";
 import { PrismaClient, DocumentCategory, Language } from "@prisma/client";
+import crypto from "crypto";
 
 // Load environment variables
 config();
@@ -103,6 +104,7 @@ async function uploadSampleDocuments() {
     if (!adminUser) {
       adminUser = await prisma.user.create({
         data: {
+          id: crypto.randomUUID(),
           email: "system@costabeach.com",
           name: "System Admin",
           isAdmin: true,

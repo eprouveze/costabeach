@@ -1,0 +1,2 @@
+id,name,email,email_verified,image,role,is_admin,building_number,apartment_number,phone_number,is_verified_owner,permissions,preferred_language,created_at,updated_at,is_verified
+b1e9ece8-44d5-4f3f-830a-c70d4631ee15,,manu@prouveze.fr,,,admin,false,,,,true,"[""manageUsers"",""manageDocuments"",""manageComiteDocuments"",""manageSocieteDocuments"",""manageLegalDocuments"",""approveRegistrations""]",french,2025-03-03 14:43:13.490939+00,2025-03-03 15:08:40.028872+00,true

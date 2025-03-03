@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { Resend } from "resend";
+import crypto from "crypto";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -74,6 +75,7 @@ export async function PUT(request: NextRequest) {
     if (action === "approve") {
       await prisma.user.create({
         data: {
+          id: crypto.randomUUID(),
           name: registration.name,
           email: registration.email,
           buildingNumber: registration.buildingNumber,

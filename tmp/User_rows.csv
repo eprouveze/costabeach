@@ -1,0 +1,2 @@
+id,name,email,emailVerified,image,hashedPassword,createdAt,updatedAt,login,role,isAdmin,apartmentNumber,buildingNumber,isVerifiedOwner,permissions,phoneNumber,preferredLanguage
+cm78levw80000tg18asnd01h5,Manu Prouveze,manu@prouveze.fr,2025-03-03 08:12:20.826,,,2025-02-17 05:06:22.326,2025-03-03 08:12:20.827,,admin,true,,,true,,,french

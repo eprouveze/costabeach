@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import crypto from "crypto";
 
 const prisma = new PrismaClient();
 
@@ -13,6 +14,7 @@ async function main() {
         role: "admin"
       },
       create: {
+        id: crypto.randomUUID(),
         email,
         isAdmin: true,
         role: "admin",
