@@ -1,41 +1,53 @@
-import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+
+// Create a Supabase client with the service role key for admin access
+const supabaseAdmin = createSupabaseClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
+);
 
 export async function GET() {
   try {
-    const supabase = createClient();
-    
     // Create users table if it doesn't exist
-    const createUsersTable = `
-      CREATE TABLE IF NOT EXISTS "users" (
-        "id" UUID PRIMARY KEY,
-        "name" TEXT,
-        "email" TEXT UNIQUE,
-        "email_verified" TIMESTAMP,
-        "image" TEXT,
-        "role" TEXT DEFAULT 'user',
-        "is_admin" BOOLEAN DEFAULT FALSE,
-        "building_number" TEXT,
-        "apartment_number" TEXT,
-        "phone_number" TEXT,
-        "is_verified_owner" BOOLEAN DEFAULT FALSE,
-        "permissions" TEXT[],
-        "preferred_language" TEXT DEFAULT 'french',
-        "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-        "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-      );
-    `;
+    const { error: createTableError } = await supabaseAdmin.from('users').select('id').limit(1);
     
-    // Execute the SQL
-    const { error: createTableError } = await supabase.rpc('pgclient', { query: createUsersTable });
-    
-    if (createTableError) {
-      console.error('Error creating users table:', createTableError);
-      return NextResponse.json({ error: 'Error creating users table' }, { status: 500 });
+    if (createTableError && createTableError.message.includes('does not exist')) {
+      // Table doesn't exist, create it
+      const { error } = await supabaseAdmin.sql`
+        CREATE TABLE IF NOT EXISTS "users" (
+          "id" UUID PRIMARY KEY,
+          "name" TEXT,
+          "email" TEXT UNIQUE,
+          "email_verified" TIMESTAMP,
+          "image" TEXT,
+          "role" TEXT DEFAULT 'user',
+          "is_admin" BOOLEAN DEFAULT FALSE,
+          "building_number" TEXT,
+          "apartment_number" TEXT,
+          "phone_number" TEXT,
+          "is_verified_owner" BOOLEAN DEFAULT FALSE,
+          "permissions" TEXT[],
+          "preferred_language" TEXT DEFAULT 'french',
+          "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+          "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+        );
+      `;
+      
+      if (error) {
+        console.error('Error creating users table:', error);
+        return NextResponse.json({ error: 'Error creating users table' }, { status: 500 });
+      }
     }
     
     // Create a function to handle new user creation
-    const createUserFunction = `
+    const { error: createFunctionError } = await supabaseAdmin.sql`
       CREATE OR REPLACE FUNCTION public.handle_new_user()
       RETURNS TRIGGER AS $$
       BEGIN
@@ -54,24 +66,18 @@ export async function GET() {
       $$ LANGUAGE plpgsql SECURITY DEFINER;
     `;
     
-    // Execute the SQL
-    const { error: createFunctionError } = await supabase.rpc('pgclient', { query: createUserFunction });
-    
     if (createFunctionError) {
       console.error('Error creating user function:', createFunctionError);
       return NextResponse.json({ error: 'Error creating user function' }, { status: 500 });
     }
     
     // Create a trigger to automatically create a user record when a new auth user is created
-    const createTrigger = `
+    const { error: createTriggerError } = await supabaseAdmin.sql`
       DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
       CREATE TRIGGER on_auth_user_created
         AFTER INSERT ON auth.users
         FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
     `;
-    
-    // Execute the SQL
-    const { error: createTriggerError } = await supabase.rpc('pgclient', { query: createTrigger });
     
     if (createTriggerError) {
       console.error('Error creating trigger:', createTriggerError);
@@ -79,7 +85,7 @@ export async function GET() {
     }
     
     // Create RLS policies for the users table
-    const createPolicies = `
+    const { error: createPoliciesError } = await supabaseAdmin.sql`
       ALTER TABLE "users" ENABLE ROW LEVEL SECURITY;
       
       -- First, drop any existing policies to avoid conflicts
@@ -120,15 +126,12 @@ export async function GET() {
         FOR INSERT WITH CHECK (true);
     `;
     
-    // Execute the SQL
-    const { error: createPoliciesError } = await supabase.rpc('pgclient', { query: createPolicies });
-    
     if (createPoliciesError) {
       console.error('Error creating policies:', createPoliciesError);
       return NextResponse.json({ error: 'Error creating policies' }, { status: 500 });
     }
     
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, message: "Database setup completed successfully" });
   } catch (error) {
     console.error('Error setting up database:', error);
     return NextResponse.json({ error: 'Error setting up database' }, { status: 500 });

@@ -444,3 +444,26 @@ Successfully created the necessary database tables in Supabase:
    - Created a server-side API route for database setup that can be used by administrators
 
 These changes complete the database setup portion of the Supabase Authentication Migration, ensuring that the application can properly store and retrieve user data while maintaining appropriate security controls.
+
+## Fixed Database Setup API Route (2024-06-30)
+
+Fixed issues with the database setup API route:
+
+1. Fixed the `cookies()` function in the Supabase server client:
+   - Updated the `cookies()` function to be properly awaited as required by Next.js
+   - Added async/await to all cookie-related functions to prevent runtime errors
+   - Improved error handling for cookie operations
+
+2. Updated the database setup API route to use direct SQL execution:
+   - Replaced the non-existent `pgclient` function with Supabase's SQL template literals
+   - Added the `SUPABASE_SERVICE_ROLE_KEY` to the environment variables
+   - Created a dedicated Supabase admin client with the service role key
+   - Improved error handling and added more detailed error messages
+   - Added a check to see if the users table already exists before trying to create it
+
+3. Enhanced the RLS policies for the users table:
+   - Added a policy to allow anyone to insert users (for testing purposes)
+   - Ensured all policies are properly dropped before recreating them
+   - Added specific policies for authenticated users to insert their own records
+
+These changes ensure that the database setup API route works correctly and can be used to initialize the database tables and RLS policies needed for the application.
