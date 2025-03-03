@@ -94,6 +94,7 @@ export async function middleware(request: NextRequest) {
 
   // CASE 3: Authentication check for protected routes
   if (
+    pathname.includes('/owner-dashboard') ||
     pathname.includes('/dashboard') ||
     pathname.includes('/admin') ||
     pathname.includes('/profile')
@@ -106,7 +107,27 @@ export async function middleware(request: NextRequest) {
       
       // Redirect to the signin page with the current locale
       const redirectUrl = `${origin}/${pathLocale}/auth/signin?returnUrl=${encodeURIComponent(request.nextUrl.pathname)}`;
+      logRedirect(pathname, redirectUrl);
       return NextResponse.redirect(redirectUrl);
+    }
+    
+    // For owner-dashboard routes, check if the user is a verified owner
+    if (pathname.includes('/owner-dashboard')) {
+      const { data: userData, error } = await supabase
+        .from('users')
+        .select('is_verified_owner')
+        .eq('id', session.user.id)
+        .single();
+      
+      if (error || !userData?.is_verified_owner) {
+        // Get the current locale from the URL
+        const pathLocale = pathname.split('/')[1];
+        
+        // Redirect to the home page with the current locale
+        const redirectUrl = `${origin}/${pathLocale}`;
+        logRedirect(pathname, redirectUrl);
+        return NextResponse.redirect(redirectUrl);
+      }
     }
   }
 

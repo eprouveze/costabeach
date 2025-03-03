@@ -50,6 +50,11 @@ This development plan outlines the transformation of the Costa Beach application
    - Consolidated tRPC client setup in `src/lib/trpc/index.tsx` to avoid duplication and confusion
    - Updated import paths in components to use the centralized tRPC client
 
+3. **Next.js Build Configuration** ✅
+   - Fixed build error related to standalone output by removing `output: 'standalone'` from Next.js config
+   - Resolved "Cannot find module for page: /_document" error by adding a basic `_document.tsx` file
+   - Successfully built the application with all issues resolved
+
 ### Missing Features in "Completed" Items
 1. **Document Browser (Section 5.1)** ✅
    - Implemented search functionality for documents

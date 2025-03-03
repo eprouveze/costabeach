@@ -1,8 +1,9 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { createClient } from '@/lib/supabase/client';
+import { AuthUser } from '@/lib/supabase/auth';
 
 interface AuthWrapperProps {
   children: React.ReactNode;
@@ -11,22 +12,95 @@ interface AuthWrapperProps {
 }
 
 export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }: AuthWrapperProps) {
-  const { data: session, status } = useSession();
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
+  const supabase = createClient();
 
   useEffect(() => {
-    if (requireAuth && status === "unauthenticated") {
-      router.push("/owner-login");
+    async function checkAuth() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session && requireAuth) {
+          // Get the current locale from the URL
+          const pathParts = pathname.split('/');
+          const locale = pathParts.length > 1 && ['fr', 'en', 'ar'].includes(pathParts[1]) 
+            ? pathParts[1] 
+            : 'fr';
+          
+          // Redirect to the signin page with the current locale and return URL
+          router.push(`/${locale}/auth/signin?returnUrl=${encodeURIComponent(pathname)}`);
+          return;
+        }
+        
+        if (session) {
+          // Get user data from the database
+          const { data: userData } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+            
+          if (userData) {
+            setUser({
+              ...userData,
+              email: session.user.email || '',
+            } as AuthUser);
+          }
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+      } finally {
+        setLoading(false);
+      }
     }
-    // Add role check if needed in the future
-  }, [requireAuth, status, router]);
+    
+    checkAuth();
+    
+    // Set up auth state change listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === 'SIGNED_OUT' && requireAuth) {
+          const pathParts = pathname.split('/');
+          const locale = pathParts.length > 1 && ['fr', 'en', 'ar'].includes(pathParts[1]) 
+            ? pathParts[1] 
+            : 'fr';
+          router.push(`/${locale}/auth/signin`);
+        }
+      }
+    );
+    
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [requireAuth, router, pathname, supabase]);
 
-  if (requireAuth && status === "loading") {
-    return <div>Loading...</div>;
+  // Show loading state
+  if (requireAuth && loading) {
+    return <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    </div>;
   }
 
-  if (requireAuth && !session) {
+  // If authentication is required but user is not authenticated
+  if (requireAuth && !user) {
     return null;
+  }
+
+  // If roles are specified, check if user has the required role
+  if (requireAuth && user && allowedRoles.length > 0) {
+    const userRole = user.role || 'user';
+    if (!allowedRoles.includes(userRole)) {
+      // User doesn't have the required role, redirect to home
+      const pathParts = pathname.split('/');
+      const locale = pathParts.length > 1 && ['fr', 'en', 'ar'].includes(pathParts[1]) 
+        ? pathParts[1] 
+        : 'fr';
+      router.push(`/${locale}`);
+      return null;
+    }
   }
 
   return <>{children}</>;

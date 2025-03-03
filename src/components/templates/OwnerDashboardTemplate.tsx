@@ -1,12 +1,13 @@
 "use client";
 
-import { signOut } from "next-auth/react";
 import { FileText, Folder, Home, LogOut, Search, Settings, User, Info, Book, FileCheck, GavelIcon, FileQuestion, CreditCard } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n/client";
 import { Header } from "@/components/organisms/Header";
 import { useState, FormEvent } from "react";
+import { signOut } from "@/lib/supabase/auth";
+import { toast } from "react-toastify";
 
 interface CategoryItem {
   id: string;
@@ -16,10 +17,11 @@ interface CategoryItem {
 
 export default function OwnerDashboardTemplate({ children }: { children?: React.ReactNode }) {
   const pathname = usePathname();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   // Categories based on the DocumentCategory enum
   const categories: CategoryItem[] = [
@@ -57,6 +59,23 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
     return searchParams.get("type") === "information";
   };
 
+  const handleSignOut = async () => {
+    setIsSigningOut(true);
+    try {
+      const { error } = await signOut();
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success(t("auth.signOutSuccess"));
+        router.push(`/${locale}`);
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Error signing out");
+    } finally {
+      setIsSigningOut(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Global Header */}
@@ -83,9 +102,9 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
             <nav className="space-y-1">
               {/* Dashboard link */}
               <Link
-                href="/owner-dashboard"
+                href={`/${locale}/owner-dashboard`}
                 className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
-                  pathname === "/owner-dashboard" && isAllCategoryActive() && !searchParams.toString()
+                  pathname === `/${locale}/owner-dashboard` && isAllCategoryActive() && !searchParams.toString()
                     ? "text-blue-600 bg-blue-50"
                     : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
                 }`}
@@ -96,7 +115,7 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
 
               {/* Information section */}
               <Link
-                href={`/owner-dashboard?type=information`}
+                href={`/${locale}/owner-dashboard?type=information`}
                 className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
                   isInformationActive()
                     ? "text-blue-600 bg-blue-50"
@@ -118,8 +137,8 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
                 const Icon = category.icon;
                 const isActive = category.id === "ALL" ? isAllCategoryActive() : isCategoryActive(category.id);
                 const href = category.id === "ALL" 
-                  ? "/owner-dashboard" 
-                  : `/owner-dashboard?category=${category.id}`;
+                  ? `/${locale}/owner-dashboard` 
+                  : `/${locale}/owner-dashboard?category=${category.id}`;
 
                 return (
                   <Link
@@ -145,9 +164,9 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
               </div>
 
               <Link
-                href="/owner-dashboard/profile"
+                href={`/${locale}/owner-dashboard/profile`}
                 className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
-                  pathname === "/owner-dashboard/profile"
+                  pathname === `/${locale}/owner-dashboard/profile`
                     ? "text-blue-600 bg-blue-50"
                     : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
                 }`}
@@ -157,9 +176,9 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
               </Link>
 
               <Link
-                href="/owner-dashboard/settings"
+                href={`/${locale}/owner-dashboard/settings`}
                 className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
-                  pathname === "/owner-dashboard/settings"
+                  pathname === `/${locale}/owner-dashboard/settings`
                     ? "text-blue-600 bg-blue-50"
                     : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
                 }`}
@@ -169,11 +188,12 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
               </Link>
 
               <button
-                onClick={() => signOut({ callbackUrl: "/" })}
-                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md"
+                onClick={handleSignOut}
+                disabled={isSigningOut}
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <LogOut className="w-5 h-5" />
-                {t("auth.signOut")}
+                {isSigningOut ? t("auth.signingOut") : t("auth.signOut")}
               </button>
             </nav>
           </div>

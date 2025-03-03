@@ -311,3 +311,21 @@ These changes ensure compatibility between the new Supabase authentication syste
 - Ensured all components have proper test coverage and Storybook documentation
 
 ## Fixed TypeScript errors in Storybook files, corrected enum values, and added Suspense boundaries for components using useSearchParams() hook.
+
+## Fixed Owner Dashboard Authentication and Redirection (2024-06-28)
+
+Fixed issues with owner dashboard authentication and redirection:
+
+1. Updated AuthWrapper component to use Supabase authentication instead of NextAuth
+2. Fixed LoginForm to properly redirect verified owners to the owner dashboard
+3. Updated OwnerDashboardTemplate to use Supabase signOut and localized URLs
+4. Enhanced middleware to properly handle owner-dashboard routes and verify owner status
+5. Added proper locale handling in all authentication redirects
+
+These changes ensure that:
+- Owners are properly redirected to the dashboard after login
+- Non-owners cannot access the owner dashboard
+- All navigation within the dashboard preserves the current locale
+- Sign-out functionality works correctly with Supabase authentication
+
+## Fixed build issues by removing the `output: 'standalone'` option from Next.js config and adding a basic `_document.tsx` file to resolve the "Cannot find module for page: /_document" error.

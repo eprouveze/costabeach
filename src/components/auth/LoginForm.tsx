@@ -7,6 +7,7 @@ import { ArrowLeft, Mail, Lock, Loader2, AlertCircle } from 'lucide-react';
 import { signIn } from '@/lib/supabase/auth';
 import { toast } from 'react-toastify';
 import { useI18n } from '@/lib/i18n/client';
+import { createClient } from '@/lib/supabase/client';
 
 export default function LoginForm() {
   const { t } = useI18n();
@@ -16,7 +17,8 @@ export default function LoginForm() {
   const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
   const searchParams = useSearchParams();
-  const returnUrl = searchParams.get('returnUrl') || '/';
+  const returnUrl = searchParams.get('returnUrl');
+  const supabase = createClient();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,8 +35,36 @@ export default function LoginForm() {
       }
       
       if (data.session) {
-        toast.success('Signed in successfully!');
-        router.push(returnUrl);
+        // Get the user's role from the database
+        const { data: userData, error: userError } = await supabase
+          .from('users')
+          .select('role, is_verified_owner')
+          .eq('id', data.session.user.id)
+          .single();
+        
+        if (userError) {
+          console.error('Error fetching user data:', userError);
+        }
+        
+        toast.success(t('auth.signin.success'));
+        
+        // Get the current locale from the URL
+        const path = window.location.pathname;
+        const pathParts = path.split('/');
+        const locale = pathParts.length > 1 && ['fr', 'en', 'ar'].includes(pathParts[1]) 
+          ? pathParts[1] 
+          : 'fr';
+        
+        // Redirect based on user role and return URL
+        if (returnUrl) {
+          router.push(returnUrl);
+        } else if (userData?.role === 'admin') {
+          router.push(`/${locale}/admin`);
+        } else if (userData?.is_verified_owner) {
+          router.push(`/${locale}/owner-dashboard`);
+        } else {
+          router.push(`/${locale}`);
+        }
       }
     } catch (error: any) {
       setErrorMessage(error.message || 'An error occurred during sign in');
@@ -146,7 +176,14 @@ export default function LoginForm() {
               disabled={isLoading}
               className="w-full rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-3 text-sm font-medium text-white transition-all hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? t('auth.signin.submitting') : t('auth.signin.submit')}
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  {t('auth.signin.submitting')}
+                </div>
+              ) : (
+                t('auth.signin.submit')
+              )}
             </button>
           </form>
 
