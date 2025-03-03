@@ -29,6 +29,9 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
           throw new Error(`Session error: ${sessionError.message}`);
         }
         
+        // Check if trying to access owner dashboard without being a verified owner
+        const isOwnerDashboardPath = pathname.includes('/owner-dashboard');
+        
         if (!session && requireAuth) {
           // Get the current locale from the URL
           const pathParts = pathname.split('/');
@@ -100,10 +103,16 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
                           // Table doesn't exist, we need to create it
                           console.error('Users table does not exist. Please run the migration script.');
                           toast.error('Database setup incomplete. Please contact the administrator.');
+                          
+                          // Redirect to the setup database page
+                          window.location.href = '/api/setup-database';
                         } else if (createError.message.includes('violates row-level security policy')) {
                           // RLS policy error
                           console.error('RLS policy error when creating user record:', createError);
                           toast.error('Permission error when creating user record. Please visit /api/setup-database to fix database permissions.');
+                          
+                          // Automatically redirect to the setup database page
+                          window.location.href = '/api/setup-database';
                           
                           // Create a fallback user object since we can't insert into the database
                           const fallbackUser = {
@@ -223,6 +232,21 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
               toast.error(`Error loading user data: ${userDataError.message || 'Unknown error'}`);
             }
           }
+        }
+
+        // After setting the user, check if they're trying to access the owner dashboard without being a verified owner
+        if (isOwnerDashboardPath && user && !user.is_verified_owner) {
+          console.error('User is not a verified owner, redirecting to home page');
+          
+          // Get the current locale from the URL
+          const pathParts = pathname.split('/');
+          const locale = pathParts.length > 1 && ['fr', 'en', 'ar'].includes(pathParts[1]) 
+            ? pathParts[1] 
+            : 'fr';
+          
+          toast.error('You do not have permission to access the owner dashboard');
+          router.push(`/${locale}`);
+          return;
         }
       } catch (error: any) {
         console.error('Auth check error:', error);

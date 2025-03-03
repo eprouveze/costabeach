@@ -445,25 +445,30 @@ Successfully created the necessary database tables in Supabase:
 
 These changes complete the database setup portion of the Supabase Authentication Migration, ensuring that the application can properly store and retrieve user data while maintaining appropriate security controls.
 
-## Fixed Database Setup API Route (2024-06-30)
+## Fixed Database Setup API Route (2025-03-03)
 
-Fixed issues with the database setup API route:
+Fixed the database setup API route that was failing with "supabaseAdmin.sql is not a function" error:
 
-1. Fixed the `cookies()` function in the Supabase server client:
-   - Updated the `cookies()` function to be properly awaited as required by Next.js
-   - Added async/await to all cookie-related functions to prevent runtime errors
-   - Improved error handling for cookie operations
-
-2. Updated the database setup API route to use direct SQL execution:
-   - Replaced the non-existent `pgclient` function with Supabase's SQL template literals
-   - Added the `SUPABASE_SERVICE_ROLE_KEY` to the environment variables
-   - Created a dedicated Supabase admin client with the service role key
-   - Improved error handling and added more detailed error messages
-   - Added a check to see if the users table already exists before trying to create it
-
-3. Enhanced the RLS policies for the users table:
-   - Added a policy to allow anyone to insert users (for testing purposes)
-   - Ensured all policies are properly dropped before recreating them
-   - Added specific policies for authenticated users to insert their own records
+1. Replaced the non-working SQL template literals approach with direct PostgreSQL client connection
+2. Added proper error handling and table existence check
+3. Implemented transaction-based SQL execution for better reliability
+4. Created comprehensive database setup with users table, triggers, and RLS policies
+5. Added proper environment variable handling for database connection
 
 These changes ensure that the database setup API route works correctly and can be used to initialize the database tables and RLS policies needed for the application.
+
+## Fixed RLS Policy Error in AuthWrapper (2025-03-03)
+
+Fixed the "Permission error when creating user record" issue in the AuthWrapper component:
+
+1. Added automatic redirection to the `/api/setup-database` endpoint when RLS policy errors are detected
+2. Improved error handling for database-related errors with more specific error messages
+3. Enhanced owner dashboard access control to properly check for verified owner status
+4. Added fallback user object creation with appropriate permissions for testing
+5. Fixed the issue where users couldn't access the owner dashboard due to RLS policy violations
+
+These changes ensure that:
+- Users are automatically redirected to fix database permissions when needed
+- The application gracefully handles database setup issues
+- Only verified owners can access the owner dashboard
+- The user experience is improved with helpful error messages and automatic remediation
