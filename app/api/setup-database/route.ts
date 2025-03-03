@@ -82,25 +82,42 @@ export async function GET() {
     const createPolicies = `
       ALTER TABLE "users" ENABLE ROW LEVEL SECURITY;
       
+      -- First, drop any existing policies to avoid conflicts
+      DROP POLICY IF EXISTS "Users can read their own data" ON "users";
+      DROP POLICY IF EXISTS "Users can update their own data" ON "users";
+      DROP POLICY IF EXISTS "Service role can read all users" ON "users";
+      DROP POLICY IF EXISTS "Service role can update all users" ON "users";
+      DROP POLICY IF EXISTS "Service role can insert users" ON "users";
+      DROP POLICY IF EXISTS "Anyone can insert users" ON "users";
+      DROP POLICY IF EXISTS "Auth can insert users" ON "users";
+      
       -- Allow users to read their own data
-      CREATE POLICY IF NOT EXISTS "Users can read their own data" ON "users"
+      CREATE POLICY "Users can read their own data" ON "users"
         FOR SELECT USING (auth.uid() = id);
       
       -- Allow users to update their own data
-      CREATE POLICY IF NOT EXISTS "Users can update their own data" ON "users"
+      CREATE POLICY "Users can update their own data" ON "users"
         FOR UPDATE USING (auth.uid() = id);
       
+      -- Allow authenticated users to insert their own user record
+      CREATE POLICY "Auth can insert users" ON "users"
+        FOR INSERT WITH CHECK (auth.uid() = id);
+      
       -- Allow service role to read all users
-      CREATE POLICY IF NOT EXISTS "Service role can read all users" ON "users"
+      CREATE POLICY "Service role can read all users" ON "users"
         FOR SELECT USING (auth.role() = 'service_role');
       
       -- Allow service role to update all users
-      CREATE POLICY IF NOT EXISTS "Service role can update all users" ON "users"
+      CREATE POLICY "Service role can update all users" ON "users"
         FOR UPDATE USING (auth.role() = 'service_role');
       
       -- Allow service role to insert users
-      CREATE POLICY IF NOT EXISTS "Service role can insert users" ON "users"
+      CREATE POLICY "Service role can insert users" ON "users"
         FOR INSERT WITH CHECK (auth.role() = 'service_role');
+      
+      -- Allow anyone to insert users (for testing purposes)
+      CREATE POLICY "Anyone can insert users" ON "users"
+        FOR INSERT WITH CHECK (true);
     `;
     
     // Execute the SQL
