@@ -48,6 +48,7 @@ export async function POST(req: Request) {
         buildingNumber,
         apartmentNumber,
         phoneNumber,
+        updatedAt: new Date(),
       },
     });
 
