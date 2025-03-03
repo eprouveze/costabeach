@@ -3,7 +3,7 @@ import { DocumentEdit } from '@/components/DocumentEdit';
 import { DocumentCategory, Language } from '@/lib/types';
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
-import { I18nProvider } from '@/lib/i18n/client';
+import { MockI18nProvider } from '@/stories/utils/MockI18nProvider';
 
 // Create a mock component that doesn't use tRPC directly
 const MockDocumentEdit: React.FC<{
@@ -147,12 +147,12 @@ const MockDocumentEdit: React.FC<{
   );
   
   return (
-    <I18nProvider locale="en">
+    <MockI18nProvider locale="en">
       <div className="p-8 bg-gray-100">
         <MockedDocumentEdit />
         <ToastContainer position="top-right" autoClose={2000} />
       </div>
-    </I18nProvider>
+    </MockI18nProvider>
   );
 };
 
@@ -186,7 +186,7 @@ export const Default: Story = {
     title: 'Annual Financial Report 2023',
     description: 'Detailed financial overview for Costa Beach 3 residence for the year 2023.',
     category: DocumentCategory.GENERAL,
-    language: Language.EN,
+    language: Language.ENGLISH,
     onSuccess: true,
   },
   parameters: {
@@ -203,7 +203,7 @@ export const FinancialReport: Story = {
     title: 'Financial Report Q2 2023',
     description: 'Quarterly financial report for Costa Beach 3 residence covering April to June 2023, including budget allocation, expenses, and maintenance costs.',
     category: DocumentCategory.FINANCE,
-    language: Language.FR,
+    language: Language.FRENCH,
     onSuccess: true,
   },
   parameters: {
@@ -219,8 +219,8 @@ export const ComiteReport: Story = {
   args: {
     title: 'Meeting Minutes - July 2023',
     description: 'Minutes from the monthly committee meeting held on July 15, 2023 at the Costa Beach 3 community hall. Includes discussions on upcoming renovations and community events.',
-    category: DocumentCategory.COMITE_REPORTS,
-    language: Language.EN,
+    category: DocumentCategory.COMITE_DE_SUIVI,
+    language: Language.ENGLISH,
     onSuccess: true,
   },
   parameters: {
@@ -236,8 +236,8 @@ export const LegalDocument: Story = {
   args: {
     title: 'Property Regulations Update',
     description: 'Updated regulations for property usage and common areas at Costa Beach 3 residence. Effective from January 1, 2024.',
-    category: DocumentCategory.LEGAL_DOCUMENTS,
-    language: Language.AR,
+    category: DocumentCategory.LEGAL,
+    language: Language.ARABIC,
     onSuccess: true,
   },
   parameters: {
@@ -249,18 +249,18 @@ export const LegalDocument: Story = {
   },
 };
 
-export const ErrorHandling: Story = {
+export const ErrorState: Story = {
   args: {
     title: 'Document with Error',
     description: 'This document will simulate an error when attempting to save.',
     category: DocumentCategory.GENERAL,
-    language: Language.EN,
+    language: Language.ENGLISH,
     onSuccess: false,
   },
   parameters: {
     docs: {
       description: {
-        story: 'Document edit modal with error handling demonstration',
+        story: 'Document edit modal with error handling when saving fails',
       },
     },
   },

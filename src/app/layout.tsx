@@ -20,6 +20,11 @@ const DirectionProvider = dynamic(() => import("@/components/DirectionProvider")
   ssr: false,
 });
 
+// Import debug button for development mode only
+const TrpcDebugButton = dynamic(() => import("@/app/trpc-debug").then(mod => ({ default: mod.TrpcDebugButton })), {
+  ssr: false,
+});
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -76,6 +81,8 @@ export default function RootLayout({
                         <AuthButton />
                       </div>
                     </nav>
+                    {/* Debug button - only in development */}
+                    {process.env.NODE_ENV === 'development' && <TrpcDebugButton />}
                     {children}
                   </div>
                   <ThemeAwareToast />

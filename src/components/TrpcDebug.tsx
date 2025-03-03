@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { api } from "@/lib/trpc";
+import { trpcClient } from "@/lib/trpc";
 
 export function TrpcDebug() {
   const [result, setResult] = useState<string>("");
@@ -31,8 +31,8 @@ export function TrpcDebug() {
     setError("");
     
     try {
-      // Test the tRPC health check endpoint
-      const data = await api.documents.healthCheck.query();
+      // Use the stand-alone client for direct API calls
+      const data = await trpcClient.documents.healthCheck.query();
       setResult(JSON.stringify(data, null, 2));
     } catch (err) {
       setError(`tRPC Error: ${err instanceof Error ? err.message : String(err)}`);

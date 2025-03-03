@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { DocumentCategory, Language } from "@/lib/types";
+import { DocumentCategory, Language, Document } from "@/lib/types";
 import { I18nProvider } from "@/lib/i18n/client";
 import { Search, Filter, Loader } from "lucide-react";
 import { MockTRPCProvider } from "../../../.storybook/MockTRPCProvider";
 
 // Mock version of DocumentCard that doesn't use real tRPC hooks
 const MockDocumentCard = ({ 
-  document, 
-  showActions = true,
+  document,
+  showActions = true, 
   onDelete,
   onView,
   onDownload 
+}: {
+  document: Document;
+  showActions?: boolean;
+  onDelete?: (id: string) => void;
+  onView?: (document: Document) => void;
+  onDownload?: (document: Document) => void;
 }) => {
   const handleDelete = () => {
     if (window.confirm("Are you sure you want to delete this document?")) {
@@ -33,7 +39,7 @@ const MockDocumentCard = ({
     );
   };
   
-  const getCategoryLabel = (category) => {
+  const getCategoryLabel = (category: DocumentCategory): string => {
     switch (category) {
       case DocumentCategory.COMITE_DE_SUIVI:
         return "Comité de Suivi";
@@ -46,7 +52,7 @@ const MockDocumentCard = ({
     }
   };
   
-  const getLanguageLabel = (language) => {
+  const getLanguageLabel = (language: Language): string => {
     switch (language) {
       case Language.ENGLISH:
         return "English";
@@ -59,13 +65,13 @@ const MockDocumentCard = ({
     }
   };
   
-  const formatFileSize = (bytes) => {
+  const formatFileSize = (bytes: number): string => {
     if (bytes < 1024) return bytes + ' B';
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   };
   
-  const formatDate = (date) => {
+  const formatDate = (date: Date | string | undefined): string => {
     if (!date) return '';
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -211,7 +217,7 @@ const MockedDocumentList = (props: any) => {
   };
 
   const handleDocumentDelete = (deletedId: string) => {
-    setDocuments(prev => prev.filter(doc => doc.id !== deletedId));
+    setDocuments((prev: Document[]) => prev.filter((doc: Document) => doc.id !== deletedId));
   };
 
   // This is a direct implementation, not using the real DocumentList component

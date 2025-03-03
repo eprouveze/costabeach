@@ -1,13 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-export async function GET() {
-  // Get the health status of various subsystems
-  const status = {
-    api: "ok",
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  
+  return NextResponse.json({
+    status: 'ok',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
-    version: "1.0.0"
-  };
-
-  return NextResponse.json(status);
+    url: url.toString(),
+    message: 'Health check successful'
+  });
 } 
