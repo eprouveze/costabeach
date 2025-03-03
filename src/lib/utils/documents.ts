@@ -165,9 +165,18 @@ export const getDocumentsByCategory = async (
     case DocumentCategory.LEGAL:
       prismaCategory = 'legal';
       break;
+    case DocumentCategory.FINANCE:
+      prismaCategory = 'finance';
+      break;
+    case DocumentCategory.GENERAL:
+      prismaCategory = 'general';
+      break;
     default:
       prismaCategory = 'comiteDeSuivi'; // Default fallback
   }
+  
+  // Debug log
+  console.log(`Fetching documents with prisma category: ${prismaCategory} from enum value: ${category}`);
   
   // Convert the Language enum to the Prisma enum value if provided
   let prismaLanguage;
@@ -179,15 +188,33 @@ export const getDocumentsByCategory = async (
       case Language.ARABIC:
         prismaLanguage = 'arabic';
         break;
+      case Language.ENGLISH:
+        prismaLanguage = 'english';
+        break;
       default:
         prismaLanguage = 'french'; // Default fallback
     }
   }
   
   const where: any = { 
-    category: prismaCategory, 
     is_public: true 
   };
+  
+  // Add category condition, if the category is in uppercase, try lowercase and both with and without camelCase
+  if (prismaCategory) {
+    where.OR = [
+      { category: prismaCategory }, // comiteDeSuivi
+      { category: prismaCategory.toLowerCase() }, // comitedesuivi
+      { category: prismaCategory.toUpperCase() }  // COMITEDESUIVI
+    ];
+    
+    // For special case of comiteDeSuivi
+    if (prismaCategory === 'comiteDeSuivi') {
+      where.OR.push({ category: 'comitedesuivi' });
+      where.OR.push({ category: 'COMITE_DE_SUIVI' });
+      where.OR.push({ category: 'Comite De Suivi' });
+    }
+  }
   
   if (prismaLanguage) {
     where.language = prismaLanguage;

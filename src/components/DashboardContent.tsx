@@ -64,6 +64,9 @@ export function DashboardContent() {
       category = DocumentCategory.COMITE_DE_SUIVI;
   }
 
+  // Log the category for debugging purposes
+  console.log(`Using document category: ${category} for param: ${categoryParam}`);
+
   // Get download URL mutation with better error handling
   const getDownloadUrl = api.documents.getDownloadUrl.useMutation({
     onError: (error) => {
