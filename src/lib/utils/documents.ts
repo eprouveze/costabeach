@@ -234,12 +234,12 @@ export const getDocumentsByCategory = async (
           updated_at as "updatedAt", author_id as "authorId"
         FROM documents
         WHERE category = ${prismaCategory}
-          ${prismaLanguage ? `AND language = ${prismaLanguage}` : ''}
+          ${prismaLanguage ? prisma.$queryRaw`AND language = ${prismaLanguage}` : prisma.$queryRaw``}
           AND is_published = true
-          ${searchQuery ? `AND (
+          ${searchQuery ? prisma.$queryRaw`AND (
             title ILIKE ${'%' + searchQuery + '%'} OR 
             description ILIKE ${'%' + searchQuery + '%'}
-          )` : ''}
+          )` : prisma.$queryRaw``}
         ORDER BY created_at DESC
         LIMIT ${limit} OFFSET ${offset}
       `;

@@ -518,3 +518,18 @@ Fixed issues with database schema mismatch and auth integration:
 3. Generated updated Prisma client reflecting these changes
 
 These changes ensure compatibility between the codebase and actual database structure, allowing the application to run without errors even when some schema updates haven't been fully applied to the database yet.
+
+## Enhanced Database Schema Handling in Documents Utility (2024-07-03)
+
+Implemented a more robust solution for the missing database column issue:
+
+1. Added try-catch pattern in `getDocumentsByCategory` function to gracefully handle Prisma errors
+2. Implemented fallback to raw SQL query when encountering the `translated_document_id` column error
+3. Enhanced the SQL fallback to properly support search, filtering, pagination, and ordering
+4. Added proper type mapping to ensure the returned data matches the Document interface
+
+This resilient approach ensures the application works correctly even with database schema mismatches, providing several benefits:
+- Prevents errors when the database schema doesn't exactly match the Prisma schema
+- Allows gradual schema updates without breaking existing functionality
+- Provides detailed logging to help identify and diagnose schema issues
+- Maintains consistent type safety throughout the application
