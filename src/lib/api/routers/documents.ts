@@ -37,7 +37,7 @@ export const documentsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { fileName, fileType, fileSize, category, language } = input;
-      const userId = ctx.session.user.id;
+      const userId = ctx.session?.user?.id;
       
       // Get the user from the database to check permissions
       const user = await prisma.user.findUnique({
@@ -89,6 +89,12 @@ export const documentsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      if (!ctx.session?.user?.id) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You must be logged in to create documents",
+        });
+      }
       const userId = ctx.session.user.id;
       
       // Get the user from the database to check permissions
@@ -184,7 +190,7 @@ export const documentsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { documentId } = input;
-      const userId = ctx.session?.user?.id;
+      const userId = ctx.session?.user?.id || 'anonymous';
       
       try {
         // Increment download count
@@ -204,7 +210,7 @@ export const documentsRouter = createTRPCRouter({
         }
         
         // Create audit log for document download (if user is logged in)
-        if (userId) {
+        if (userId !== 'anonymous') {
           await createAuditLog(
             userId,
             "download",
@@ -235,13 +241,13 @@ export const documentsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { documentId } = input;
-      const userId = ctx.session?.user?.id;
+      const userId = ctx.session?.user?.id || 'anonymous';
       
       try {
         await incrementViewCount(documentId);
         
         // Create audit log for document view (if user is logged in)
-        if (userId) {
+        if (userId !== 'anonymous') {
           const document = await prisma.document.findUnique({
             where: { id: documentId },
             select: { title: true },
@@ -277,6 +283,12 @@ export const documentsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { documentId } = input;
+      if (!ctx.session?.user?.id) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You must be logged in to delete documents",
+        });
+      }
       const userId = ctx.session.user.id;
       
       try {
@@ -353,7 +365,7 @@ export const documentsRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      const userId = ctx.session.user.id;
+      const userId = ctx.session?.user?.id;
       
       // Get the user to check if they are an admin or content editor
       const user = await prisma.user.findUnique({
@@ -416,6 +428,13 @@ export const documentsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      if (!ctx.session?.user?.id) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You must be logged in to update documents",
+        });
+      }
+      
       // Check if user has permission to manage this document category
       const permissionMap = {
         [DocumentCategory.COMITE_DE_SUIVI]: Permission.MANAGE_COMITE_DOCUMENTS,
@@ -429,7 +448,7 @@ export const documentsRouter = createTRPCRouter({
       
       // Get user permissions from database
       const user = await prisma.user.findUnique({
-        where: { id: ctx.session.user.id },
+        where: { id: ctx.session?.user?.id },
         select: { permissions: true, isAdmin: true }
       });
       
@@ -473,19 +492,19 @@ export const documentsRouter = createTRPCRouter({
         data: {
           title: input.title,
           description: input.description,
-          category: input.category,
+          category: input.category as any,
         },
       });
 
       // Log the update action
-      await createAuditLog({
-        userId: ctx.session.user.id,
-        action: "update",
-        entityType: "document",
-        entityId: updatedDocument.id,
-        details: {
-          title: updatedDocument.title,
-          category: updatedDocument.category,
+      await createAuditLog(
+        ctx.session?.user?.id || 'system',
+        "update",
+        "Document",
+        input.id,
+        {
+          title: input.title,
+          category: input.category,
           previousTitle: existingDoc.title,
           previousCategory: existingDoc.category,
           changedFields: {
@@ -493,8 +512,8 @@ export const documentsRouter = createTRPCRouter({
             description: existingDoc.description !== input.description,
             category: existingDoc.category !== input.category,
           }
-        },
-      });
+        }
+      );
 
       return updatedDocument;
     }),

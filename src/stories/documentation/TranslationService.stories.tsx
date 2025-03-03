@@ -25,7 +25,7 @@ const TranslationServiceDemo = () => {
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Simulate translation results
-      const translations = {
+      const translations: { [key: string]: string } = {
         'french': 'Bonjour le monde!',
         'arabic': 'مرحبا بالعالم!'
       };

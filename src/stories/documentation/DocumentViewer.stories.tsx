@@ -73,7 +73,7 @@ const MockDocumentPreview = (props: React.ComponentProps<typeof DocumentPreview>
         )}
       </div>
 
-      {props.onRequestTranslation && props.document.language !== 'en' && (
+      {props.onRequestTranslation && props.document.language !== Language.ENGLISH && (
         <button 
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           onClick={() => props.onRequestTranslation && props.onRequestTranslation(props.document.id)}
