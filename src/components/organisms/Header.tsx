@@ -59,7 +59,8 @@ export const Header = ({ className = "" }: HeaderProps) => {
       await signOut();
       router.push(`/${locale}`);
     } else {
-      router.push(`/${locale}/auth/signin`);
+      // Use direct navigation to ensure the redirect works
+      window.location.href = `/${locale}/auth/signin`;
     }
   };
 

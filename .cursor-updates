@@ -329,3 +329,13 @@ These changes ensure that:
 - Sign-out functionality works correctly with Supabase authentication
 
 ## Fixed build issues by removing the `output: 'standalone'` option from Next.js config and adding a basic `_document.tsx` file to resolve the "Cannot find module for page: /_document" error.
+
+## Fixed "Se connecter" button not working on main page (2024-06-29)
+
+Fixed the sign-in button on the main page that wasn't redirecting properly:
+
+1. Updated the Header component to use direct window.location.href navigation instead of Next.js router.push()
+2. Modified the LoginForm component to also use direct navigation for more reliable redirects after authentication
+3. Verified that all locale-specific sign-in pages (fr/en/ar) exist and are properly configured
+
+These changes ensure that users can properly navigate to the sign-in page from any language variant of the site.

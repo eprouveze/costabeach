@@ -57,13 +57,13 @@ export default function LoginForm() {
         
         // Redirect based on user role and return URL
         if (returnUrl) {
-          router.push(returnUrl);
+          window.location.href = returnUrl;
         } else if (userData?.role === 'admin') {
-          router.push(`/${locale}/admin`);
+          window.location.href = `/${locale}/admin`;
         } else if (userData?.is_verified_owner) {
-          router.push(`/${locale}/owner-dashboard`);
+          window.location.href = `/${locale}/owner-dashboard`;
         } else {
-          router.push(`/${locale}`);
+          window.location.href = `/${locale}`;
         }
       }
     } catch (error: any) {
