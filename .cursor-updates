@@ -124,3 +124,14 @@
 - Added Header component to OwnerDashboardTemplate to provide consistent navigation and language switching across the site.
 - Created missing API routes for document download/preview and owner registrations to fix build errors.
 - Created admin page and owner registrations page to complete the application structure.
+- Added API implementation and missing features tasks to development plan, including document API routes, owner registration API routes, admin interface enhancements, and NextAuth integration.
+- Updated the top navbar to conditionally show links based on authentication status and added proper login/logout functionality.
+- Redesigned the owner dashboard sidebar to include document categories and information section with proper search functionality.
+- Created a unified dashboard page that displays both documents and information items, with filtering by category and content type.
+- Added an Information model to the Prisma schema to support text-based informational content.
+- Enhanced locale files with new translations for added features and UI elements.
+- Added "All Documents" category and "Documents Financiers" (Finance) category to the owner dashboard sidebar.
+- Updated the OwnerDashboardTemplate and dashboard page to handle filtering based on the new categories.
+- Added the FINANCE category to the DocumentCategory enum in the Prisma schema.
+- Added translations for the new categories in all locale files (English, French, Arabic).
+- Added sample financial documents and information to the mock data for testing.

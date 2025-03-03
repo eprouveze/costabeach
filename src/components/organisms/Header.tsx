@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { NavItem } from "../molecules/NavItem";
 import LanguageSwitcher from "../LanguageSwitcher";
-import { Menu, X, Home, FileText, Mail, User, Info } from "lucide-react";
+import { Menu, X, Home, FileText, Mail, User, Info, LogIn, LogOut } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
+import { useSession, signIn, signOut } from "next-auth/react";
+import Link from "next/link";
 
 interface HeaderProps {
   className?: string;
@@ -15,6 +17,9 @@ export const Header = ({ className = "" }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const { t } = useI18n();
+  const { data: session, status } = useSession();
+  
+  const isAuthenticated = status === "authenticated";
 
   // Close mobile menu when navigating
   useEffect(() => {
@@ -23,10 +28,8 @@ export const Header = ({ className = "" }: HeaderProps) => {
 
   const navItems = [
     { label: t("navigation.home"), href: "/", icon: Home },
-    { label: t("navigation.about"), href: "/about", icon: Info },
-    { label: t("navigation.documents"), href: "/documents", icon: FileText },
+    { label: t("navigation.ownerPortal"), href: isAuthenticated ? "/owner-dashboard" : "/owner-login", icon: User },
     { label: t("navigation.contact"), href: "/contact", icon: Mail },
-    { label: t("navigation.ownerPortal"), href: "/owner-login", icon: User },
   ];
 
   // Check if a nav item is active
@@ -37,13 +40,23 @@ export const Header = ({ className = "" }: HeaderProps) => {
     return pathname.startsWith(href);
   };
 
+  const handleAuthAction = () => {
+    if (isAuthenticated) {
+      signOut({ callbackUrl: "/" });
+    } else {
+      signIn();
+    }
+  };
+
   return (
     <header className={`w-full bg-white dark:bg-gray-800 shadow-sm ${className}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              {t("common.siteTitle")}
+              <Link href="/" className="hover:text-blue-600 transition-colors">
+                {t("common.siteTitle")}
+              </Link>
             </h1>
           </div>
           
@@ -61,6 +74,22 @@ export const Header = ({ className = "" }: HeaderProps) => {
               ))}
             </nav>
             <LanguageSwitcher variant="dropdown" />
+            <button
+              onClick={handleAuthAction}
+              className="flex items-center gap-2 px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+            >
+              {isAuthenticated ? (
+                <>
+                  <LogOut className="w-4 h-4" />
+                  <span>{t("auth.signOut")}</span>
+                </>
+              ) : (
+                <>
+                  <LogIn className="w-4 h-4" />
+                  <span>{t("auth.signIn")}</span>
+                </>
+              )}
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -91,6 +120,22 @@ export const Header = ({ className = "" }: HeaderProps) => {
                   className="block px-4 py-2 text-base"
                 />
               ))}
+              <button
+                onClick={handleAuthAction}
+                className="flex items-center gap-2 px-4 py-2 text-base text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md"
+              >
+                {isAuthenticated ? (
+                  <>
+                    <LogOut className="w-5 h-5" />
+                    <span>{t("auth.signOut")}</span>
+                  </>
+                ) : (
+                  <>
+                    <LogIn className="w-5 h-5" />
+                    <span>{t("auth.signIn")}</span>
+                  </>
+                )}
+              </button>
             </div>
           </nav>
         )}

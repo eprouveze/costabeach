@@ -34,7 +34,11 @@
     "admin": "Administration",
     "contact": "Contact",
     "siteTitle": "Costa Beach 3",
-    "clearSearch": "Effacer la recherche"
+    "clearSearch": "Effacer la recherche",
+    "information": "Informations",
+    "searchResults": "Résultats de recherche",
+    "resultsFound": "résultats trouvés",
+    "user": "Utilisateur"
   },
   "navigation": {
     "home": "Accueil",
@@ -91,8 +95,10 @@
     "preview": "Aperçu",
     "noDocuments": "Aucun document trouvé",
     "uploadNew": "Téléverser un nouveau document",
+    "viewCount": "vues",
     "categories": {
       "title": "Catégories de documents",
+      "all": "Tous les documents",
       "financial": "Financier",
       "legal": "Juridique",
       "maintenance": "Maintenance",
@@ -100,12 +106,14 @@
       "general": "Général",
       "comiteDeSuivi": "Comité de Suivi",
       "societeDeGestion": "Société de Gestion",
-      "legal": "Documents Juridiques"
+      "legal": "Documents Juridiques",
+      "finance": "Documents Financiers"
     },
     "categoryDescriptions": {
       "comiteDeSuivi": "Documents relatifs au comité de suivi, y compris les procès-verbaux et les rapports",
       "societeDeGestion": "Documents de la société de gestion, y compris les rapports financiers et les communications",
-      "legal": "Documents juridiques, contrats et règlements relatifs à la propriété"
+      "legal": "Documents juridiques, contrats et règlements relatifs à la propriété",
+      "finance": "États financiers, budgets et autres informations financières concernant la propriété"
     },
     "uploadSuccess": "Document téléversé avec succès",
     "deleteSuccess": "Document supprimé avec succès",
@@ -301,7 +309,12 @@
       "comiteDeSuivi": "{{count}} documents du Comité de Suivi",
       "societeDeGestion": "{{count}} documents de la Société de Gestion",
       "legal": "{{count}} documents juridiques"
-    }
+    },
+    "noInformation": "Aucune information disponible",
+    "noContent": "Aucun contenu disponible",
+    "checkBackLater": "Veuillez vérifier ultérieurement pour les mises à jour",
+    "informationDescription": "Dernières mises à jour et annonces pour les propriétaires",
+    "allDocumentsDescription": "Consultez tous les documents et informations de toutes les catégories"
   },
   "notifications": {
     "title": "Notifications",

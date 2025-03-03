@@ -1,277 +1,311 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
+import React from "react";
 import OwnerDashboardTemplate from "@/components/templates/OwnerDashboardTemplate";
-import { api } from "@/lib/trpc/react";
-import { DocumentCategory, Language } from "@/lib/types";
-import { FileText, Bell, ChevronRight, Users, Folder, Scale } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
-import { formatDistanceToNow } from "date-fns";
-import { fr, ar, enUS } from "date-fns/locale";
+import { useSearchParams } from "next/navigation";
+import { Clock, FileText, Info, Search, CreditCard } from "lucide-react";
+import Link from "next/link";
+
+// Mock data types
+interface Document {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  createdAt: Date;
+  viewCount: number;
+  fileType: string;
+}
+
+interface Information {
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  createdAt: Date;
+  viewCount: number;
+}
+
+// Mock documents
+const mockDocuments: Document[] = [
+  {
+    id: "1",
+    title: "Annual Financial Report 2023",
+    description: "Detailed financial report for the year 2023",
+    category: "FINANCE",
+    createdAt: new Date(2023, 11, 15),
+    viewCount: 34,
+    fileType: "pdf"
+  },
+  {
+    id: "2",
+    title: "Building Maintenance Schedule",
+    description: "Schedule of planned maintenance for Q1 2024",
+    category: "SOCIETE_DE_GESTION",
+    createdAt: new Date(2023, 12, 5),
+    viewCount: 27,
+    fileType: "xlsx"
+  },
+  {
+    id: "3",
+    title: "Residential Rules and Regulations",
+    description: "Official rules and regulations for Costa Beach 3 residents",
+    category: "LEGAL",
+    createdAt: new Date(2023, 10, 22),
+    viewCount: 65,
+    fileType: "pdf"
+  },
+  {
+    id: "4",
+    title: "Meeting Minutes - December 2023",
+    description: "Minutes from the homeowners association meeting in December",
+    category: "COMITE_DE_SUIVI",
+    createdAt: new Date(2023, 12, 20),
+    viewCount: 41,
+    fileType: "docx"
+  },
+  {
+    id: "5",
+    title: "Budget Projection 2024",
+    description: "Financial projections and budget allocation for 2024",
+    category: "FINANCE",
+    createdAt: new Date(2023, 12, 18),
+    viewCount: 53,
+    fileType: "pdf"
+  }
+];
+
+// Mock information
+const mockInformation: Information[] = [
+  {
+    id: "1",
+    title: "Important Notice: Holiday Schedule",
+    content: "The management office will be closed from December 24th to January 2nd. For emergencies, please call the security desk at +212 522 123 456.",
+    category: "GENERAL",
+    createdAt: new Date(2023, 11, 18),
+    viewCount: 87
+  },
+  {
+    id: "2",
+    title: "Pool Maintenance Update",
+    content: "The pool will be closed for maintenance from January 10-12, 2024. We apologize for any inconvenience.",
+    category: "SOCIETE_DE_GESTION",
+    createdAt: new Date(2023, 12, 28),
+    viewCount: 52
+  },
+  {
+    id: "3",
+    title: "New Year's Community Event",
+    content: "Join us for a New Year's celebration in the community hall on January 5th, 2024, from 7 PM to 10 PM. Refreshments will be provided. Please RSVP by January 3rd.",
+    category: "COMITE_DE_SUIVI",
+    createdAt: new Date(2023, 12, 15),
+    viewCount: 76
+  },
+  {
+    id: "4",
+    title: "Quarterly Fee Update",
+    content: "Please note that quarterly maintenance fees will be adjusted by 3% starting January 2024 to account for inflation and increased service costs. The new fee schedule will be distributed next week.",
+    category: "FINANCE",
+    createdAt: new Date(2023, 12, 22),
+    viewCount: 92
+  }
+];
 
 export default function OwnerDashboardPage() {
-  const { t, locale } = useI18n();
-  const [userLanguage, setUserLanguage] = useState<Language>(Language.FRENCH);
+  const { t } = useI18n();
+  const searchParams = useSearchParams();
   
-  // Set user language based on locale
-  useEffect(() => {
-    if (locale === "fr") {
-      setUserLanguage(Language.FRENCH);
-    } else if (locale === "ar") {
-      setUserLanguage(Language.ARABIC);
-    } else {
-      setUserLanguage(Language.ENGLISH);
+  const categoryFilter = searchParams.get("category");
+  const typeFilter = searchParams.get("type");
+  const searchQuery = searchParams.get("search")?.toLowerCase();
+
+  // Filter documents based on params
+  const filteredDocuments = mockDocuments.filter(doc => {
+    // Apply category filter (skip for ALL category)
+    if (categoryFilter && categoryFilter !== "ALL" && doc.category !== categoryFilter) {
+      return false;
     }
-  }, [locale]);
-  
-  // Fetch documents for each category
-  const comiteDocuments = api.documents.getDocumentsByCategory.useQuery({
-    category: DocumentCategory.COMITE_DE_SUIVI,
-    language: userLanguage,
-    limit: 3
-  });
-  
-  const societeDocuments = api.documents.getDocumentsByCategory.useQuery({
-    category: DocumentCategory.SOCIETE_DE_GESTION,
-    language: userLanguage,
-    limit: 3
-  });
-  
-  const legalDocuments = api.documents.getDocumentsByCategory.useQuery({
-    category: DocumentCategory.LEGAL,
-    language: userLanguage,
-    limit: 3
-  });
-  
-  // Format date for display
-  const formatDate = (date: Date) => {
-    const dateLocale = locale === "fr" ? fr : locale === "ar" ? ar : enUS;
-    return formatDistanceToNow(new Date(date), { 
-      addSuffix: true,
-      locale: dateLocale
-    });
-  };
-  
-  // Mock notifications - would be fetched from API in a real implementation
-  const notifications = [
-    {
-      id: 1,
-      title: t("notifications.newDocument"),
-      message: t("notifications.newDocumentMessage"),
-      date: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-      read: false
-    },
-    {
-      id: 2,
-      title: t("notifications.documentUpdated"),
-      message: t("notifications.documentUpdatedMessage"),
-      date: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
-      read: true
-    },
-    {
-      id: 3,
-      title: t("notifications.maintenanceScheduled"),
-      message: t("notifications.maintenanceScheduledMessage"),
-      date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 days ago
-      read: true
-    }
-  ];
-  
-  // Document categories
-  const categories = [
-    {
-      id: DocumentCategory.COMITE_DE_SUIVI,
-      name: t("documents.categories.comiteDeSuivi"),
-      icon: <Users className="h-8 w-8 text-blue-500" />,
-      color: "bg-blue-100",
-      link: "/owner-dashboard/documents?category=COMITE_DE_SUIVI",
-      count: comiteDocuments.data?.length || 0,
-      isLoading: comiteDocuments.isLoading
-    },
-    {
-      id: DocumentCategory.SOCIETE_DE_GESTION,
-      name: t("documents.categories.societeDeGestion"),
-      icon: <Folder className="h-8 w-8 text-green-500" />,
-      color: "bg-green-100",
-      link: "/owner-dashboard/documents?category=SOCIETE_DE_GESTION",
-      count: societeDocuments.data?.length || 0,
-      isLoading: societeDocuments.isLoading
-    },
-    {
-      id: DocumentCategory.LEGAL,
-      name: t("documents.categories.legal"),
-      icon: <Scale className="h-8 w-8 text-purple-500" />,
-      color: "bg-purple-100",
-      link: "/owner-dashboard/documents?category=LEGAL",
-      count: legalDocuments.data?.length || 0,
-      isLoading: legalDocuments.isLoading
-    }
-  ];
-  
-  // Get recent documents from all categories
-  const getRecentDocuments = () => {
-    const allDocuments = [
-      ...(comiteDocuments.data || []),
-      ...(societeDocuments.data || []),
-      ...(legalDocuments.data || [])
-    ];
     
-    // Sort by creation date (newest first) and take the first 5
-    return allDocuments
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-      .slice(0, 5);
+    // Don't show documents if looking at information only
+    if (typeFilter === "information") {
+      return false;
+    }
+
+    // Apply search filter
+    if (searchQuery) {
+      return (
+        doc.title.toLowerCase().includes(searchQuery) ||
+        (doc.description && doc.description.toLowerCase().includes(searchQuery))
+      );
+    }
+    
+    return true;
+  });
+
+  // Filter information based on params
+  const filteredInformation = mockInformation.filter(info => {
+    // Apply category filter (skip for ALL category)
+    if (categoryFilter && categoryFilter !== "ALL" && info.category !== categoryFilter) {
+      return false;
+    }
+    
+    // Don't show information if not explicitly looking for it and there's another filter
+    if (typeFilter !== "information" && (categoryFilter || searchQuery)) {
+      return false;
+    }
+
+    // Apply search filter
+    if (searchQuery) {
+      return (
+        info.title.toLowerCase().includes(searchQuery) ||
+        info.content.toLowerCase().includes(searchQuery)
+      );
+    }
+    
+    return true;
+  });
+
+  // Sort everything by date, most recent first
+  const allItems = [
+    ...filteredDocuments.map(doc => ({ ...doc, type: 'document' as const })),
+    ...filteredInformation.map(info => ({ ...info, type: 'information' as const }))
+  ].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
+  // Format date
+  const formatDate = (date: Date) => {
+    return new Intl.DateTimeFormat('default', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }).format(date);
   };
-  
-  const isLoading = comiteDocuments.isLoading || societeDocuments.isLoading || legalDocuments.isLoading;
-  const recentDocuments = getRecentDocuments();
+
+  // Get icon for category
+  const getCategoryIcon = (category: string) => {
+    switch(category) {
+      case 'FINANCE':
+        return <CreditCard className="h-4 w-4 text-green-600 mr-1" />;
+      default:
+        return null;
+    }
+  };
+
+  // Determine what to display in the header
+  let headerTitle = t("dashboard.welcome");
+  let headerDescription = "";
+
+  if (categoryFilter === "ALL") {
+    headerTitle = t("documents.categories.all") || "All Documents";
+    headerDescription = t("dashboard.allDocumentsDescription") || "View all documents and information";
+  } else if (categoryFilter) {
+    const categoryName = t(`documents.categories.${categoryFilter.toLowerCase()}`) || categoryFilter;
+    headerTitle = categoryName;
+    headerDescription = t(`documents.categoryDescriptions.${categoryFilter.toLowerCase()}`) || "";
+  } else if (typeFilter === "information") {
+    headerTitle = t("common.information") || "Informations";
+    headerDescription = t("dashboard.informationDescription") || "Latest updates and announcements for owners";
+  } else if (searchQuery) {
+    headerTitle = `${t("common.search") || "Search"}: "${searchQuery}"`;
+    headerDescription = `${allItems.length} ${t("common.resultsFound") || "results found"}`;
+  }
 
   return (
-    <main className="min-h-screen">
-      <OwnerDashboardTemplate>
-        <div className="mb-6">
-          <h1 className="text-2xl font-semibold text-gray-800">{t("dashboard.welcome")}</h1>
-          <p className="text-sm text-gray-500 mt-1">{t("dashboard.overview")}</p>
-        </div>
-        
-        {/* Document Categories */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-medium text-gray-800">{t("dashboard.documentCategories")}</h2>
-            <Link 
-              href="/owner-dashboard/categories"
-              className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
-            >
-              {t("documents.viewAll")}
-              <ChevronRight className="w-4 h-4 ml-1" />
+    <OwnerDashboardTemplate>
+      <div className="mb-6">
+        <h1 className="text-2xl font-semibold text-gray-800">{headerTitle}</h1>
+        {headerDescription && (
+          <p className="text-sm text-gray-500 mt-1">{headerDescription}</p>
+        )}
+      </div>
+
+      {/* No results message */}
+      {allItems.length === 0 && (
+        <div className="bg-white p-8 rounded-lg shadow-sm text-center">
+          <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            {searchQuery 
+              ? t("documents.noSearchResults")?.replace('{{query}}', searchQuery) || `No results found for "${searchQuery}"`
+              : typeFilter === "information"
+                ? t("dashboard.noInformation") || "No information available"
+                : categoryFilter
+                  ? t("documents.noDocumentsInCategory") || "No documents in this category"
+                  : t("dashboard.noContent") || "No content available"}
+          </h3>
+          <p className="text-gray-500">
+            {searchQuery 
+              ? t("documents.tryDifferentSearch") || "Try a different search term or clear the search"
+              : t("dashboard.checkBackLater") || "Please check back later for updates"}
+          </p>
+          {searchQuery && (
+            <Link href="/owner-dashboard" className="mt-4 inline-block text-blue-600 hover:text-blue-800">
+              {t("common.clearSearch") || "Clear search"}
             </Link>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {categories.map((category) => (
-              <Link 
-                key={category.id} 
-                href={category.link}
-                className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-center">
-                  <div className={`p-3 rounded-lg ${category.color} mr-4`}>
-                    {category.icon}
+          )}
+        </div>
+      )}
+
+      {/* Items list */}
+      {allItems.length > 0 && (
+        <div className="grid gap-4 md:grid-cols-1">
+          {allItems.map((item) => (
+            <div 
+              key={`${item.type}-${item.id}`} 
+              className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center mb-2">
+                    {item.type === 'document' ? (
+                      item.category === 'FINANCE' ? (
+                        <CreditCard className="h-5 w-5 text-green-600 mr-2" />
+                      ) : (
+                        <FileText className="h-5 w-5 text-blue-600 mr-2" />
+                      )
+                    ) : (
+                      <Info className="h-5 w-5 text-green-600 mr-2" />
+                    )}
+                    <h3 className="font-medium text-gray-900">{item.title}</h3>
                   </div>
-                  <div>
-                    <h3 className="font-medium text-gray-800">{category.name}</h3>
-                    <p className="text-sm text-gray-500 mt-1">
-                      {category.isLoading 
-                        ? t("common.loading") 
-                        : t("documents.documentCount", { count: category.count })}
-                    </p>
+                  
+                  {item.type === 'document' && (
+                    <p className="text-sm text-gray-600 mb-3">{item.description}</p>
+                  )}
+                  
+                  {item.type === 'information' && (
+                    <p className="text-sm text-gray-600 mb-3">{item.content}</p>
+                  )}
+                  
+                  <div className="flex items-center text-xs text-gray-500">
+                    <Clock className="h-4 w-4 mr-1" />
+                    <span>{formatDate(item.createdAt)}</span>
+                    
+                    <span className="mx-2">•</span>
+                    
+                    <span>{item.viewCount} {t("documents.viewCount") || "views"}</span>
+                    
+                    {item.type === 'document' && (
+                      <>
+                        <span className="mx-2">•</span>
+                        <span className="uppercase">{item.fileType}</span>
+                      </>
+                    )}
                   </div>
                 </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-        
-        {/* Recent Documents */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-medium text-gray-800">{t("dashboard.recentDocuments")}</h2>
-            <Link 
-              href="/owner-dashboard/documents"
-              className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
-            >
-              {t("dashboard.viewAllDocuments")}
-              <ChevronRight className="w-4 h-4 ml-1" />
-            </Link>
-          </div>
-          
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            {isLoading ? (
-              <div className="animate-pulse p-4 space-y-4">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="flex items-center space-x-4">
-                    <div className="rounded-lg bg-gray-200 h-12 w-12"></div>
-                    <div className="flex-1">
-                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                      <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : recentDocuments.length > 0 ? (
-              <div className="divide-y divide-gray-200">
-                {recentDocuments.map((doc) => (
-                  <Link 
-                    key={doc.id} 
-                    href={`/owner-dashboard/documents/${doc.id}`}
-                    className="flex items-center p-4 hover:bg-gray-50"
+                
+                {item.type === 'document' && (
+                  <Link
+                    href={`/owner-dashboard/documents/${item.id}`}
+                    className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm font-medium hover:bg-blue-200"
                   >
-                    <div className="p-2 bg-blue-100 rounded-lg mr-4">
-                      <FileText className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-medium text-gray-800">{doc.title}</h3>
-                      <div className="flex items-center mt-1 text-xs text-gray-500">
-                        <span>{formatDate(doc.createdAt)}</span>
-                        <span className="mx-2">•</span>
-                        <span className="capitalize">{t(`documents.categories.${doc.category}`)}</span>
-                      </div>
-                    </div>
+                    {t("documents.view") || "View"}
                   </Link>
-                ))}
+                )}
               </div>
-            ) : (
-              <div className="p-6 text-center text-gray-500">
-                {t("documents.noDocuments")}
-              </div>
-            )}
-          </div>
+            </div>
+          ))}
         </div>
-        
-        {/* Notifications */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-medium text-gray-800">{t("dashboard.notifications")}</h2>
-            <Link 
-              href="/owner-dashboard/notifications"
-              className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
-            >
-              {t("dashboard.viewAllNotifications")}
-              <ChevronRight className="w-4 h-4 ml-1" />
-            </Link>
-          </div>
-          
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            {notifications.length > 0 ? (
-              <div className="divide-y divide-gray-200">
-                {notifications.slice(0, 3).map((notification) => (
-                  <div 
-                    key={notification.id} 
-                    className={`p-4 ${!notification.read ? 'bg-blue-50' : ''}`}
-                  >
-                    <div className="flex items-start">
-                      <div className="p-2 bg-gray-100 rounded-full mr-4">
-                        <Bell className={`w-5 h-5 ${!notification.read ? 'text-blue-500' : 'text-gray-400'}`} />
-                      </div>
-                      <div>
-                        <h3 className={`font-medium ${!notification.read ? 'text-blue-800' : 'text-gray-800'}`}>
-                          {notification.title}
-                        </h3>
-                        <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
-                        <p className="text-xs text-gray-500 mt-2">{formatDate(notification.date)}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="p-6 text-center text-gray-500">
-                {t("dashboard.noNotifications")}
-              </div>
-            )}
-          </div>
-        </div>
-      </OwnerDashboardTemplate>
-    </main>
+      )}
+    </OwnerDashboardTemplate>
   );
 } 

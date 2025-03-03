@@ -29,7 +29,11 @@
     "language": "Language",
     "contact": "Contact",
     "siteTitle": "Costa Beach 3",
-    "clearSearch": "Clear Search"
+    "clearSearch": "Clear Search",
+    "information": "Information",
+    "searchResults": "Search Results",
+    "resultsFound": "results found",
+    "user": "User"
   },
   "navigation": {
     "home": "Home",
@@ -221,8 +225,10 @@
     "preview": "Preview",
     "noDocuments": "No documents found",
     "uploadNew": "Upload New Document",
+    "viewCount": "views",
     "categories": {
       "title": "Document Categories",
+      "all": "All Documents",
       "financial": "Financial",
       "legal": "Legal",
       "maintenance": "Maintenance",
@@ -230,12 +236,14 @@
       "general": "General",
       "comiteDeSuivi": "Monitoring Committee",
       "societeDeGestion": "Management Company",
-      "legal": "Legal Documents"
+      "legal": "Legal Documents",
+      "finance": "Financial Documents"
     },
     "categoryDescriptions": {
       "comiteDeSuivi": "Documents related to the monitoring committee, including meeting minutes and reports",
       "societeDeGestion": "Documents from the management company, including financial reports and communications",
-      "legal": "Legal documents, contracts, and regulations related to the property"
+      "legal": "Legal documents, contracts, and regulations related to the property",
+      "finance": "Financial statements, budgets, and other financial information for the property"
     },
     "uploadSuccess": "Document uploaded successfully",
     "deleteSuccess": "Document deleted successfully",
@@ -297,7 +305,12 @@
       "comiteDeSuivi": "{{count}} Monitoring Committee documents",
       "societeDeGestion": "{{count}} Management Company documents",
       "legal": "{{count}} Legal documents"
-    }
+    },
+    "noInformation": "No information available",
+    "noContent": "No content available",
+    "checkBackLater": "Please check back later for updates",
+    "informationDescription": "Latest updates and announcements for owners",
+    "allDocumentsDescription": "View all documents and information across all categories"
   },
   "notifications": {
     "title": "Notifications",

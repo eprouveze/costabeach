@@ -34,6 +34,7 @@ model User {
   accounts       Account[]
   sessions       Session[]
   documents      Document[] // Documents created by this user
+  information    Information[]
 }
 
 model Account {
@@ -42,12 +43,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String?
-  access_token      String?
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?
+  id_token          String? @db.Text
   session_state     String?
   User              User    @relation(fields: [userId], references: [id])
 
@@ -72,6 +73,9 @@ enum UserRole {
 enum Language {
   french
   arabic
+  EN
+  FR
+  AR
 }
 
 enum Permission {
@@ -123,6 +127,11 @@ enum DocumentCategory {
   legal
   financial
   general
+  COMITE_DE_SUIVI
+  SOCIETE_DE_GESTION
+  LEGAL
+  GENERAL
+  FINANCE
 }
 
 model Document {
@@ -145,4 +154,19 @@ model Document {
   updatedAt       DateTime  @updatedAt
   authorId        String
   author          User      @relation(fields: [authorId], references: [id])
+}
+
+model Information {
+  id           String           @id @default(cuid())
+  title        String
+  content      String           @db.Text
+  category     DocumentCategory
+  language     Language
+  translatedFrom String?
+  viewCount    Int              @default(0)
+  isPublished  Boolean          @default(true)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  authorId     String
+  author       User             @relation(fields: [authorId], references: [id])
 }

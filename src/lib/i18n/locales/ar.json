@@ -46,7 +46,11 @@
     "admin": "الإدارة",
     "contact": "اتصل بنا",
     "siteTitle": "كوستا بيتش 3",
-    "clearSearch": "مسح البحث"
+    "clearSearch": "مسح البحث",
+    "information": "معلومات",
+    "searchResults": "نتائج البحث",
+    "resultsFound": "نتائج",
+    "user": "المستخدم"
   },
   "navigation": {
     "home": "الرئيسية",
@@ -124,17 +128,19 @@
     "deleteSuccess": "تم حذف المستند بنجاح",
     "deleteConfirm": "هل أنت متأكد من رغبتك في حذف هذا المستند؟",
     "downloadCount": "عدد التنزيلات",
-    "viewCount": "عدد المشاهدات",
+    "viewCount": "مشاهدات",
     "requestTranslation": "طلب ترجمة",
     "translationRequested": "تم طلب الترجمة",
     "translationInProgress": "الترجمة قيد التقدم",
     "translationCompleted": "اكتملت الترجمة",
     "categories": {
+      "all": "جميع المستندات",
       "comiteDeSuivi": "لجنة المتابعة",
       "societeDeGestion": "شركة الإدارة",
       "legal": "المستندات القانونية",
       "financial": "المستندات المالية",
-      "general": "المستندات العامة"
+      "general": "المستندات العامة",
+      "finance": "المستندات المالية"
     },
     "dropzone": {
       "title": "اسحب وأفلت الملف هنا",
@@ -166,7 +172,8 @@
     "categoryDescriptions": {
       "comiteDeSuivi": "المستندات المتعلقة بلجنة المتابعة، بما في ذلك محاضر الاجتماعات والتقارير",
       "societeDeGestion": "مستندات من شركة الإدارة، بما في ذلك التقارير المالية والمراسلات",
-      "legal": "المستندات القانونية والعقود واللوائح المتعلقة بالعقار"
+      "legal": "المستندات القانونية والعقود واللوائح المتعلقة بالعقار",
+      "finance": "البيانات المالية والميزانيات وغيرها من المعلومات المالية المتعلقة بالعقار"
     },
     "recentDocuments": "المستندات الحديثة",
     "viewAll": "عرض الكل",
@@ -393,7 +400,12 @@
       "comiteDeSuivi": "{{count}} مستند للجنة المتابعة",
       "societeDeGestion": "{{count}} مستند لشركة الإدارة",
       "legal": "{{count}} مستند قانوني"
-    }
+    },
+    "noInformation": "لا توجد معلومات متاحة",
+    "noContent": "لا يوجد محتوى متاح",
+    "checkBackLater": "يرجى التحقق لاحقًا للحصول على التحديثات",
+    "informationDescription": "آخر التحديثات والإعلانات للمالكين",
+    "allDocumentsDescription": "عرض جميع المستندات والمعلومات عبر جميع الفئات"
   },
   "notifications": {
     "title": "الإشعارات",
