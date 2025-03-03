@@ -195,30 +195,69 @@ export const getDocumentsByCategory = async (
     ];
   }
   
-  const documents = await prisma.document.findMany({
-    where,
-    orderBy: { createdAt: 'desc' },
-    take: limit,
-    skip: offset,
-    include: {
-      author: {
-        select: {
-          id: true,
-          name: true,
+  try {
+    const documents = await prisma.document.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+      skip: offset,
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+          },
         },
       },
-      // The translatedDocument relation is commented out until the column exists in the database
-      // translatedDocument: true
-    },
-  });
-  
-  // Convert the documents to the expected type
-  return documents.map(doc => ({
-    ...doc,
-    category: category,
-    language: language || (doc.language === 'french' ? Language.FRENCH : Language.ARABIC),
-    translatedDocument: null, // Add this field to satisfy the type, even though it doesn't exist in the database
-  })) as Document[];
+    });
+    
+    // Convert the documents to the expected type
+    return documents.map(doc => ({
+      ...doc,
+      category: category,
+      language: language || (doc.language === 'french' ? Language.FRENCH : Language.ARABIC),
+      translatedDocument: null, // Add this field to satisfy the type, even though it doesn't exist in the database
+      translatedDocumentId: null, // Add this field to satisfy the type
+    })) as Document[];
+  } catch (error) {
+    // If we get a Prisma error about the translatedDocumentId column, fall back to a simpler query
+    if (error instanceof Error && error.message.includes('translated_document_id')) {
+      console.warn('Falling back to simple query due to missing translated_document_id column');
+      
+      // Try a simpler query without the problematic relation
+      const simpleDocuments = await prisma.$queryRaw`
+        SELECT 
+          id, title, description, file_path as "filePath", file_size as "fileSize", 
+          file_type as "fileType", category, language, is_translated as "isTranslated", 
+          is_published as "isPublished", view_count as "viewCount", 
+          download_count as "downloadCount", created_at as "createdAt", 
+          updated_at as "updatedAt", author_id as "authorId"
+        FROM documents
+        WHERE category = ${prismaCategory}
+          ${prismaLanguage ? `AND language = ${prismaLanguage}` : ''}
+          AND is_published = true
+          ${searchQuery ? `AND (
+            title ILIKE ${'%' + searchQuery + '%'} OR 
+            description ILIKE ${'%' + searchQuery + '%'}
+          )` : ''}
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `;
+      
+      // Convert the raw documents to the expected type
+      return (simpleDocuments as any[]).map(doc => ({
+        ...doc,
+        category: category,
+        language: language || (doc.language === 'french' ? Language.FRENCH : Language.ARABIC),
+        translatedDocument: null,
+        translatedDocumentId: null,
+        author: { id: doc.authorId, name: '' }, // Basic author info, missing the full name
+      })) as Document[];
+    }
+    
+    // Re-throw other errors
+    throw error;
+  }
 };
 
 /**
