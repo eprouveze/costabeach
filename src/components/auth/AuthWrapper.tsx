@@ -7,9 +7,48 @@ import { AuthUser } from '@/lib/supabase/auth';
 import { Language } from '@/lib/types';
 import { toast } from 'react-toastify';
 
-// Log important diagnostics
+// Log important diagnostics while filtering out sensitive information
 const logUserData = (message: string, data: any) => {
-  console.log(`[AuthWrapper] ${message}:`, data);
+  // Create a sanitized copy of the data to avoid logging sensitive information
+  const sanitized = typeof data === 'object' && data !== null 
+    ? sanitizeData(data) 
+    : data;
+  
+  console.log(`[AuthWrapper] ${message}:`, sanitized);
+};
+
+// Helper function to remove sensitive data before logging
+const sanitizeData = (data: any): any => {
+  if (!data || typeof data !== 'object') return data;
+  
+  // If it's an array, sanitize each item
+  if (Array.isArray(data)) {
+    return data.map(sanitizeData);
+  }
+  
+  // For objects, create a clean copy without sensitive fields
+  const sanitized = { ...data };
+  
+  // List of sensitive field names to remove/mask
+  const sensitiveFields = [
+    'password', 'token', 'secret', 'key', 'access_token', 
+    'refresh_token', 'id_token', 'authorization', 'jwt',
+    'session_token', 'api_key', 'private_key', 'credential'
+  ];
+  
+  // Check all properties for sensitive data
+  Object.keys(sanitized).forEach(key => {
+    // Remove sensitive fields completely
+    if (sensitiveFields.some(field => key.toLowerCase().includes(field))) {
+      sanitized[key] = '[REDACTED]';
+    } 
+    // Recursively sanitize nested objects
+    else if (typeof sanitized[key] === 'object' && sanitized[key] !== null) {
+      sanitized[key] = sanitizeData(sanitized[key]);
+    }
+  });
+  
+  return sanitized;
 };
 
 interface AuthWrapperProps {
@@ -35,7 +74,19 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
         setError(null);
         
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        console.log('[AuthWrapper] Retrieved session details:', session);
+        // Only log non-sensitive information from the session
+        if (session?.user) {
+          console.log('[AuthWrapper] Retrieved session details:', { 
+            user: { 
+              id: session.user.id, 
+              email: session.user.email 
+            },
+            // Don't log tokens or other sensitive information
+            expires_at: session.expires_at
+          });
+        } else {
+          console.log('[AuthWrapper] No active session found');
+        }
         
         if (sessionError) {
           console.error('Session error:', sessionError);
@@ -93,6 +144,9 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
             // Only make the API call if we haven't already verified the user and we're on the owner dashboard
             if (isOwnerDashboardPath && !userVerified && session.user?.id && session.user?.email) {
               try {
+                // Immediately set userVerified to prevent duplicate calls while the fetch is in progress
+                setUserVerified(true);
+                
                 // Call a fetch to your server-side API route
                 const response = await fetch('/api/users/ensure-user-exists', {
                   method: 'POST',
@@ -108,12 +162,14 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
                 if (response.ok) {
                   const result = await response.json();
                   logUserData('User record verified or created via API', result);
-                  setUserVerified(true); // Mark user as verified to prevent future calls
+                  // setUserVerified(true); - Already set above to prevent race conditions
                 } else {
                   console.error('Failed to ensure user exists via API:', await response.text());
                 }
               } catch (apiError) {
                 console.error('Error calling ensure-user-exists API:', apiError);
+                // Even if there's an error, we don't want to retry endlessly
+                // setUserVerified(true); - Already set above to prevent race conditions
               }
             }
 

@@ -1,5 +1,20 @@
 # Cursor Updates
 
+## Fixed security issues with authentication data logging (2024-07-04)
+
+Addressed security concerns related to authentication data handling:
+
+1. Fixed duplicate calls to the `/api/users/ensure-user-exists` endpoint by immediately setting `userVerified` flag
+2. Added sophisticated data sanitization to prevent logging sensitive authentication information
+3. Created a `sanitizeData` helper function that recursively removes tokens, passwords, and other credentials
+4. Modified session logging to only include non-sensitive user information
+
+These changes improve both security and performance by:
+- Preventing authentication tokens from appearing in logs
+- Reducing duplicate API calls to user verification endpoints
+- Maintaining useful logging information while redacting sensitive data
+- Properly handling race conditions in the authentication flow
+
 ## Created PublicPageTemplate Storybook Story (2024-03-03)
 
 Added a comprehensive Storybook story for the PublicPageTemplate component with various examples and responsive variants:
