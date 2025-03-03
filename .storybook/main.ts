@@ -34,6 +34,8 @@ const config: StorybookConfig = {
         "next/navigation": path.resolve(__dirname, "./mockNextNavigation"),
         // Mock react-toastify
         "react-toastify": path.resolve(__dirname, "./mockToastify"),
+        // Mock trpc client
+        "@/lib/trpc/react": path.resolve(__dirname, "./mockTrpc"),
       };
     }
     return config;

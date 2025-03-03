@@ -3,7 +3,6 @@ import { Meta, StoryObj } from '@storybook/react';
 import { DocumentPreview } from '@/components/DocumentPreview';
 import { Document, DocumentCategory, Language } from '@/lib/types';
 import { I18nProvider } from '@/lib/i18n/client';
-import { MockTRPCProvider } from '@/lib/mocks/mockTrpc';
 
 // Mock document data
 const mockDocument: Document = {
@@ -64,13 +63,9 @@ const meta: Meta<typeof DocumentPreview> = {
   },
   decorators: [
     (Story) => (
-      <I18nProvider>
-        <MockTRPCProvider>
-          <div className="w-full max-w-4xl">
-            <Story />
-          </div>
-        </MockTRPCProvider>
-      </I18nProvider>
+      <div className="w-full max-w-4xl">
+        <Story />
+      </div>
     ),
   ],
   tags: ['autodocs'],

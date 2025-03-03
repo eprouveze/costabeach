@@ -1059,6 +1059,77 @@ This development plan outlines the transformation of the Costa Beach application
 **Storybook:**
 - [ ] Document deployment process
 
+### 7.7 Storybook Improvements and Reorganization
+- [ ] Fix tRPC context errors in Storybook
+- [ ] Reorganize sidebar structure into logical categories
+- [ ] Ensure all components have Storybook stories
+- [ ] Implement consistent decorators for all components
+- [ ] Add missing Context Providers for tRPC components
+
+**Implementation Details:**
+- Create a comprehensive mock for the tRPC Provider that works across all components
+- Add the mock tRPC Provider to Storybook's preview.tsx as a global decorator
+- Reorganize stories following the Atomic Design pattern (atoms, molecules, organisms, templates, pages)
+- Implement decorators for common contexts (I18nProvider, TRPCProvider, SessionProvider)
+- Ensure proper mobile and responsive views for all components
+- Create stories for missing components, especially those added in recent sprints
+- Implement proper error handling for components that require server-side data
+- Add documentation for usage patterns and best practices
+- Update existing stories to follow consistent patterns
+- Add dark mode support for all components
+
+**Implementation Steps:**
+1. **Fix tRPC Context Error (0.2 SP)**
+   - Create an enhanced MockTRPCProvider in .storybook directory
+   - Add proper error handling to prevent "__untypedClient" errors
+   - Register the provider in Storybook preview.tsx instead of per-story
+   - Test on all components that use tRPC hooks
+
+2. **Reorganize Sidebar Structure (0.2 SP)**
+   - Create main categories: Atoms, Molecules, Organisms, Templates, Pages
+   - Add subcategories for functional areas (Auth, Documents, Layout, etc.)
+   - Update all story files to use consistent naming conventions
+   - Add sorting metadata to ensure logical ordering
+
+3. **Complete Component Coverage (0.4 SP)**
+   - Inventory all components in the application
+   - Identify components without stories
+   - Create stories for missing components
+   - Ensure all variants are documented
+
+4. **Context Provider Implementation (0.2 SP)**
+   - Create reusable decorators for common contexts
+   - Implement a global decorator setup for preview.tsx
+   - Test with components that require multiple contexts
+   - Add documentation for context usage in stories
+
+**Tests:**
+- [ ] Test Storybook builds
+- [ ] Verify tRPC components render without errors
+- [ ] Test all story categories and navigation
+- [ ] Check component coverage against application inventory
+
+**Testing Instructions:**
+- Run `npm run storybook` and verify no console errors
+- Navigate through all categories and test each component
+- Verify all components that use tRPC hooks render correctly
+- Test different variants and responsive views for components
+- Check dark mode toggling works across all components
+
+**Dependencies:**
+- This task depends on up-to-date component implementations
+- Requires knowledge of all component dependencies and context requirements
+- Access to design documentation for proper organization
+
+**Storybook:**
+- [ ] Document Storybook organization structure
+- [ ] Create examples of proper story implementation
+
+**Related Areas:**
+- Component Documentation (Section 7.4)
+- Design System (Section 7.5)
+- Integration Testing (Section 7.1)
+
 ## 8. API Implementation and Missing Features
 
 ### 8.1 Document API Routes

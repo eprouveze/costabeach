@@ -4,6 +4,7 @@ import "../src/app/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 import { I18nProvider } from '../src/lib/i18n/client';
+import { TRPCProvider } from './mockTrpc';
 
 const preview: Preview = {
   parameters: {
@@ -37,7 +38,9 @@ const preview: Preview = {
   decorators: [
     (Story) => (
       <I18nProvider>
-        <Story />
+        <TRPCProvider>
+          <Story />
+        </TRPCProvider>
       </I18nProvider>
     ),
   ],

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { locales, defaultLocale } from "@/lib/i18n";
+import { createServerClient } from '@supabase/ssr';
+import { Database } from '@/lib/types/database.types';
 
 // Cookie name for storing locale
 const LOCALE_COOKIE = "NEXT_LOCALE";
@@ -10,13 +12,47 @@ function logRedirect(from: string, to: string) {
   return;
 }
 
-// Middleware function to handle internationalization
-export function middleware(request: NextRequest) {
+// Middleware function to handle internationalization and authentication
+export async function middleware(request: NextRequest) {
   // Get the pathname of the request (e.g. /, /en, /fr/about)
-  const { pathname, origin } = request.nextUrl;
+  const { pathname, origin, searchParams } = request.nextUrl;
 
   // Log middleware execution
   console.log(`[Middleware] Processing path: ${pathname}`);
+
+  // Create a response object to modify and return
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  });
+
+  // Create a Supabase client for authentication checks
+  const supabase = createServerClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return request.cookies.get(name)?.value;
+        },
+        set(name: string, value: string, options: any) {
+          response.cookies.set({
+            name,
+            value,
+            ...options,
+          });
+        },
+        remove(name: string, options: any) {
+          response.cookies.set({
+            name,
+            value: '',
+            ...options,
+          });
+        },
+      },
+    }
+  );
 
   // Skip for non-page requests (API routes, static files, etc.)
   if (
@@ -28,7 +64,7 @@ export function middleware(request: NextRequest) {
     pathname === "/robots.txt" ||
     pathname === "/sitemap.xml"
   ) {
-    return NextResponse.next();
+    return response;
   }
 
   // Get the locale from cookie or default to French
@@ -56,8 +92,23 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  // CASE 3: Path already has a locale - just proceed
-  const response = NextResponse.next();
+  // CASE 3: Authentication check for protected routes
+  if (
+    pathname.includes('/dashboard') ||
+    pathname.includes('/admin') ||
+    pathname.includes('/profile')
+  ) {
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (!session) {
+      // Get the current locale from the URL
+      const pathLocale = pathname.split('/')[1];
+      
+      // Redirect to the signin page with the current locale
+      const redirectUrl = `${origin}/${pathLocale}/auth/signin?returnUrl=${encodeURIComponent(request.nextUrl.pathname)}`;
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
 
   // Extract the locale from the pathname
   const pathLocale = pathname.split('/')[1];
