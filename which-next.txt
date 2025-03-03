@@ -1,0 +1,1 @@
+/Users/macminim1manu/.nvm/versions/node/v20.18.1/bin/next

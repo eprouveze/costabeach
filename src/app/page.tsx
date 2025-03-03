@@ -4,9 +4,9 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { PublicLandingTemplate } from "@/components/PublicLandingTemplate";
-import { Hero } from "@/components/Hero";
-import { AboutSection } from "@/components/AboutSection";
+import PublicLandingTemplate from "@/components/PublicLandingTemplate";
+import Hero from "@/components/Hero";
+import AboutSection from "@/components/AboutSection";
 
 export const dynamic = "force-dynamic";
 

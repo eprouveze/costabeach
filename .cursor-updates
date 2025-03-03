@@ -309,3 +309,5 @@ These changes ensure compatibility between the new Supabase authentication syste
 - Fixed potential issues in Storybook stories by removing Jest-specific code
 - Completed the testing and documentation requirements for the Content Editor Role section of the development plan
 - Ensured all components have proper test coverage and Storybook documentation
+
+## Fixed TypeScript errors in Storybook files, corrected enum values, and added Suspense boundaries for components using useSearchParams() hook.

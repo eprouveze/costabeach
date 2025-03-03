@@ -40,6 +40,11 @@ console.log(`Platform: ${process.platform}`);
 console.log(`User info: ${process.env.USER || process.env.USERNAME}`);
 console.log('=============================\n');
 
+// Clear Next.js cache only
+console.log('\nClearing Next.js cache...');
+safeRemoveDir('.next');
+safeRemoveDir(path.join('node_modules', '.cache'));
+
 // Create manifest directory if it doesn't exist
 console.log('Ensuring middleware manifest directory exists...');
 try {
@@ -57,27 +62,6 @@ try {
   }
 } catch (err) {
   console.warn('Error ensuring middleware directory exists:', err);
-}
-
-// Clear caches
-console.log('\nClearing Next.js caches...');
-safeRemoveDir('.next');
-safeRemoveDir(path.join('node_modules', '.cache'));
-
-// Clean install dependencies
-console.log('\nCleaning node_modules and reinstalling dependencies...');
-try {
-  safeRemoveDir('node_modules');
-  console.log('Running npm ci to ensure clean dependencies install...');
-  execSync('npm ci', { stdio: 'inherit' });
-} catch (err) {
-  console.error('Error during npm ci, falling back to npm install:', err);
-  try {
-    execSync('npm install', { stdio: 'inherit' });
-  } catch (npmErr) {
-    console.error('Error during npm install:', npmErr);
-    process.exit(1);
-  }
 }
 
 // Create route files again in case they were deleted
@@ -279,19 +263,48 @@ try {
   console.warn('Error updating root router:', err);
 }
 
-// Build the application
-console.log('\nBuilding the application...');
+// Run the build using local node_modules binaries
+console.log('\nRunning Next.js build...');
 try {
-  execSync('npm run build', { stdio: 'inherit' });
+  // First install prisma if needed
+  if (!fs.existsSync('node_modules/.bin/prisma')) {
+    console.log('Installing prisma...');
+    execSync('npm install --save-dev prisma --legacy-peer-deps', { stdio: 'inherit' });
+  }
+  
+  // Run prisma generate using the local binary
+  console.log('Running prisma generate...');
+  execSync('node_modules/.bin/prisma generate', { stdio: 'inherit' });
+  
+  // Build the Next.js app
+  console.log('Building Next.js app...');
+  execSync('node_modules/.bin/next build', { stdio: 'inherit' });
+  
   console.log('\nBuild completed successfully');
 } catch (err) {
   console.error('Error during build:', err);
-  process.exit(1);
+  console.log('\nTrying alternative approach with npx...');
+  
+  try {
+    execSync('npx prisma generate', { stdio: 'inherit' });
+    execSync('npx next build', { stdio: 'inherit' });
+    console.log('\nBuild with npx completed successfully');
+  } catch (npxErr) {
+    console.error('Error during npx build:', npxErr);
+    process.exit(1);
+  }
 }
 
 console.log('\nStarting development server...');
 try {
-  execSync('npm run dev', { stdio: 'inherit' });
+  execSync('node_modules/.bin/next dev', { stdio: 'inherit' });
 } catch (err) {
-  console.error('Error starting development server:', err);
+  console.error('Error starting development server with node_modules binary:', err);
+  console.log('Trying with npx...');
+  
+  try {
+    execSync('npx next dev', { stdio: 'inherit' });
+  } catch (npxErr) {
+    console.error('Error starting development server with npx:', npxErr);
+  }
 } 

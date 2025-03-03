@@ -1,0 +1,1 @@
+export async function GET() { return Response.json({ status: "ok", message: "Direct debug API is working", time: new Date().toISOString(), metadata: { nextVersion: process.env.NEXT_RUNTIME || "unknown", nodejs: process.version, env: process.env.NODE_ENV || "unknown" } }); }

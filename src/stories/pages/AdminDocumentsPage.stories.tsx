@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { I18nProvider } from '@/lib/i18n/client';
-import { DocumentCategory, Language, UserPermission } from '@/lib/types';
+import { DocumentCategory, Language, Permission } from '@/lib/types';
 import { 
   FileText, 
   Upload, 
@@ -47,7 +47,7 @@ const mockDocuments = generateMockDocuments(12);
 
 // Interface for the mock component props
 interface MockAdminDocumentsPageProps {
-  userPermissions: UserPermission[];
+  userPermissions: Permission[];
   isLoading?: boolean;
   noDocuments?: boolean;
   isAdmin?: boolean;
@@ -55,7 +55,7 @@ interface MockAdminDocumentsPageProps {
 
 // Mock component implementation without depending on actual components
 const MockAdminDocumentsPage: React.FC<MockAdminDocumentsPageProps> = ({ 
-  userPermissions = [UserPermission.MANAGE_DOCUMENTS], 
+  userPermissions = [Permission.MANAGE_DOCUMENTS], 
   isLoading = false,
   noDocuments = false,
   isAdmin = true
@@ -71,18 +71,20 @@ const MockAdminDocumentsPage: React.FC<MockAdminDocumentsPageProps> = ({
   const filteredDocuments = !noDocuments ? mockDocuments.filter(doc => {
     if (isAdmin) return true;
     
-    const permissionMap = {
-      [DocumentCategory.COMITE_REPORTS]: UserPermission.MANAGE_COMITE_DOCUMENTS,
-      [DocumentCategory.LEGAL_DOCUMENTS]: UserPermission.MANAGE_LEGAL_DOCUMENTS,
-      [DocumentCategory.SOCIETE_DOCUMENTS]: UserPermission.MANAGE_SOCIETE_DOCUMENTS,
-      [DocumentCategory.GENERAL]: UserPermission.MANAGE_DOCUMENTS,
+    // Create a mapping of document categories to required permissions
+    const permissionMap: Record<DocumentCategory, Permission> = {
+      [DocumentCategory.COMITE_DE_SUIVI]: Permission.MANAGE_COMITE_DOCUMENTS,
+      [DocumentCategory.LEGAL]: Permission.MANAGE_LEGAL_DOCUMENTS,
+      [DocumentCategory.SOCIETE_DE_GESTION]: Permission.MANAGE_SOCIETE_DOCUMENTS,
+      [DocumentCategory.GENERAL]: Permission.MANAGE_DOCUMENTS,
+      [DocumentCategory.FINANCE]: Permission.MANAGE_DOCUMENTS,
     };
     
-    return userPermissions.includes(permissionMap[doc.category] || UserPermission.MANAGE_DOCUMENTS);
+    return userPermissions.includes(permissionMap[doc.category] || Permission.MANAGE_DOCUMENTS);
   }) : [];
 
   return (
-    <I18nProvider locale="en">
+    <I18nProvider>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex justify-between items-center mb-6">
@@ -171,15 +173,15 @@ const MockAdminDocumentsPage: React.FC<MockAdminDocumentsPageProps> = ({
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Language
                   </label>
-                  <select
+                  <select 
+                    className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     value={selectedLanguage}
-                    onChange={(e) => setSelectedLanguage(e.target.value as Language | "")}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    onChange={(e) => setSelectedLanguage(e.target.value as Language)}
                   >
                     <option value="">All Languages</option>
-                    <option value={Language.FR}>French</option>
-                    <option value={Language.AR}>Arabic</option>
-                    <option value={Language.EN}>English</option>
+                    <option value={Language.FRENCH}>French</option>
+                    <option value={Language.ARABIC}>Arabic</option>
+                    <option value={Language.ENGLISH}>English</option>
                   </select>
                 </div>
               </div>
@@ -368,9 +370,9 @@ const MockAdminDocumentsPage: React.FC<MockAdminDocumentsPageProps> = ({
                     <select
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     >
-                      <option value={Language.EN}>English</option>
-                      <option value={Language.FR}>French</option>
-                      <option value={Language.AR}>Arabic</option>
+                      <option value={Language.ENGLISH}>English</option>
+                      <option value={Language.FRENCH}>French</option>
+                      <option value={Language.ARABIC}>Arabic</option>
                     </select>
                   </div>
                   
@@ -442,7 +444,7 @@ const meta: Meta<typeof MockAdminDocumentsPage> = {
   argTypes: {
     userPermissions: {
       control: 'multi-select',
-      options: Object.values(UserPermission),
+      options: Object.values(Permission),
       description: 'User permissions that control document access',
     },
     isLoading: {
@@ -465,7 +467,7 @@ type Story = StoryObj<typeof MockAdminDocumentsPage>;
 
 export const Default: Story = {
   args: {
-    userPermissions: [UserPermission.MANAGE_DOCUMENTS],
+    userPermissions: [Permission.MANAGE_DOCUMENTS],
     isLoading: false,
     noDocuments: false,
     isAdmin: true,
@@ -481,7 +483,7 @@ export const Default: Story = {
 
 export const Loading: Story = {
   args: {
-    userPermissions: [UserPermission.MANAGE_DOCUMENTS],
+    userPermissions: [Permission.MANAGE_DOCUMENTS],
     isLoading: true,
     noDocuments: false,
     isAdmin: true,
@@ -497,7 +499,7 @@ export const Loading: Story = {
 
 export const EmptyState: Story = {
   args: {
-    userPermissions: [UserPermission.MANAGE_DOCUMENTS],
+    userPermissions: [Permission.MANAGE_DOCUMENTS],
     isLoading: false,
     noDocuments: true,
     isAdmin: true,
@@ -513,7 +515,7 @@ export const EmptyState: Story = {
 
 export const ContentEditorView: Story = {
   args: {
-    userPermissions: [UserPermission.MANAGE_COMITE_DOCUMENTS, UserPermission.MANAGE_LEGAL_DOCUMENTS],
+    userPermissions: [Permission.MANAGE_COMITE_DOCUMENTS, Permission.MANAGE_LEGAL_DOCUMENTS],
     isLoading: false,
     noDocuments: false,
     isAdmin: false,

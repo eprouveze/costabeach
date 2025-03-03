@@ -1,34 +1,38 @@
-import { NextResponse } from 'next/server';
+import { createCallerFactory } from "@/lib/api/trpc";
 import { appRouter } from "@/lib/api/root";
-import { createTRPCContext } from "@/lib/api/trpc";
+import { getServerAuthSession } from "@/lib/auth";
+import { prisma } from "@/lib/db";
 
 export async function GET() {
   try {
-    // Create a context for the tRPC router
-    const context = await createTRPCContext({ headers: new Headers() });
+    // Get the session
+    const session = await getServerAuthSession();
     
-    // Call the health check procedure directly
-    const caller = appRouter.createCaller(context);
-    const healthCheck = await caller.documents.healthCheck();
+    // Create a tRPC caller with the required context
+    const createCaller = createCallerFactory(appRouter);
+    const caller = createCaller({
+      session,
+      headers: new Headers(),
+      db: prisma,
+    });
     
-    // Return the result
-    return NextResponse.json({
-      status: 'success',
-      message: 'tRPC test successful',
-      data: healthCheck,
+    // Call the healthCheck procedure that exists in the router
+    const result = await caller.healthCheck();
+    
+    return Response.json({
+      status: 'ok',
+      result,
       timestamp: new Date().toISOString()
     });
   } catch (error) {
     console.error('tRPC test error:', error);
-    
-    return NextResponse.json(
-      {
-        status: 'error',
-        message: error instanceof Error ? error.message : 'Unknown error',
-        stack: process.env.NODE_ENV === 'development' && error instanceof Error ? error.stack : undefined,
-        timestamp: new Date().toISOString()
-      },
-      { status: 500 }
-    );
+    return Response.json({
+      status: 'error',
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: process.env.NODE_ENV !== 'production' 
+        ? error instanceof Error ? error.stack : undefined
+        : undefined,
+      timestamp: new Date().toISOString()
+    }, { status: 500 });
   }
-} 
+}
