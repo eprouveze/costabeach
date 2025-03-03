@@ -588,3 +588,13 @@ Fixed an issue where the application was making excessive calls to the `/api/set
 3. Added proper state management to ensure the API is not called repeatedly
 
 This change prevents dozens of unnecessary API calls that were being made on each page load, improving performance and reducing server load.
+
+## 2024-07-04 Fix excessive logging in AuthWrapper component
+
+Refactored the `AuthWrapper` component to reduce excessive console logging:
+- Added conditional logging to prevent repeated log messages for session retrieval and user data
+- Modified the `useEffect` hook dependencies to minimize unnecessary re-execution
+- Restored the `isVerifiedOwner` update functionality that was previously removed
+- Improved code comments for better maintainability
+
+These changes significantly reduce console clutter while preserving important diagnostic information, and ensure all authentication features work properly.

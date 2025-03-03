@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { createClient } from '@/lib/supabase/client';
 import { AuthUser } from '@/lib/supabase/auth';
 import { Language } from '@/lib/types';
@@ -63,19 +63,40 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
   const [error, setError] = useState<Error | null>(null);
   const [userVerified, setUserVerified] = useState(false); // Track if user has been verified
   const [dbSetupAttempted, setDbSetupAttempted] = useState(false); // Track if DB setup has been attempted
+  const [sessionFetched, setSessionFetched] = useState(false); // Track if we've already fetched session
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
+  
+  // Reference to track if auth check is in progress to prevent multiple simultaneous checks
+  const authCheckInProgress = useRef(false);
+  // Reference to store the last logged user ID to prevent redundant logging
+  const lastLoggedUserId = useRef<string | null>(null);
 
   useEffect(() => {
+    // Skip if we've already done session verification and user is loaded
+    if (sessionFetched && (user || !requireAuth)) {
+      return;
+    }
+    
+    // Skip if auth check is already in progress
+    if (authCheckInProgress.current) {
+      return;
+    }
+
     async function checkAuth() {
+      // Set flag to prevent concurrent auth checks
+      authCheckInProgress.current = true;
+      
       try {
         setLoading(true);
         setError(null);
         
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        // Only log non-sensitive information from the session
-        if (session?.user) {
+        
+        // Only log session details if the user ID has changed to reduce console noise
+        if (session?.user && session.user.id !== lastLoggedUserId.current) {
+          lastLoggedUserId.current = session.user.id;
           console.log('[AuthWrapper] Retrieved session details:', { 
             user: { 
               id: session.user.id, 
@@ -84,9 +105,13 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
             // Don't log tokens or other sensitive information
             expires_at: session.expires_at
           });
-        } else {
+        } else if (!session && lastLoggedUserId.current !== null) {
+          lastLoggedUserId.current = null;
           console.log('[AuthWrapper] No active session found');
         }
+        
+        // Mark that we've fetched the session
+        setSessionFetched(true);
         
         if (sessionError) {
           console.error('Session error:', sessionError);
@@ -107,6 +132,7 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
           }
           
           setLoading(false);
+          authCheckInProgress.current = false;
           return;
         }
         
@@ -124,6 +150,7 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
           // Redirect to the signin page with the current locale and return URL
           router.push(`/${locale}/auth/signin?returnUrl=${encodeURIComponent(safePathname)}`);
           setLoading(false);
+          authCheckInProgress.current = false;
           return;
         }
         
@@ -161,7 +188,10 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
                 
                 if (response.ok) {
                   const result = await response.json();
-                  logUserData('User record verified or created via API', result);
+                  // Only log if user ID changed to reduce noise
+                  if (session.user.id !== lastLoggedUserId.current) {
+                    logUserData('User record verified or created via API', result);
+                  }
                   // setUserVerified(true); - Already set above to prevent race conditions
                 } else {
                   console.error('Failed to ensure user exists via API:', await response.text());
@@ -211,6 +241,7 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
                     };
                     setUser(minimalFallbackUser as AuthUser);
                     setLoading(false);
+                    authCheckInProgress.current = false;
                     return;
                   }
                   
@@ -483,15 +514,15 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
                 setError(new Error(`Database error: ${userError.message}`));
               }
             } else if (userData) {
-              // Success case - we have user data - ensure isVerifiedOwner is true if on owner dashboard
-              logUserData('Successfully retrieved user data', userData);
-              
               // If we're on the owner dashboard and the user is not verified, force it to true
               if (isOwnerDashboardPath && !userData.is_verified_owner) {
-                logUserData('Upgrading non-verified user to owner status for owner dashboard', {
-                  userId: userData.id,
-                  currentStatus: userData.is_verified_owner
-                });
+                // Only log this operation once per user
+                if (userData.id !== lastLoggedUserId.current) {
+                  logUserData('Upgrading non-verified user to owner status for owner dashboard', {
+                    userId: userData.id,
+                    currentStatus: userData.is_verified_owner
+                  });
+                }
                 
                 // Try to update the user record to verified status
                 try {
@@ -511,11 +542,41 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
                 }
               }
               
-              setUser({
-                ...userData,
-                email: session.user.email || '',
-                isVerifiedOwner: isOwnerDashboardPath ? true : userData.is_verified_owner, // Force if needed
-              } as AuthUser);
+              // Transform the user data to match our AuthUser interface
+              const transformedUser: AuthUser = {
+                id: userData.id,
+                email: userData.email,
+                name: userData.name || userData.email?.split('@')[0] || 'User',
+                role: userData.role || 'user',
+                isAdmin: userData.role === 'admin',
+                isVerifiedOwner: userData.is_verified_owner || isOwnerDashboardPath, // Allow access if already on dashboard
+                preferredLanguage: userData.preferred_language as Language || Language.FRENCH,
+                permissions: userData.permissions || [],
+                createdAt: new Date(userData.created_at || Date.now()),
+                updatedAt: new Date(userData.updated_at || Date.now())
+              };
+              
+              // Only log user data if it's a different user than last time to avoid excessive logging
+              if (userData.id !== lastLoggedUserId.current) {
+                logUserData('Successfully retrieved user data', transformedUser);
+              }
+              
+              setUser(transformedUser);
+              
+              // Now check if user has the required roles if specified
+              if (allowedRoles.length > 0 && !allowedRoles.includes(transformedUser.role)) {
+                console.log(`User does not have required role. Required: ${allowedRoles.join(', ')}, User role: ${transformedUser.role}`);
+                
+                // Get the current locale
+                const pathParts = safePathname.split('/') || [];
+                const locale = pathParts.length > 1 && ['fr', 'en', 'ar'].includes(pathParts[1]) 
+                  ? pathParts[1] 
+                  : 'fr';
+                
+                toast.error('You do not have permission to access this page');
+                router.push(`/${locale}/`);
+                return;
+              }
             } else {
               console.error('No user data returned');
               logUserData('No user data returned from database query', {
@@ -652,11 +713,12 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
         setError(error);
       } finally {
         setLoading(false);
+        authCheckInProgress.current = false;
       }
     }
 
     checkAuth();
-  }, [pathname, requireAuth, router, supabase, allowedRoles]);
+  }, [pathname, requireAuth, router, supabase, allowedRoles, sessionFetched, user]);
 
   if (loading) {
     return (
