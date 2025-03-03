@@ -16,7 +16,7 @@ import {
   Languages
 } from "lucide-react";
 import { DocumentPreview } from "./organisms/DocumentPreview";
-import { trpc } from "@/lib/trpc/client";
+import { api } from "@/lib/trpc";
 import { toast } from "react-toastify";
 
 interface DocumentCardProps {
@@ -38,8 +38,8 @@ export const DocumentCard = ({
   const [showPreview, setShowPreview] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
   const { downloadDocument, deleteDocument } = useDocuments();
-  const requestTranslation = trpc.translations.requestDocumentTranslation.useMutation();
-  const utils = trpc.useContext();
+  const requestTranslation = api.translations.requestDocumentTranslation.useMutation();
+  const utils = api.useContext();
   
   const handleDownload = async () => {
     if (externalDownloadHandler) {

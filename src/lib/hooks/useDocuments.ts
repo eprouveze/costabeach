@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { api } from "@/lib/trpc/react";
+import { api } from "@/lib/trpc";
 import { DocumentCategory, Language } from "@/lib/types";
 import { useRouter } from "next/navigation";
 

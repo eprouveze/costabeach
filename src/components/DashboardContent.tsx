@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n/client";
 import { useSearchParams } from "next/navigation";
 import { DocumentList } from "./organisms/DocumentList";
-import { api } from "@/lib/trpc/react";
+import { api } from "@/lib/trpc";
 import { DocumentCategory, Language } from "@/lib/types";
 import { formatDistanceToNow } from "date-fns";
 import { fr, ar, enUS } from "date-fns/locale";

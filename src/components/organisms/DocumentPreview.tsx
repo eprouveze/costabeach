@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Document, Language } from "@/lib/types";
 import { useDocuments } from "@/lib/hooks/useDocuments";
 import { X, Download, Languages, Loader } from "lucide-react";
-import { trpc } from "@/lib/trpc/client";
+import { api } from "@/lib/trpc";
 import { toast } from "react-toastify";
 
 interface DocumentPreviewProps {
@@ -28,7 +28,7 @@ export const DocumentPreview = ({
   const [isTranslationInProgress, setIsTranslationInProgress] = useState(false);
   const { getDocumentPreviewUrl, downloadDocument } = useDocuments();
   
-  const translationStatus = trpc.translations.getDocumentTranslationStatus.useQuery(
+  const translationStatus = api.translations.getDocumentTranslationStatus.useQuery(
     { documentId: document.id },
     {
       enabled: isTranslationRequested,
@@ -111,7 +111,7 @@ export const DocumentPreview = ({
         setIsTranslationRequested(true);
         
         // Call the translation request endpoint
-        await trpc.translations.requestDocumentTranslation.mutate({
+        await api.translations.requestDocumentTranslation.mutate({
           documentId: document.id
         });
         
