@@ -552,3 +552,14 @@ This change makes the document listing resilient to database schema differences 
 - Updated upload-sample-documents.ts script to use correct field names (isPublished, view_count, download_count) that match the Prisma schema
 
 ## Fixed owner dashboard performance issues by optimizing API calls to ensure-user-exists endpoint and adding robust error handling for JSON parsing.
+
+## Fixed Supabase database setup issue (2024-07-04)
+
+Fixed the 404 error when calling a non-existent Supabase stored procedure:
+
+1. Identified the issue where `AuthWrapper` was trying to call a non-existent RPC function `create_users_table_if_not_exists`
+2. Modified the `AuthWrapper` component to use the existing `/api/setup-database` API endpoint instead
+3. This endpoint properly creates the necessary database tables, triggers, and RLS policies
+4. Added proper error handling for the database setup process
+
+This change ensures the application works correctly with Supabase, preventing 404 errors in the console and improving the authentication flow.

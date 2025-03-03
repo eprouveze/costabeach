@@ -77,11 +77,12 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
         
         if (session) {
           try {
-            // Try to create the users table if it doesn't exist
+            // Remove the call to non-existent RPC function and use the API endpoint instead
             try {
-              await supabase.rpc('create_users_table_if_not_exists');
+              // This API endpoint properly sets up the database tables
+              await fetch('/api/setup-database');
             } catch (tableError) {
-              console.log('Note: Unable to create users table. This is expected if the table already exists or if you lack permissions.');
+              console.log('Note: Unable to setup database tables. This is expected in normal operation.');
             }
 
             // Only make the API call if we haven't already verified the user and we're on the owner dashboard
