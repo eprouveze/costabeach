@@ -502,3 +502,19 @@ Replaced various email addresses (costabeach.com, costabeach3.com) with the offi
 5. User creation in sample documents upload script
 
 This ensures consistency across all user-facing content and backend communications.
+
+## Fixed Database Schema Mismatch and Auth Integration Issues (2024-03-03)
+
+Fixed issues with database schema mismatch and auth integration:
+
+1. Updated Prisma schema to remove legacy auth fields:
+   - Removed `hashedPassword` field from User model (now handled by Supabase Auth)
+   - Temporarily commented out self-referential Document relationship until database is synced
+
+2. Fixed documents utility to handle missing database columns:
+   - Updated documents query to remove reference to missing translatedDocument relation
+   - Added fallback values to satisfy TypeScript types without requiring database changes
+
+3. Generated updated Prisma client reflecting these changes
+
+These changes ensure compatibility between the codebase and actual database structure, allowing the application to run without errors even when some schema updates haven't been fully applied to the database yet.

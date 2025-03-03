@@ -207,6 +207,8 @@ export const getDocumentsByCategory = async (
           name: true,
         },
       },
+      // The translatedDocument relation is commented out until the column exists in the database
+      // translatedDocument: true
     },
   });
   
@@ -215,7 +217,7 @@ export const getDocumentsByCategory = async (
     ...doc,
     category: category,
     language: language || (doc.language === 'french' ? Language.FRENCH : Language.ARABIC),
-    translatedDocument: null,
+    translatedDocument: null, // Add this field to satisfy the type, even though it doesn't exist in the database
   })) as Document[];
 };
 
