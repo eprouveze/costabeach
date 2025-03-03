@@ -78,6 +78,7 @@
     "registrationRejected": "Votre demande d'inscription a été rejetée.",
     "signIn": "Se connecter",
     "signUp": "S'inscrire",
+    "signOut": "Déconnexion",
     "signin": {
       "title": "Bienvenue",
       "subtitle": "Connectez-vous à votre compte",

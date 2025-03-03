@@ -16,6 +16,12 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const documentsRouter = createTRPCRouter({
+  // Health check procedure
+  healthCheck: publicProcedure
+    .query(async () => {
+      return { status: "ok", timestamp: new Date().toISOString() };
+    }),
+  
   // Get a signed URL for uploading a document to S3
   getUploadUrl: protectedProcedure
     .input(
@@ -276,13 +282,5 @@ export const documentsRouter = createTRPCRouter({
           message: "Failed to delete document",
         });
       }
-    }),
-  
-  healthCheck: publicProcedure
-    .query(() => {
-      return {
-        status: "ok",
-        timestamp: new Date().toISOString()
-      };
     }),
 }); 

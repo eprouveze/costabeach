@@ -54,7 +54,7 @@ export function OwnerPortalSidebar({ onNavigate, currentPath = "/owner-dashboard
 
       <div className="mt-auto">
         <Button className="w-full" onClick={signOut}>
-          {t("auth.signOut") === "auth.signOut" ? "Déconnexion" : t("auth.signOut")}
+          {t("auth.signOut")}
         </Button>
       </div>
     </aside>

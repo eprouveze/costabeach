@@ -40,8 +40,13 @@ const getQueryClient = () => {
  * Get the base URL for API calls
  */
 function getBaseUrl() {
-  if (typeof window !== "undefined") return window.location.origin;
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  if (typeof window !== "undefined") {
+    // In the browser, use the current window location
+    return window.location.origin;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
 

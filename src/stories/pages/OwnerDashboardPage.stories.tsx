@@ -3,22 +3,27 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import OwnerDashboardPage from '@/app/owner-dashboard/page';
-import { createStoryDecorator } from '../utils/StoryProviders';
+import { I18nProvider } from '@/lib/i18n/client';
+import { SessionProvider } from 'next-auth/react';
+import MockTRPCProvider from '../../../.storybook/MockTRPCProvider';
 
-// Create a decorator with all the necessary providers
-const withAllProviders = createStoryDecorator({
-  withI18n: true,
-  withTRPC: true,
-  withSession: true,
-  i18nMessages: {
-    'owner.dashboard.title': 'Owner Dashboard',
-    'owner.dashboard.properties': 'Your Properties',
-    'owner.dashboard.documents': 'Documents',
-    'owner.dashboard.bookings': 'Bookings',
-    'owner.dashboard.statistics': 'Statistics',
-    'owner.dashboard.welcome': 'Welcome back',
-  }
-});
+// Create a decorator that wraps components with all necessary providers
+const withProviders = (Story: React.ComponentType) => (
+  <I18nProvider>
+    <SessionProvider session={{ 
+      user: { 
+        id: "owner-user-id",
+        email: "owner@example.com",
+        name: "Owner User"
+      }, 
+      expires: "1" 
+    }}>
+      <MockTRPCProvider>
+        <Story />
+      </MockTRPCProvider>
+    </SessionProvider>
+  </I18nProvider>
+);
 
 const meta: Meta<typeof OwnerDashboardPage> = {
   title: 'Pages/OwnerDashboardPage',
@@ -27,8 +32,7 @@ const meta: Meta<typeof OwnerDashboardPage> = {
     layout: 'fullscreen',
   },
   tags: ['autodocs'],
-  // Use our combined provider decorator
-  decorators: [withAllProviders],
+  decorators: [withProviders],
 };
 
 export default meta;

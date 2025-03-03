@@ -1,11 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { SessionProvider } from "next-auth/react";
-import { ToastContainer } from "react-toastify";
 import OwnerRegistrationsPage from "../../app/admin/owner-registrations/page";
 import { http } from "msw";
+import { I18nProvider } from '@/lib/i18n/client';
+import { SessionProvider } from 'next-auth/react';
+import MockTRPCProvider from '../../../.storybook/MockTRPCProvider';
+import { ToastContainer } from "react-toastify";
 import { userEvent, within } from "@storybook/testing-library";
 import { expect } from "@storybook/jest";
-import { createStoryDecorator } from '../utils/StoryProviders';
 
 const mockRegistrations = [
   {
@@ -42,24 +43,25 @@ const mockRegistrations = [
   },
 ];
 
-// Create a decorator with all the necessary providers
-const withAllProviders = createStoryDecorator({
-  withI18n: true,
-  withTRPC: true,
-  withSession: true,
-  i18nMessages: {
-    'admin.ownerRegistrations.title': 'Owner Registration Requests',
-    'admin.ownerRegistrations.empty': 'No registration requests available',
-    'admin.ownerRegistrations.error': 'Failed to load registration requests',
-    'admin.ownerRegistrations.loading': 'Loading registration requests...',
-    'admin.ownerRegistrations.approve': 'Approve',
-    'admin.ownerRegistrations.reject': 'Reject',
-    'admin.ownerRegistrations.review': 'Review',
-    'admin.ownerRegistrations.notes': 'Add notes (optional)',
-    'common.cancel': 'Cancel',
-    'common.save': 'Save',
-  }
-});
+// Create a decorator that wraps components with all necessary providers
+const withProviders = (Story: React.ComponentType) => (
+  <I18nProvider>
+    <SessionProvider session={{ 
+      user: { 
+        id: "admin-user-id",
+        email: "admin@costabeach.com",
+        name: "Admin User",
+        isAdmin: true 
+      }, 
+      expires: "1" 
+    }}>
+      <MockTRPCProvider>
+        <Story />
+        <ToastContainer />
+      </MockTRPCProvider>
+    </SessionProvider>
+  </I18nProvider>
+);
 
 const meta = {
   title: "Pages/OwnerRegistrationsPage",
@@ -81,15 +83,7 @@ const meta = {
       ],
     },
   },
-  decorators: [
-    withAllProviders,
-    (Story) => (
-      <>
-        <Story />
-        <ToastContainer />
-      </>
-    ),
-  ],
+  decorators: [withProviders],
   tags: ["autodocs"],
 } satisfies Meta<typeof OwnerRegistrationsPage>;
 

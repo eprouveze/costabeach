@@ -26,30 +26,16 @@ export const DocumentPreview = ({
   const [previewContent, setPreviewContent] = useState<string | null>(null);
   const [isTranslationRequested, setIsTranslationRequested] = useState(false);
   const [isTranslationInProgress, setIsTranslationInProgress] = useState(false);
-  const { getDocumentPreviewUrl, downloadDocument } = useDocuments();
+  const { previewDocument, downloadDocument } = useDocuments();
   
-  const translationStatus = api.translations.getDocumentTranslationStatus.useQuery(
-    { documentId: document.id },
+  const translationStatus = api.translations.getTranslationStatus.useQuery(
+    { 
+      documentId: document.id,
+      targetLanguage: Language.ENGLISH // Default to English or use a state variable if needed
+    },
     {
       enabled: isTranslationRequested,
-      refetchInterval: (data) => {
-        // If translation is complete or failed, stop polling
-        if (data?.status === "completed" || data?.status === "failed") {
-          return false;
-        }
-        // Otherwise poll every 5 seconds
-        return 5000;
-      },
-      onSuccess: (data) => {
-        if (data?.status === "completed") {
-          toast.success("Translation completed! Refreshing preview...");
-          setIsTranslationInProgress(false);
-          loadPreview(); // Reload the preview with the translated version
-        } else if (data?.status === "failed") {
-          toast.error("Translation failed. Please try again later.");
-          setIsTranslationInProgress(false);
-        }
-      },
+      refetchInterval: isTranslationInProgress ? 5000 : false, // Poll every 5 seconds if translation is in progress
     }
   );
 
@@ -61,7 +47,7 @@ export const DocumentPreview = ({
   const loadPreview = async () => {
     try {
       setIsLoading(true);
-      const url = await getDocumentPreviewUrl(document.id);
+      const url = await previewDocument(document.id);
       
       // Determine preview type based on file extension
       const fileExtension = document.filePath.split('.').pop()?.toLowerCase();
@@ -74,14 +60,22 @@ export const DocumentPreview = ({
         setPreviewUrl(url);
       } else if (['txt', 'md', 'csv'].includes(fileExtension || '')) {
         setPreviewType('text');
-        const response = await fetch(url);
-        const text = await response.text();
-        setPreviewContent(text);
+        if (url) {
+          const response = await fetch(url);
+          const text = await response.text();
+          setPreviewContent(text);
+        } else {
+          setPreviewContent('Unable to load document preview');
+        }
       } else if (['html', 'htm'].includes(fileExtension || '')) {
         setPreviewType('html');
-        const response = await fetch(url);
-        const html = await response.text();
-        setPreviewContent(html);
+        if (url) {
+          const response = await fetch(url);
+          const html = await response.text();
+          setPreviewContent(html);
+        } else {
+          setPreviewContent('Unable to load document preview');
+        }
       } else if (['json'].includes(fileExtension || '')) {
         setPreviewType('json');
         const response = await fetch(url);

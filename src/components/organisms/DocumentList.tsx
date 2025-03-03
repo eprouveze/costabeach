@@ -56,11 +56,11 @@ export const DocumentList = ({
   const fetchDocuments = async () => {
     try {
       setIsLoading(true);
-      const fetchedDocuments = await getDocuments({
-        category: selectedCategory,
-        language: selectedLanguage,
+      const fetchedDocuments = await getDocuments(
+        selectedCategory,
+        selectedLanguage,
         limit
-      });
+      );
       setDocuments(fetchedDocuments);
     } catch (error) {
       console.error("Error fetching documents:", error);

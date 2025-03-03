@@ -4,14 +4,17 @@ import type { Meta, StoryObj } from "@storybook/react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import ClientProvider from "@/components/ClientProvider";
-import { createStoryDecorator } from "../utils/StoryProviders";
+import { I18nProvider } from '@/lib/i18n/client';
+import { SessionProvider } from 'next-auth/react';
 
-// Create a decorator with all the necessary providers
-const withProviders = createStoryDecorator({
-  withI18n: true,
-  withSession: true,
-  withTRPC: false, // No tRPC needed for HomePage
-});
+// Create a decorator that wraps components with all necessary providers
+const withProviders = (Story: React.ComponentType) => (
+  <I18nProvider>
+    <SessionProvider session={null}>
+      <Story />
+    </SessionProvider>
+  </I18nProvider>
+);
 
 // Create a client-side version of HomePage for Storybook
 function HomePage() {

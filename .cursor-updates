@@ -160,7 +160,7 @@ Note: In production, this change is transparent as the port is handled by the ho
 - Successfully built and tested the application with all issues resolved.
 - Fixed Storybook configuration by updating tRPC mocking, correcting component paths, and replacing dynamic titles with string literals to comply with Storybook 8.x requirements.
 - Fixed tRPC context provider issue by adding TRPCReactProvider to ClientLayout component, resolving "Unable to find tRPC Context" error.
-- Fixed I18n context error in OwnerRegistrationsPage Storybook story by updating it to use createStoryDecorator consistent with other page stories.
+- Fixed I18n context error in multiple Storybook stories (OwnerRegistrationsPage, OwnerDashboardPage, HomePage) by directly using I18nProvider from @/lib/i18n/client instead of relying on createStoryDecorator.
 
 ## Supabase Authentication Migration Plan (2024-06-19)
 
