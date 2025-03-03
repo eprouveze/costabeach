@@ -1,13 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import OwnerDashboardTemplate from "@/components/templates/OwnerDashboardTemplate";
 import { useI18n } from "@/lib/i18n/client";
 import { useSearchParams } from "next/navigation";
 import { Clock, FileText, Info, Search, CreditCard, Book, GavelIcon, BookOpen } from "lucide-react";
 import Link from "next/link";
+import { prisma } from "@/lib/db";
 
-// Mock data types
+// Document types
 interface Document {
   id: string;
   title: string;
@@ -28,171 +29,9 @@ interface Information {
   viewCount: number;
 }
 
-// Mock documents - expanded with more entries for each category
-const mockDocuments: Document[] = [
-  // Financial Documents
-  {
-    id: "1",
-    title: "Annual Financial Report 2023",
-    description: "Detailed financial report for the year 2023, including income, expenses, and financial projections.",
-    category: "FINANCE",
-    createdAt: new Date(2023, 11, 15),
-    viewCount: 34,
-    fileType: "pdf",
-    filePath: "/dummy.pdf"
-  },
-  {
-    id: "5",
-    title: "Budget Projection 2024",
-    description: "Financial projections and budget allocation for 2024 with quarterly breakdown and expense categories.",
-    category: "FINANCE",
-    createdAt: new Date(2023, 12, 18),
-    viewCount: 53,
-    fileType: "pdf",
-    filePath: "/dummy.pdf"
-  },
-  {
-    id: "9",
-    title: "Q1 2024 Financial Statement",
-    description: "Quarterly financial statement with balance sheet, income statement, and cash flow details.",
-    category: "FINANCE",
-    createdAt: new Date(2024, 3, 12),
-    viewCount: 28,
-    fileType: "pdf",
-    filePath: "/dummy.pdf"
-  },
-  {
-    id: "13",
-    title: "Property Tax Assessment 2024",
-    description: "Annual property tax assessment and payment schedule for Costa Beach 3 property.",
-    category: "FINANCE",
-    createdAt: new Date(2024, 1, 5),
-    viewCount: 42,
-    fileType: "pdf",
-    filePath: "/dummy.pdf"
-  },
-  
-  // Society Management Documents
-  {
-    id: "2",
-    title: "Building Maintenance Schedule",
-    description: "Schedule of planned maintenance for Q1 2024, including common areas, pool, and garden maintenance.",
-    category: "SOCIETE_DE_GESTION",
-    createdAt: new Date(2023, 12, 5),
-    viewCount: 27,
-    fileType: "xlsx",
-    filePath: "/dummy.pdf"
-  },
-  {
-    id: "6",
-    title: "Property Management Contract 2024",
-    description: "Annual contract with the property management company detailing services and fees.",
-    category: "SOCIETE_DE_GESTION",
-    createdAt: new Date(2024, 0, 10),
-    viewCount: 31,
-    fileType: "pdf",
-    filePath: "/dummy.pdf"
-  },
-  {
-    id: "10",
-    title: "Cleaning and Waste Management Plan",
-    description: "Detailed plan for cleaning services and waste management for the property.",
-    category: "SOCIETE_DE_GESTION",
-    createdAt: new Date(2024, 2, 15),
-    viewCount: 19,
-    fileType: "docx",
-    filePath: "/dummy.pdf"
-  },
-  
-  // Legal Documents
-  {
-    id: "3",
-    title: "Residential Rules and Regulations",
-    description: "Official rules and regulations for Costa Beach 3 residents, including property usage and common areas.",
-    category: "LEGAL",
-    createdAt: new Date(2023, 10, 22),
-    viewCount: 65,
-    fileType: "pdf",
-    filePath: "/dummy.pdf"
-  },
-  {
-    id: "7",
-    title: "Costa Beach 3 Bylaws",
-    description: "Governing bylaws for the Costa Beach 3 homeowners association.",
-    category: "LEGAL",
-    createdAt: new Date(2023, 9, 8),
-    viewCount: 48,
-    fileType: "pdf",
-    filePath: "/dummy.pdf"
-  },
-  {
-    id: "11",
-    title: "Insurance Policy Documentation",
-    description: "Property insurance policy documents and coverage details for 2024.",
-    category: "LEGAL",
-    createdAt: new Date(2024, 0, 25),
-    viewCount: 37,
-    fileType: "pdf",
-    filePath: "/dummy.pdf"
-  },
-  
-  // Committee Documents
-  {
-    id: "4",
-    title: "Meeting Minutes - December 2023",
-    description: "Minutes from the homeowners association meeting in December, including decisions and action items.",
-    category: "COMITE_DE_SUIVI",
-    createdAt: new Date(2023, 12, 20),
-    viewCount: 41,
-    fileType: "docx",
-    filePath: "/dummy.pdf"
-  },
-  {
-    id: "8",
-    title: "Committee Election Results 2024",
-    description: "Results of the annual committee elections and new committee member information.",
-    category: "COMITE_DE_SUIVI",
-    createdAt: new Date(2024, 1, 15),
-    viewCount: 39,
-    fileType: "pdf",
-    filePath: "/dummy.pdf"
-  },
-  {
-    id: "12",
-    title: "Committee Meeting Schedule 2024",
-    description: "Schedule of upcoming committee meetings for the year 2024.",
-    category: "COMITE_DE_SUIVI",
-    createdAt: new Date(2024, 0, 5),
-    viewCount: 33,
-    fileType: "pdf",
-    filePath: "/dummy.pdf"
-  },
-  
-  // General Documents
-  {
-    id: "14",
-    title: "Community Directory 2024",
-    description: "Directory of all residents and important contacts for the community.",
-    category: "GENERAL",
-    createdAt: new Date(2024, 1, 20),
-    viewCount: 56,
-    fileType: "pdf",
-    filePath: "/dummy.pdf"
-  },
-  {
-    id: "15",
-    title: "Amenities Usage Guide",
-    description: "Guide to using community amenities including the pool, gym, and communal spaces.",
-    category: "GENERAL",
-    createdAt: new Date(2024, 2, 10),
-    viewCount: 45,
-    fileType: "pdf",
-    filePath: "/dummy.pdf"
-  }
-];
-
-// Mock information - expanded with more entries for each category
+// Mock information - we'll keep this for now while we implement real documents
 const mockInformation: Information[] = [
+  // Various information entries...
   // General Information
   {
     id: "1",
@@ -324,8 +163,35 @@ export default function OwnerDashboardPage() {
   const typeFilter = searchParams.get("type");
   const searchQuery = searchParams.get("search")?.toLowerCase();
 
+  // Add state for documents
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch documents from the database
+  useEffect(() => {
+    async function fetchDocuments() {
+      try {
+        // Fetch documents from the database
+        const response = await fetch('/api/documents');
+        if (!response.ok) {
+          throw new Error('Failed to fetch documents');
+        }
+        const data = await response.json();
+        setDocuments(data);
+      } catch (error) {
+        console.error('Error fetching documents:', error);
+        // If there's an error, use the mock documents as fallback
+        setDocuments([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchDocuments();
+  }, []);
+
   // Filter documents based on params
-  const filteredDocuments = mockDocuments.filter(doc => {
+  const filteredDocuments = documents.filter(doc => {
     // Apply category filter (skip for ALL category)
     if (categoryFilter && categoryFilter !== "ALL" && doc.category !== categoryFilter) {
       return false;
@@ -374,7 +240,7 @@ export default function OwnerDashboardPage() {
   const allItems = [
     ...filteredDocuments.map(doc => ({ ...doc, type: 'document' as const })),
     ...filteredInformation.map(info => ({ ...info, type: 'information' as const }))
-  ].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   // Format date
   const formatDate = (date: Date) => {
@@ -382,7 +248,7 @@ export default function OwnerDashboardPage() {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
-    }).format(date);
+    }).format(new Date(date));
   };
 
   // Get icon for category
@@ -427,15 +293,25 @@ export default function OwnerDashboardPage() {
 
   return (
     <OwnerDashboardTemplate>
-      <div className="mb-6">
+      <div className="mb-8">
         <h1 className="text-2xl font-semibold text-gray-800">{headerTitle}</h1>
         {headerDescription && (
           <p className="text-sm text-gray-500 mt-1">{headerDescription}</p>
         )}
       </div>
 
+      {/* Loading indicator */}
+      {loading && (
+        <div className="bg-white p-8 rounded-lg shadow-sm text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <h3 className="text-lg font-medium text-gray-900 mt-4">
+            {t("common.loading") || "Loading..."}
+          </h3>
+        </div>
+      )}
+
       {/* No results message */}
-      {allItems.length === 0 && (
+      {!loading && allItems.length === 0 && (
         <div className="bg-white p-8 rounded-lg shadow-sm text-center">
           <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -461,29 +337,29 @@ export default function OwnerDashboardPage() {
       )}
 
       {/* Items list */}
-      {allItems.length > 0 && (
-        <div className="grid gap-4 md:grid-cols-1">
+      {!loading && allItems.length > 0 && (
+        <div className="grid gap-5">
           {allItems.map((item) => (
             <div 
               key={`${item.type}-${item.id}`} 
-              className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow"
+              className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <div className="flex items-center mb-2">
+                  <div className="flex items-center mb-3">
                     {item.type === 'document' 
                       ? getCategoryIcon(item.category)
                       : <Info className="h-5 w-5 text-green-600 mr-2" />
                     }
-                    <h3 className="font-medium text-gray-900">{item.title}</h3>
+                    <h3 className="font-medium text-lg text-gray-900">{item.title}</h3>
                   </div>
                   
                   {item.type === 'document' && (
-                    <p className="text-sm text-gray-600 mb-3">{item.description}</p>
+                    <p className="text-sm text-gray-600 mb-4">{item.description}</p>
                   )}
                   
                   {item.type === 'information' && (
-                    <p className="text-sm text-gray-600 mb-3">{item.content}</p>
+                    <p className="text-sm text-gray-600 mb-4">{item.content}</p>
                   )}
                   
                   <div className="flex items-center flex-wrap text-xs text-gray-500">
@@ -513,9 +389,9 @@ export default function OwnerDashboardPage() {
                 
                 {item.type === 'document' && (
                   <Link
-                    href={item.filePath || `#`}
+                    href={`/api/documents/${item.id}/download`}
                     target="_blank"
-                    className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm font-medium hover:bg-blue-200"
+                    className="px-4 py-2 bg-blue-100 text-blue-700 rounded-md text-sm font-medium hover:bg-blue-200 transition-colors"
                   >
                     {t("documents.view") || "View"}
                   </Link>

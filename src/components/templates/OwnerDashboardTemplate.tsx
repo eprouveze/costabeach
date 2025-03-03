@@ -64,7 +64,7 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
       
       <div className="flex flex-1">
         {/* Sidebar */}
-        <aside className="w-64 bg-white border-r border-gray-200 fixed top-16 h-[calc(100vh-4rem)]">
+        <aside className="w-64 bg-white border-r border-gray-200 fixed top-16 bottom-0 left-0 overflow-y-auto z-10">
           <div className="p-4">
             <form onSubmit={handleSearch} className="mb-6">
               <div className="relative">
@@ -180,9 +180,9 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 ml-64 mt-16">
+        <main className="flex-1 ml-64 pt-16 pb-10 min-h-screen">
           {/* Content */}
-          <div className="p-6">
+          <div className="p-6 max-w-5xl mx-auto">
             {children}
           </div>
         </main>

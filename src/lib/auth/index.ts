@@ -7,6 +7,16 @@ import {
 } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import { Resend } from "resend";
+import { headers } from "next/headers";
+
+// Debug: Log environment variables
+console.log('Debug - Email Config:', {
+  SMTP_HOST: process.env.SMTP_HOST,
+  SMTP_PORT: process.env.SMTP_PORT,
+  SMTP_USER: process.env.SMTP_USER,
+  EMAIL_FROM: process.env.EMAIL_FROM,
+  RESEND_API_KEY: process.env.RESEND_API_KEY ? 'Set' : 'Not Set'
+});
 
 export enum UserRole {
   user = "user",
@@ -67,6 +77,16 @@ export const authOptions: NextAuthOptions = {
       },
       from: process.env.EMAIL_FROM,
       sendVerificationRequest: async ({ identifier: email, url }) => {
+        // Get the current request's host
+        const headersList = headers();
+        const host = headersList.get("host");
+        const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+        
+        // Replace the URL's origin with the current request's origin
+        const currentOrigin = `${protocol}://${host}`;
+        const urlObject = new URL(url);
+        const newUrl = url.replace(urlObject.origin, currentOrigin);
+
         const resend = new Resend(process.env.RESEND_API_KEY);
         try {
           const result = await resend.emails.send({
@@ -77,7 +97,7 @@ export const authOptions: NextAuthOptions = {
               <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
                 <h1 style="color: #2563eb; margin-bottom: 24px;">Welcome to Costa Beach</h1>
                 <p style="margin-bottom: 24px;">Click the link below to sign in to your account:</p>
-                <a href="${url}" style="display: inline-block; padding: 12px 24px; background-color: #2563eb; color: white; text-decoration: none; border-radius: 6px;">Sign in to Costa Beach</a>
+                <a href="${newUrl}" style="display: inline-block; padding: 12px 24px; background-color: #2563eb; color: white; text-decoration: none; border-radius: 6px;">Sign in to Costa Beach</a>
                 <p style="margin-top: 24px; color: #6b7280;">If you did not request this email, you can safely ignore it.</p>
                 <div style="margin-top: 48px; padding-top: 24px; border-top: 1px solid #e5e7eb; color: #6b7280;">
                   <p style="font-size: 14px;">Costa Beach Owner Portal</p>
@@ -136,11 +156,17 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async redirect({ url, baseUrl }) {
+      // Get the current request's host
+      const headersList = headers();
+      const host = headersList.get("host");
+      const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+      const currentBaseUrl = `${protocol}://${host}`;
+
       // Allows relative callback URLs
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
+      if (url.startsWith("/")) return `${currentBaseUrl}${url}`;
+      // Allows callback URLs on the same host (ignoring port)
+      else if (new URL(url).hostname === new URL(currentBaseUrl).hostname) return url;
+      return currentBaseUrl;
     },
   },
   pages: {
