@@ -563,3 +563,13 @@ Fixed the 404 error when calling a non-existent Supabase stored procedure:
 4. Added proper error handling for the database setup process
 
 This change ensures the application works correctly with Supabase, preventing 404 errors in the console and improving the authentication flow.
+
+## Fixed excessive API calls to database setup endpoint (2024-07-04)
+
+Fixed an issue where the application was making excessive calls to the `/api/setup-database` endpoint:
+
+1. Added a `dbSetupAttempted` state variable to track if database setup has already been attempted
+2. Modified the AuthWrapper component to only call the setup database endpoint once per session
+3. Added proper state management to ensure the API is not called repeatedly
+
+This change prevents dozens of unnecessary API calls that were being made on each page load, improving performance and reducing server load.

@@ -23,6 +23,7 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [userVerified, setUserVerified] = useState(false); // Track if user has been verified
+  const [dbSetupAttempted, setDbSetupAttempted] = useState(false); // Track if DB setup has been attempted
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
@@ -77,12 +78,16 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
         
         if (session) {
           try {
-            // Remove the call to non-existent RPC function and use the API endpoint instead
-            try {
-              // This API endpoint properly sets up the database tables
-              await fetch('/api/setup-database');
-            } catch (tableError) {
-              console.log('Note: Unable to setup database tables. This is expected in normal operation.');
+            // Only attempt database setup once per session
+            if (!dbSetupAttempted) {
+              try {
+                // This API endpoint properly sets up the database tables
+                await fetch('/api/setup-database');
+                setDbSetupAttempted(true);
+              } catch (tableError) {
+                console.log('Note: Unable to setup database tables. This is expected in normal operation.');
+                setDbSetupAttempted(true); // Still mark as attempted even if it fails
+              }
             }
 
             // Only make the API call if we haven't already verified the user and we're on the owner dashboard
