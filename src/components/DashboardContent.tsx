@@ -141,8 +141,8 @@ export function DashboardContent() {
   // If loading
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="flex justify-center items-center h-64" data-testid="loading-spinner">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" role="status"></div>
       </div>
     );
   }
@@ -150,7 +150,7 @@ export function DashboardContent() {
   // If error
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded" data-testid="error-message">
         <p>{t("common.error")}: {error.message}</p>
       </div>
     );
@@ -159,7 +159,7 @@ export function DashboardContent() {
   // If no documents
   if (!documents || documents.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow p-6 text-center">
+      <div className="bg-white rounded-lg shadow p-6 text-center" data-testid="empty-state">
         <h2 className="text-xl font-medium mb-2">{t("documents.noDocuments")}</h2>
         <p className="text-gray-500">{t("documents.noDocumentsInCategory")}</p>
       </div>

@@ -360,3 +360,35 @@ Fixed issues with authentication and the owner dashboard:
    - Improved error state display in the UI
 
 These changes ensure that users can properly sign in and access the owner dashboard if they are verified owners, with appropriate error handling and feedback throughout the process.
+
+## Enhanced Test Coverage for Authentication and Dashboard Components (2024-06-29)
+
+Added comprehensive Jest tests for the authentication and dashboard components:
+
+1. Created AuthWrapper.test.tsx with tests for:
+   - Authentication state handling
+   - User role verification
+   - Owner dashboard access control
+   - User record creation when missing
+   - Proper redirection based on authentication state
+
+2. Created LoginForm.test.tsx with tests for:
+   - Form rendering and validation
+   - Authentication success and error handling
+   - Role-based redirection (owner, admin)
+   - Return URL handling
+   - User data fetching error handling
+
+3. Created DashboardContent.test.tsx with tests for:
+   - Loading, error, and empty states
+   - Document rendering
+   - Category filtering
+   - Language handling based on locale
+   - Information section rendering
+
+4. Enhanced components with test IDs and accessibility attributes:
+   - Added data-testid attributes to key elements
+   - Added proper role attributes for accessibility
+   - Improved component structure for better testability
+
+These tests ensure that the authentication flow and dashboard functionality work correctly, particularly focusing on the issues that were fixed in the previous update.
