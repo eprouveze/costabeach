@@ -4,7 +4,7 @@ import React from "react";
 import OwnerDashboardTemplate from "@/components/templates/OwnerDashboardTemplate";
 import { useI18n } from "@/lib/i18n/client";
 import { useSearchParams } from "next/navigation";
-import { Clock, FileText, Info, Search, CreditCard } from "lucide-react";
+import { Clock, FileText, Info, Search, CreditCard, Book, GavelIcon, BookOpen } from "lucide-react";
 import Link from "next/link";
 
 // Mock data types
@@ -16,6 +16,7 @@ interface Document {
   createdAt: Date;
   viewCount: number;
   fileType: string;
+  filePath?: string;
 }
 
 interface Information {
@@ -27,88 +28,291 @@ interface Information {
   viewCount: number;
 }
 
-// Mock documents
+// Mock documents - expanded with more entries for each category
 const mockDocuments: Document[] = [
+  // Financial Documents
   {
     id: "1",
     title: "Annual Financial Report 2023",
-    description: "Detailed financial report for the year 2023",
+    description: "Detailed financial report for the year 2023, including income, expenses, and financial projections.",
     category: "FINANCE",
     createdAt: new Date(2023, 11, 15),
     viewCount: 34,
-    fileType: "pdf"
-  },
-  {
-    id: "2",
-    title: "Building Maintenance Schedule",
-    description: "Schedule of planned maintenance for Q1 2024",
-    category: "SOCIETE_DE_GESTION",
-    createdAt: new Date(2023, 12, 5),
-    viewCount: 27,
-    fileType: "xlsx"
-  },
-  {
-    id: "3",
-    title: "Residential Rules and Regulations",
-    description: "Official rules and regulations for Costa Beach 3 residents",
-    category: "LEGAL",
-    createdAt: new Date(2023, 10, 22),
-    viewCount: 65,
-    fileType: "pdf"
-  },
-  {
-    id: "4",
-    title: "Meeting Minutes - December 2023",
-    description: "Minutes from the homeowners association meeting in December",
-    category: "COMITE_DE_SUIVI",
-    createdAt: new Date(2023, 12, 20),
-    viewCount: 41,
-    fileType: "docx"
+    fileType: "pdf",
+    filePath: "/dummy.pdf"
   },
   {
     id: "5",
     title: "Budget Projection 2024",
-    description: "Financial projections and budget allocation for 2024",
+    description: "Financial projections and budget allocation for 2024 with quarterly breakdown and expense categories.",
     category: "FINANCE",
     createdAt: new Date(2023, 12, 18),
     viewCount: 53,
-    fileType: "pdf"
+    fileType: "pdf",
+    filePath: "/dummy.pdf"
+  },
+  {
+    id: "9",
+    title: "Q1 2024 Financial Statement",
+    description: "Quarterly financial statement with balance sheet, income statement, and cash flow details.",
+    category: "FINANCE",
+    createdAt: new Date(2024, 3, 12),
+    viewCount: 28,
+    fileType: "pdf",
+    filePath: "/dummy.pdf"
+  },
+  {
+    id: "13",
+    title: "Property Tax Assessment 2024",
+    description: "Annual property tax assessment and payment schedule for Costa Beach 3 property.",
+    category: "FINANCE",
+    createdAt: new Date(2024, 1, 5),
+    viewCount: 42,
+    fileType: "pdf",
+    filePath: "/dummy.pdf"
+  },
+  
+  // Society Management Documents
+  {
+    id: "2",
+    title: "Building Maintenance Schedule",
+    description: "Schedule of planned maintenance for Q1 2024, including common areas, pool, and garden maintenance.",
+    category: "SOCIETE_DE_GESTION",
+    createdAt: new Date(2023, 12, 5),
+    viewCount: 27,
+    fileType: "xlsx",
+    filePath: "/dummy.pdf"
+  },
+  {
+    id: "6",
+    title: "Property Management Contract 2024",
+    description: "Annual contract with the property management company detailing services and fees.",
+    category: "SOCIETE_DE_GESTION",
+    createdAt: new Date(2024, 0, 10),
+    viewCount: 31,
+    fileType: "pdf",
+    filePath: "/dummy.pdf"
+  },
+  {
+    id: "10",
+    title: "Cleaning and Waste Management Plan",
+    description: "Detailed plan for cleaning services and waste management for the property.",
+    category: "SOCIETE_DE_GESTION",
+    createdAt: new Date(2024, 2, 15),
+    viewCount: 19,
+    fileType: "docx",
+    filePath: "/dummy.pdf"
+  },
+  
+  // Legal Documents
+  {
+    id: "3",
+    title: "Residential Rules and Regulations",
+    description: "Official rules and regulations for Costa Beach 3 residents, including property usage and common areas.",
+    category: "LEGAL",
+    createdAt: new Date(2023, 10, 22),
+    viewCount: 65,
+    fileType: "pdf",
+    filePath: "/dummy.pdf"
+  },
+  {
+    id: "7",
+    title: "Costa Beach 3 Bylaws",
+    description: "Governing bylaws for the Costa Beach 3 homeowners association.",
+    category: "LEGAL",
+    createdAt: new Date(2023, 9, 8),
+    viewCount: 48,
+    fileType: "pdf",
+    filePath: "/dummy.pdf"
+  },
+  {
+    id: "11",
+    title: "Insurance Policy Documentation",
+    description: "Property insurance policy documents and coverage details for 2024.",
+    category: "LEGAL",
+    createdAt: new Date(2024, 0, 25),
+    viewCount: 37,
+    fileType: "pdf",
+    filePath: "/dummy.pdf"
+  },
+  
+  // Committee Documents
+  {
+    id: "4",
+    title: "Meeting Minutes - December 2023",
+    description: "Minutes from the homeowners association meeting in December, including decisions and action items.",
+    category: "COMITE_DE_SUIVI",
+    createdAt: new Date(2023, 12, 20),
+    viewCount: 41,
+    fileType: "docx",
+    filePath: "/dummy.pdf"
+  },
+  {
+    id: "8",
+    title: "Committee Election Results 2024",
+    description: "Results of the annual committee elections and new committee member information.",
+    category: "COMITE_DE_SUIVI",
+    createdAt: new Date(2024, 1, 15),
+    viewCount: 39,
+    fileType: "pdf",
+    filePath: "/dummy.pdf"
+  },
+  {
+    id: "12",
+    title: "Committee Meeting Schedule 2024",
+    description: "Schedule of upcoming committee meetings for the year 2024.",
+    category: "COMITE_DE_SUIVI",
+    createdAt: new Date(2024, 0, 5),
+    viewCount: 33,
+    fileType: "pdf",
+    filePath: "/dummy.pdf"
+  },
+  
+  // General Documents
+  {
+    id: "14",
+    title: "Community Directory 2024",
+    description: "Directory of all residents and important contacts for the community.",
+    category: "GENERAL",
+    createdAt: new Date(2024, 1, 20),
+    viewCount: 56,
+    fileType: "pdf",
+    filePath: "/dummy.pdf"
+  },
+  {
+    id: "15",
+    title: "Amenities Usage Guide",
+    description: "Guide to using community amenities including the pool, gym, and communal spaces.",
+    category: "GENERAL",
+    createdAt: new Date(2024, 2, 10),
+    viewCount: 45,
+    fileType: "pdf",
+    filePath: "/dummy.pdf"
   }
 ];
 
-// Mock information
+// Mock information - expanded with more entries for each category
 const mockInformation: Information[] = [
+  // General Information
   {
     id: "1",
     title: "Important Notice: Holiday Schedule",
-    content: "The management office will be closed from December 24th to January 2nd. For emergencies, please call the security desk at +212 522 123 456.",
+    content: "The management office will be closed from December 24th to January 2nd. For emergencies, please call the security desk at +212 522 123 456. Regular office hours will resume on January 3rd, 2024.",
     category: "GENERAL",
     createdAt: new Date(2023, 11, 18),
     viewCount: 87
   },
   {
+    id: "5",
+    title: "New Security System Installation",
+    content: "A new security system is being installed at all entrance points starting next week. All residents will receive new access cards by mail. The installation will take approximately 3 days and should not cause any disruption to normal access.",
+    category: "GENERAL",
+    createdAt: new Date(2024, 2, 25),
+    viewCount: 64
+  },
+  {
+    id: "9",
+    title: "Community Website Update",
+    content: "The community website has been updated with new features including an improved document search and a community forum. Please visit the website to explore the new features and update your profile information.",
+    category: "GENERAL",
+    createdAt: new Date(2024, 3, 5),
+    viewCount: 42
+  },
+  
+  // Management Company Information
+  {
     id: "2",
     title: "Pool Maintenance Update",
-    content: "The pool will be closed for maintenance from January 10-12, 2024. We apologize for any inconvenience.",
+    content: "The pool will be closed for maintenance from January 10-12, 2024. We apologize for any inconvenience. During this time, the pool pump system will be upgraded and the tiles will be deep cleaned. The pool deck will also be resealed.",
     category: "SOCIETE_DE_GESTION",
     createdAt: new Date(2023, 12, 28),
     viewCount: 52
   },
   {
+    id: "6",
+    title: "Elevator Maintenance Schedule",
+    content: "The elevators in Building A will undergo routine maintenance on April 15th from 9:00 AM to 12:00 PM. During this time, please use the service elevator or stairwells. Technicians will ensure minimal disruption to residents.",
+    category: "SOCIETE_DE_GESTION",
+    createdAt: new Date(2024, 3, 10),
+    viewCount: 38
+  },
+  {
+    id: "10",
+    title: "Garden Landscaping Project",
+    content: "Starting May 5th, we will begin a landscaping improvement project in the main garden area. The project will include new plantings, improved irrigation, and the addition of more seating areas. The work will last approximately two weeks.",
+    category: "SOCIETE_DE_GESTION",
+    createdAt: new Date(2024, 4, 1),
+    viewCount: 29
+  },
+  
+  // Committee Information
+  {
     id: "3",
     title: "New Year's Community Event",
-    content: "Join us for a New Year's celebration in the community hall on January 5th, 2024, from 7 PM to 10 PM. Refreshments will be provided. Please RSVP by January 3rd.",
+    content: "Join us for a New Year's celebration in the community hall on January 5th, 2024, from 7 PM to 10 PM. Refreshments will be provided. Please RSVP by January 3rd. There will be music, games, and a special toast at 9 PM to celebrate the community's achievements in 2023.",
     category: "COMITE_DE_SUIVI",
     createdAt: new Date(2023, 12, 15),
     viewCount: 76
   },
   {
+    id: "7",
+    title: "Community Survey Results",
+    content: "The results of our annual community survey are now available. Overall satisfaction rate has increased to 92%. The main areas of improvement identified were the gym facilities and guest parking. The committee is preparing action plans to address these areas.",
+    category: "COMITE_DE_SUIVI",
+    createdAt: new Date(2024, 2, 20),
+    viewCount: 55
+  },
+  {
+    id: "11",
+    title: "Call for Volunteers: Community Garden",
+    content: "The committee is looking for volunteers to help maintain the new community garden area. If you have experience with gardening or would simply like to contribute, please contact the committee secretary. A planning meeting will be held on May 15th.",
+    category: "COMITE_DE_SUIVI",
+    createdAt: new Date(2024, 4, 5),
+    viewCount: 31
+  },
+  
+  // Financial Information
+  {
     id: "4",
     title: "Quarterly Fee Update",
-    content: "Please note that quarterly maintenance fees will be adjusted by 3% starting January 2024 to account for inflation and increased service costs. The new fee schedule will be distributed next week.",
+    content: "Please note that quarterly maintenance fees will be adjusted by 3% starting January 2024 to account for inflation and increased service costs. The new fee schedule will be distributed next week. All payment methods remain the same, including bank transfer and direct debit options.",
     category: "FINANCE",
     createdAt: new Date(2023, 12, 22),
     viewCount: 92
+  },
+  {
+    id: "8",
+    title: "Annual Audit Completion",
+    content: "The annual financial audit has been completed and the association's finances are in good standing. The full audit report is available in the Financial Documents section. A summary presentation will be given at the next general meeting on April 25th.",
+    category: "FINANCE",
+    createdAt: new Date(2024, 3, 15),
+    viewCount: 63
+  },
+  {
+    id: "12",
+    title: "Special Assessment for Roof Repairs",
+    content: "Following the inspection report, the board has approved a special assessment for necessary roof repairs on Buildings B and C. The assessment will be $500 per unit, payable in two installments in June and September. A detailed breakdown of costs is available upon request.",
+    category: "FINANCE",
+    createdAt: new Date(2024, 4, 10),
+    viewCount: 78
+  },
+  
+  // Legal Information
+  {
+    id: "13",
+    title: "Updated Parking Regulations",
+    content: "The board has approved updated parking regulations effective June 1st. Changes include a new visitor parking permit system and designated spots for electric vehicles. All residents must register their vehicles with the management office by May 15th.",
+    category: "LEGAL",
+    createdAt: new Date(2024, 4, 8),
+    viewCount: 45
+  },
+  {
+    id: "14",
+    title: "Short-term Rental Policy Reminder",
+    content: "We would like to remind all owners that according to the community bylaws, short-term rentals (less than 30 days) are not permitted. The board will be increasing enforcement of this policy starting in July, with fines for violations as outlined in the bylaws.",
+    category: "LEGAL",
+    createdAt: new Date(2024, 5, 1),
+    viewCount: 67
   }
 ];
 
@@ -185,10 +389,21 @@ export default function OwnerDashboardPage() {
   const getCategoryIcon = (category: string) => {
     switch(category) {
       case 'FINANCE':
-        return <CreditCard className="h-4 w-4 text-green-600 mr-1" />;
+        return <CreditCard className="h-5 w-5 text-green-600 mr-2" />;
+      case 'LEGAL':
+        return <GavelIcon className="h-5 w-5 text-purple-600 mr-2" />;
+      case 'COMITE_DE_SUIVI':
+        return <Book className="h-5 w-5 text-blue-600 mr-2" />;
+      case 'SOCIETE_DE_GESTION':
+        return <BookOpen className="h-5 w-5 text-amber-600 mr-2" />;
       default:
-        return null;
+        return <FileText className="h-5 w-5 text-blue-600 mr-2" />;
     }
+  };
+
+  // Get category label
+  const getCategoryLabel = (category: string) => {
+    return t(`documents.categories.${category.toLowerCase()}`) || category;
   };
 
   // Determine what to display in the header
@@ -197,7 +412,7 @@ export default function OwnerDashboardPage() {
 
   if (categoryFilter === "ALL") {
     headerTitle = t("documents.categories.all") || "All Documents";
-    headerDescription = t("dashboard.allDocumentsDescription") || "View all documents and information";
+    headerDescription = t("dashboard.allDocumentsDescription") || "View all documents and information across all categories";
   } else if (categoryFilter) {
     const categoryName = t(`documents.categories.${categoryFilter.toLowerCase()}`) || categoryFilter;
     headerTitle = categoryName;
@@ -256,15 +471,10 @@ export default function OwnerDashboardPage() {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center mb-2">
-                    {item.type === 'document' ? (
-                      item.category === 'FINANCE' ? (
-                        <CreditCard className="h-5 w-5 text-green-600 mr-2" />
-                      ) : (
-                        <FileText className="h-5 w-5 text-blue-600 mr-2" />
-                      )
-                    ) : (
-                      <Info className="h-5 w-5 text-green-600 mr-2" />
-                    )}
+                    {item.type === 'document' 
+                      ? getCategoryIcon(item.category)
+                      : <Info className="h-5 w-5 text-green-600 mr-2" />
+                    }
                     <h3 className="font-medium text-gray-900">{item.title}</h3>
                   </div>
                   
@@ -276,26 +486,35 @@ export default function OwnerDashboardPage() {
                     <p className="text-sm text-gray-600 mb-3">{item.content}</p>
                   )}
                   
-                  <div className="flex items-center text-xs text-gray-500">
-                    <Clock className="h-4 w-4 mr-1" />
-                    <span>{formatDate(item.createdAt)}</span>
+                  <div className="flex items-center flex-wrap text-xs text-gray-500">
+                    <div className="flex items-center mr-4 mb-1">
+                      <Clock className="h-4 w-4 mr-1" />
+                      <span>{formatDate(item.createdAt)}</span>
+                    </div>
                     
-                    <span className="mx-2">•</span>
+                    <div className="flex items-center mr-4 mb-1">
+                      <span>{item.viewCount} {t("documents.viewCount") || "views"}</span>
+                    </div>
                     
-                    <span>{item.viewCount} {t("documents.viewCount") || "views"}</span>
+                    {/* Show category badge */}
+                    <div className="flex items-center mb-1">
+                      <span className="px-2 py-1 rounded-full bg-gray-100 text-xs">
+                        {getCategoryLabel(item.category)}
+                      </span>
+                    </div>
                     
                     {item.type === 'document' && (
-                      <>
-                        <span className="mx-2">•</span>
+                      <div className="flex items-center ml-4 mb-1">
                         <span className="uppercase">{item.fileType}</span>
-                      </>
+                      </div>
                     )}
                   </div>
                 </div>
                 
                 {item.type === 'document' && (
                   <Link
-                    href={`/owner-dashboard/documents/${item.id}`}
+                    href={item.filePath || `#`}
+                    target="_blank"
                     className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm font-medium hover:bg-blue-200"
                   >
                     {t("documents.view") || "View"}

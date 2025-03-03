@@ -135,3 +135,6 @@
 - Added the FINANCE category to the DocumentCategory enum in the Prisma schema.
 - Added translations for the new categories in all locale files (English, French, Arabic).
 - Added sample financial documents and information to the mock data for testing.
+- Expanded mock data with more dummy documents and information entries for each category to provide a comprehensive view of the dashboard.
+- Ensured dummy PDF file accessibility by verifying file locations and references.
+- Successfully built the project after all changes, resolving previous build issues.
