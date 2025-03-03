@@ -9,15 +9,6 @@ import EmailProvider from "next-auth/providers/email";
 import { Resend } from "resend";
 import { headers } from "next/headers";
 
-// Debug: Log environment variables
-console.log('Debug - Email Config:', {
-  SMTP_HOST: process.env.SMTP_HOST,
-  SMTP_PORT: process.env.SMTP_PORT,
-  SMTP_USER: process.env.SMTP_USER,
-  EMAIL_FROM: process.env.EMAIL_FROM,
-  RESEND_API_KEY: process.env.RESEND_API_KEY ? 'Set' : 'Not Set'
-});
-
 export enum UserRole {
   user = "user",
   admin = "admin",

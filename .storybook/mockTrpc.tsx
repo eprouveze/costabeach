@@ -106,115 +106,269 @@ const mockDocuments: Document[] = [
   }
 ];
 
-/**
- * This function creates a proper mock TRPC client that doesn't rely on
- * the actual client implementation, preventing the "__untypedClient" error.
- */
-function createMockTRPCClient() {
-  // Create handlers that return mock data
+// Create a full proxy handler to catch all tRPC calls
+// This prevents the "__untypedClient" error by providing a complete mock implementation
+const createTRPCProxy = () => {
+  // Generic proxy handler that returns fixtures for queries and mutations
+  return new Proxy({}, {
+    get: (target, prop) => {
+      // Return a router proxy for each router (documents, translations, etc.)
+      return new Proxy({}, {
+        get: (routerTarget, routerProp) => {
+          // Return a procedure proxy for each procedure within the router
+          return new Proxy({}, {
+            get: (procTarget, procProp) => {
+              if (procProp === 'useQuery') {
+                // Handle useQuery
+                return (params: any) => mockQueryHandler(String(prop), String(routerProp), params);
+              } else if (procProp === 'useMutation') {
+                // Handle useMutation
+                return () => mockMutationHandler(String(prop), String(routerProp));
+              } else if (procProp === 'useInfiniteQuery') {
+                // Handle useInfiniteQuery
+                return (params: any) => mockInfiniteQueryHandler(String(prop), String(routerProp), params);
+              } else if (procProp === 'useSubscription') {
+                // Handle useSubscription
+                return (params: any) => {
+                  console.log(`[Mock tRPC] useSubscription called for ${String(prop)}.${String(routerProp)} with params:`, params);
+                  return { isLoading: false, data: null };
+                };
+              } else {
+                // Return a noop function for other procedure properties
+                return () => console.log(`[Mock tRPC] Unhandled procedure property: ${String(procProp)}`);
+              }
+            }
+          });
+        }
+      });
+    }
+  });
+};
+
+// Mock handler for useQuery
+const mockQueryHandler = (router: string, procedure: string, params: any) => {
+  console.log(`[Mock tRPC] useQuery called for ${router}.${procedure} with params:`, params);
+  
+  // Handle documents router
+  if (router === 'documents') {
+    if (procedure === 'getDocumentsByCategory') {
+      let filteredDocs = [...mockDocuments];
+      
+      if (params?.category) {
+        filteredDocs = filteredDocs.filter(doc => doc.category === params.category);
+      }
+      
+      if (params?.language) {
+        filteredDocs = filteredDocs.filter(doc => doc.language === params.language);
+      }
+      
+      if (params?.searchQuery) {
+        const query = params.searchQuery.toLowerCase();
+        filteredDocs = filteredDocs.filter(doc => 
+          doc.title.toLowerCase().includes(query) || 
+          doc.description.toLowerCase().includes(query)
+        );
+      }
+      
+      return {
+        data: filteredDocs,
+        isLoading: false,
+        isError: false,
+        error: null,
+        refetch: () => Promise.resolve({ data: filteredDocs }),
+        fetchStatus: 'idle',
+        status: 'success',
+        isFetching: false
+      };
+    }
+  }
+  
+  // Handle translations router
+  if (router === 'translations') {
+    if (procedure === 'getTranslationStatus') {
+      return {
+        data: { status: 'completed', translatedDocumentId: 'translated-doc-1' },
+        isLoading: false,
+        isError: false,
+        error: null,
+        refetch: () => Promise.resolve({ 
+          data: { status: 'completed', translatedDocumentId: 'translated-doc-1' } 
+        }),
+        fetchStatus: 'idle',
+        status: 'success',
+        isFetching: false
+      };
+    }
+  }
+  
+  // Default fallback for unhandled queries
   return {
-    documents: {
-      getDocumentsByCategory: {
-        useQuery: ({ category, language, limit }: { category: DocumentCategory, language?: Language, limit?: number }) => {
-          // Filter documents by category and language
-          let filteredDocs = mockDocuments.filter(doc => doc.category === category);
-          
-          if (language) {
-            filteredDocs = filteredDocs.filter(doc => doc.language === language);
-          }
-          
-          // Apply limit if provided
-          if (limit && limit > 0) {
-            filteredDocs = filteredDocs.slice(0, limit);
-          }
-          
-          return {
-            data: filteredDocs,
-            isLoading: false,
-            isError: false,
-            error: null,
-            refetch: () => Promise.resolve({ data: filteredDocs })
-          };
+    data: null,
+    isLoading: false,
+    isError: false,
+    error: null,
+    refetch: () => Promise.resolve({ data: null }),
+    fetchStatus: 'idle',
+    status: 'success',
+    isFetching: false
+  };
+};
+
+// Mock handler for useMutation
+const mockMutationHandler = (router: string, procedure: string) => {
+  console.log(`[Mock tRPC] useMutation called for ${router}.${procedure}`);
+  
+  // Common mutation properties
+  const commonProps = {
+    isLoading: false,
+    isError: false,
+    error: null,
+    reset: () => {},
+    context: undefined,
+    data: undefined,
+    failureCount: 0,
+    failureReason: null,
+    isPaused: false,
+    isPending: false,
+    isSuccess: true,
+    status: 'idle',
+    submittedAt: 0,
+    variables: undefined
+  };
+
+  // Handle documents router
+  if (router === 'documents') {
+    if (procedure === 'getDownloadUrl') {
+      return {
+        ...commonProps,
+        mutateAsync: async ({ documentId }: { documentId: string }) => {
+          console.log(`[Mock tRPC] Getting download URL for document ${documentId}`);
+          return { downloadUrl: `https://example.com/download/${documentId}` };
+        },
+        mutate: ({ documentId }: { documentId: string }) => {
+          console.log(`[Mock tRPC] Getting download URL for document ${documentId}`);
+          return { downloadUrl: `https://example.com/download/${documentId}` };
         }
-      },
-      getDownloadUrl: {
-        useMutation: () => ({
-          mutateAsync: async ({ documentId }: { documentId: string }) => {
-            return { downloadUrl: `https://example.com/download/${documentId}` };
-          },
-          mutate: ({ documentId }: { documentId: string }) => {
-            return { downloadUrl: `https://example.com/download/${documentId}` };
-          },
-          isLoading: false
-        })
-      },
-      incrementViewCount: {
-        useMutation: () => ({
-          mutateAsync: async ({ documentId }: { documentId: string }) => {
-            return { success: true };
-          },
-          mutate: ({ documentId }: { documentId: string }) => {
-            return { success: true };
-          },
-          isLoading: false
-        })
-      },
-      searchDocuments: {
-        useQuery: ({ query, category }: { query?: string, category?: DocumentCategory }) => {
-          let results = [...mockDocuments];
-          
-          if (query) {
-            results = results.filter(doc => 
-              doc.title.toLowerCase().includes(query.toLowerCase()) || 
-              doc.description.toLowerCase().includes(query.toLowerCase())
-            );
-          }
-          
-          if (category) {
-            results = results.filter(doc => doc.category === category);
-          }
-          
-          return {
-            data: results,
-            isLoading: false,
-            isError: false,
-            error: null,
-            refetch: () => Promise.resolve({ data: results })
-          };
+      };
+    }
+    
+    if (procedure === 'incrementViewCount') {
+      return {
+        ...commonProps,
+        mutateAsync: async ({ documentId }: { documentId: string }) => {
+          console.log(`[Mock tRPC] Incrementing view count for document ${documentId}`);
+          return { success: true };
+        },
+        mutate: ({ documentId }: { documentId: string }) => {
+          console.log(`[Mock tRPC] Incrementing view count for document ${documentId}`);
+          return { success: true };
         }
-      }
+      };
+    }
+    
+    if (procedure === 'createDocument') {
+      return {
+        ...commonProps,
+        mutateAsync: async (docData: any) => {
+          console.log(`[Mock tRPC] Creating document with data:`, docData);
+          return {
+            id: 'new-doc-id',
+            ...docData,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          };
+        },
+        mutate: (docData: any) => {
+          console.log(`[Mock tRPC] Creating document with data:`, docData);
+        }
+      };
+    }
+    
+    if (procedure === 'getUploadUrl') {
+      return {
+        ...commonProps,
+        mutateAsync: async (fileData: any) => {
+          console.log(`[Mock tRPC] Getting upload URL for file:`, fileData);
+          return {
+            uploadUrl: `https://example.com/upload/${fileData.fileName}`,
+            filePath: `documents/${fileData.category.toLowerCase()}/${fileData.fileName}`
+          };
+        },
+        mutate: (fileData: any) => {
+          console.log(`[Mock tRPC] Getting upload URL for file:`, fileData);
+        }
+      };
+    }
+    
+    if (procedure === 'deleteDocument') {
+      return {
+        ...commonProps,
+        mutateAsync: async ({ documentId }: { documentId: string }) => {
+          console.log(`[Mock tRPC] Deleting document ${documentId}`);
+          return { success: true };
+        },
+        mutate: ({ documentId }: { documentId: string }) => {
+          console.log(`[Mock tRPC] Deleting document ${documentId}`);
+        }
+      };
+    }
+  }
+  
+  // Handle translations router
+  if (router === 'translations') {
+    if (procedure === 'requestTranslation') {
+      return {
+        ...commonProps,
+        mutateAsync: async ({ documentId, targetLanguage }: { documentId: string, targetLanguage: Language }) => {
+          console.log(`[Mock tRPC] Requesting translation for document ${documentId} to ${targetLanguage}`);
+          return { success: true, jobId: 'mock-job-id' };
+        },
+        mutate: ({ documentId, targetLanguage }: { documentId: string, targetLanguage: Language }) => {
+          console.log(`[Mock tRPC] Requesting translation for document ${documentId} to ${targetLanguage}`);
+        }
+      };
+    }
+  }
+  
+  // Default fallback for unhandled mutations
+  return {
+    ...commonProps,
+    mutateAsync: async (data: any) => {
+      console.log(`[Mock tRPC] Unhandled mutation ${router}.${procedure} with data:`, data);
+      return { success: true };
     },
-    translations: {
-      requestTranslation: {
-        useMutation: () => ({
-          mutateAsync: async ({ documentId, targetLanguage }: { documentId: string, targetLanguage: Language }) => {
-            return { success: true, jobId: 'mock-job-id' };
-          },
-          mutate: ({ documentId, targetLanguage }: { documentId: string, targetLanguage: Language }) => {
-            return { success: true, jobId: 'mock-job-id' };
-          },
-          isLoading: false
-        })
-      },
-      getTranslationStatus: {
-        useQuery: ({ jobId }: { jobId: string }) => {
-          return {
-            data: { status: 'completed', translatedDocumentId: 'translated-doc-1' },
-            isLoading: false,
-            isError: false,
-            error: null,
-            refetch: () => Promise.resolve({ 
-              data: { status: 'completed', translatedDocumentId: 'translated-doc-1' } 
-            })
-          };
-        }
-      }
+    mutate: (data: any) => {
+      console.log(`[Mock tRPC] Unhandled mutation ${router}.${procedure} with data:`, data);
     }
   };
-}
+};
+
+// Mock handler for useInfiniteQuery
+const mockInfiniteQueryHandler = (router: string, procedure: string, params: any) => {
+  console.log(`[Mock tRPC] useInfiniteQuery called for ${router}.${procedure} with params:`, params);
+  
+  // Default implementation for all infinite queries
+  return {
+    data: {
+      pages: [mockDocuments.slice(0, 3)],
+      pageParams: [null]
+    },
+    isLoading: false,
+    isError: false,
+    error: null,
+    fetchNextPage: () => Promise.resolve(),
+    fetchPreviousPage: () => Promise.resolve(),
+    hasNextPage: false,
+    hasPreviousPage: false,
+    isFetchingNextPage: false,
+    isFetchingPreviousPage: false,
+    status: 'success',
+    refetch: () => Promise.resolve()
+  };
+};
 
 /**
- * Enhanced MockTRPCProvider that creates a proper client with all required methods
+ * Enhanced TRPCProvider that creates a proper client with all required methods
  * to prevent the "__untypedClient" error in Storybook.
  */
 export function TRPCProvider({ children }: { children: React.ReactNode }) {
@@ -229,8 +383,8 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
   }));
 
   // Create a mock client that handles all the necessary operations
-  const [trpcClient] = React.useState(() => {
-    return api.createClient({
+  const [trpcClient] = React.useState(() => 
+    api.createClient({
       links: [
         httpBatchLink({
           url: 'http://localhost:3000/api/trpc',
@@ -238,36 +392,38 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
           headers: () => ({}),
         }),
       ],
-    });
-  });
-
-  // Set up the context with mock data handlers
-  const mockClient = createMockTRPCClient();
+    })
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
       <api.Provider client={trpcClient} queryClient={queryClient}>
-        {/* Use React context to provide our mock implementations */}
-        <MockDataContext.Provider value={mockClient}>
+        <TRPCMockContext.Provider value={createTRPCProxy()}>
           {children}
-        </MockDataContext.Provider>
+        </TRPCMockContext.Provider>
       </api.Provider>
     </QueryClientProvider>
   );
 }
 
 /**
- * Context for mock data to be used by components
+ * Context for tRPC mocking in Storybook
  */
-export const MockDataContext = React.createContext<ReturnType<typeof createMockTRPCClient> | null>(null);
+export const TRPCMockContext = React.createContext<ReturnType<typeof createTRPCProxy> | null>(null);
 
 /**
- * Hook to access mock data - components should use this instead of the actual tRPC hooks
+ * Hook to access tRPC mock functions - use this to override the default tRPC client in stories
+ * This provides a complete mock API that matches the actual tRPC API shape
  */
-export function useMockData() {
-  const context = React.useContext(MockDataContext);
+export function useTRPCMock() {
+  const context = React.useContext(TRPCMockContext);
   if (context === null) {
-    throw new Error('useMockData must be used within a MockTRPCProvider');
+    throw new Error('useTRPCMock must be used within a TRPCProvider');
   }
   return context;
-} 
+}
+
+/**
+ * Re-export api to make it easy to access in stories
+ */
+export { api }; 

@@ -36,6 +36,8 @@ const config: StorybookConfig = {
         "react-toastify": path.resolve(__dirname, "./mockToastify"),
         // Mock trpc client
         "@/lib/trpc/react": path.resolve(__dirname, "./mockTrpc"),
+        // Also mock the client import used by components
+        "@/lib/trpc/client": path.resolve(__dirname, "./mockTrpc"),
       };
     }
     return config;
