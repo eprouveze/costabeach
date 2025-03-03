@@ -140,15 +140,7 @@ const mockDocuments: Document[] = [
     authorId: 'user1',
     author: {
       id: 'user1',
-      name: 'John Doe',
-      email: 'john@example.com',
-      image: 'https://i.pravatar.cc/150?u=user1',
-      role: 'admin',
-      isAdmin: true,
-      isVerifiedOwner: true,
-      preferredLanguage: Language.FRENCH,
-      createdAt: new Date(),
-      updatedAt: new Date()
+      name: 'John Doe'
     },
     createdAt: new Date(),
     updatedAt: new Date()
@@ -169,15 +161,7 @@ const mockDocuments: Document[] = [
     authorId: 'user2',
     author: {
       id: 'user2',
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      image: 'https://i.pravatar.cc/150?u=user2',
-      role: 'admin',
-      isAdmin: true,
-      isVerifiedOwner: true,
-      preferredLanguage: Language.FRENCH,
-      createdAt: new Date(),
-      updatedAt: new Date()
+      name: 'Jane Smith'
     },
     createdAt: new Date(),
     updatedAt: new Date()
@@ -198,15 +182,7 @@ const mockDocuments: Document[] = [
     authorId: 'user3',
     author: {
       id: 'user3',
-      name: 'Alex Johnson',
-      email: 'alex@example.com',
-      image: 'https://i.pravatar.cc/150?u=user3',
-      role: 'admin',
-      isAdmin: true,
-      isVerifiedOwner: true,
-      preferredLanguage: Language.FRENCH,
-      createdAt: new Date(),
-      updatedAt: new Date()
+      name: 'Alex Johnson'
     },
     createdAt: new Date(),
     updatedAt: new Date()

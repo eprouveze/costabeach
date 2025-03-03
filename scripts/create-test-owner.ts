@@ -1,4 +1,5 @@
 import { PrismaClient, RegistrationStatus } from '@prisma/client';
+import { v4 as uuidv4 } from 'uuid';
 
 const prisma = new PrismaClient();
 
@@ -6,6 +7,7 @@ async function main() {
   // Create a test owner registration
   const testOwner = await prisma.ownerRegistration.create({
     data: {
+      id: uuidv4(),
       email: 'manu@prouveze.fr',
       name: 'Emmanuel Prouveze',
       buildingNumber: 'A1',
@@ -26,4 +28,4 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
-  }); 
+  });

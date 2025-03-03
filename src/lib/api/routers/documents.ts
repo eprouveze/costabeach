@@ -295,7 +295,7 @@ export const documentsRouter = router({
         // Get the document to check category
         const document = await prisma.document.findUnique({
           where: { id: documentId },
-          select: { category: true, authorId: true, title: true },
+          select: { category: true, created_by: true, title: true },
         });
         
         if (!document) {
@@ -315,7 +315,7 @@ export const documentsRouter = router({
         const userPermissions = user?.permissions || [];
         const canDelete = 
           user?.isAdmin || 
-          document.authorId === userId || 
+          document.created_by === userId || 
           canManageDocumentCategory(userPermissions, document.category as DocumentCategory);
         
         if (!canDelete) {

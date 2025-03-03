@@ -131,10 +131,8 @@ async function uploadSampleDocuments() {
           fileSize: fs.statSync(path.join(process.cwd(), "public", "dummy.pdf")).size,
           fileType: "application/pdf",
           language: "french",
-          isPublished: true,
-          viewCount: 0,
-          downloadCount: 0,
-          authorId: adminUser.id
+          is_public: true,
+          created_by: adminUser.id
         }
       });
       console.log(`✅ Created database entry: ${dbEntry.id}\n`);

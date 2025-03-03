@@ -27,6 +27,8 @@ model User {
   is_verified       Boolean?    @default(false)
   audit_log         audit_log[]
   documents         Document[]
+  accounts          Account[]
+  sessions          Session[]
 
   @@map("users")
 }
@@ -57,10 +59,10 @@ model Document {
 
 model Account {
   id                String  @id
-  userId            String
+  userId            String  @map("user_id")
   type              String
   provider          String
-  providerAccountId String
+  providerAccountId String  @map("provider_account_id")
   refresh_token     String?
   access_token      String?
   expires_at        Int?
@@ -68,82 +70,43 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-  User              User    @relation(fields: [userId], references: [id])
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerAccountId])
+  @@map("accounts")
 }
 
 model Allowlist {
   id        String   @id
   email     String   @unique
-  createdAt DateTime @default(now())
-}
+  createdAt DateTime @default(now()) @map("created_at")
 
-model Document {
-  id                   String           @id
-  title                String
-  description          String?
-  filePath             String
-  fileSize             Int
-  fileType             String
-  category             DocumentCategory
-  language             Language
-  translatedDocumentId String?
-  isTranslated         Boolean          @default(false)
-  isPublished          Boolean          @default(true)
-  viewCount            Int              @default(0)
-  downloadCount        Int              @default(0)
-  createdAt            DateTime         @default(now())
-  updatedAt            DateTime
-  authorId             String
-  User                 User             @relation(fields: [authorId], references: [id])
-  Document             Document?        @relation("DocumentToDocument", fields: [translatedDocumentId], references: [id])
-  other_Document       Document[]       @relation("DocumentToDocument")
+  @@map("allowlist")
 }
 
 model OwnerRegistration {
   id                String             @id
   email             String             @unique
   name              String
-  buildingNumber    String
-  apartmentNumber   String
-  phoneNumber       String
+  buildingNumber    String             @map("building_number")
+  apartmentNumber   String             @map("apartment_number")
+  phoneNumber       String             @map("phone_number")
   status            RegistrationStatus @default(pending)
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
   notes             String?
-  preferredLanguage Language           @default(french)
+  preferredLanguage Language           @default(french) @map("preferred_language")
+
+  @@map("owner_registrations")
 }
 
 model Session {
   id           String   @id
-  sessionToken String   @unique
-  userId       String
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
   expires      DateTime
-  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-model User {
-  id                String       @id
-  name              String?
-  email             String?      @unique
-  emailVerified     DateTime?
-  image             String?
-  hashedPassword    String?
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime
-  login             String?
-  role              UserRole     @default(user)
-  isAdmin           Boolean      @default(false)
-  apartmentNumber   String?
-  buildingNumber    String?
-  isVerifiedOwner   Boolean      @default(false)
-  permissions       Permission[]
-  phoneNumber       String?
-  preferredLanguage Language     @default(french)
-  Account           Account[]
-  Document          Document[]
-  Session           Session[]
+  @@map("sessions")
 }
 
 model VerificationToken {
@@ -152,6 +115,7 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+  @@map("verification_tokens")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.

@@ -547,3 +547,6 @@ Fixed error in the documents utility that was preventing the owner dashboard fro
 5. Enhanced error handling for database schema mismatches
 
 This change makes the document listing resilient to database schema differences while maintaining proper type safety throughout the application.
+
+## Fixed DocumentPreview story by removing extra properties from author objects that were causing type errors
+- Updated upload-sample-documents.ts script to use correct field names (isPublished, view_count, download_count) that match the Prisma schema

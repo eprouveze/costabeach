@@ -24,7 +24,7 @@ export async function GET(
     }
     
     // If the document is not published, check if the user is authenticated
-    if (!document.isPublished) {
+    if (!document.is_public) {
       const session = await getServerSession(authOptions);
       
       if (!session?.user) {

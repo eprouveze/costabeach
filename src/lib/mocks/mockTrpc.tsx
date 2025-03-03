@@ -27,15 +27,7 @@ const mockDocuments: Document[] = [
     authorId: 'user1',
     author: {
       id: 'user1',
-      name: 'Admin User',
-      email: 'admin@example.com',
-      role: 'admin',
-      isAdmin: true,
-      isVerifiedOwner: true,
-      preferredLanguage: Language.FRENCH,
-      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30), // 30 days ago
-      updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
-      permissions: [Permission.MANAGE_DOCUMENTS, Permission.MANAGE_USERS]
+      name: 'Admin User'
     }
   },
   {
@@ -56,15 +48,7 @@ const mockDocuments: Document[] = [
     authorId: 'user1',
     author: {
       id: 'user1',
-      name: 'Admin User',
-      email: 'admin@example.com',
-      role: 'admin',
-      isAdmin: true,
-      isVerifiedOwner: true,
-      preferredLanguage: Language.FRENCH,
-      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30), // 30 days ago
-      updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
-      permissions: [Permission.MANAGE_DOCUMENTS, Permission.MANAGE_USERS]
+      name: 'Admin User'
     }
   },
   {
@@ -85,15 +69,7 @@ const mockDocuments: Document[] = [
     authorId: 'user1',
     author: {
       id: 'user1',
-      name: 'Admin User',
-      email: 'admin@example.com',
-      role: 'admin',
-      isAdmin: true,
-      isVerifiedOwner: true,
-      preferredLanguage: Language.FRENCH,
-      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30), // 30 days ago
-      updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
-      permissions: [Permission.MANAGE_DOCUMENTS, Permission.MANAGE_USERS]
+      name: 'Admin User'
     }
   }
 ];

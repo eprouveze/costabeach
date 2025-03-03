@@ -40,7 +40,7 @@ export interface Document {
   createdAt: Date;
   updatedAt: Date;
   authorId: string;
-  author?: User;
+  author?: { id: string; name?: string | null };
 }
 
 export interface User {
