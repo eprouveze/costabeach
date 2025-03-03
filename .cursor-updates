@@ -121,3 +121,6 @@
 - Updated OwnerPortalSidebar to use correct routing paths for the owner dashboard.
 - Created a settings page for the owner dashboard with language, appearance, and notification preferences.
 - Created a community page for the owner dashboard with events, announcements, and forum sections.
+- Added Header component to OwnerDashboardTemplate to provide consistent navigation and language switching across the site.
+- Created missing API routes for document download/preview and owner registrations to fix build errors.
+- Created admin page and owner registrations page to complete the application structure.
