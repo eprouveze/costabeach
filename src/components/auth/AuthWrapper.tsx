@@ -4,6 +4,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createClient } from '@/lib/supabase/client';
 import { AuthUser } from '@/lib/supabase/auth';
+import { toast } from 'react-toastify';
 
 interface AuthWrapperProps {
   children: React.ReactNode;
@@ -37,13 +38,51 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
         
         if (session) {
           // Get user data from the database
-          const { data: userData } = await supabase
+          const { data: userData, error: userError } = await supabase
             .from('users')
             .select('*')
             .eq('id', session.user.id)
             .single();
             
-          if (userData) {
+          if (userError) {
+            console.error('Error fetching user data:', userError);
+            
+            // If user doesn't exist in the database, create a default user record
+            if (userError.code === 'PGRST116') { // PostgreSQL error for "no rows returned"
+              console.log('User not found in database, creating default record');
+              
+              // Get user metadata from auth
+              const { data: { user: authUser } } = await supabase.auth.getUser();
+              
+              if (authUser) {
+                // Create a default user record
+                const { data: newUser, error: createError } = await supabase
+                  .from('users')
+                  .insert([
+                    {
+                      id: authUser.id,
+                      email: authUser.email,
+                      name: authUser.user_metadata?.name || authUser.email?.split('@')[0] || 'User',
+                      role: 'user',
+                      is_verified_owner: false,
+                      preferred_language: authUser.user_metadata?.preferred_language || 'french',
+                      permissions: []
+                    }
+                  ])
+                  .select()
+                  .single();
+                
+                if (createError) {
+                  console.error('Error creating user record:', createError);
+                } else if (newUser) {
+                  setUser({
+                    ...newUser,
+                    email: authUser.email || '',
+                  } as AuthUser);
+                }
+              }
+            }
+          } else if (userData) {
             setUser({
               ...userData,
               email: session.user.email || '',
@@ -101,6 +140,22 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
       router.push(`/${locale}`);
       return null;
     }
+  }
+
+  // Check if the user is a verified owner when accessing owner dashboard
+  if (requireAuth && user && pathname.includes('/owner-dashboard') && !user.is_verified_owner) {
+    // User is not a verified owner, redirect to home
+    const pathParts = pathname.split('/');
+    const locale = pathParts.length > 1 && ['fr', 'en', 'ar'].includes(pathParts[1]) 
+      ? pathParts[1] 
+      : 'fr';
+    
+    // Show a toast message explaining the redirect
+    toast.error("You need to be a verified owner to access the owner dashboard");
+    
+    // Redirect to home page
+    router.push(`/${locale}`);
+    return null;
   }
 
   return <>{children}</>;

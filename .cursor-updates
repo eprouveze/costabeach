@@ -339,3 +339,24 @@ Fixed the sign-in button on the main page that wasn't redirecting properly:
 3. Verified that all locale-specific sign-in pages (fr/en/ar) exist and are properly configured
 
 These changes ensure that users can properly navigate to the sign-in page from any language variant of the site.
+
+## Fixed Authentication Error and Blank Owner Dashboard Page (2024-06-29)
+
+Fixed issues with authentication and the owner dashboard:
+
+1. Fixed "Error fetching user data: {}" error after sign-in by:
+   - Adding proper error handling in the AuthWrapper component
+   - Creating a default user record in the database if one doesn't exist
+   - Improving error logging and fallback behavior
+
+2. Fixed blank owner dashboard page by:
+   - Removing the incorrect `allowedRoles={["owner"]}` check from dashboard pages
+   - Adding proper verification of the `is_verified_owner` flag for owner dashboard access
+   - Adding a toast notification when non-owners try to access the owner dashboard
+
+3. Improved error handling in the DashboardContent component:
+   - Added retry logic for failed document fetches
+   - Added better error logging and user-friendly error messages
+   - Improved error state display in the UI
+
+These changes ensure that users can properly sign in and access the owner dashboard if they are verified owners, with appropriate error handling and feedback throughout the process.

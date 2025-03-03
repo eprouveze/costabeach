@@ -4,7 +4,7 @@ import OwnerDashboardTemplate from "@/components/templates/OwnerDashboardTemplat
 
 export default function OwnerDashboardPageFr() {
   return (
-    <AuthWrapper requireAuth={true} allowedRoles={["owner"]}>
+    <AuthWrapper requireAuth={true}>
       <OwnerDashboardTemplate>
         <DashboardContent />
       </OwnerDashboardTemplate>

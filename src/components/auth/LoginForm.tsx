@@ -35,34 +35,44 @@ export default function LoginForm() {
       }
       
       if (data.session) {
-        // Get the user's role from the database
-        const { data: userData, error: userError } = await supabase
-          .from('users')
-          .select('role, is_verified_owner')
-          .eq('id', data.session.user.id)
-          .single();
-        
-        if (userError) {
-          console.error('Error fetching user data:', userError);
-        }
-        
-        toast.success(t('auth.signin.success'));
-        
-        // Get the current locale from the URL
-        const path = window.location.pathname;
-        const pathParts = path.split('/');
-        const locale = pathParts.length > 1 && ['fr', 'en', 'ar'].includes(pathParts[1]) 
-          ? pathParts[1] 
-          : 'fr';
-        
-        // Redirect based on user role and return URL
-        if (returnUrl) {
-          window.location.href = returnUrl;
-        } else if (userData?.role === 'admin') {
-          window.location.href = `/${locale}/admin`;
-        } else if (userData?.is_verified_owner) {
-          window.location.href = `/${locale}/owner-dashboard`;
-        } else {
+        try {
+          // Get the user's role from the database
+          const { data: userData, error: userError } = await supabase
+            .from('users')
+            .select('role, is_verified_owner')
+            .eq('id', data.session.user.id)
+            .single();
+          
+          if (userError) {
+            console.error('Error fetching user data:', userError);
+            // Continue with default redirection even if user data fetch fails
+            toast.warning('Could not fetch complete user profile, redirecting to home page');
+          }
+          
+          toast.success(t('auth.signin.success'));
+          
+          // Get the current locale from the URL
+          const path = window.location.pathname;
+          const pathParts = path.split('/');
+          const locale = pathParts.length > 1 && ['fr', 'en', 'ar'].includes(pathParts[1]) 
+            ? pathParts[1] 
+            : 'fr';
+          
+          // Redirect based on user role and return URL
+          if (returnUrl) {
+            window.location.href = returnUrl;
+          } else if (userData?.role === 'admin') {
+            window.location.href = `/${locale}/admin`;
+          } else if (userData?.is_verified_owner) {
+            window.location.href = `/${locale}/owner-dashboard`;
+          } else {
+            // Default fallback if no specific role or verified status
+            window.location.href = `/${locale}`;
+          }
+        } catch (userDataError) {
+          console.error('Error in user data processing:', userDataError);
+          // Fallback redirection if anything goes wrong with user data
+          const locale = 'fr'; // Default fallback locale
           window.location.href = `/${locale}`;
         }
       }

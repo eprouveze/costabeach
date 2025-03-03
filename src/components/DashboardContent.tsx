@@ -8,6 +8,7 @@ import { api } from "@/lib/trpc";
 import { DocumentCategory, Language } from "@/lib/types";
 import { formatDistanceToNow } from "date-fns";
 import { fr, ar, enUS } from "date-fns/locale";
+import { toast } from "react-toastify";
 
 interface Document {
   id: string;
@@ -67,7 +68,13 @@ export function DashboardContent() {
     language: userLanguage,
     searchQuery
   }, {
-    enabled: !typeParam || typeParam !== "information"
+    enabled: !typeParam || typeParam !== "information",
+    retry: 3,
+    retryDelay: 1000,
+    onError: (err) => {
+      console.error("Error fetching documents:", err);
+      toast.error(`Error loading documents: ${err.message}`);
+    }
   });
 
   // Get download URL mutation
