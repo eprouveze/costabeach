@@ -1,5 +1,20 @@
 # Cursor Updates
 
+## Dynamic Port Handling in NextAuth (2024-03-26)
+
+Fixed email verification links to work with dynamic ports in development. When Next.js assigns different ports (e.g., when 3000 is busy), the auth system now:
+
+1. Uses `headers()` to detect the current port dynamically
+2. Updates verification email links with correct port
+3. Handles redirects properly after verification
+4. Works seamlessly when Next.js changes ports (3000 → 3001 → 3002)
+
+Key files modified:
+- `src/lib/auth/index.ts`: Updated NextAuth config to handle dynamic ports
+- Email verification now works correctly regardless of assigned port
+
+Note: In production, this change is transparent as the port is handled by the hosting platform.
+
 - Created comprehensive RTL development plan with systematic approach to handling RTL content across the application, including current state analysis, migration strategy, technical implementation details, and best practices for developers
 - Ran production build verification - build completed successfully with no TypeScript or compilation errors
 - Performed build check on Next.js app with tRPC and Tailwind configuration
@@ -138,3 +153,8 @@
 - Expanded mock data with more dummy documents and information entries for each category to provide a comprehensive view of the dashboard.
 - Ensured dummy PDF file accessibility by verifying file locations and references.
 - Successfully built the project after all changes, resolving previous build issues.
+- Fixed owner dashboard blank page issue by creating a DashboardContent component that fetches and displays documents from S3.
+- Fixed translation keys showing raw in the UI by updating the OwnerDashboardTemplate to use the correct translation keys.
+- Fixed NextAuth headers error by properly awaiting the headers() function in the auth configuration.
+- Updated DocumentCategory enum to include GENERAL and FINANCE categories for better document organization.
+- Successfully built and tested the application with all issues resolved.

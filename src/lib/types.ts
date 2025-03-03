@@ -1,7 +1,9 @@
 export enum DocumentCategory {
   COMITE_DE_SUIVI = 'comiteDeSuivi',
   SOCIETE_DE_GESTION = 'societeDeGestion',
-  LEGAL = 'legal'
+  LEGAL = 'legal',
+  GENERAL = 'general',
+  FINANCE = 'finance'
 }
 
 export enum Language {

@@ -78,7 +78,7 @@ export const authOptions: NextAuthOptions = {
       from: process.env.EMAIL_FROM,
       sendVerificationRequest: async ({ identifier: email, url }) => {
         // Get the current request's host
-        const headersList = headers();
+        const headersList = await headers();
         const host = headersList.get("host");
         const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
         
@@ -105,7 +105,6 @@ export const authOptions: NextAuthOptions = {
               </div>
             `,
           });
-          console.log('Email sent:', result);
         } catch (error) {
           console.error('Failed to send email:', error);
           throw new Error('Failed to send verification email');
@@ -157,7 +156,7 @@ export const authOptions: NextAuthOptions = {
     },
     async redirect({ url, baseUrl }) {
       // Get the current request's host
-      const headersList = headers();
+      const headersList = await headers();
       const host = headersList.get("host");
       const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
       const currentBaseUrl = `${protocol}://${host}`;
