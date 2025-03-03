@@ -104,15 +104,15 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
                           console.error('Users table does not exist. Please run the migration script.');
                           toast.error('Database setup incomplete. Please contact the administrator.');
                           
-                          // Redirect to the setup database page
-                          window.location.href = '/api/setup-database';
+                          // Instead of redirecting, just log a message for administrators
+                          console.log('Administrator action needed: Please visit /api/setup-database to set up the database');
                         } else if (createError.message.includes('violates row-level security policy')) {
                           // RLS policy error
                           console.error('RLS policy error when creating user record:', createError);
-                          toast.error('Permission error when creating user record. Please visit /api/setup-database to fix database permissions.');
+                          toast.error('Permission error when creating user record. Please contact the administrator.');
                           
-                          // Automatically redirect to the setup database page
-                          window.location.href = '/api/setup-database';
+                          // Instead of redirecting, just log a message for administrators
+                          console.log('Administrator action needed: Please visit /api/setup-database to fix database permissions');
                           
                           // Create a fallback user object since we can't insert into the database
                           const fallbackUser = {
