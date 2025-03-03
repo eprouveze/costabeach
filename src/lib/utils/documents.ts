@@ -224,8 +224,21 @@ export const getDocumentsByCategory = async (
     if (error instanceof Error && error.message.includes('translated_document_id')) {
       console.warn('Falling back to simple query due to missing translated_document_id column');
       
-      // Try a simpler query without the problematic relation
-      const simpleDocuments = await prisma.$queryRaw`
+      // Construct conditions separately for the query
+      let languageCondition = '';
+      let searchCondition = '';
+      
+      if (prismaLanguage) {
+        languageCondition = 'AND language = $1';
+      }
+      
+      if (searchQuery) {
+        const searchPattern = `%${searchQuery}%`;
+        searchCondition = 'AND (title ILIKE $2 OR description ILIKE $2)';
+      }
+      
+      // Build the query with proper parameter placeholders
+      const query = `
         SELECT 
           id, title, description, file_path as "filePath", file_size as "fileSize", 
           file_type as "fileType", category, language, is_translated as "isTranslated", 
@@ -233,16 +246,25 @@ export const getDocumentsByCategory = async (
           download_count as "downloadCount", created_at as "createdAt", 
           updated_at as "updatedAt", author_id as "authorId"
         FROM documents
-        WHERE category = ${prismaCategory}
-          ${prismaLanguage ? prisma.$queryRaw`AND language = ${prismaLanguage}` : prisma.$queryRaw``}
+        WHERE category = $3
+          ${languageCondition}
           AND is_published = true
-          ${searchQuery ? prisma.$queryRaw`AND (
-            title ILIKE ${'%' + searchQuery + '%'} OR 
-            description ILIKE ${'%' + searchQuery + '%'}
-          )` : prisma.$queryRaw``}
+          ${searchCondition}
         ORDER BY created_at DESC
-        LIMIT ${limit} OFFSET ${offset}
+        LIMIT $4 OFFSET $5
       `;
+      
+      // Collect parameters based on conditions
+      const params = [];
+      if (prismaLanguage) {
+        params.push(prismaLanguage);
+      }
+      if (searchQuery) {
+        params.push(`%${searchQuery}%`);
+      }
+      params.push(prismaCategory, limit, offset);
+      
+      const simpleDocuments = await prisma.$queryRawUnsafe(query, ...params);
       
       // Convert the raw documents to the expected type
       return (simpleDocuments as any[]).map(doc => ({

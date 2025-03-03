@@ -533,3 +533,5 @@ This resilient approach ensures the application works correctly even with databa
 - Allows gradual schema updates without breaking existing functionality
 - Provides detailed logging to help identify and diagnose schema issues
 - Maintains consistent type safety throughout the application
+
+## Fixed SQL syntax error in getDocumentsByCategory by properly implementing parameterized queries with $queryRawUnsafe.
