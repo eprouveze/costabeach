@@ -261,3 +261,12 @@ These changes ensure compatibility between the new Supabase authentication syste
 - The new template provides a cleaner UI with the header and footer but focuses the user's attention on the content
 
 These changes improve the user experience by ensuring the signup and login forms are prominently displayed without being pushed down by landing page content.
+
+## Fixed Template Imports (2024-06-21)
+
+- Fixed issues with the PublicPageTemplate component:
+  - Updated import for ToastContainer from react-toastify (was incorrectly using Toaster)
+  - Fixed imports for Header and Footer components to use named exports
+  - Resolved component reference errors in the template
+- The lightweight template now correctly displays on contact and auth pages
+- Fixed build and compilation issues related to the template imports

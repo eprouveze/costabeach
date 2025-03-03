@@ -15,20 +15,24 @@ import {
   HardDrive,
   Languages
 } from "lucide-react";
-import { DocumentPreview } from "./DocumentPreview";
+import { DocumentPreview } from "./organisms/DocumentPreview";
 import { trpc } from "@/lib/trpc/client";
 import { toast } from "react-toastify";
 
 interface DocumentCardProps {
   document: Document;
-  onDelete?: () => void;
+  onDelete?: (deletedId: string) => void;
   showActions?: boolean;
+  onView?: (document: Document) => void;
+  onDownload?: (document: Document) => void;
 }
 
 export const DocumentCard = ({ 
   document, 
   onDelete, 
-  showActions = true 
+  showActions = true,
+  onView,
+  onDownload: externalDownloadHandler
 }: DocumentCardProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
@@ -38,7 +42,11 @@ export const DocumentCard = ({
   const utils = trpc.useContext();
   
   const handleDownload = async () => {
-    await downloadDocument(document.id, document.title);
+    if (externalDownloadHandler) {
+      externalDownloadHandler(document);
+    } else {
+      await downloadDocument(document.id, document.title);
+    }
   };
   
   const handleDelete = async () => {
@@ -46,14 +54,18 @@ export const DocumentCard = ({
       setIsDeleting(true);
       const success = await deleteDocument(document.id, document.category as DocumentCategory);
       if (success && onDelete) {
-        onDelete();
+        onDelete(document.id);
       }
       setIsDeleting(false);
     }
   };
   
   const handlePreview = () => {
-    setShowPreview(true);
+    if (onView) {
+      onView(document);
+    } else {
+      setShowPreview(true);
+    }
   };
   
   const handleClosePreview = () => {
@@ -239,4 +251,4 @@ export const DocumentCard = ({
       )}
     </>
   );
-}; 
+} 

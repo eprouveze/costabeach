@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { DocumentList } from "@/components/organisms/DocumentList";
 import { DocumentCategory, Language } from "@/lib/types";
+import MockTRPCProvider from "../../../.storybook/MockTRPCProvider";
 
 const meta: Meta<typeof DocumentList> = {
   title: "Organisms/DocumentList",
@@ -11,9 +12,11 @@ const meta: Meta<typeof DocumentList> = {
   tags: ["autodocs"],
   decorators: [
     (Story) => (
-      <div className="max-w-7xl mx-auto">
-        <Story />
-      </div>
+      <MockTRPCProvider>
+        <div className="max-w-7xl mx-auto">
+          <Story />
+        </div>
+      </MockTRPCProvider>
     ),
   ],
 };
