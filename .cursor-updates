@@ -490,3 +490,15 @@ These changes ensure that:
 - The system maintains security while providing better error recovery
 
 ## Fixed build errors in user creation by adding required UUID id field to all user creation operations.
+
+## Standardized email address to info@costabeach.ma across the entire codebase (2025-03-03)
+
+Replaced various email addresses (costabeach.com, costabeach3.com) with the official info@costabeach.ma email in:
+
+1. Email sender address in the owner registrations API
+2. Contact information in all locale files (en, fr, ar)
+3. Footer component contact information
+4. Contact form stories and documentation
+5. User creation in sample documents upload script
+
+This ensures consistency across all user-facing content and backend communications.

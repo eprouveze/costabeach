@@ -105,7 +105,7 @@ async function uploadSampleDocuments() {
       adminUser = await prisma.user.create({
         data: {
           id: crypto.randomUUID(),
-          email: "system@costabeach.com",
+          email: "info@costabeach.ma",
           name: "System Admin",
           isAdmin: true,
           role: "admin",

@@ -20,7 +20,7 @@ const mockTranslations = {
   'contact.contactInfo.title': 'Contact Information',
   'contact.contactInfo.address': 'Costa Beach 3, Casablanca, Morocco',
   'contact.contactInfo.phone': '+212 522 123 456',
-  'contact.contactInfo.email': 'info@costabeach3.com',
+  'contact.contactInfo.email': 'info@costabeach.ma',
   'contact.contactInfo.hours': 'Office Hours: Monday-Friday, 9:00 AM - 5:00 PM',
   'contact.validation.nameRequired': 'Please enter your name',
   'contact.validation.emailRequired': 'Please enter your email address',
@@ -152,7 +152,7 @@ const ContactFormDocumentation = () => {
               <div className="w-5 h-5 text-blue-600 mt-1 mr-3">✉️</div>
               <div>
                 <p className="font-medium">Email</p>
-                <p className="text-gray-600 dark:text-gray-300">info@costabeach3.com</p>
+                <p className="text-gray-600 dark:text-gray-300">info@costabeach.ma</p>
               </div>
             </div>
             

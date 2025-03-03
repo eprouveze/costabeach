@@ -58,7 +58,7 @@ export const Footer = ({ className = "" }: FooterProps) => {
             <address className="not-italic text-gray-400">
               <p>Costa Beach 3</p>
               <p>Casablanca, Morocco</p>
-              <p>Email: contact@costabeach3.com</p>
+              <p>Email: info@costabeach.ma</p>
             </address>
           </div>
         </div>

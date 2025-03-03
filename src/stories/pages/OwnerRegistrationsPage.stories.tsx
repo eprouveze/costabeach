@@ -49,7 +49,7 @@ const withProviders = (Story: React.ComponentType) => (
     <SessionProvider session={{ 
       user: { 
         id: "admin-user-id",
-        email: "admin@costabeach.com",
+        email: "info@costabeach.ma",
         name: "Admin User",
         isAdmin: true 
       }, 

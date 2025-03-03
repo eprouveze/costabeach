@@ -110,7 +110,7 @@ export async function PUT(request: NextRequest) {
       `;
 
     await resend.emails.send({
-      from: "Costa Beach <noreply@costabeach.com>",
+      from: "Costa Beach <info@costabeach.ma>",
       to: registration.email,
       subject: emailSubject,
       html: emailHtml,
