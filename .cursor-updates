@@ -252,21 +252,20 @@ These changes ensure compatibility between the new Supabase authentication syste
 - Enhanced fix-storybook-dependencies.js script to better detect missing I18nProvider issues
 - Added check for components that might use i18n indirectly (like Header and OwnerPortalSidebar)
 
-## Lightweight Template for Auth Pages (2024-06-21)
+## Fixed Storybook tRPC Context Issues (2024-06-26)
 
-- Created a new `PublicPageTemplate` component that provides a lighter alternative to the full landing page template
-- Updated all auth pages (signin, signup) across all language versions to use the new lightweight template
-- Updated the contact page to use the lightweight template
-- Fixed a syntax error in DocumentList.tsx
-- The new template provides a cleaner UI with the header and footer but focuses the user's attention on the content
+- Fixed "Unable to find tRPC Context" error in DocumentList story by creating a mocked version of the component
+- Added MockedDocumentList component that doesn't rely on actual tRPC hooks but simulates their behavior
+- Updated DocumentList.stories.tsx to use the mocked component instead of the real one
+- Enhanced DocumentCard component to properly handle external onView and onDownload handlers
+- Moved component implementations to follow Atomic Design structure (atoms, molecules, organisms)
+- Reorganized import paths to match the new directory structure
 
-These changes improve the user experience by ensuring the signup and login forms are prominently displayed without being pushed down by landing page content.
+## Unified Footer Implementation (2024-06-21)
 
-## Fixed Template Imports (2024-06-21)
-
-- Fixed issues with the PublicPageTemplate component:
-  - Updated import for ToastContainer from react-toastify (was incorrectly using Toaster)
-  - Fixed imports for Header and Footer components to use named exports
-  - Resolved component reference errors in the template
-- The lightweight template now correctly displays on contact and auth pages
-- Fixed build and compilation issues related to the template imports
+- Updated the Footer component to use the same consistent styling and translations as the landing page
+- Modified PublicLandingTemplate to use the shared Footer component instead of inline footer implementation
+- Ensured consistent footer appearance across all pages (landing, auth, contact)
+- Used proper translation keys from landing.footer namespace
+- Improved site consistency by using shared Header and Footer components
+- This change makes the footer reusable across all templates and page types
