@@ -13,7 +13,6 @@ import {
 import { DocumentCategory, Language, Permission } from "@/lib/types";
 import { PrismaClient } from "@prisma/client";
 import { createAuditLog } from "@/lib/utils/audit";
-import { UserPermission } from "@/lib/types";
 import { checkPermission } from "@/lib/utils/permissions";
 
 const prisma = new PrismaClient();
@@ -419,15 +418,31 @@ export const documentsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       // Check if user has permission to manage this document category
       const permissionMap = {
-        [DocumentCategory.COMITE_REPORTS]: UserPermission.MANAGE_COMITE_DOCUMENTS,
-        [DocumentCategory.LEGAL_DOCUMENTS]: UserPermission.MANAGE_LEGAL_DOCUMENTS,
-        [DocumentCategory.SOCIETE_DOCUMENTS]: UserPermission.MANAGE_SOCIETE_DOCUMENTS,
-        [DocumentCategory.GENERAL]: UserPermission.MANAGE_DOCUMENTS,
+        [DocumentCategory.COMITE_DE_SUIVI]: Permission.MANAGE_COMITE_DOCUMENTS,
+        [DocumentCategory.LEGAL]: Permission.MANAGE_LEGAL_DOCUMENTS,
+        [DocumentCategory.SOCIETE_DE_GESTION]: Permission.MANAGE_SOCIETE_DOCUMENTS,
+        [DocumentCategory.GENERAL]: Permission.MANAGE_DOCUMENTS,
+        [DocumentCategory.FINANCE]: Permission.MANAGE_DOCUMENTS,
       };
 
-      const requiredPermission = permissionMap[input.category] || UserPermission.MANAGE_DOCUMENTS;
-      if (!checkPermission(ctx.session.user.permissions, requiredPermission) &&
-          !checkPermission(ctx.session.user.permissions, UserPermission.ADMIN)) {
+      const requiredPermission = permissionMap[input.category] || Permission.MANAGE_DOCUMENTS;
+      
+      // Get user permissions from database
+      const user = await prisma.user.findUnique({
+        where: { id: ctx.session.user.id },
+        select: { permissions: true, isAdmin: true }
+      });
+      
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+      
+      const userPermissions = user.permissions as Permission[] || [];
+      
+      if (!checkPermission(userPermissions, requiredPermission) && !user.isAdmin) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You don't have permission to update this document.",

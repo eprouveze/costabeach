@@ -57,7 +57,10 @@ export function OwnerPortalSidebar({ onNavigate, currentPath = "/owner-dashboard
       </nav>
 
       <div className="mt-auto">
-        <Button className="w-full" onClick={signOut}>
+        <Button 
+          className="w-full" 
+          onClick={() => signOut({ callbackUrl: '/' })}
+        >
           {t("auth.signOut")}
         </Button>
       </div>
