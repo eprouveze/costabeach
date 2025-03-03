@@ -1,15 +1,7 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  loggerLink,
-  unstable_httpBatchStreamLink,
-  createTRPCClient,
-  httpBatchLink,
-  createWSClient,
-  wsLink,
-  splitLink,
-} from "@trpc/client";
+import { loggerLink, httpBatchLink, createTRPCClient } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 import { useState } from "react";
 import SuperJSON from "superjson";
@@ -24,7 +16,15 @@ export const api = createTRPCReact<AppRouter>();
 /**
  * Create a QueryClient with singleton pattern for client components
  */
-const createQueryClient = () => new QueryClient();
+const createQueryClient = () => new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 1000, // 5 seconds
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {
@@ -46,19 +46,6 @@ function getBaseUrl() {
 }
 
 /**
- * Create a WebSocket client for subscriptions
- */
-const wsClient =
-  typeof window !== "undefined"
-    ? createWSClient({
-        url:
-          process.env.NODE_ENV === "development"
-            ? "ws://localhost:3001"
-            : `wss://${window.location.host}`,
-      })
-    : undefined;
-
-/**
  * React component that provides tRPC to the entire application
  * Use this in your root layout
  */
@@ -73,21 +60,14 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
             process.env.NODE_ENV === "development" ||
             (op.direction === "down" && op.result instanceof Error),
         }),
-        splitLink({
-          condition: (op) => !!wsClient && op.type === "subscription",
-          true: wsLink({
-            client: wsClient!,
-            transformer: SuperJSON,
-          }),
-          false: unstable_httpBatchStreamLink({
-            transformer: SuperJSON,
-            url: getBaseUrl() + "/api/trpc",
-            headers: () => {
-              const headers = new Headers();
-              headers.set("x-trpc-source", "nextjs-react");
-              return headers;
-            },
-          }),
+        httpBatchLink({
+          url: getBaseUrl() + "/api/trpc",
+          transformer: SuperJSON,
+          headers: () => {
+            const headers = new Headers();
+            headers.set("x-trpc-source", "nextjs-react");
+            return headers;
+          },
         }),
       ],
     }),

@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
 import { type AppRouter } from '@/lib/api/root';
 import { createTRPCReact } from '@trpc/react-query';
+import superjson from 'superjson';
 
 export const trpc = createTRPCReact<AppRouter>();
 
@@ -28,6 +29,8 @@ export function MockTRPCProvider({ children }: { children: React.ReactNode }) {
       links: [
         httpBatchLink({
           url: 'http://localhost:3000/api/trpc',
+          // Adding transformer to match the configuration in the app
+          transformer: superjson,
           // You can pass any additional fetch options as a second parameter
           fetch(url, options) {
             return fetch(url, {

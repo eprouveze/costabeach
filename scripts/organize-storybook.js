@@ -11,9 +11,9 @@ const __dirname = path.dirname(__filename);
 const categories = {
   atoms: ['Button', 'Heading', 'Icon', 'Input', 'Paragraph', 'RTLText', 'RTLList', 'RTLWrapper'],
   molecules: ['Card', 'Form', 'NavItem', 'TextField', 'LanguageSwitcher', 'DocumentCard'],
-  organisms: ['Header', 'Footer', 'DocumentList', 'OwnerPortalSidebar', 'PropertyShowcase', 'DocumentUpload', 'DocumentPreview', 'Hero', 'AboutSection'],
+  organisms: ['Header', 'Footer', 'DocumentList', 'OwnerPortalSidebar', 'DocumentUpload', 'DocumentPreview', 'Hero', 'AboutSection'],
   templates: ['PublicLandingTemplate', 'OwnerDashboardTemplate'],
-  pages: ['HomePage', 'OwnerLoginPage', 'OwnerSignUpPage', 'VerifyRequestPage', 'OwnerDashboardPage', 'ContactPage', 'PropertyDetailPage', 'OwnerRegistrationsPage'],
+  pages: ['HomePage', 'OwnerLoginPage', 'OwnerSignUpPage', 'VerifyRequestPage', 'OwnerDashboardPage', 'ContactPage', 'OwnerRegistrationsPage'],
   documentation: ['Introduction', 'I18nSystem', 'PermissionSystem', 'S3Integration', 'TranslationService', 'TranslationWorkflow', 'ErrorBoundary', 'AuthWrapper', 'DocumentViewer', 'RTLComponents', 'Navigation', 'ContactForm'],
 };
 

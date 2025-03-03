@@ -277,4 +277,12 @@ export const documentsRouter = createTRPCRouter({
         });
       }
     }),
+  
+  healthCheck: publicProcedure
+    .query(() => {
+      return {
+        status: "ok",
+        timestamp: new Date().toISOString()
+      };
+    }),
 }); 

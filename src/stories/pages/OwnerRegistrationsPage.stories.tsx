@@ -5,6 +5,7 @@ import OwnerRegistrationsPage from "../../app/admin/owner-registrations/page";
 import { http } from "msw";
 import { userEvent, within } from "@storybook/testing-library";
 import { expect } from "@storybook/jest";
+import { createStoryDecorator } from '../utils/StoryProviders';
 
 const mockRegistrations = [
   {
@@ -41,6 +42,25 @@ const mockRegistrations = [
   },
 ];
 
+// Create a decorator with all the necessary providers
+const withAllProviders = createStoryDecorator({
+  withI18n: true,
+  withTRPC: true,
+  withSession: true,
+  i18nMessages: {
+    'admin.ownerRegistrations.title': 'Owner Registration Requests',
+    'admin.ownerRegistrations.empty': 'No registration requests available',
+    'admin.ownerRegistrations.error': 'Failed to load registration requests',
+    'admin.ownerRegistrations.loading': 'Loading registration requests...',
+    'admin.ownerRegistrations.approve': 'Approve',
+    'admin.ownerRegistrations.reject': 'Reject',
+    'admin.ownerRegistrations.review': 'Review',
+    'admin.ownerRegistrations.notes': 'Add notes (optional)',
+    'common.cancel': 'Cancel',
+    'common.save': 'Save',
+  }
+});
+
 const meta = {
   title: "Pages/OwnerRegistrationsPage",
   component: OwnerRegistrationsPage,
@@ -62,19 +82,12 @@ const meta = {
     },
   },
   decorators: [
+    withAllProviders,
     (Story) => (
-      <SessionProvider session={{ 
-        user: { 
-          id: "admin-user-id",
-          email: "admin@costabeach.com",
-          name: "Admin User",
-          isAdmin: true 
-        }, 
-        expires: "1" 
-      }}>
+      <>
         <Story />
         <ToastContainer />
-      </SessionProvider>
+      </>
     ),
   ],
   tags: ["autodocs"],

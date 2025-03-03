@@ -159,6 +159,8 @@ Note: In production, this change is transparent as the port is handled by the ho
 - Updated DocumentCategory enum to include GENERAL and FINANCE categories for better document organization.
 - Successfully built and tested the application with all issues resolved.
 - Fixed Storybook configuration by updating tRPC mocking, correcting component paths, and replacing dynamic titles with string literals to comply with Storybook 8.x requirements.
+- Fixed tRPC context provider issue by adding TRPCReactProvider to ClientLayout component, resolving "Unable to find tRPC Context" error.
+- Fixed I18n context error in OwnerRegistrationsPage Storybook story by updating it to use createStoryDecorator consistent with other page stories.
 
 ## Supabase Authentication Migration Plan (2024-06-19)
 

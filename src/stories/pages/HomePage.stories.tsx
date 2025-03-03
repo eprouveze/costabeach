@@ -1,10 +1,17 @@
 "use client";
 
 import type { Meta, StoryObj } from "@storybook/react";
-import { SessionProvider } from "next-auth/react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import ClientProvider from "@/components/ClientProvider";
+import { createStoryDecorator } from "../utils/StoryProviders";
+
+// Create a decorator with all the necessary providers
+const withProviders = createStoryDecorator({
+  withI18n: true,
+  withSession: true,
+  withTRPC: false, // No tRPC needed for HomePage
+});
 
 // Create a client-side version of HomePage for Storybook
 function HomePage() {
@@ -65,13 +72,7 @@ function HomePage() {
 const meta = {
   title: "Pages/HomePage",
   component: HomePage,
-  decorators: [
-    (Story) => (
-      <SessionProvider session={null}>
-        <Story />
-      </SessionProvider>
-    ),
-  ],
+  decorators: [withProviders],
 } satisfies Meta<typeof HomePage>;
 
 export default meta;

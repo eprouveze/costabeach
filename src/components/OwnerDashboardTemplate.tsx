@@ -13,7 +13,7 @@ const OwnerDashboardTemplate: React.FC<OwnerDashboardTemplateProps> = ({ childre
         <OwnerPortalSidebar />
       </aside>
       <main className="w-3/4 p-4">
-        <DocumentList documents={[]} />
+        <DocumentList initialDocuments={[]} />
         {children}
       </main>
     </div>

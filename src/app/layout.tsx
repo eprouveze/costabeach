@@ -1,7 +1,7 @@
 import React from "react";
 import "@/app/globals.css";
 import "react-toastify/dist/ReactToastify.css";
-import { TRPCReactProvider } from "@/lib/trpc/react";
+import { TRPCReactProvider } from "@/lib/trpc";
 import { Metadata } from "next";
 import ClientProvider from "@/components/ClientProvider";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";

@@ -5,6 +5,7 @@ import { NavItem } from "@/components/molecules/NavItem";
 import { TextField } from "@/components/molecules/TextField";
 import { Search, Home, FileText, Settings, Users, Folder, Bell } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
+import { Button } from "@/components/atoms/Button";
 
 interface OwnerPortalSidebarProps {
   onNavigate?: (path: string) => void;
@@ -50,6 +51,12 @@ export function OwnerPortalSidebar({ onNavigate, currentPath = "/owner-dashboard
           />
         ))}
       </nav>
+
+      <div className="mt-auto">
+        <Button className="w-full" onClick={signOut}>
+          {t("auth.signOut") === "auth.signOut" ? "Déconnexion" : t("auth.signOut")}
+        </Button>
+      </div>
     </aside>
   );
 } 

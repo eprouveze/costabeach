@@ -3,8 +3,7 @@ import type { Preview } from "@storybook/react";
 import "../src/app/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
-import { I18nProvider } from '../src/lib/i18n/client';
-import MockTRPCProvider from './MockTRPCProvider';
+import { StoryProviders } from '../src/stories/utils/StoryProviders';
 
 // Order based on Atomic Design principles
 const atomicDesignOrder = [
@@ -55,13 +54,11 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => (
-      <I18nProvider>
-        <MockTRPCProvider>
-          <div className="p-4">
-            <Story />
-          </div>
-        </MockTRPCProvider>
-      </I18nProvider>
+      <StoryProviders>
+        <div className="p-4">
+          <Story />
+        </div>
+      </StoryProviders>
     ),
   ],
 };
