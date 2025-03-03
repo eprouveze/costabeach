@@ -41,7 +41,8 @@ const getQueryClient = () => {
  */
 function getBaseUrl() {
   if (typeof window !== "undefined") {
-    // In the browser, use the current window location
+    // In the browser, use the current window location's origin
+    // This ensures we're using the absolute URL without locale prefixes
     return window.location.origin;
   }
   if (process.env.VERCEL_URL) {

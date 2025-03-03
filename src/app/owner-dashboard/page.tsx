@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { Clock, FileText, Info, Search, CreditCard, Book, GavelIcon, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
+import { TrpcDebug } from "@/components/TrpcDebug";
 
 // Document types
 interface Document {
@@ -293,6 +294,10 @@ export default function OwnerDashboardPage() {
 
   return (
     <OwnerDashboardTemplate>
+      <div className="mb-6">
+        <TrpcDebug />
+      </div>
+
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-gray-800">{headerTitle}</h1>
         {headerDescription && (

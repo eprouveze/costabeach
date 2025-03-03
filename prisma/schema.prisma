@@ -35,6 +35,7 @@ model User {
   sessions       Session[]
   documents      Document[] // Documents created by this user
   information    Information[]
+  auditLogs      AuditLog[]
 }
 
 model Account {
@@ -169,4 +170,17 @@ model Information {
   updatedAt    DateTime         @updatedAt
   authorId     String
   author       User             @relation(fields: [authorId], references: [id])
+}
+
+model AuditLog {
+  id         String    @id @default(cuid())
+  action     String    // e.g., "create", "update", "delete"
+  entityType String    // e.g., "Document", "User"
+  entityId   String    // ID of the affected entity
+  userId     String    // ID of the user who performed the action
+  details    Json?     // Additional details as JSON
+  createdAt  DateTime  @default(now())
+  
+  // Relations
+  user       User      @relation(fields: [userId], references: [id])
 }

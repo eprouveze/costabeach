@@ -3,14 +3,54 @@ import { Permission } from '@/lib/types';
 
 /**
  * Check if a user has a specific permission
+ * @param userPermissions Array of user permissions
+ * @param requiredPermission The permission to check for
+ * @returns Boolean indicating if the user has the permission
  */
-export const hasPermission = (
+export function checkPermission(
   userPermissions: Permission[] | undefined,
   requiredPermission: Permission
-): boolean => {
-  if (!userPermissions) return false;
+): boolean {
+  if (!userPermissions || userPermissions.length === 0) {
+    return false;
+  }
+  
   return userPermissions.includes(requiredPermission);
-};
+}
+
+/**
+ * Check if a user has any of the specified permissions
+ * @param userPermissions Array of user permissions
+ * @param requiredPermissions Array of permissions to check for
+ * @returns Boolean indicating if the user has any of the permissions
+ */
+export function hasAnyPermission(
+  userPermissions: Permission[] | undefined,
+  requiredPermissions: Permission[]
+): boolean {
+  if (!userPermissions || userPermissions.length === 0) {
+    return false;
+  }
+  
+  return requiredPermissions.some(permission => userPermissions.includes(permission));
+}
+
+/**
+ * Check if a user has all of the specified permissions
+ * @param userPermissions Array of user permissions
+ * @param requiredPermissions Array of permissions to check for
+ * @returns Boolean indicating if the user has all of the permissions
+ */
+export function hasAllPermissions(
+  userPermissions: Permission[] | undefined,
+  requiredPermissions: Permission[]
+): boolean {
+  if (!userPermissions || userPermissions.length === 0) {
+    return false;
+  }
+  
+  return requiredPermissions.every(permission => userPermissions.includes(permission));
+}
 
 /**
  * Check if a user is an admin

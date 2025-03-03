@@ -78,9 +78,13 @@ export const DocumentPreview = ({
         }
       } else if (['json'].includes(fileExtension || '')) {
         setPreviewType('json');
-        const response = await fetch(url);
-        const json = await response.json();
-        setPreviewContent(JSON.stringify(json, null, 2));
+        if (url) {
+          const response = await fetch(url);
+          const json = await response.json();
+          setPreviewContent(JSON.stringify(json, null, 2));
+        } else {
+          setPreviewContent('Unable to load document preview - URL is missing');
+        }
       } else {
         setPreviewType('unsupported');
       }
@@ -104,10 +108,21 @@ export const DocumentPreview = ({
         setIsTranslationInProgress(true);
         setIsTranslationRequested(true);
         
-        // Call the translation request endpoint
-        await api.translations.requestDocumentTranslation.mutate({
-          documentId: document.id
+        // Use fetch instead of tRPC for now to avoid build issues
+        const response = await fetch('/api/translations/request', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            documentId: document.id,
+            targetLanguage: 'en'
+          }),
         });
+        
+        if (!response.ok) {
+          throw new Error('Failed to request translation');
+        }
         
         toast.info("Translation requested. This may take a few minutes.");
       } catch (error) {
@@ -199,14 +214,14 @@ export const DocumentPreview = ({
   };
 
   const shouldShowTranslationButton = () => {
-    // Only show translation button if:
-    // 1. The document is not already in the user's preferred language
-    // 2. The document is not already being translated
+    // Only show the translation button if:
+    // 1. No translation is in progress
+    // 2. The document is not already translated
     // 3. The document is not a translation itself
     return (
       !isTranslationInProgress && 
-      !document.isTranslation &&
-      document.language !== 'en' // Assuming 'en' is the user's preferred language
+      !document.translatedDocumentId && // Check if this document is not already a translation
+      document.language !== Language.ENGLISH // Use the Language enum instead of string literal
     );
   };
 

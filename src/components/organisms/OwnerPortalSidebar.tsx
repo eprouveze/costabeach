@@ -1,11 +1,15 @@
 "use client";
 
+import React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { NavItem } from "@/components/molecules/NavItem";
 import { TextField } from "@/components/molecules/TextField";
-import { Search, Home, FileText, Settings, Users, Folder, Bell } from "lucide-react";
+import { Search, Home, FileText, Settings, Users, Folder, Bell, Menu, X } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
 import { Button } from "@/components/atoms/Button";
+import { signOut } from "next-auth/react";
 
 interface OwnerPortalSidebarProps {
   onNavigate?: (path: string) => void;

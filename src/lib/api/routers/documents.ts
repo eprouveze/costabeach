@@ -12,6 +12,9 @@ import {
 } from "@/lib/utils/documents";
 import { DocumentCategory, Language, Permission } from "@/lib/types";
 import { PrismaClient } from "@prisma/client";
+import { createAuditLog } from "@/lib/utils/audit";
+import { UserPermission } from "@/lib/types";
+import { checkPermission } from "@/lib/utils/permissions";
 
 const prisma = new PrismaClient();
 
@@ -117,6 +120,19 @@ export const documentsRouter = createTRPCRouter({
           input.isPublished
         );
         
+        // Create audit log for document creation
+        await createAuditLog(
+          userId,
+          "create",
+          "Document",
+          document.id,
+          {
+            title: document.title,
+            category: document.category,
+            language: document.language
+          }
+        );
+        
         return document;
       } catch (error) {
         console.error("Error creating document:", error);
@@ -169,6 +185,7 @@ export const documentsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { documentId } = input;
+      const userId = ctx.session?.user?.id;
       
       try {
         // Increment download count
@@ -177,7 +194,7 @@ export const documentsRouter = createTRPCRouter({
         // Get document from database to get the file path
         const document = await prisma.document.findUnique({
           where: { id: documentId },
-          select: { filePath: true },
+          select: { filePath: true, title: true },
         });
         
         if (!document) {
@@ -185,6 +202,17 @@ export const documentsRouter = createTRPCRouter({
             code: "NOT_FOUND",
             message: "Document not found",
           });
+        }
+        
+        // Create audit log for document download (if user is logged in)
+        if (userId) {
+          await createAuditLog(
+            userId,
+            "download",
+            "Document",
+            documentId,
+            { title: document.title }
+          );
         }
         
         const downloadUrl = await getDownloadUrl(document.filePath);
@@ -206,11 +234,31 @@ export const documentsRouter = createTRPCRouter({
         documentId: z.string(),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { documentId } = input;
+      const userId = ctx.session?.user?.id;
       
       try {
         await incrementViewCount(documentId);
+        
+        // Create audit log for document view (if user is logged in)
+        if (userId) {
+          const document = await prisma.document.findUnique({
+            where: { id: documentId },
+            select: { title: true },
+          });
+          
+          if (document) {
+            await createAuditLog(
+              userId,
+              "view",
+              "Document",
+              documentId,
+              { title: document.title }
+            );
+          }
+        }
+        
         return { success: true };
       } catch (error) {
         console.error("Error incrementing view count:", error);
@@ -236,7 +284,7 @@ export const documentsRouter = createTRPCRouter({
         // Get the document to check category
         const document = await prisma.document.findUnique({
           where: { id: documentId },
-          select: { category: true, authorId: true },
+          select: { category: true, authorId: true, title: true },
         });
         
         if (!document) {
@@ -266,6 +314,18 @@ export const documentsRouter = createTRPCRouter({
           });
         }
         
+        // Create audit log for document deletion
+        await createAuditLog(
+          userId,
+          "delete",
+          "Document",
+          documentId,
+          { 
+            title: document.title,
+            category: document.category
+          }
+        );
+        
         // Delete document from database
         await prisma.document.delete({
           where: { id: documentId },
@@ -282,5 +342,145 @@ export const documentsRouter = createTRPCRouter({
           message: "Failed to delete document",
         });
       }
+    }),
+  
+  // Get audit logs for documents
+  getDocumentAuditLogs: protectedProcedure
+    .input(
+      z.object({
+        documentId: z.string().optional(),
+        limit: z.number().min(1).max(100).default(50),
+        offset: z.number().min(0).default(0),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      
+      // Get the user to check if they are an admin or content editor
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { role: true }
+      });
+      
+      if (!user || (user.role !== 'admin' && user.role !== 'contentEditor')) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You don't have permission to access audit logs",
+        });
+      }
+      
+      try {
+        const where: any = { entityType: "Document" };
+        if (input.documentId) {
+          where.entityId = input.documentId;
+        }
+        
+        const [logs, total] = await Promise.all([
+          prisma.auditLog.findMany({
+            where,
+            orderBy: {
+              createdAt: "desc",
+            },
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+            skip: input.offset,
+            take: input.limit,
+          }),
+          prisma.auditLog.count({ where }),
+        ]);
+        
+        return { logs, total };
+      } catch (error) {
+        console.error("Error fetching document audit logs:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch audit logs",
+        });
+      }
+    }),
+  
+  // Add updateDocument mutation with audit logging after createDocument
+  updateDocument: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string().min(1),
+        description: z.string().optional(),
+        category: z.nativeEnum(DocumentCategory),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Check if user has permission to manage this document category
+      const permissionMap = {
+        [DocumentCategory.COMITE_REPORTS]: UserPermission.MANAGE_COMITE_DOCUMENTS,
+        [DocumentCategory.LEGAL_DOCUMENTS]: UserPermission.MANAGE_LEGAL_DOCUMENTS,
+        [DocumentCategory.SOCIETE_DOCUMENTS]: UserPermission.MANAGE_SOCIETE_DOCUMENTS,
+        [DocumentCategory.GENERAL]: UserPermission.MANAGE_DOCUMENTS,
+      };
+
+      const requiredPermission = permissionMap[input.category] || UserPermission.MANAGE_DOCUMENTS;
+      if (!checkPermission(ctx.session.user.permissions, requiredPermission) &&
+          !checkPermission(ctx.session.user.permissions, UserPermission.ADMIN)) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You don't have permission to update this document.",
+        });
+      }
+
+      // Get the existing document
+      const existingDoc = await ctx.db.document.findUnique({
+        where: { id: input.id },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          category: true
+        },
+      });
+
+      if (!existingDoc) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Document not found",
+        });
+      }
+
+      // Update the document
+      const updatedDocument = await ctx.db.document.update({
+        where: { id: input.id },
+        data: {
+          title: input.title,
+          description: input.description,
+          category: input.category,
+        },
+      });
+
+      // Log the update action
+      await createAuditLog({
+        userId: ctx.session.user.id,
+        action: "update",
+        entityType: "document",
+        entityId: updatedDocument.id,
+        details: {
+          title: updatedDocument.title,
+          category: updatedDocument.category,
+          previousTitle: existingDoc.title,
+          previousCategory: existingDoc.category,
+          changedFields: {
+            title: existingDoc.title !== input.title,
+            description: existingDoc.description !== input.description,
+            category: existingDoc.category !== input.category,
+          }
+        },
+      });
+
+      return updatedDocument;
     }),
 }); 
