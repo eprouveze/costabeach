@@ -7,7 +7,7 @@ import Link from "next/link";
 
 function ErrorContent() {
   const searchParams = useSearchParams();
-  const error = searchParams.get("error");
+  const error = searchParams?.get("error") || "Unknown error";
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-white to-neutral-50 dark:from-neutral-900 dark:to-neutral-950 px-4">

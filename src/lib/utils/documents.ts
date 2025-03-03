@@ -228,41 +228,40 @@ export const getDocumentsByCategory = async (
       let languageCondition = '';
       let searchCondition = '';
       
+      // Prepare parameters array
+      const params: any[] = [];
+      
       if (prismaLanguage) {
         languageCondition = 'AND language = $1';
+        params.push(prismaLanguage);
       }
       
       if (searchQuery) {
-        const searchPattern = `%${searchQuery}%`;
-        searchCondition = 'AND (title ILIKE $2 OR description ILIKE $2)';
+        searchCondition = 'AND (title ILIKE $' + (params.length + 1) + ' OR description ILIKE $' + (params.length + 1) + ')';
+        params.push(`%${searchQuery}%`);
       }
       
-      // Build the query with proper parameter placeholders
+      // Add the remaining parameters
+      params.push(prismaCategory);  // Category parameter
+      params.push(limit);           // Limit parameter
+      params.push(offset);          // Offset parameter
+      
+      // Build the query with proper parameter placeholders - removing the is_translated column
       const query = `
         SELECT 
           id, title, description, file_path as "filePath", file_size as "fileSize", 
-          file_type as "fileType", category, language, is_translated as "isTranslated", 
+          file_type as "fileType", category, language, 
           is_published as "isPublished", view_count as "viewCount", 
           download_count as "downloadCount", created_at as "createdAt", 
           updated_at as "updatedAt", author_id as "authorId"
         FROM documents
-        WHERE category = $3
+        WHERE category = $${params.length - 2}
           ${languageCondition}
           AND is_published = true
           ${searchCondition}
         ORDER BY created_at DESC
-        LIMIT $4 OFFSET $5
+        LIMIT $${params.length - 1} OFFSET $${params.length}
       `;
-      
-      // Collect parameters based on conditions
-      const params = [];
-      if (prismaLanguage) {
-        params.push(prismaLanguage);
-      }
-      if (searchQuery) {
-        params.push(`%${searchQuery}%`);
-      }
-      params.push(prismaCategory, limit, offset);
       
       const simpleDocuments = await prisma.$queryRawUnsafe(query, ...params);
       
@@ -273,6 +272,7 @@ export const getDocumentsByCategory = async (
         language: language || (doc.language === 'french' ? Language.FRENCH : Language.ARABIC),
         translatedDocument: null,
         translatedDocumentId: null,
+        isTranslated: false, // Add default value for isTranslated
         author: { id: doc.authorId, name: '' }, // Basic author info, missing the full name
       })) as Document[];
     }

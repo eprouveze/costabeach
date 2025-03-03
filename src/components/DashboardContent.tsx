@@ -22,9 +22,9 @@ interface Document {
 export function DashboardContent() {
   const { t, locale } = useI18n();
   const searchParams = useSearchParams();
-  const categoryParam = searchParams.get('category');
-  const typeParam = searchParams.get('type');
-  const searchQuery = searchParams.get('search') || "";
+  const categoryParam = searchParams?.get('category');
+  const typeParam = searchParams?.get('type');
+  const searchQuery = searchParams?.get('search') || "";
   
   const [userLanguage, setUserLanguage] = useState<Language>(Language.FRENCH);
   const [viewingDocumentId, setViewingDocumentId] = useState<string | null>(null);

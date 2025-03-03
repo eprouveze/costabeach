@@ -39,7 +39,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Extract locale from pathname or use default
-    const pathSegments = pathname.split("/").filter(Boolean); // Remove empty segments
+    const pathSegments = pathname?.split("/").filter(Boolean) || []; // Remove empty segments
     const pathLocale = pathSegments.length > 0 ? pathSegments[0] as Locale : null;
     const currentLocale = pathLocale && locales.includes(pathLocale as Locale) 
       ? pathLocale as Locale 
@@ -84,7 +84,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     setLocaleState(newLocale);
     
     // Update URL to reflect locale change
-    const pathSegments = pathname.split("/").filter(Boolean); // Remove empty segments
+    const pathSegments = pathname?.split("/").filter(Boolean) || []; // Remove empty segments
     
     // Create a new path with the new locale
     let newPath: string;
@@ -95,7 +95,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
       newPath = `/${pathSegments.join("/")}`;
     } else {
       // Add the locale if it doesn't exist
-      newPath = `/${newLocale}${pathname.startsWith('/') ? pathname : `/${pathname}`}`;
+      newPath = `/${newLocale}${pathname?.startsWith('/') ? pathname : `/${pathname}`}`;
     }
     
     if (DEBUG_I18N) {

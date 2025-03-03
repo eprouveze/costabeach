@@ -20,7 +20,7 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
   const { t, locale } = useI18n();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+  const [searchQuery, setSearchQuery] = useState(searchParams?.get("search") || "");
   const [isSigningOut, setIsSigningOut] = useState(false);
 
   // Categories based on the DocumentCategory enum
@@ -35,7 +35,7 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
 
   const handleSearch = (e: FormEvent) => {
     e.preventDefault();
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams?.toString());
     if (searchQuery) {
       params.set("search", searchQuery);
     } else {
@@ -46,17 +46,17 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
 
   // Check if a category is active
   const isCategoryActive = (categoryId: string) => {
-    return searchParams.get("category") === categoryId;
+    return searchParams?.get("category") === categoryId;
   };
 
   // Check if all documents are being displayed (no category filter)
   const isAllCategoryActive = () => {
-    return searchParams.get("category") === "ALL" || (!searchParams.get("category") && !searchParams.get("type"));
+    return searchParams?.get("category") === "ALL" || (!searchParams?.get("category") && !searchParams?.get("type"));
   };
 
   // Check if information section is active
   const isInformationActive = () => {
-    return searchParams.get("type") === "information";
+    return searchParams?.get("type") === "information";
   };
 
   const handleSignOut = async () => {
@@ -104,7 +104,7 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
               <Link
                 href={`/${locale}/owner-dashboard`}
                 className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
-                  pathname === `/${locale}/owner-dashboard` && isAllCategoryActive() && !searchParams.toString()
+                  pathname === `/${locale}/owner-dashboard` && isAllCategoryActive() && !searchParams?.toString()
                     ? "text-blue-600 bg-blue-50"
                     : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
                 }`}

@@ -51,7 +51,7 @@ export const Header = ({ className = "" }: HeaderProps) => {
     if (href === `/${locale}`) {
       return pathname === href;
     }
-    return pathname.startsWith(href);
+    return pathname?.startsWith(href) || false;
   };
 
   const handleAuthAction = async () => {

@@ -15,7 +15,7 @@ export default function DocumentViewerPage() {
   const { t, locale } = useI18n();
   const router = useRouter();
   const params = useParams();
-  const documentId = params.id as string;
+  const documentId = params?.id as string;
   const [isLoading, setIsLoading] = useState(true);
   const [documentUrl, setDocumentUrl] = useState<string | null>(null);
   const [documentDetails, setDocumentDetails] = useState<any>(null);

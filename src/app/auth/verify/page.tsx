@@ -18,7 +18,7 @@ export default function VerifyPage() {
         const supabase = createClient();
         
         // Check if this is a redirect from email verification
-        if (searchParams.has('type') && searchParams.get('type') === 'signup') {
+        if (searchParams?.has('type') && searchParams?.get('type') === 'signup') {
           setStatus('success');
           setMessage('Your email has been verified! You can now sign in to your account.');
           return;

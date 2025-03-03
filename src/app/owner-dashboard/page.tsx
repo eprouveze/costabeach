@@ -160,9 +160,9 @@ export default function OwnerDashboardPage() {
   const { t } = useI18n();
   const searchParams = useSearchParams();
   
-  const categoryFilter = searchParams.get("category");
-  const typeFilter = searchParams.get("type");
-  const searchQuery = searchParams.get("search")?.toLowerCase();
+  const categoryFilter = searchParams?.get("category");
+  const typeFilter = searchParams?.get("type");
+  const searchQuery = searchParams?.get("search")?.toLowerCase();
 
   // Add state for documents
   const [documents, setDocuments] = useState<Document[]>([]);

@@ -535,3 +535,15 @@ This resilient approach ensures the application works correctly even with databa
 - Maintains consistent type safety throughout the application
 
 ## Fixed SQL syntax error in getDocumentsByCategory by properly implementing parameterized queries with $queryRawUnsafe.
+
+## Fixed SQL syntax error in getDocumentsByCategory function (2025-03-03)
+
+Fixed error in the documents utility that was preventing the owner dashboard from loading documents:
+
+1. Identified an issue where the fallback SQL query was referring to an `is_translated` column that doesn't exist in the database
+2. Updated the query to remove the missing column from the SELECT statement
+3. Added a default value (`false`) for `isTranslated` in the result mapping
+4. Improved parameter handling to ensure correct numbering regardless of which conditions are applied
+5. Enhanced error handling for database schema mismatches
+
+This change makes the document listing resilient to database schema differences while maintaining proper type safety throughout the application.

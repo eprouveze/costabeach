@@ -14,8 +14,8 @@ function SignInContent() {
   const [isLoading, setIsLoading] = React.useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
-  const error = searchParams.get("error");
-  const callbackUrl = searchParams.get("callbackUrl") || "/owner-dashboard";
+  const error = searchParams?.get("error") || null;
+  const callbackUrl = searchParams?.get("callbackUrl") || "/owner-dashboard";
 
   React.useEffect(() => {
     if (error) {

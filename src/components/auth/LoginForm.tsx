@@ -17,7 +17,7 @@ export default function LoginForm() {
   const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
   const searchParams = useSearchParams();
-  const returnUrl = searchParams.get('returnUrl');
+  const returnUrl = searchParams?.get('returnUrl') || '/owner-dashboard';
   const supabase = createClient();
 
   const handleSubmit = async (e: React.FormEvent) => {

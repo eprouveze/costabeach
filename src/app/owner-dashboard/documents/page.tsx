@@ -21,7 +21,7 @@ import { fr, ar, enUS } from "date-fns/locale";
 export default function DocumentsPage() {
   const { t, locale } = useI18n();
   const searchParams = useSearchParams();
-  const categoryParam = searchParams.get('category');
+  const categoryParam = searchParams?.get('category');
   
   const [userLanguage, setUserLanguage] = useState<Language>(Language.FRENCH);
   const [searchQuery, setSearchQuery] = useState<string>("");
