@@ -11,10 +11,31 @@ export async function POST(req: NextRequest) {
   let userEmail: string | undefined;
   
   try {
+    // Check content type and content length to prevent empty body errors
+    const contentType = req.headers.get('content-type') || '';
+    const contentLength = req.headers.get('content-length') || '0';
+    
+    // If empty request or wrong content type, return error
+    if (parseInt(contentLength) === 0 || !contentType.includes('application/json')) {
+      console.log('[API] ensure-user-exists: Empty request or invalid content type');
+      return NextResponse.json({ 
+        success: false, 
+        message: "Invalid request. Please provide a JSON body with userId and userEmail." 
+      }, { status: 400 });
+    }
+    
     // Get the userId and userEmail from the request body
-    const reqBody = await req.json();
-    userId = reqBody.userId;
-    userEmail = reqBody.userEmail;
+    try {
+      const reqBody = await req.json();
+      userId = reqBody.userId;
+      userEmail = reqBody.userEmail;
+    } catch (jsonError) {
+      console.error('[API] JSON parsing error:', jsonError);
+      return NextResponse.json({ 
+        success: false, 
+        message: "Invalid JSON in request body" 
+      }, { status: 400 });
+    }
     
     if (!userId || !userEmail) {
       return NextResponse.json({ 

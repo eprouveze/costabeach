@@ -550,3 +550,5 @@ This change makes the document listing resilient to database schema differences 
 
 ## Fixed DocumentPreview story by removing extra properties from author objects that were causing type errors
 - Updated upload-sample-documents.ts script to use correct field names (isPublished, view_count, download_count) that match the Prisma schema
+
+## Fixed owner dashboard performance issues by optimizing API calls to ensure-user-exists endpoint and adding robust error handling for JSON parsing.

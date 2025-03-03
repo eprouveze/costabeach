@@ -22,6 +22,7 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [userVerified, setUserVerified] = useState(false); // Track if user has been verified
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
@@ -83,9 +84,8 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
               console.log('Note: Unable to create users table. This is expected if the table already exists or if you lack permissions.');
             }
 
-            // First, attempt to use the server API to ensure user exists
-            // This approach avoids RLS problems entirely by using a server endpoint
-            if (isOwnerDashboardPath) {
+            // Only make the API call if we haven't already verified the user and we're on the owner dashboard
+            if (isOwnerDashboardPath && !userVerified && session.user?.id && session.user?.email) {
               try {
                 // Call a fetch to your server-side API route
                 const response = await fetch('/api/users/ensure-user-exists', {
@@ -102,6 +102,7 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
                 if (response.ok) {
                   const result = await response.json();
                   logUserData('User record verified or created via API', result);
+                  setUserVerified(true); // Mark user as verified to prevent future calls
                 } else {
                   console.error('Failed to ensure user exists via API:', await response.text());
                 }

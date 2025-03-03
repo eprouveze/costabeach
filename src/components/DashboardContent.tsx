@@ -64,7 +64,15 @@ export function DashboardContent() {
       category = DocumentCategory.COMITE_DE_SUIVI;
   }
 
-  // Fetch documents based on selected category
+  // Get download URL mutation with better error handling
+  const getDownloadUrl = api.documents.getDownloadUrl.useMutation({
+    onError: (error) => {
+      console.error("Error getting download URL:", error);
+      toast.error(`${t("documents.errorDownloading") || "Error downloading document"}: ${error.message}`);
+    }
+  });
+
+  // Fetch documents based on selected category with better caching and stale-while-revalidate
   const { 
     data: documents, 
     isLoading, 
@@ -78,39 +86,45 @@ export function DashboardContent() {
       searchQuery
     }, 
     {
+      // Only fetch if not viewing information and not manually fetching
       enabled: (!typeParam || typeParam !== "information") && !isManuallyFetching,
-      retry: 3,
-      retryDelay: 1000
+      retry: 2, // Reduce retries to prevent excessive API calls
+      retryDelay: attempt => Math.min(1000 * (2 ** attempt), 5000), // Exponential backoff with 5s cap
+      staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+      refetchOnWindowFocus: false, // Don't refetch on window focus
+      refetchOnReconnect: true, // Refetch on reconnect
     }
   );
-
-  // Handle errors from the query
+  
+  // Handle errors separately with an effect
   useEffect(() => {
     if (error) {
       console.error("Error fetching documents:", error);
       toast.error(`${t("documents.errorLoading") || "Error loading documents"}: ${error.message}`);
-      
-      // If we haven't retried too many times, try again after a delay
-      if (retryCount < 3) {
-        setTimeout(() => {
-          setRetryCount(prev => prev + 1);
-          refetch();
-        }, 2000);
-      }
     }
-  }, [error, retryCount, refetch, t]);
+  }, [error, t]);
 
-  // Get download URL mutation
-  const getDownloadUrl = api.documents.getDownloadUrl.useMutation();
+  // Handle manual retry with debounce
+  const [isRetryDisabled, setIsRetryDisabled] = useState(false);
   
-  // Handle download URL error
-  useEffect(() => {
-    if (getDownloadUrl.error) {
-      console.error("Error getting download URL:", getDownloadUrl.error);
-      toast.error(`${t("documents.errorDownloading") || "Error downloading document"}: ${getDownloadUrl.error.message}`);
+  const handleManualRetry = useCallback(async () => {
+    if (isRetryDisabled) return;
+    
+    try {
+      setIsRetryDisabled(true);
+      setIsManuallyFetching(true);
+      toast.info(t("common.retrying") || "Retrying...");
+      await refetch();
+      toast.success(t("common.retrySuccessful") || "Successfully refreshed");
+    } catch (err: any) {
+      toast.error(`${t("common.retryFailed") || "Retry failed"}: ${err.message}`);
+    } finally {
+      setIsManuallyFetching(false);
+      // Disable retry button for 2 seconds to prevent spam clicks
+      setTimeout(() => setIsRetryDisabled(false), 2000);
     }
-  }, [getDownloadUrl.error, t]);
-  
+  }, [refetch, t, isRetryDisabled]);
+
   // Format date for display
   const formatDate = (date: Date) => {
     const dateLocale = locale === "fr" ? fr : locale === "ar" ? ar : enUS;
@@ -125,20 +139,6 @@ export function DashboardContent() {
     if (bytes < 1024) return bytes + ' B';
     else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
     else return (bytes / 1048576).toFixed(1) + ' MB';
-  };
-
-  // Handle manual retry
-  const handleManualRetry = async () => {
-    try {
-      setIsManuallyFetching(true);
-      toast.info(t("common.retrying") || "Retrying...");
-      await refetch();
-      toast.success(t("common.retrySuccessful") || "Successfully refreshed");
-    } catch (err: any) {
-      toast.error(`${t("common.retryFailed") || "Retry failed"}: ${err.message}`);
-    } finally {
-      setIsManuallyFetching(false);
-    }
   };
 
   // Option 1: Change the formatting to include all required fields from the Document interface
