@@ -15,6 +15,7 @@ async function main() {
       phoneNumber: '+1234567890',
       status: 'approved' as RegistrationStatus,
       preferredLanguage: 'french',
+      updatedAt: new Date(),
     },
   });
 
