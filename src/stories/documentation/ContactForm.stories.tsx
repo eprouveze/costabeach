@@ -215,7 +215,7 @@ const withI18nProvider = (Story: React.ComponentType) => (
 );
 
 const meta: Meta<typeof ContactFormDocumentation> = {
-  title: 'Documentation/Contact Form',
+  title: 'Documentation/ContactForm',
   component: ContactFormDocumentation,
   decorators: [withI18nProvider],
   parameters: {

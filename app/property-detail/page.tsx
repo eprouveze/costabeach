@@ -1,12 +1,19 @@
-import PublicLandingTemplate from '@/components/templates/PublicLandingTemplate';
+"use client";
 
-export default function PropertyDetailPage() {
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+export default function PropertyDetailRedirectPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Redirect to the French locale version
+    router.replace("/fr/property-detail");
+  }, [router]);
+
   return (
-    <PublicLandingTemplate>
-      <section className="p-4">
-        <h1 className="text-2xl font-bold">Property Detail</h1>
-        <p>Detailed information about the property will be displayed here.</p>
-      </section>
-    </PublicLandingTemplate>
+    <div className="flex min-h-screen items-center justify-center">
+      <p className="text-lg">Redirecting to property detail page...</p>
+    </div>
   );
 } 

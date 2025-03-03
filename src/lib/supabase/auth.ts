@@ -95,7 +95,17 @@ export async function requireAuth() {
   const user = await getUser()
   
   if (!user) {
-    redirect('/auth/signin')
+    // Get the current locale from the URL or use French as default
+    let locale = 'fr'
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname
+      const pathParts = path.split('/')
+      if (pathParts.length > 1 && ['fr', 'en', 'ar'].includes(pathParts[1])) {
+        locale = pathParts[1]
+      }
+    }
+    
+    redirect(`/${locale}/auth/signin`)
   }
   
   return user

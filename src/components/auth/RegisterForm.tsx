@@ -7,8 +7,10 @@ import { ArrowLeft, Mail, Lock, User, Phone, Building, Home, Loader2, AlertCircl
 import { signUp } from '@/lib/supabase/auth';
 import { toast } from 'react-toastify';
 import { Language } from '@/lib/types';
+import { useI18n } from '@/lib/i18n/client';
 
 export default function RegisterForm() {
+  const { t } = useI18n();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -71,11 +73,11 @@ export default function RegisterForm() {
         <div className="text-center">
           <h1 className="text-4xl font-bold">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-brandBlue-500 to-brandBlue-700 dark:from-brandBlue-400 dark:to-brandBlue-600">
-              Create Account
+              {t('auth.signup.title')}
             </span>
           </h1>
           <p className="mt-3 text-neutral-600 dark:text-neutral-300">
-            Join Costa Beach to access exclusive owner resources
+            {t('auth.signup.subtitle')}
           </p>
         </div>
 
@@ -93,7 +95,7 @@ export default function RegisterForm() {
                 htmlFor="name"
                 className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
               >
-                Full Name
+                {t('auth.signup.fullName')}
               </label>
               <div className="mt-2 relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -108,7 +110,8 @@ export default function RegisterForm() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 pl-10 px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 shadow-sm dark:bg-neutral-800 focus:border-brandBlue-500 dark:focus:border-brandBlue-400 focus:ring-brandBlue-500 dark:focus:ring-brandBlue-400"
-                  placeholder="John Doe"
+                  placeholder={t('auth.signup.fullNamePlaceholder')}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -118,7 +121,7 @@ export default function RegisterForm() {
                 htmlFor="email"
                 className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
               >
-                Email address
+                {t('auth.signup.email')}
               </label>
               <div className="mt-2 relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -133,7 +136,8 @@ export default function RegisterForm() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 pl-10 px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 shadow-sm dark:bg-neutral-800 focus:border-brandBlue-500 dark:focus:border-brandBlue-400 focus:ring-brandBlue-500 dark:focus:ring-brandBlue-400"
-                  placeholder="you@example.com"
+                  placeholder={t('auth.signup.emailPlaceholder')}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -144,7 +148,7 @@ export default function RegisterForm() {
                   htmlFor="building-number"
                   className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
                 >
-                  Building Number
+                  {t('auth.signup.buildingNumber')}
                 </label>
                 <div className="mt-2 relative">
                   <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -157,7 +161,8 @@ export default function RegisterForm() {
                     value={buildingNumber}
                     onChange={(e) => setBuildingNumber(e.target.value)}
                     className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 pl-10 px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 shadow-sm dark:bg-neutral-800 focus:border-brandBlue-500 dark:focus:border-brandBlue-400 focus:ring-brandBlue-500 dark:focus:ring-brandBlue-400"
-                    placeholder="B12"
+                    placeholder={t('auth.signup.buildingNumberPlaceholder')}
+                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -167,7 +172,7 @@ export default function RegisterForm() {
                   htmlFor="apartment-number"
                   className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
                 >
-                  Apartment Number
+                  {t('auth.signup.apartmentNumber')}
                 </label>
                 <div className="mt-2 relative">
                   <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -180,7 +185,8 @@ export default function RegisterForm() {
                     value={apartmentNumber}
                     onChange={(e) => setApartmentNumber(e.target.value)}
                     className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 pl-10 px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 shadow-sm dark:bg-neutral-800 focus:border-brandBlue-500 dark:focus:border-brandBlue-400 focus:ring-brandBlue-500 dark:focus:ring-brandBlue-400"
-                    placeholder="304"
+                    placeholder={t('auth.signup.apartmentNumberPlaceholder')}
+                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -191,7 +197,7 @@ export default function RegisterForm() {
                 htmlFor="phone-number"
                 className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
               >
-                Phone Number
+                {t('auth.signup.phoneNumber')}
               </label>
               <div className="mt-2 relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -205,7 +211,8 @@ export default function RegisterForm() {
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 pl-10 px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 shadow-sm dark:bg-neutral-800 focus:border-brandBlue-500 dark:focus:border-brandBlue-400 focus:ring-brandBlue-500 dark:focus:ring-brandBlue-400"
-                  placeholder="+212 123 456 789"
+                  placeholder={t('auth.signup.phoneNumberPlaceholder')}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -215,7 +222,7 @@ export default function RegisterForm() {
                 htmlFor="preferred-language"
                 className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
               >
-                Preferred Language
+                {t('auth.signup.preferredLanguage')}
               </label>
               <div className="mt-2">
                 <select
@@ -224,10 +231,11 @@ export default function RegisterForm() {
                   value={preferredLanguage}
                   onChange={(e) => setPreferredLanguage(e.target.value as Language)}
                   className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 px-4 py-3 text-neutral-900 dark:text-white shadow-sm dark:bg-neutral-800 focus:border-brandBlue-500 dark:focus:border-brandBlue-400 focus:ring-brandBlue-500 dark:focus:ring-brandBlue-400"
+                  disabled={isLoading}
                 >
-                  <option value={Language.FRENCH}>French</option>
-                  <option value={Language.ENGLISH}>English</option>
-                  <option value={Language.ARABIC}>Arabic</option>
+                  <option value={Language.FRENCH}>{t('auth.signup.french')}</option>
+                  <option value={Language.ENGLISH}>{t('auth.signup.english')}</option>
+                  <option value={Language.ARABIC}>{t('auth.signup.arabic')}</option>
                 </select>
               </div>
             </div>
@@ -237,7 +245,7 @@ export default function RegisterForm() {
                 htmlFor="password"
                 className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
               >
-                Password
+                {t('auth.signup.password')}
               </label>
               <div className="mt-2 relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -252,7 +260,8 @@ export default function RegisterForm() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 pl-10 px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 shadow-sm dark:bg-neutral-800 focus:border-brandBlue-500 dark:focus:border-brandBlue-400 focus:ring-brandBlue-500 dark:focus:ring-brandBlue-400"
-                  placeholder="••••••••"
+                  placeholder={t('auth.signup.passwordPlaceholder')}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -262,7 +271,7 @@ export default function RegisterForm() {
                 htmlFor="confirm-password"
                 className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
               >
-                Confirm Password
+                {t('auth.signup.confirmPassword')}
               </label>
               <div className="mt-2 relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -277,7 +286,8 @@ export default function RegisterForm() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 pl-10 px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 shadow-sm dark:bg-neutral-800 focus:border-brandBlue-500 dark:focus:border-brandBlue-400 focus:ring-brandBlue-500 dark:focus:ring-brandBlue-400"
-                  placeholder="••••••••"
+                  placeholder={t('auth.signup.confirmPasswordPlaceholder')}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -290,12 +300,12 @@ export default function RegisterForm() {
               {isLoading ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
-                  Creating account...
+                  {t('auth.signup.submitting')}
                 </>
               ) : (
                 <>
                   <User className="h-5 w-5" />
-                  Create Account
+                  {t('auth.signup.submit')}
                 </>
               )}
             </button>
@@ -303,12 +313,21 @@ export default function RegisterForm() {
 
           <div className="mt-6">
             <p className="text-center text-sm text-neutral-600 dark:text-neutral-400">
-              Already have an account?{" "}
+              {t('auth.signup.alreadyHaveAccount')}{" "}
               <Link
                 href="/auth/signin"
                 className="font-medium text-brandBlue-600 dark:text-brandBlue-400 hover:text-brandBlue-500"
               >
-                Sign in
+                {t('auth.signup.signIn')}
+              </Link>
+            </p>
+            <p className="mt-2 text-center text-sm text-neutral-600 dark:text-neutral-400">
+              {t('auth.signup.bySigningUp')}{" "}
+              <Link
+                href="/privacy"
+                className="font-medium text-brandBlue-600 dark:text-brandBlue-400 hover:text-brandBlue-500"
+              >
+                {t('auth.signup.privacyPolicy')}
               </Link>
             </p>
           </div>

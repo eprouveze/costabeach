@@ -1,13 +1,19 @@
-import { AuthWrapper } from "@/components/auth/AuthWrapper";
-import { DashboardContent } from "@/components/DashboardContent";
-import OwnerDashboardTemplate from "@/components/templates/OwnerDashboardTemplate";
+"use client";
 
-export default function OwnerDashboardPage() {
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+export default function OwnerDashboardRedirectPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Redirect to the French locale version
+    router.replace("/fr/owner-dashboard");
+  }, [router]);
+
   return (
-    <AuthWrapper requireAuth={true} allowedRoles={["owner"]}>
-      <OwnerDashboardTemplate>
-        <DashboardContent />
-      </OwnerDashboardTemplate>
-    </AuthWrapper>
+    <div className="flex min-h-screen items-center justify-center">
+      <p className="text-lg">Redirecting to owner dashboard...</p>
+    </div>
   );
 } 

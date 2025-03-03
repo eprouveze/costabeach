@@ -1,19 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Header } from '../../components/organisms/Header';
-import { NavItem } from '../../components/molecules/NavItem';
+import { Header } from '@/components/organisms/Header';
+import { NavItem } from '@/components/molecules/NavItem';
 import { Home, FileText, Mail, User, Info } from 'lucide-react';
-import { MockI18nProvider } from '../utils/MockI18nProvider';
-
-// Mock translations for Storybook
-const mockTranslations = {
-  'navigation.home': 'Home',
-  'navigation.about': 'About',
-  'navigation.documents': 'Documents',
-  'navigation.contact': 'Contact',
-  'navigation.ownerPortal': 'Owner Portal',
-  'navigation.toggleMenu': 'Toggle Menu',
-  'common.language': 'Language',
-};
+import { I18nProvider } from '@/lib/i18n/client';
 
 // Create a wrapper component for documentation
 const NavigationPatterns = () => {
@@ -97,18 +86,15 @@ const NavigationPatterns = () => {
   );
 };
 
-// Create a decorator that wraps components with MockI18nProvider
+// Create a decorator that wraps components with I18nProvider
 const withI18nProvider = (Story: React.ComponentType) => (
-  <MockI18nProvider 
-    locale="en" 
-    messages={mockTranslations}
-  >
+  <I18nProvider>
     <Story />
-  </MockI18nProvider>
+  </I18nProvider>
 );
 
 const meta: Meta<typeof NavigationPatterns> = {
-  title: 'Documentation/Navigation Patterns',
+  title: 'Documentation/Navigation',
   component: NavigationPatterns,
   decorators: [withI18nProvider],
   parameters: {

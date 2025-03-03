@@ -6,8 +6,10 @@ import Link from 'next/link';
 import { ArrowLeft, Mail, Lock, Loader2, AlertCircle } from 'lucide-react';
 import { signIn } from '@/lib/supabase/auth';
 import { toast } from 'react-toastify';
+import { useI18n } from '@/lib/i18n/client';
 
 export default function LoginForm() {
+  const { t } = useI18n();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -55,20 +57,20 @@ export default function LoginForm() {
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-brandBlue-500 to-brandBlue-700 dark:from-brandBlue-400 dark:to-brandBlue-600">
-              Welcome Back
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600">
+              {t('auth.signin.title')}
             </span>
           </h1>
           <p className="mt-3 text-neutral-600 dark:text-neutral-300">
-            Sign in to your account
+            {t('auth.signin.subtitle')}
           </p>
         </div>
 
         <div className="rounded-2xl bg-white dark:bg-neutral-800/50 p-8 shadow-xl">
           {errorMessage && (
-            <div className="mb-4 flex items-center gap-2 rounded-lg bg-red-50 dark:bg-red-900/20 p-3 text-red-800 dark:text-red-200">
+            <div className="mb-6 flex items-center space-x-2 rounded-lg bg-red-50 dark:bg-red-900/30 p-4 text-red-800 dark:text-red-200">
               <AlertCircle className="h-5 w-5" />
-              <p className="text-sm">{errorMessage}</p>
+              <span>{errorMessage}</span>
             </div>
           )}
 
@@ -78,12 +80,9 @@ export default function LoginForm() {
                 htmlFor="email"
                 className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
               >
-                Email address
+                {t('auth.signin.email')}
               </label>
-              <div className="mt-2 relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Mail className="h-5 w-5 text-neutral-400" />
-                </div>
+              <div className="mt-2">
                 <input
                   id="email"
                   name="email"
@@ -92,8 +91,9 @@ export default function LoginForm() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 pl-10 px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 shadow-sm dark:bg-neutral-800 focus:border-brandBlue-500 dark:focus:border-brandBlue-400 focus:ring-brandBlue-500 dark:focus:ring-brandBlue-400"
-                  placeholder="you@example.com"
+                  className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 shadow-sm dark:bg-neutral-800 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400"
+                  placeholder={t('auth.signin.emailPlaceholder')}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -103,12 +103,9 @@ export default function LoginForm() {
                 htmlFor="password"
                 className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
               >
-                Password
+                {t('auth.signin.password')}
               </label>
-              <div className="mt-2 relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Lock className="h-5 w-5 text-neutral-400" />
-                </div>
+              <div className="mt-2">
                 <input
                   id="password"
                   name="password"
@@ -117,8 +114,9 @@ export default function LoginForm() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 pl-10 px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 shadow-sm dark:bg-neutral-800 focus:border-brandBlue-500 dark:focus:border-brandBlue-400 focus:ring-brandBlue-500 dark:focus:ring-brandBlue-400"
-                  placeholder="••••••••"
+                  className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 shadow-sm dark:bg-neutral-800 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400"
+                  placeholder={t('auth.signin.passwordPlaceholder')}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -146,30 +144,29 @@ export default function LoginForm() {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-brandBlue-500 to-brandBlue-600 px-4 py-3 text-white shadow-lg shadow-brandBlue-500/20 transition-all hover:from-brandBlue-600 hover:to-brandBlue-700 hover:shadow-xl hover:shadow-brandBlue-500/30 focus:outline-none focus:ring-2 focus:ring-brandBlue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-3 text-sm font-medium text-white transition-all hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  Signing in...
-                </>
-              ) : (
-                <>
-                  <Mail className="h-5 w-5" />
-                  Sign in
-                </>
-              )}
+              {isLoading ? t('auth.signin.submitting') : t('auth.signin.submit')}
             </button>
           </form>
 
           <div className="mt-6">
             <p className="text-center text-sm text-neutral-600 dark:text-neutral-400">
-              Don&apos;t have an account?{" "}
+              {t('auth.signin.noAccount')}{" "}
               <Link
                 href="/auth/signup"
-                className="font-medium text-brandBlue-600 dark:text-brandBlue-400 hover:text-brandBlue-500"
+                className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500"
               >
-                Sign up
+                {t('auth.signin.signup')}
+              </Link>
+            </p>
+            <p className="mt-2 text-center text-sm text-neutral-600 dark:text-neutral-400">
+              {t('auth.signin.forgotPassword')}{" "}
+              <Link
+                href="/auth/reset-password"
+                className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500"
+              >
+                {t('auth.signin.resetPassword')}
               </Link>
             </p>
           </div>

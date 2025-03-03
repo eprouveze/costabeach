@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { DocumentList } from "@/components/DocumentList";
+import { DocumentList } from "@/components/organisms/DocumentList";
 import { DocumentCategory, Language } from "@/lib/types";
 
 const meta: Meta<typeof DocumentList> = {

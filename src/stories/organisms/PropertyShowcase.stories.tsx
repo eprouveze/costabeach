@@ -1,15 +1,23 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { PropertyShowcase } from "@/components/organisms/PropertyShowcase";
+import { I18nProvider } from "@/lib/i18n/client";
 import { Bed, Bath, Home, Users, Waves, Sun } from "lucide-react";
 
-const meta: Meta<typeof PropertyShowcase> = {
+const meta = {
   title: "Organisms/PropertyShowcase",
   component: PropertyShowcase,
   parameters: {
-    layout: "padded",
+    layout: "fullscreen",
   },
   tags: ["autodocs"],
-};
+  decorators: [
+    (Story) => (
+      <I18nProvider>
+        <Story />
+      </I18nProvider>
+    ),
+  ],
+} satisfies Meta<typeof PropertyShowcase>;
 
 export default meta;
 type Story = StoryObj<typeof PropertyShowcase>;

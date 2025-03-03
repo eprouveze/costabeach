@@ -224,3 +224,40 @@ Fixed build issues related to the Supabase authentication implementation:
    - Build process completes without errors
 
 These changes ensure compatibility between the new Supabase authentication system and the existing application structure, allowing for a smooth transition from NextAuth to Supabase auth.
+
+## Storybook Reorganization (2024-06-24)
+
+- Implemented complete Storybook reorganization following Atomic Design principles
+- Created an enhanced organization script that properly categorizes components
+- Fixed inconsistent story titles to use standardized category/component format
+- Moved all stories to appropriate category folders (atoms, molecules, organisms, templates, pages, documentation)
+- Updated story files to use consistent title patterns for proper sidebar organization
+- Ensured proper order of categories in the Storybook sidebar with documentation first
+
+## Storybook tRPC Context Fixes (2024-06-24)
+
+- Fixed tRPC context errors in Storybook by creating proper mock implementations for components that use tRPC hooks
+- Created MockDocumentPreview component to avoid tRPC context requirements in DocumentViewer stories
+- Updated TranslationWorkflow and TranslationService stories to use MockTRPCProvider
+- Improved title detection in fix-storybook-dependencies.js script to handle complex cases with mock data
+- Enhanced organize-storybook.js script to better update titles in story files
+- Fixed all title issues to ensure consistent Atomic Design organization in the Storybook sidebar
+
+## Fixed I18n Context Issues in Storybook (2024-06-25)
+
+- Fixed "useI18n must be used within an I18nProvider" errors in Navigation story
+- Updated Navigation.stories.tsx to use the standard I18nProvider instead of MockI18nProvider
+- Added missing I18nProvider decorator to PropertyShowcase story
+- Added tRPC context provider to I18nSystem documentation story
+- Enhanced fix-storybook-dependencies.js script to better detect missing I18nProvider issues
+- Added check for components that might use i18n indirectly (like Header and OwnerPortalSidebar)
+
+## Lightweight Template for Auth Pages (2024-06-21)
+
+- Created a new `PublicPageTemplate` component that provides a lighter alternative to the full landing page template
+- Updated all auth pages (signin, signup) across all language versions to use the new lightweight template
+- Updated the contact page to use the lightweight template
+- Fixed a syntax error in DocumentList.tsx
+- The new template provides a cleaner UI with the header and footer but focuses the user's attention on the content
+
+These changes improve the user experience by ensuring the signup and login forms are prominently displayed without being pushed down by landing page content.

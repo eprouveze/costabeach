@@ -7,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 function SignInContent() {
   const [email, setEmail] = React.useState("");
@@ -132,10 +133,17 @@ function SignInContent() {
   );
 }
 
-export default function OwnerLoginPage() {
+export default function OwnerLoginRedirectPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Redirect to the French locale version
+    router.replace("/fr/owner-login");
+  }, [router]);
+
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <SignInContent />
-    </Suspense>
+    <div className="flex min-h-screen items-center justify-center">
+      <p className="text-lg">Redirecting to login page...</p>
+    </div>
   );
 } 
