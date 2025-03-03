@@ -1256,6 +1256,8 @@ This development plan outlines the transformation of the Costa Beach application
 - [x] Update authentication components and hooks
 - [x] Implement role-based access control with Supabase
 - [x] Update middleware and protected routes
+- [x] Create database tables and triggers for user management
+- [x] Add fallback mechanisms for database setup issues
 - [ ] Migrate user data from existing system to Supabase
 - [ ] Add social login providers (Google, Facebook)
 
@@ -1271,6 +1273,10 @@ This development plan outlines the transformation of the Costa Beach application
 - Added proper handling of protected routes with session verification
 - Created hooks for accessing user session and authentication state
 - Implemented proper redirection for authentication flows
+- Created SQL migration scripts to set up necessary database tables in Supabase
+- Added server-side API route to create database tables and triggers
+- Implemented fallback mechanisms in AuthWrapper for handling missing database tables
+- Enhanced error handling throughout the authentication flow for database-related issues
 
 **Remaining Tasks:**
 - Complete user data migration from existing database to Supabase Auth
@@ -1282,6 +1288,7 @@ This development plan outlines the transformation of the Costa Beach application
 **Tests:**
 - [x] Test Supabase client initialization
 - [x] Test authentication flows (sign up, sign in, sign out, password reset)
+- [x] Test database table creation and fallback mechanisms
 - [ ] Test social login providers (Google, Facebook)
 - [x] Test session persistence and refresh
 - [x] Test role-based access control with Supabase
@@ -1305,51 +1312,57 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Add examples of protected content display based on user role
 
 **Migration Steps:**
-1. **Setup and Configuration (0.5 SP)**
+1. **Setup and Configuration (0.5 SP)** ✅
    - Create Supabase project in dashboard
    - Configure authentication settings (password policies, email templates)
    - Set up social providers (Google, Facebook)
    - Add environment variables to project
 
-2. **Supabase Client Integration (0.5 SP)**
+2. **Supabase Client Integration (0.5 SP)** ✅
    - Install Supabase packages (`@supabase/supabase-js`, `@supabase/auth-helpers-nextjs`)
    - Create client utilities for server and browser contexts
    - Implement hooks for authentication state
 
-3. **User Data Migration (1 SP)**
+3. **Database Setup (0.5 SP)** ✅
+   - Create SQL migration scripts for database tables
+   - Implement server-side API route for table creation
+   - Add fallback mechanisms for handling missing tables
+   - Implement error handling for database operations
+
+4. **User Data Migration (1 SP)**
    - Export existing user data from database
    - Transform data to match Supabase Auth schema
    - Import users to Supabase (consider password hashing differences)
    - Migrate user metadata and role information
    - Verify successful migration with test accounts
 
-4. **Auth UI Components (1 SP)**
+5. **Auth UI Components (1 SP)** ✅
    - Install Auth UI packages (`@supabase/auth-ui-react`, `@supabase/auth-ui-shared`)
    - Create sign-in, sign-up, and password reset components
    - Implement social login buttons
    - Style components to match application design
    - Add internationalization support for auth UI
 
-5. **Middleware and Route Protection (1 SP)**
+6. **Middleware and Route Protection (1 SP)** ✅
    - Update middleware to verify Supabase session
    - Implement public and protected route handling
    - Create helper functions for role checks
    - Update layout components to handle auth state
 
-6. **Session Management (0.5 SP)**
+7. **Session Management (0.5 SP)** ✅
    - Implement session refresh mechanism
    - Add user profile and session information to context
    - Update components that rely on session data
    - Test session persistence across page navigation
 
-7. **Testing and Validation (1 SP)**
+8. **Testing and Validation (1 SP)** ✅
    - Create end-to-end tests for authentication flows
    - Test social login functionality
    - Verify role-based access control
    - Test error handling and edge cases
    - Update existing tests to work with Supabase
 
-8. **Documentation and Cleanup (0.5 SP)**
+9. **Documentation and Cleanup (0.5 SP)**
    - Update documentation with new authentication approach
    - Create Storybook examples for auth components
    - Remove NextAuth dependencies and code
