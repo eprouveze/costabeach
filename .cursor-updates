@@ -158,3 +158,15 @@ Note: In production, this change is transparent as the port is handled by the ho
 - Fixed NextAuth headers error by properly awaiting the headers() function in the auth configuration.
 - Updated DocumentCategory enum to include GENERAL and FINANCE categories for better document organization.
 - Successfully built and tested the application with all issues resolved.
+
+## Supabase Authentication Migration Plan (2024-06-19)
+
+Added a comprehensive plan to migrate from NextAuth to Supabase Authentication, including:
+
+1. Detailed implementation steps for Supabase project setup and configuration
+2. User data migration strategy from existing database to Supabase Auth
+3. Integration of social login providers (Google and Facebook)
+4. Updated middleware for session verification and route protection
+5. Component updates for authentication UI with internationalization support
+6. Testing strategy and required environment variables
+7. Estimated effort (5.5 story points) with implementation timeline

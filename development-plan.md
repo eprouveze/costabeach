@@ -1168,6 +1168,115 @@ This development plan outlines the transformation of the Costa Beach application
 - Check security features like account locking
 - Verify password reset functionality
 
+### 8.5 Supabase Authentication Migration
+- [ ] Set up Supabase project and authentication services
+- [ ] Implement Supabase client integration
+- [ ] Migrate user data from existing system to Supabase
+- [ ] Update authentication components and hooks
+- [ ] Implement role-based access control with Supabase
+- [ ] Add social login providers (Google, Facebook)
+- [ ] Update middleware and protected routes
+
+**Implementation Details:**
+- Create a Supabase project and configure authentication settings
+- Set up environment variables for Supabase connection
+- Create a Supabase client utility for both server and client components
+- Implement user data migration from existing database to Supabase Auth
+- Map existing roles and permissions to Supabase user metadata
+- Configure Google and Facebook OAuth providers in Supabase dashboard
+- Create custom Auth UI components using Supabase Auth UI library
+- Update middleware to use Supabase session verification
+- Implement row-level security policies in Supabase for data access control
+- Create hooks for accessing user session and authentication state
+- Implement proper redirection for protected routes
+- Add email templates for authentication flows
+
+**Tests:**
+- [ ] Test Supabase client initialization
+- [ ] Test authentication flows (sign up, sign in, sign out, password reset)
+- [ ] Test social login providers (Google, Facebook)
+- [ ] Test session persistence and refresh
+- [ ] Test role-based access control with Supabase
+- [ ] Test data migration accuracy
+- [ ] Test protected routes and middleware
+
+**Testing Instructions:**
+- Set up a test Supabase project for development
+- Test all authentication flows from end to end
+- Verify user data migration with test accounts
+- Test social login with test credentials
+- Verify protected routes correctly restrict access
+- Check role-based permissions are enforced
+- Test session timeout and refresh functionality
+- Verify email templates and notifications
+
+**Storybook:**
+- [ ] Create Storybook stories for auth components
+- [ ] Document authentication flows and states
+- [ ] Add examples of protected content display based on user role
+
+**Migration Steps:**
+1. **Setup and Configuration (0.5 SP)**
+   - Create Supabase project in dashboard
+   - Configure authentication settings (password policies, email templates)
+   - Set up social providers (Google, Facebook)
+   - Add environment variables to project
+
+2. **Supabase Client Integration (0.5 SP)**
+   - Install Supabase packages (`@supabase/supabase-js`, `@supabase/auth-helpers-nextjs`)
+   - Create client utilities for server and browser contexts
+   - Implement hooks for authentication state
+
+3. **User Data Migration (1 SP)**
+   - Export existing user data from database
+   - Transform data to match Supabase Auth schema
+   - Import users to Supabase (consider password hashing differences)
+   - Migrate user metadata and role information
+   - Verify successful migration with test accounts
+
+4. **Auth UI Components (1 SP)**
+   - Install Auth UI packages (`@supabase/auth-ui-react`, `@supabase/auth-ui-shared`)
+   - Create sign-in, sign-up, and password reset components
+   - Implement social login buttons
+   - Style components to match application design
+   - Add internationalization support for auth UI
+
+5. **Middleware and Route Protection (1 SP)**
+   - Update middleware to verify Supabase session
+   - Implement public and protected route handling
+   - Create helper functions for role checks
+   - Update layout components to handle auth state
+
+6. **Session Management (0.5 SP)**
+   - Implement session refresh mechanism
+   - Add user profile and session information to context
+   - Update components that rely on session data
+   - Test session persistence across page navigation
+
+7. **Testing and Validation (1 SP)**
+   - Create end-to-end tests for authentication flows
+   - Test social login functionality
+   - Verify role-based access control
+   - Test error handling and edge cases
+   - Update existing tests to work with Supabase
+
+8. **Documentation and Cleanup (0.5 SP)**
+   - Update documentation with new authentication approach
+   - Create Storybook examples for auth components
+   - Remove NextAuth dependencies and code
+   - Clean up unused authentication components
+
+**Required Environment Variables:**
+```
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key (server-side only)
+```
+
+**Implementation Timeline:**
+- Total estimated effort: 5.5 story points
+- Recommended implementation order: Setup → Client Integration → Auth UI → Middleware → User Migration → Session Management → Testing → Documentation
+
 ## Notes for Implementation
 
 - All user-facing text must support both French and Arabic
