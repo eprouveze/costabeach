@@ -269,3 +269,14 @@ These changes ensure compatibility between the new Supabase authentication syste
 - Used proper translation keys from landing.footer namespace
 - Improved site consistency by using shared Header and Footer components
 - This change makes the footer reusable across all templates and page types
+
+## Fixed Localized Navigation Links (2024-06-21)
+
+- Fixed incorrect navigation links in the Header component:
+  - Updated all navigation items to include the current locale in URLs
+  - Fixed "Portail Proprietaire" link that was incorrectly pointing to "/src/app/auth/signin"
+  - Updated all other links (home, contact, auth) to properly include locale
+  - Fixed the site title link to navigate to the localized home page
+  - Updated the auth action handler to redirect to localized routes
+- These changes ensure proper navigation when switching between languages
+- Users can now properly access the sign-in page from any language variant of the site

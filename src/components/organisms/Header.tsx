@@ -17,7 +17,7 @@ interface HeaderProps {
 export const Header = ({ className = "" }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const router = useRouter();
   const { session, isLoading } = useSupabaseSession();
   
@@ -29,14 +29,26 @@ export const Header = ({ className = "" }: HeaderProps) => {
   }, [pathname]);
 
   const navItems = [
-    { label: t("navigation.home"), href: "/", icon: Home },
-    { label: t("navigation.ownerPortal"), href: isAuthenticated ? "/owner-dashboard" : "/auth/signin", icon: User },
-    { label: t("navigation.contact"), href: "/contact", icon: Mail },
+    { 
+      label: t("navigation.home"), 
+      href: `/${locale}`, 
+      icon: Home 
+    },
+    { 
+      label: t("navigation.ownerPortal"), 
+      href: isAuthenticated ? `/${locale}/owner-dashboard` : `/${locale}/auth/signin`, 
+      icon: User 
+    },
+    { 
+      label: t("navigation.contact"), 
+      href: `/${locale}/contact`, 
+      icon: Mail 
+    },
   ];
 
   // Check if a nav item is active
   const isActive = (href: string) => {
-    if (href === "/") {
+    if (href === `/${locale}`) {
       return pathname === href;
     }
     return pathname.startsWith(href);
@@ -45,9 +57,9 @@ export const Header = ({ className = "" }: HeaderProps) => {
   const handleAuthAction = async () => {
     if (isAuthenticated) {
       await signOut();
-      router.push("/");
+      router.push(`/${locale}`);
     } else {
-      router.push("/auth/signin");
+      router.push(`/${locale}/auth/signin`);
     }
   };
 
@@ -57,7 +69,7 @@ export const Header = ({ className = "" }: HeaderProps) => {
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              <Link href="/" className="hover:text-blue-600 transition-colors">
+              <Link href={`/${locale}`} className="hover:text-blue-600 transition-colors">
                 {t("common.siteTitle")}
               </Link>
             </h1>

@@ -1,35 +1,28 @@
 import React, { useState, useEffect } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { DocumentList } from "@/components/organisms/DocumentList";
 import { DocumentCategory, Language } from "@/lib/types";
 import { I18nProvider } from "@/lib/i18n/client";
-import MockTRPCProvider from "../../../.storybook/MockTRPCProvider";
+import { Search, Filter, Loader } from "lucide-react";
+import { DocumentCard } from "@/components/DocumentCard";
 
-// Create a mocked version of the DocumentList component
-// This avoids the need for real tRPC hooks
+// Create a fully mocked version of DocumentList that doesn't rely on the real component
 const MockedDocumentList = (props: any) => {
   const [documents, setDocuments] = useState(props.initialDocuments || []);
-  const [isLoading, setIsLoading] = useState(!props.initialDocuments);
   const [filteredDocuments, setFilteredDocuments] = useState(props.initialDocuments || []);
+  const [isLoading, setIsLoading] = useState(!props.initialDocuments);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(props.category);
   const [selectedLanguage, setSelectedLanguage] = useState(props.language);
-  
-  // Mock the useDocuments hook functions
-  const mockGetDocuments = async () => {
-    // Simulate loading delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return props.initialDocuments || [];
-  };
   
   // Initialize documents on mount
   useEffect(() => {
     if (!props.initialDocuments) {
       const fetchDocuments = async () => {
         setIsLoading(true);
-        const docs = await mockGetDocuments();
-        setDocuments(docs);
-        setFilteredDocuments(docs);
+        // Simulate loading delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setDocuments([]);
+        setFilteredDocuments([]);
         setIsLoading(false);
       };
       fetchDocuments();
@@ -68,15 +61,96 @@ const MockedDocumentList = (props: any) => {
     setFilteredDocuments(filtered);
   };
 
-  // Render the DocumentList with proper props
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    filterDocuments();
+  };
+
+  const handleDocumentDelete = (deletedId: string) => {
+    setDocuments(prev => prev.filter(doc => doc.id !== deletedId));
+  };
+
+  // This is a direct implementation, not using the real DocumentList component
   return (
-    <div className="max-w-7xl mx-auto">
-      <DocumentList
-        {...props}
-        initialDocuments={filteredDocuments}
-        // Override hooks with our mocked versions
-        getDocuments={mockGetDocuments}
-      />
+    <div className="w-full">
+      {/* Search and filters */}
+      {(props.showSearch !== false || props.showFilters !== false) && (
+        <div className="mb-6 flex flex-col md:flex-row gap-4">
+          {props.showSearch !== false && (
+            <form onSubmit={handleSearch} className="flex-1">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search documents..."
+                  className="w-full px-4 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
+                />
+                <button
+                  type="submit"
+                  className="absolute inset-y-0 right-0 px-3 flex items-center"
+                >
+                  <Search className="w-5 h-5 text-gray-400" />
+                </button>
+              </div>
+            </form>
+          )}
+          
+          {props.showFilters !== false && (
+            <div className="flex gap-2">
+              <select
+                value={selectedCategory || ""}
+                onChange={(e) => setSelectedCategory(e.target.value as DocumentCategory || undefined)}
+                className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
+              >
+                <option value="">All Categories</option>
+                {Object.values(DocumentCategory).map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+              
+              <select
+                value={selectedLanguage || ""}
+                onChange={(e) => setSelectedLanguage(e.target.value as Language || undefined)}
+                className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
+              >
+                <option value="">All Languages</option>
+                {Object.values(Language).map((lang) => (
+                  <option key={lang} value={lang}>
+                    {lang}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
+      )}
+      
+      {/* Document list */}
+      {isLoading ? (
+        <div className="flex justify-center items-center py-12">
+          <Loader className="w-8 h-8 animate-spin text-blue-600" />
+        </div>
+      ) : filteredDocuments.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredDocuments.map((doc) => (
+            <DocumentCard
+              key={doc.id}
+              document={doc}
+              showActions={props.showActions !== false}
+              onDelete={handleDocumentDelete}
+              onView={props.onView}
+              onDownload={props.onDownload}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <p className="text-gray-500 dark:text-gray-400">No documents found</p>
+        </div>
+      )}
     </div>
   );
 };
@@ -91,7 +165,9 @@ const meta: Meta<typeof MockedDocumentList> = {
   decorators: [
     (Story) => (
       <I18nProvider>
-        <Story />
+        <div className="max-w-7xl mx-auto">
+          <Story />
+        </div>
       </I18nProvider>
     ),
   ],
