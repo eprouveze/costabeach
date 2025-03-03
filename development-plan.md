@@ -60,11 +60,16 @@ This development plan outlines the transformation of the Costa Beach application
    - Implemented search functionality for documents
    - Added client-side filtering and server-side search capabilities
    - Integrated with the document router to support search queries
+   - Fixed category handling to support multiple formats of category names
+   - Enhanced document fetching to be resilient against database schema differences
+   - Added sample documents to populate the database for testing and demonstration
 
 2. **Document Viewer (Section 5.2)** ✅
    - Added file preview for different formats (PDF, images, text, HTML)
    - Implemented translation request option with background processing
    - Created UI components for requesting translations and checking status
+   - Fixed document loading and display regardless of category name format in database
+   - Enhanced error handling and recovery for document viewer components
 
 3. **Document Management (Section 6.2)**
    - Implement document versioning functionality
@@ -491,17 +496,22 @@ This development plan outlines the transformation of the Costa Beach application
 - Add search functionality with full-text search on title and description
 - Implemented client-side filtering and server-side search capabilities
 - Integrated with the document router to support search queries
+- Fixed category handling to support multiple formats (camelCase, snake_case, lowercase) of category names
+- Enhanced document fetching to be resilient against database schema differences
+- Improved error handling for database-related issues
 
 **Tests:**
 - [x] Test filtering behavior
 - [x] Test search functionality
 - [x] Test pagination if implemented
+- [x] Test category matching with different format variations
 
 **Testing Instructions:**
 - Verify filtering by all supported criteria
 - Test search with partial matches and different languages
 - Test pagination with various page sizes
 - Verify empty state handling
+- Verify documents appear correctly regardless of how category names are stored in database
 
 **Storybook:**
 - [x] Create Storybook stories for document browser component
@@ -520,17 +530,21 @@ This development plan outlines the transformation of the Costa Beach application
 - Added support for various file types (PDF, images, text, HTML, JSON)
 - Implemented fallback behavior for unsupported file types
 - Integrated with translation service to request document translations
+- Enhanced error handling for document loading and format issues
+- Added robust category handling for document filtering and display
 
 **Tests:**
 - [x] Test viewer rendering for different file types
 - [x] Test translation request workflow
 - [x] Test responsive behavior
+- [x] Test category-based filtering
 
 **Testing Instructions:**
 - Test preview rendering for all supported file types
 - Verify download tracking increments correctly
 - Test translation request workflow
 - Check responsive behavior on different devices
+- Verify correct category filtering and document display regardless of category name format
 
 **Storybook:**
 - [x] Create Storybook stories for document viewer component
@@ -714,17 +728,26 @@ This development plan outlines the transformation of the Costa Beach application
 - Ensured proper internationalization support for all dashboard elements
 - Fixed authentication flow for owner login with email-based authentication
 - Created document-focused pages for the owner dashboard
+- Fixed document loading issues by enhancing category handling in the getDocumentsByCategory function
+- Added robust error handling and recovery mechanisms for document fetching
+- Implemented flexible category matching to support various formats (camelCase, snake_case, lowercase)
+- Added comprehensive logging to assist with troubleshooting document loading issues
+- Created script for uploading sample documents to populate the database for testing
 
 **Tests:**
 - [x] Test dashboard loading
 - [x] Test notification system
 - [x] Test user authentication flow
+- [x] Test document loading with various category formats
+- [x] Test error handling and recovery for failed document fetches
 
 **Testing Instructions:**
 - Verify dashboard layout on different screen sizes
 - Test owner login flow with email authentication
 - Verify document categories and recent documents display correctly
 - Check notification system for new documents
+- Test document loading with different category names and formats
+- Verify error handling when document fetching fails
 
 **Storybook:**
 - [x] Create Storybook stories for dashboard components
