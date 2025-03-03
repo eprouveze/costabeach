@@ -46,7 +46,7 @@ export default function Hero({ className = "" }: HeroProps) {
           {/* CTA Buttons */}
           <div className={`flex flex-wrap gap-4 ${textAlignClass === 'text-right' ? 'justify-end' : 'justify-start'}`}>
             <Link 
-              href="/owner-register" 
+              href="/auth/signup" 
               className="bg-white text-blue-600 px-6 py-3 rounded-md hover:bg-gray-100 transition-colors font-medium"
             >
               {t("landing.registerCTA")}

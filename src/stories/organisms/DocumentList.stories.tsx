@@ -1,11 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { DocumentList } from "../../components/organisms/DocumentList";
+import { DocumentList } from "@/components/DocumentList";
+import { DocumentCategory, Language } from "@/lib/types";
 
 const meta: Meta<typeof DocumentList> = {
   title: "Organisms/DocumentList",
   component: DocumentList,
   parameters: {
-    layout: "padded",
+    layout: "centered",
   },
   tags: ["autodocs"],
   decorators: [
@@ -20,65 +21,91 @@ const meta: Meta<typeof DocumentList> = {
 export default meta;
 type Story = StoryObj<typeof DocumentList>;
 
-const sampleDocuments = [
+const mockDocuments = [
   {
     id: "1",
-    title: "Annual Report 2023",
-    description: "Financial report for the year 2023",
-    type: "PDF",
-    dateUploaded: "2024-01-15",
-    fileSize: "2.5 MB",
+    title: "HOA Meeting Minutes",
+    description: "Minutes from the January 2023 HOA meeting",
+    filePath: "/documents/meeting-minutes-jan-2023.pdf",
+    fileSize: 1024 * 1024 * 2, // 2MB
+    fileType: "application/pdf",
+    category: DocumentCategory.GENERAL,
+    language: Language.ENGLISH,
+    authorId: "user-1",
+    isTranslated: false,
+    isPublished: true,
+    viewCount: 45,
+    downloadCount: 12,
+    createdAt: new Date("2023-01-15"),
+    updatedAt: new Date("2023-01-15"),
   },
   {
     id: "2",
-    title: "Meeting Minutes",
-    description: "Board meeting minutes from December",
-    type: "DOC",
-    dateUploaded: "2023-12-20",
-    fileSize: "500 KB",
+    title: "Annual Budget",
+    description: "Annual budget for the 2023 fiscal year",
+    filePath: "/documents/annual-budget-2023.xlsx",
+    fileSize: 1024 * 1024 * 1.5, // 1.5MB
+    fileType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    category: DocumentCategory.FINANCE,
+    language: Language.ENGLISH,
+    authorId: "user-2",
+    isTranslated: false,
+    isPublished: true,
+    viewCount: 32,
+    downloadCount: 18,
+    createdAt: new Date("2023-02-01"),
+    updatedAt: new Date("2023-02-01"),
   },
   {
     id: "3",
-    title: "Maintenance Schedule",
-    description: "Upcoming maintenance activities",
-    type: "XLSX",
-    dateUploaded: "2024-02-01",
-    fileSize: "750 KB",
+    title: "Community Guidelines",
+    description: "Updated community guidelines for 2023",
+    filePath: "/documents/community-guidelines-2023.docx",
+    fileSize: 1024 * 1024 * 1, // 1MB
+    fileType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    category: DocumentCategory.LEGAL,
+    language: Language.ENGLISH,
+    authorId: "user-1",
+    isTranslated: false,
+    isPublished: true,
+    viewCount: 67,
+    downloadCount: 23,
+    createdAt: new Date("2023-01-20"),
+    updatedAt: new Date("2023-01-25"),
   },
 ];
 
 export const Default: Story = {
   args: {
-    documents: sampleDocuments,
-    onView: (id) => console.log(`Viewing document: ${id}`),
-    onDownload: (id) => console.log(`Downloading document: ${id}`),
+    initialDocuments: mockDocuments,
+    showActions: true,
   },
 };
 
-export const ViewOnly: Story = {
+export const WithoutSearch: Story = {
   args: {
-    documents: sampleDocuments,
-    onView: (id) => console.log(`Viewing document: ${id}`),
+    initialDocuments: mockDocuments,
+    showSearch: false,
   },
 };
 
-export const DownloadOnly: Story = {
+export const WithoutFilters: Story = {
   args: {
-    documents: sampleDocuments,
-    onDownload: (id) => console.log(`Downloading document: ${id}`),
+    initialDocuments: mockDocuments,
+    showFilters: false,
   },
 };
 
-export const NoActions: Story = {
+export const WithoutActions: Story = {
   args: {
-    documents: sampleDocuments,
+    initialDocuments: mockDocuments,
+    showActions: false,
   },
 };
 
 export const SingleDocument: Story = {
   args: {
-    documents: [sampleDocuments[0]],
-    onView: (id) => console.log(`Viewing document: ${id}`),
-    onDownload: (id) => console.log(`Downloading document: ${id}`),
+    initialDocuments: [mockDocuments[0]],
+    showActions: true,
   },
 }; 

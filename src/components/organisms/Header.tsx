@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { NavItem } from "../molecules/NavItem";
 import LanguageSwitcher from "../LanguageSwitcher";
 import { Menu, X, Home, FileText, Mail, User, Info, LogIn, LogOut } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { signOut } from "@/lib/supabase/auth";
 import Link from "next/link";
+import { useSupabaseSession } from "@/lib/supabase/hooks";
 
 interface HeaderProps {
   className?: string;
@@ -17,9 +18,10 @@ export const Header = ({ className = "" }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const { t } = useI18n();
-  const { data: session, status } = useSession();
+  const router = useRouter();
+  const { session, isLoading } = useSupabaseSession();
   
-  const isAuthenticated = status === "authenticated";
+  const isAuthenticated = !!session;
 
   // Close mobile menu when navigating
   useEffect(() => {
@@ -28,7 +30,7 @@ export const Header = ({ className = "" }: HeaderProps) => {
 
   const navItems = [
     { label: t("navigation.home"), href: "/", icon: Home },
-    { label: t("navigation.ownerPortal"), href: isAuthenticated ? "/owner-dashboard" : "/owner-login", icon: User },
+    { label: t("navigation.ownerPortal"), href: isAuthenticated ? "/owner-dashboard" : "/auth/signin", icon: User },
     { label: t("navigation.contact"), href: "/contact", icon: Mail },
   ];
 
@@ -40,11 +42,12 @@ export const Header = ({ className = "" }: HeaderProps) => {
     return pathname.startsWith(href);
   };
 
-  const handleAuthAction = () => {
+  const handleAuthAction = async () => {
     if (isAuthenticated) {
-      signOut({ callbackUrl: "/" });
+      await signOut();
+      router.push("/");
     } else {
-      signIn();
+      router.push("/auth/signin");
     }
   };
 

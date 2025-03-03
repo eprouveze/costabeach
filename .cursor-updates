@@ -158,6 +158,7 @@ Note: In production, this change is transparent as the port is handled by the ho
 - Fixed NextAuth headers error by properly awaiting the headers() function in the auth configuration.
 - Updated DocumentCategory enum to include GENERAL and FINANCE categories for better document organization.
 - Successfully built and tested the application with all issues resolved.
+- Fixed Storybook configuration by updating tRPC mocking, correcting component paths, and replacing dynamic titles with string literals to comply with Storybook 8.x requirements.
 
 ## Supabase Authentication Migration Plan (2024-06-19)
 
@@ -193,3 +194,33 @@ Updated related sections in the development plan to reflect the authentication c
 - Added detailed implementation notes and testing instructions to the Supabase authentication section
 - Listed remaining tasks for the authentication system, including social login implementation and user data migration
 - Fixed build error by cleaning the .next directory before rebuilding
+
+## Storybook Improvements and Reorganization (2024-06-24)
+
+- Fixed Next.js navigation mock in Storybook by adding missing `redirect` function to resolve console warnings
+- Created comprehensive component story template to ensure consistent story creation and documentation
+- Added script to check and fix missing context providers in story files
+- Updated Storybook organization to follow Atomic Design principles with proper category sorting
+- Enhanced scripts for organizing and maintaining Storybook stories
+- Updated development plan to mark Storybook Improvements section as completed
+
+## Fixed Supabase Authentication Build Issues (2024-06-21)
+
+Fixed build issues related to the Supabase authentication implementation:
+
+1. Updated the Supabase server client to work in both App Router and Pages Router contexts:
+   - Modified `src/lib/supabase/server.ts` to use dynamic imports for `next/headers`
+   - Implemented try/catch blocks to handle cookie operations in different routing contexts
+   - Added fallbacks for Pages Router environments
+
+2. Fixed TypeScript errors in Storybook components:
+   - Updated `DocumentList.stories.tsx` to match the component's actual props
+   - Fixed mock document data to conform to the Document type interface
+   - Removed non-existent props (onView, onDownload) from story configurations
+
+3. Successfully built the application with the Supabase authentication system:
+   - All pages now use the new Supabase authentication flow
+   - Redirects from old auth pages to new Supabase auth pages are working
+   - Build process completes without errors
+
+These changes ensure compatibility between the new Supabase authentication system and the existing application structure, allowing for a smooth transition from NextAuth to Supabase auth.

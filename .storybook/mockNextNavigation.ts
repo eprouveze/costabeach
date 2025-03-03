@@ -41,4 +41,10 @@ export function usePathname() {
 
 export function useParams() {
   return {};
+}
+
+// Add missing redirect function to fix Storybook warning
+export function redirect(url: string): never {
+  console.log(`[Mock Router] Redirecting to: ${url}`);
+  throw new Error('[Mock Redirect] Redirect is not available in Storybook');
 } 

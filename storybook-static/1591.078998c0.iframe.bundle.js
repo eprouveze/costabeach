@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknextjs_template=self.webpackChunknextjs_template||[]).push([[1591],{"./node_modules/ws/browser.js":module=>{module.exports=function(){throw new Error("ws does not work in the browser. Browser clients must use the native WebSocket object")}}}]);

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { DocumentPreview } from '@/components/DocumentPreview';
 import { Document, DocumentCategory, Language } from '@/lib/types';
-import { I18nProvider } from '@/lib/i18n/client';
+import { CATEGORY, SUBCATEGORY } from '../../.storybook/storybook-organization';
 
 // Mock document data
 const mockDocument: Document = {
@@ -56,7 +56,7 @@ const mockUseDocuments = () => {
 };
 
 const meta: Meta<typeof DocumentPreview> = {
-  title: 'Components/DocumentViewer',
+  title: 'Document/DocumentViewer',
   component: DocumentPreview,
   parameters: {
     layout: 'centered',
@@ -117,12 +117,15 @@ export const TranslationInProgress: Story = {
     className: 'max-h-[80vh]',
   },
   parameters: {
-    mockData: [
-      {
-        path: 'trpc.translations.getTranslationStatus.useQuery',
-        data: { status: 'pending' },
-      },
-    ],
+    mockData: {
+      trpc: {
+        translations: {
+          getTranslationStatus: {
+            data: { status: 'pending', translatedDocumentId: null },
+          }
+        }
+      }
+    },
   },
 };
 
@@ -149,12 +152,13 @@ export const DocumentWithError: Story = {
     className: 'max-h-[80vh]',
   },
   parameters: {
-    mockData: [
-      {
-        path: 'useDocuments.previewDocument',
-        error: new Error('Failed to load document preview'),
-      },
-    ],
+    mockData: {
+      useDocuments: {
+        previewDocument: {
+          error: new Error('Failed to load document preview'),
+        }
+      }
+    },
   },
 };
 

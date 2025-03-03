@@ -15,7 +15,9 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "upload-documents": "tsx scripts/upload-sample-documents.ts"
+    "upload-documents": "tsx scripts/upload-sample-documents.ts",
+    "organize-storybook": "node scripts/organize-storybook.js",
+    "fix-storybook": "node scripts/fix-storybook-dependencies.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.758.0",

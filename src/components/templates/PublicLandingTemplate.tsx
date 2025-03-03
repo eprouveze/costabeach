@@ -30,7 +30,7 @@ export default function PublicLandingTemplate({ children }: PublicLandingTemplat
               {t("common.contact")}
             </Link>
             <Link
-              href="/owner-login"
+              href="/auth/signin"
               className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
             >
               {t("auth.signIn")}
@@ -117,12 +117,12 @@ export default function PublicLandingTemplate({ children }: PublicLandingTemplat
                   </Link>
                 </li>
                 <li>
-                  <Link href="/owner-login" className="text-gray-400 hover:text-white transition-colors">
+                  <Link href="/auth/signin" className="text-gray-400 hover:text-white transition-colors">
                     {t("auth.signIn")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/owner-register" className="text-gray-400 hover:text-white transition-colors">
+                  <Link href="/auth/signup" className="text-gray-400 hover:text-white transition-colors">
                     {t("auth.signUp")}
                   </Link>
                 </li>
