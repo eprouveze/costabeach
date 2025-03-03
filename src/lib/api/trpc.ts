@@ -9,6 +9,7 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
+import { Context } from './context';
 
 import { getServerAuthSession, UserRole } from "../auth";
 import { prisma } from '@/lib/db';
@@ -42,7 +43,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
-const t = initTRPC.context<typeof createTRPCContext>().create({
+const t = initTRPC.context<Context>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {
     return {
@@ -75,7 +76,7 @@ export const createCallerFactory = t.createCallerFactory;
  *
  * @see https://trpc.io/docs/router
  */
-export const createTRPCRouter = t.router;
+export const router = t.router;
 
 /**
  * Public (unauthenticated) procedure
@@ -96,14 +97,11 @@ export const publicProcedure = t.procedure;
  */
 export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
   if (!ctx.session || !ctx.session.user) {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "Session or user information is missing",
-    });
+    throw new TRPCError({ code: 'UNAUTHORIZED' });
   }
-
   return next({
     ctx: {
+      ...ctx,
       session: { ...ctx.session, user: ctx.session.user },
     },
   });

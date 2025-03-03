@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { 
   createDocument, 
@@ -17,7 +17,7 @@ import { checkPermission } from "@/lib/utils/permissions";
 
 const prisma = new PrismaClient();
 
-export const documentsRouter = createTRPCRouter({
+export const documentsRouter = router({
   // Health check procedure
   healthCheck: publicProcedure
     .query(async () => {

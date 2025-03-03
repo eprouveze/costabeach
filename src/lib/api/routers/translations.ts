@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { Language } from "@/lib/types";
 import { translateText, getOrCreateTranslatedDocument } from "@/lib/utils/translations";
@@ -8,7 +8,7 @@ import { inngest } from "@/lib/inngest";
 
 const prisma = new PrismaClient();
 
-export const translationsRouter = createTRPCRouter({
+export const translationsRouter = router({
   // Translate text from one language to another
   translateText: publicProcedure
     .input(
