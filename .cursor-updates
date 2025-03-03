@@ -170,3 +170,10 @@ Added a comprehensive plan to migrate from NextAuth to Supabase Authentication, 
 5. Component updates for authentication UI with internationalization support
 6. Testing strategy and required environment variables
 7. Estimated effort (5.5 story points) with implementation timeline
+
+Updated related sections in the development plan to reflect the authentication change:
+1. Marked NextAuth Integration section as deprecated
+2. Updated Owner Registration Flow section with Supabase migration notes
+3. Updated User Management Interface section to reference Supabase Auth integration
+4. Added notes to Navigation Structure section for role-based navigation changes
+5. Enhanced implementation notes with Supabase-specific guidelines

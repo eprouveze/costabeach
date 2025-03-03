@@ -309,6 +309,8 @@ This development plan outlines the transformation of the Costa Beach application
 - Allow admins to add notes and approve/reject registrations
 - Send email notifications for registration status changes
 
+> **Note for Supabase Migration:** This flow will need to be updated to use Supabase authentication instead of NextAuth. User registration data will be stored in Supabase Auth, with additional metadata stored in the database. See Section 8.5 for migration details.
+
 **Tests:**
 - [x] Test registration workflow
 - [x] Test approval process
@@ -364,6 +366,8 @@ This development plan outlines the transformation of the Costa Beach application
 - Implement role-based navigation items for authenticated users
 - Ensure navigation labels are properly translated
 - Add visual indicators for current page
+
+> **Note for Supabase Migration:** Role-based navigation will need to be updated to use Supabase session and user metadata instead of NextAuth session data. See Section 8.5 for integration details.
 
 **Tests:**
 - [x] Test navigation functionality
@@ -885,6 +889,8 @@ This development plan outlines the transformation of the Costa Beach application
 - Implement user status management (active, suspended, etc.)
 - Add audit logging for permission changes
 
+> **Note for Supabase Migration:** User management will be integrated with Supabase Auth. User metadata, roles, and permissions will be stored and managed through Supabase, with custom UI components to interact with the Supabase Auth API. See Section 8.5 for complete migration details.
+
 **Tests:**
 - [ ] Test user listing functionality
 - [ ] Test role assignment
@@ -1140,33 +1146,37 @@ This development plan outlines the transformation of the Costa Beach application
 - Test filtering, search, and pagination
 - Check data export functionality
 
-### 8.4 NextAuth Integration
-- [ ] Complete NextAuth integration with proper roles and permissions
-- [ ] Implement session management
-- [ ] Add role-based access control
-- [ ] Implement secure authentication flows
+### 8.4 NextAuth Integration ~~(DEPRECATED)~~
+- [ ] ~~Complete NextAuth integration with proper roles and permissions~~
+- [ ] ~~Implement session management~~
+- [ ] ~~Add role-based access control~~
+- [ ] ~~Implement secure authentication flows~~
 
 **Implementation Details:**
-- Enhance NextAuth configuration with proper session management
+~~- Enhance NextAuth configuration with proper session management
 - Implement role-based access control for different user types
 - Add custom callbacks to include user roles and permissions in session
 - Implement secure authentication flows with email verification
 - Add password reset functionality
 - Implement account locking for failed login attempts
-- Add session expiration and renewal
+- Add session expiration and renewal~~
+
+> **Note:** This section has been deprecated in favor of the Supabase Authentication Migration plan (Section 8.5). All authentication-related features will be implemented using Supabase instead of NextAuth.
 
 **Tests:**
-- [ ] Test authentication flows
-- [ ] Test role-based access control
-- [ ] Test session management
-- [ ] Test security features
+- [ ] ~~Test authentication flows~~
+- [ ] ~~Test role-based access control~~
+- [ ] ~~Test session management~~
+- [ ] ~~Test security features~~
 
 **Testing Instructions:**
-- Test login, logout, and registration flows
+~~- Test login, logout, and registration flows
 - Verify role-based access control restricts unauthorized access
 - Test session expiration and renewal
 - Check security features like account locking
-- Verify password reset functionality
+- Verify password reset functionality~~
+
+> See Section 8.5 for updated testing instructions related to Supabase authentication.
 
 ### 8.5 Supabase Authentication Migration
 - [ ] Set up Supabase project and authentication services
@@ -1286,3 +1296,6 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key (server-side only)
 - Consider accessibility requirements throughout development 
 - All UI components should have corresponding Storybook stories
 - Storybook should be used for visual regression testing 
+- Authentication will be implemented using Supabase Auth instead of NextAuth, with social login support for Google and Facebook
+- User roles and permissions will be stored as metadata in Supabase Auth
+- All authentication UI components should support internationalization
