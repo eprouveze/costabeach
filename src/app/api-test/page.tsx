@@ -8,6 +8,7 @@ export default function ApiTestPage() {
   const [shouldFetch, setShouldFetch] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<Error | null>(null);
+  const [endpoint, setEndpoint] = useState<string>("/api/test-api");
 
   // Use the correct syntax for tRPC useQuery with React Query v5
   const healthCheck = api.healthCheck.useQuery(
@@ -38,7 +39,7 @@ export default function ApiTestPage() {
     try {
       setResult(null);
       setError(null);
-      const response = await fetch("/api/debug");
+      const response = await fetch(endpoint);
       const data = await response.json();
       setResult(data);
     } catch (err) {
@@ -54,20 +55,38 @@ export default function ApiTestPage() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">API Test Page</h1>
       
+      <div className="mb-4">
+        <label htmlFor="endpoint" className="block text-sm font-medium text-gray-700 mb-1">
+          API Endpoint:
+        </label>
+        <div className="flex">
+          <select 
+            id="endpoint"
+            className="flex-1 p-2 border rounded mr-2"
+            value={endpoint}
+            onChange={(e) => setEndpoint(e.target.value)}
+          >
+            <option value="/api/test-api">Test API</option>
+            <option value="/api/test-document">Test Document API</option>
+            <option value="/api/trpc/healthCheck">Direct tRPC Health Check</option>
+          </select>
+          
+          <button
+            onClick={testRegularApi}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Test Regular API
+          </button>
+        </div>
+      </div>
+      
       <div className="flex space-x-4 mb-6">
-        <button
-          onClick={testRegularApi}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Test Regular API
-        </button>
-        
         <button
           onClick={testTrpcApi}
           className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
           disabled={shouldFetch && healthCheck.isLoading}
         >
-          Test tRPC API
+          Test tRPC API (via Client)
         </button>
       </div>
       
@@ -81,6 +100,9 @@ export default function ApiTestPage() {
         <div className="mb-4 p-4 border rounded bg-red-50 text-red-700">
           <h2 className="font-bold">Error:</h2>
           <p>{error.message}</p>
+          {error.stack && (
+            <pre className="mt-2 text-xs overflow-x-auto">{error.stack}</pre>
+          )}
         </div>
       )}
       

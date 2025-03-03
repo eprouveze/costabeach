@@ -39,7 +39,7 @@ export default function LoginForm() {
           // Get the user's role from the database
           const { data: userData, error: userError } = await supabase
             .from('users')
-            .select('role, is_verified_owner')
+            .select('role, is_verified_owner, is_admin')
             .eq('id', data.session.user.id)
             .single();
           
@@ -58,15 +58,38 @@ export default function LoginForm() {
             ? pathParts[1] 
             : 'fr';
           
-          // Redirect based on user role and return URL
+          // Redirection priority:
+          // 1. Return URL (if provided)
+          // 2. Owner Dashboard (if owner is verified and path contains /owner-dashboard)
+          // 3. Admin Dashboard (if admin)
+          // 4. Owner Dashboard (if owner is verified)
+          // 5. Home page (default)
+          
           if (returnUrl) {
+            console.log(`Redirecting to return URL: ${returnUrl}`);
             window.location.href = returnUrl;
-          } else if (userData?.role === 'admin') {
+          } else if (userData?.is_verified_owner && userData?.is_admin) {
+            // User is both admin and verified owner, check if they were trying to access the owner dashboard
+            const ownerPathPattern = /owner-dashboard/;
+            const comingFromOwnerPath = document.referrer && ownerPathPattern.test(document.referrer);
+            
+            if (comingFromOwnerPath) {
+              console.log('User has both roles but was accessing owner dashboard, redirecting there');
+              window.location.href = `/${locale}/owner-dashboard`;
+            } else {
+              // Default to admin dashboard for dual-role users not specifically accessing owner dashboard
+              console.log('User has both roles, redirecting to admin dashboard by default');
+              window.location.href = `/${locale}/admin`;
+            }
+          } else if (userData?.is_admin) {
+            console.log('User is admin, redirecting to admin dashboard');
             window.location.href = `/${locale}/admin`;
           } else if (userData?.is_verified_owner) {
+            console.log('User is verified owner, redirecting to owner dashboard');
             window.location.href = `/${locale}/owner-dashboard`;
           } else {
             // Default fallback if no specific role or verified status
+            console.log('No specific role found, redirecting to home page');
             window.location.href = `/${locale}`;
           }
         } catch (userDataError) {

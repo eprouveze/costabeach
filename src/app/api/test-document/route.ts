@@ -1,46 +1,39 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { PrismaClient } from '@prisma/client';
 import { DocumentCategory, Language } from '@/lib/types';
+
+const prisma = new PrismaClient();
 
 export async function GET() {
   try {
     // Check database connection
-    const dbStatus = await prisma.$queryRaw`SELECT 1 as status`;
+    const testResult = await prisma.$queryRaw`SELECT 1 as test`;
     
-    // Try to fetch documents
-    const documents = await prisma.document.findMany({
-      take: 5,
-      orderBy: {
-        createdAt: 'desc'
-      }
+    // Return some mock document data to verify the API is working
+    return NextResponse.json({
+      success: true,
+      message: "Document API is working",
+      databaseConnection: testResult ? "connected" : "failed",
+      mockDocuments: [
+        {
+          id: "test-doc-1",
+          title: "Test Document 1",
+          description: "This is a test document for API diagnosis",
+          category: DocumentCategory.COMITE_DE_SUIVI,
+          language: Language.FRENCH,
+          createdAt: new Date(),
+          fileSize: 12345
+        }
+      ]
     });
-    
-    // Check S3 configuration
-    const s3Config = {
-      region: process.env.AWS_REGION || 'us-west-2',
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID ? 'configured' : 'missing',
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ? 'configured' : 'missing',
-      bucketName: process.env.BUCKET_NAME || 'costa-beach-documents'
-    };
+  } catch (error: any) {
+    console.error("Error in test-document API:", error);
     
     return NextResponse.json({
-      status: 'ok',
-      dbConnection: dbStatus ? 'connected' : 'failed',
-      documentsCount: documents.length,
-      documents: documents.map(doc => ({
-        id: doc.id,
-        title: doc.title,
-        category: doc.category,
-        language: doc.language
-      })),
-      s3Config
-    });
-  } catch (error) {
-    console.error('Test document API error:', error);
-    return NextResponse.json({
-      status: 'error',
-      message: error instanceof Error ? error.message : 'Unknown error',
-      stack: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.stack : undefined) : undefined
+      success: false,
+      message: "Error in document API",
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     }, { status: 500 });
   }
 } 

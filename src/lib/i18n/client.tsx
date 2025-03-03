@@ -11,6 +11,9 @@ import frTranslations from './locales/fr.json';
 import arTranslations from './locales/ar.json';
 import enTranslations from './locales/en.json';
 
+// Set this to true only when debugging i18n issues
+const DEBUG_I18N = false;
+
 const staticTranslations: Record<Locale, Record<string, any>> = {
   fr: frTranslations,
   ar: arTranslations,
@@ -42,16 +45,11 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
       ? pathLocale as Locale 
       : defaultLocale;
     
-    console.log('[I18nProvider] Current locale from path:', currentLocale);
-    console.log('[I18nProvider] Path segments:', pathSegments);
-    console.log('[I18nProvider] Full pathname:', pathname);
-    
     // Always set the locale regardless of whether we're loading translations
     setLocaleState(currentLocale);
     
     // Set translations directly from the static import
     if (staticTranslations[currentLocale]) {
-      console.log('[I18nProvider] Using static translations for locale:', currentLocale);
       setTranslations(staticTranslations[currentLocale]);
       setIsLoading(false);
     } else {
@@ -64,20 +62,24 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     try {
       const storedLocale = localStorage.getItem('NEXT_LOCALE') as Locale | null;
       if (storedLocale && locales.includes(storedLocale) && currentLocale === defaultLocale && !pathLocale) {
-        console.log('[I18nProvider] Using stored locale from localStorage:', storedLocale);
         setLocaleState(storedLocale);
         setTranslations(staticTranslations[storedLocale] || staticTranslations[defaultLocale]);
       }
     } catch (e) {
       // Ignore localStorage errors (may happen in SSR)
-      console.log('[I18nProvider] Could not access localStorage:', e);
+      if (DEBUG_I18N) {
+        console.log('[I18nProvider] Could not access localStorage:', e);
+      }
     }
   }, [pathname]);
 
   const setLocale = (newLocale: Locale) => {
     if (newLocale === locale) return;
     
-    console.log(`[I18nProvider] Switching locale from ${locale} to ${newLocale}`);
+    if (DEBUG_I18N) {
+      console.log(`[I18nProvider] Switching locale from ${locale} to ${newLocale}`);
+    }
+    
     setIsLoading(true);
     setLocaleState(newLocale);
     
@@ -96,7 +98,9 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
       newPath = `/${newLocale}${pathname.startsWith('/') ? pathname : `/${pathname}`}`;
     }
     
-    console.log(`[I18nProvider] New path after locale change: ${newPath}`);
+    if (DEBUG_I18N) {
+      console.log(`[I18nProvider] New path after locale change: ${newPath}`);
+    }
     
     // Set a cookie to remember the locale preference
     document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=${60 * 60 * 24 * 365}`;
@@ -105,7 +109,9 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     try {
       localStorage.setItem('NEXT_LOCALE', newLocale);
     } catch (e) {
-      console.log('[I18nProvider] Could not save locale to localStorage:', e);
+      if (DEBUG_I18N) {
+        console.log('[I18nProvider] Could not save locale to localStorage:', e);
+      }
     }
     
     // Use window.location.href for a full page navigation, which is more reliable than router.push
@@ -116,12 +122,16 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
   const t = (key: string, params?: Record<string, any>): string => {
     if (!translations || Object.keys(translations).length === 0) {
-      console.log(`[I18nProvider] Translation lookup failed - no translations loaded for key: ${key}`);
+      if (DEBUG_I18N) {
+        console.log(`[I18nProvider] Translation lookup failed - no translations loaded for key: ${key}`);
+      }
       return key;
     }
     
-    console.log(`[I18nProvider] Looking up translation for key: ${key}, current locale: ${locale}`);
-    console.log(`[I18nProvider] Available translations root keys:`, Object.keys(translations));
+    if (DEBUG_I18N) {
+      console.log(`[I18nProvider] Looking up translation for key: ${key}, current locale: ${locale}`);
+      console.log(`[I18nProvider] Available translations root keys:`, Object.keys(translations));
+    }
     
     const keys = key.split(".");
     let result: any = translations;
@@ -129,20 +139,28 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     for (const k of keys) {
       if (result && typeof result === "object" && k in result) {
         result = result[k];
-        console.log(`[I18nProvider] Found segment "${k}" in translation tree, continuing...`);
+        if (DEBUG_I18N) {
+          console.log(`[I18nProvider] Found segment "${k}" in translation tree, continuing...`);
+        }
       } else {
-        console.log(`[I18nProvider] Translation not found for key: ${key}, missing segment: ${k}`);
-        console.log(`[I18nProvider] Available keys at this level:`, result ? Object.keys(result) : 'none');
+        if (DEBUG_I18N) {
+          console.log(`[I18nProvider] Translation not found for key: ${key}, missing segment: ${k}`);
+          console.log(`[I18nProvider] Available keys at this level:`, result ? Object.keys(result) : 'none');
+        }
         return key; // Fallback to key if translation not found
       }
     }
     
     if (typeof result !== "string") {
-      console.log(`[I18nProvider] Translation result is not a string for key: ${key}, type:`, typeof result);
+      if (DEBUG_I18N) {
+        console.log(`[I18nProvider] Translation result is not a string for key: ${key}, type:`, typeof result);
+      }
       return key;
     }
     
-    console.log(`[I18nProvider] Successfully translated "${key}" to "${result}"`);
+    if (DEBUG_I18N) {
+      console.log(`[I18nProvider] Successfully translated "${key}" to "${result}"`);
+    }
     
     // Replace parameters in the translation string
     if (params) {
@@ -154,8 +172,16 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     return result;
   };
 
+  const contextValue: I18nContextType = {
+    locale,
+    setLocale,
+    t,
+    isLoading,
+    isRTL
+  };
+
   return (
-    <I18nContext.Provider value={{ locale, setLocale, t, isLoading, isRTL }}>
+    <I18nContext.Provider value={contextValue}>
       {children}
     </I18nContext.Provider>
   );

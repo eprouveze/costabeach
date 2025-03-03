@@ -9,31 +9,49 @@ import { createTRPCContext } from "@/lib/api/trpc";
  * handling a HTTP request (e.g. when you make requests from Client Components).
  */
 const createContext = async (req: NextRequest) => {
-  return createTRPCContext({
-    headers: req.headers,
-  });
+  try {
+    // Log the request URL and path for debugging
+    console.log(`tRPC request: ${req.url}, path: ${req.nextUrl.pathname}`);
+    
+    return createTRPCContext({
+      headers: req.headers,
+    });
+  } catch (error) {
+    console.error("Error creating tRPC context:", error);
+    throw error;
+  }
 };
 
 const env = process.env;
 
-const handler = (req: NextRequest) =>
-  fetchRequestHandler({
-    endpoint: "/api/trpc",
-    req,
-    router: appRouter,
-    createContext: () => createContext(req),
-    onError:
-      env.NODE_ENV === "development"
-        ? ({ path, error }) => {
-            console.error(
-              `❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`,
-              error.stack ? `\nStack: ${error.stack}` : "",
-              error.cause ? `\nCause: ${error.cause}` : ""
-            );
-          }
-        : ({ path, error }) => {
-            console.error(`tRPC failed on ${path ?? "<no-path>"}`, error);
-          },
-  });
+const handler = (req: NextRequest) => {
+  // Debug information for the request
+  console.log(`Processing tRPC request to: ${req.nextUrl.pathname}`);
+  console.log(`Request method: ${req.method}`);
+  
+  try {
+    return fetchRequestHandler({
+      endpoint: "/api/trpc",
+      req,
+      router: appRouter,
+      createContext: () => createContext(req),
+      onError:
+        env.NODE_ENV === "development"
+          ? ({ path, error }) => {
+              console.error(
+                `❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`,
+                error.stack ? `\nStack: ${error.stack}` : "",
+                error.cause ? `\nCause: ${error.cause}` : ""
+              );
+            }
+          : ({ path, error }) => {
+              console.error(`tRPC failed on ${path ?? "<no-path>"}`, error);
+            },
+    });
+  } catch (error) {
+    console.error("Error in tRPC handler:", error);
+    throw error;
+  }
+};
 
 export { handler as GET, handler as POST };
