@@ -63,6 +63,7 @@
     "guests": "الضيوف",
     "messages": "الرسائل",
     "payments": "المدفوعات",
+    "categories": "الفئات",
     "signOut": "تسجيل الخروج"
   },
   "auth": {

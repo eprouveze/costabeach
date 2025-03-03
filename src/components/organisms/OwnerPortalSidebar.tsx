@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { NavItem } from "@/components/molecules/NavItem";
 import { TextField } from "@/components/molecules/TextField";
-import { Search, Home, FileText, Settings, Users } from "lucide-react";
+import { Search, Home, FileText, Settings, Users, Folder, Bell } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
 
 interface OwnerPortalSidebarProps {
@@ -11,15 +11,17 @@ interface OwnerPortalSidebarProps {
   currentPath?: string;
 }
 
-export function OwnerPortalSidebar({ onNavigate, currentPath = "/owner/dashboard" }: OwnerPortalSidebarProps) {
+export function OwnerPortalSidebar({ onNavigate, currentPath = "/owner-dashboard" }: OwnerPortalSidebarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const { t } = useI18n();
 
   const navigationItems = [
-    { icon: Home, label: t("navigation.dashboard"), path: "/owner/dashboard" },
-    { icon: FileText, label: t("navigation.documents"), path: "/owner/documents" },
-    { icon: Users, label: t("navigation.community"), path: "/owner/community" },
-    { icon: Settings, label: t("navigation.settings"), path: "/owner/settings" },
+    { icon: Home, label: t("navigation.dashboard"), path: "/owner-dashboard" },
+    { icon: FileText, label: t("navigation.documents"), path: "/owner-dashboard/documents" },
+    { icon: Folder, label: t("navigation.categories"), path: "/owner-dashboard/categories" },
+    { icon: Bell, label: t("navigation.notifications"), path: "/owner-dashboard/notifications" },
+    { icon: Users, label: t("navigation.community"), path: "/owner-dashboard/community" },
+    { icon: Settings, label: t("navigation.settings"), path: "/owner-dashboard/settings" },
   ];
 
   return (

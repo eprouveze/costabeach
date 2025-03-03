@@ -78,26 +78,6 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
 
         {/* Content */}
         <div className="p-6">
-          {/* Dashboard Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-              <h3 className="text-sm font-medium text-gray-500 mb-1">Total Properties</h3>
-              <p className="text-2xl font-semibold text-gray-900">4</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-              <h3 className="text-sm font-medium text-gray-500 mb-1">Active Bookings</h3>
-              <p className="text-2xl font-semibold text-gray-900">12</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-              <h3 className="text-sm font-medium text-gray-500 mb-1">Total Revenue</h3>
-              <p className="text-2xl font-semibold text-gray-900">$24,500</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-              <h3 className="text-sm font-medium text-gray-500 mb-1">New Messages</h3>
-              <p className="text-2xl font-semibold text-gray-900">3</p>
-            </div>
-          </div>
-
           {children}
         </div>
       </main>

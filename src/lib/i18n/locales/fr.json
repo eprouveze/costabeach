@@ -51,6 +51,7 @@
     "guests": "Invités",
     "messages": "Messages",
     "payments": "Paiements",
+    "categories": "Catégories",
     "signOut": "Déconnexion"
   },
   "auth": {
