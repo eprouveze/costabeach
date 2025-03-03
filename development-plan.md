@@ -1053,6 +1053,121 @@ This development plan outlines the transformation of the Costa Beach application
 **Storybook:**
 - [ ] Document deployment process
 
+## 8. API Implementation and Missing Features
+
+### 8.1 Document API Routes
+- [ ] Implement document download API route
+- [ ] Implement document preview API route
+- [ ] Add proper authentication and authorization
+- [ ] Implement error handling and logging
+
+**Implementation Details:**
+- Replace placeholder implementation in `/api/documents/[id]/download` with actual S3 download functionality
+- Implement proper file streaming or signed URL generation for downloads
+- Add authentication checks to ensure only authorized users can access documents
+- Implement preview generation for different file types in `/api/documents/[id]/preview`
+- Add download tracking to increment document download counts
+- Implement proper error handling with specific error messages
+- Add logging for all document access for audit purposes
+
+**Tests:**
+- [ ] Test document download API with various file types
+- [ ] Test authentication and authorization
+- [ ] Test error handling for various scenarios
+- [ ] Test download tracking functionality
+
+**Testing Instructions:**
+- Test document downloads with various file types and sizes
+- Verify authentication checks prevent unauthorized access
+- Test error scenarios like missing files, server errors, etc.
+- Verify download counts are incremented correctly
+- Check that appropriate headers are set for different file types
+
+### 8.2 Owner Registration API Routes
+- [ ] Implement owner registration API endpoints
+- [ ] Add validation and sanitization
+- [ ] Implement admin approval workflow
+- [ ] Add email notifications
+
+**Implementation Details:**
+- Replace placeholder implementation in `/api/admin/owner-registrations` with actual database operations
+- Implement proper validation for registration data
+- Add sanitization to prevent security issues
+- Implement admin approval workflow with status tracking
+- Add email notifications for registration status changes
+- Implement proper error handling with specific error messages
+- Add logging for all registration activities
+
+**Tests:**
+- [ ] Test registration submission
+- [ ] Test validation and error handling
+- [ ] Test admin approval workflow
+- [ ] Test email notifications
+
+**Testing Instructions:**
+- Test registration submission with valid and invalid data
+- Verify validation prevents invalid submissions
+- Test admin approval, rejection, and notes functionality
+- Verify email notifications are sent for status changes
+- Check that appropriate error messages are returned for various scenarios
+
+### 8.3 Admin Interface Enhancements
+- [ ] Complete admin dashboard functionality
+- [ ] Implement user management features
+- [ ] Add document management capabilities
+- [ ] Implement audit logging
+
+**Implementation Details:**
+- Enhance the admin dashboard with actual data from the database
+- Implement user management features (create, edit, delete, suspend)
+- Add document management capabilities (upload, edit, delete, categorize)
+- Implement audit logging for all admin actions
+- Add filtering and search functionality for users and documents
+- Implement pagination for large datasets
+- Add data export functionality
+
+**Tests:**
+- [ ] Test admin dashboard loading and data display
+- [ ] Test user management operations
+- [ ] Test document management operations
+- [ ] Test audit logging
+
+**Testing Instructions:**
+- Verify admin dashboard displays correct data
+- Test all user management operations
+- Test all document management operations
+- Verify audit logs record all admin actions
+- Test filtering, search, and pagination
+- Check data export functionality
+
+### 8.4 NextAuth Integration
+- [ ] Complete NextAuth integration with proper roles and permissions
+- [ ] Implement session management
+- [ ] Add role-based access control
+- [ ] Implement secure authentication flows
+
+**Implementation Details:**
+- Enhance NextAuth configuration with proper session management
+- Implement role-based access control for different user types
+- Add custom callbacks to include user roles and permissions in session
+- Implement secure authentication flows with email verification
+- Add password reset functionality
+- Implement account locking for failed login attempts
+- Add session expiration and renewal
+
+**Tests:**
+- [ ] Test authentication flows
+- [ ] Test role-based access control
+- [ ] Test session management
+- [ ] Test security features
+
+**Testing Instructions:**
+- Test login, logout, and registration flows
+- Verify role-based access control restricts unauthorized access
+- Test session expiration and renewal
+- Check security features like account locking
+- Verify password reset functionality
+
 ## Notes for Implementation
 
 - All user-facing text must support both French and Arabic
