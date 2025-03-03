@@ -14,7 +14,6 @@ model User {
   email             String?      @unique
   emailVerified     DateTime?    @map("email_verified") @db.Timestamp(6)
   image             String?
-  hashedPassword    String?      @map("hashed_password")
   createdAt         DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt         DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
   login             String?
@@ -113,8 +112,9 @@ model Document {
   updatedAt            DateTime @updatedAt @map("updated_at")
   authorId             String   @map("author_id")
   author               User     @relation(fields: [authorId], references: [id])
-  translatedDocument   Document? @relation("DocumentTranslation", fields: [translatedDocumentId], references: [id])
-  translations         Document[] @relation("DocumentTranslation")
+  // Temporarily commented out self-relation until column exists
+  // translatedDocument   Document? @relation("DocumentTranslation", fields: [translatedDocumentId], references: [id])
+  // translations         Document[] @relation("DocumentTranslation")
 
   @@map("documents")
 }

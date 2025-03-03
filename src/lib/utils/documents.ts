@@ -215,6 +215,7 @@ export const getDocumentsByCategory = async (
     ...doc,
     category: category,
     language: language || (doc.language === 'french' ? Language.FRENCH : Language.ARABIC),
+    translatedDocument: null,
   })) as Document[];
 };
 
