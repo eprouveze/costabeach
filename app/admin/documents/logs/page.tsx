@@ -39,7 +39,7 @@ export default function DocumentLogsPage() {
   );
 
   // Filter logs based on search query and selected action
-  const filteredLogs = data?.logs.filter(log => {
+  const filteredLogs = data?.logs.filter((log: any) => {
     let matchesSearch = true;
     let matchesAction = true;
     
@@ -217,7 +217,7 @@ export default function DocumentLogsPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {filteredLogs.map((log) => {
+                  {filteredLogs.map((log: any) => {
                     const details = log.details as any;
                     return (
                       <tr key={log.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">

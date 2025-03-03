@@ -9,33 +9,26 @@ datasource db {
 }
 
 model User {
-  id             String    @id @default(cuid())
-  name           String?
-  email          String?   @unique
-  emailVerified  DateTime?
-  image          String?
-  hashedPassword String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  login          String?
-  role           UserRole  @default(user)
-  isAdmin        Boolean   @default(false)
-  
-  // Owner specific fields
-  buildingNumber String?
-  apartmentNumber String?
-  phoneNumber    String?
-  isVerifiedOwner Boolean  @default(false)
-  
-  // Permission fields
-  permissions    Permission[]
-  preferredLanguage Language @default(french)
-  
-  accounts       Account[]
-  sessions       Session[]
-  documents      Document[] // Documents created by this user
-  information    Information[]
-  auditLogs      AuditLog[]
+  id                String       @id @default(cuid())
+  name              String?
+  email             String?      @unique
+  emailVerified     DateTime?
+  image             String?
+  hashedPassword    String?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  login             String?
+  role              UserRole     @default(user)
+  isAdmin           Boolean      @default(false)
+  apartmentNumber   String?
+  buildingNumber    String?
+  isVerifiedOwner   Boolean      @default(false)
+  permissions       Permission[]
+  phoneNumber       String?
+  preferredLanguage Language     @default(french)
+  accounts          Account[]
+  documents         Document[]
+  sessions          Session[]
 }
 
 model Account {
@@ -44,12 +37,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
   User              User    @relation(fields: [userId], references: [id])
 
@@ -61,31 +54,7 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-enum UserRole {
-  user
-  admin
-  contentEditor
-}
-
-enum Language {
-  french
-  arabic
-  EN
-  FR
-  AR
-}
-
-enum Permission {
-  manageUsers
-  manageDocuments
-  manageComiteDocuments
-  manageSocieteDocuments
-  manageLegalDocuments
-  approveRegistrations
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Allowlist {
@@ -103,17 +72,78 @@ model VerificationToken {
 }
 
 model OwnerRegistration {
-  id              String    @id @default(cuid())
-  email           String    @unique
-  name            String
-  buildingNumber  String
-  apartmentNumber String
-  phoneNumber     String
-  status          RegistrationStatus @default(pending)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  notes           String?   // For admin comments
-  preferredLanguage Language @default(french)
+  id                String             @id @default(cuid())
+  email             String             @unique
+  name              String
+  buildingNumber    String
+  apartmentNumber   String
+  phoneNumber       String
+  status            RegistrationStatus @default(pending)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  notes             String?
+  preferredLanguage Language           @default(french)
+}
+
+model Document {
+  id                   String           @id @default(cuid())
+  title                String
+  description          String?
+  filePath             String
+  fileSize             Int
+  fileType             String
+  category             DocumentCategory
+  language             Language
+  translatedDocumentId String?
+  isTranslated         Boolean          @default(false)
+  isPublished          Boolean          @default(true)
+  viewCount            Int              @default(0)
+  downloadCount        Int              @default(0)
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  authorId             String
+  author               User             @relation(fields: [authorId], references: [id])
+  translatedDocument   Document?        @relation("DocumentTranslation", fields: [translatedDocumentId], references: [id])
+  translations         Document[]       @relation("DocumentTranslation")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model users {
+  id                 String    @id @db.Uuid
+  name               String?
+  email              String?   @unique
+  email_verified     DateTime? @db.Timestamp(6)
+  image              String?
+  role               String?   @default("user")
+  is_admin           Boolean?  @default(false)
+  building_number    String?
+  apartment_number   String?
+  phone_number       String?
+  is_verified_owner  Boolean?  @default(false)
+  permissions        String[]
+  preferred_language String?   @default("french")
+  created_at         DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+enum UserRole {
+  user
+  admin
+  contentEditor
+}
+
+enum Language {
+  french
+  arabic
+}
+
+enum Permission {
+  manageUsers
+  manageDocuments
+  manageComiteDocuments
+  manageSocieteDocuments
+  manageLegalDocuments
+  approveRegistrations
 }
 
 enum RegistrationStatus {
@@ -128,59 +158,4 @@ enum DocumentCategory {
   legal
   financial
   general
-  COMITE_DE_SUIVI
-  SOCIETE_DE_GESTION
-  LEGAL
-  GENERAL
-  FINANCE
-}
-
-model Document {
-  id              String    @id @default(cuid())
-  title           String
-  description     String?
-  filePath        String    // S3 path
-  fileSize        Int       // Size in bytes
-  fileType        String    // MIME type
-  category        DocumentCategory
-  language        Language
-  translatedDocumentId String?   // Reference to translated version if exists
-  translatedDocument   Document?  @relation("DocumentTranslation", fields: [translatedDocumentId], references: [id])
-  translations    Document[] @relation("DocumentTranslation")
-  isTranslated    Boolean   @default(false)
-  isPublished     Boolean   @default(true)
-  viewCount       Int       @default(0)
-  downloadCount   Int       @default(0)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  authorId        String
-  author          User      @relation(fields: [authorId], references: [id])
-}
-
-model Information {
-  id           String           @id @default(cuid())
-  title        String
-  content      String           @db.Text
-  category     DocumentCategory
-  language     Language
-  translatedFrom String?
-  viewCount    Int              @default(0)
-  isPublished  Boolean          @default(true)
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
-  authorId     String
-  author       User             @relation(fields: [authorId], references: [id])
-}
-
-model AuditLog {
-  id         String    @id @default(cuid())
-  action     String    // e.g., "create", "update", "delete"
-  entityType String    // e.g., "Document", "User"
-  entityId   String    // ID of the affected entity
-  userId     String    // ID of the user who performed the action
-  details    Json?     // Additional details as JSON
-  createdAt  DateTime  @default(now())
-  
-  // Relations
-  user       User      @relation(fields: [userId], references: [id])
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useI18n } from "@/lib/i18n/client";
 import { useSearchParams } from "next/navigation";
 import { DocumentList } from "./organisms/DocumentList";
@@ -29,6 +29,7 @@ export function DashboardContent() {
   const [userLanguage, setUserLanguage] = useState<Language>(Language.FRENCH);
   const [viewingDocumentId, setViewingDocumentId] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
+  const [isManuallyFetching, setIsManuallyFetching] = useState(false);
   
   // Set user language based on locale
   useEffect(() => {
@@ -64,17 +65,30 @@ export function DashboardContent() {
   }
 
   // Fetch documents based on selected category
-  const { data: documents, isLoading, error, refetch } = api.documents.getDocumentsByCategory.useQuery({
-    category,
-    language: userLanguage,
-    searchQuery
-  }, {
-    enabled: !typeParam || typeParam !== "information",
-    retry: 3,
-    retryDelay: 1000,
-    onError: (err) => {
-      console.error("Error fetching documents:", err);
-      toast.error(`${t("documents.errorLoading") || "Error loading documents"}: ${err.message}`);
+  const { 
+    data: documents, 
+    isLoading, 
+    error, 
+    refetch,
+    isError
+  } = api.documents.getDocumentsByCategory.useQuery(
+    {
+      category,
+      language: userLanguage,
+      searchQuery
+    }, 
+    {
+      enabled: (!typeParam || typeParam !== "information") && !isManuallyFetching,
+      retry: 3,
+      retryDelay: 1000
+    }
+  );
+
+  // Handle errors from the query
+  useEffect(() => {
+    if (error) {
+      console.error("Error fetching documents:", error);
+      toast.error(`${t("documents.errorLoading") || "Error loading documents"}: ${error.message}`);
       
       // If we haven't retried too many times, try again after a delay
       if (retryCount < 3) {
@@ -84,15 +98,18 @@ export function DashboardContent() {
         }, 2000);
       }
     }
-  });
+  }, [error, retryCount, refetch, t]);
 
   // Get download URL mutation
-  const getDownloadUrl = api.documents.getDownloadUrl.useMutation({
-    onError: (err) => {
-      console.error("Error getting download URL:", err);
-      toast.error(`${t("documents.errorDownloading") || "Error downloading document"}: ${err.message}`);
+  const getDownloadUrl = api.documents.getDownloadUrl.useMutation();
+  
+  // Handle download URL error
+  useEffect(() => {
+    if (getDownloadUrl.error) {
+      console.error("Error getting download URL:", getDownloadUrl.error);
+      toast.error(`${t("documents.errorDownloading") || "Error downloading document"}: ${getDownloadUrl.error.message}`);
     }
-  });
+  }, [getDownloadUrl.error, t]);
   
   // Format date for display
   const formatDate = (date: Date) => {
@@ -110,6 +127,20 @@ export function DashboardContent() {
     else return (bytes / 1048576).toFixed(1) + ' MB';
   };
 
+  // Handle manual retry
+  const handleManualRetry = async () => {
+    try {
+      setIsManuallyFetching(true);
+      toast.info(t("common.retrying") || "Retrying...");
+      await refetch();
+      toast.success(t("common.retrySuccessful") || "Successfully refreshed");
+    } catch (err: any) {
+      toast.error(`${t("common.retryFailed") || "Retry failed"}: ${err.message}`);
+    } finally {
+      setIsManuallyFetching(false);
+    }
+  };
+
   // Option 1: Change the formatting to include all required fields from the Document interface
   const formattedDocuments = documents?.map(doc => ({
     ...doc, // Keep all original properties
@@ -122,8 +153,8 @@ export function DashboardContent() {
     displayDate: formatDate(doc.createdAt)
   })) || [];
 
-  // Cast functions with "any" to bypass TypeScript's strict checking
-  const handleViewDocument = ((document: any) => {
+  // Handle view document
+  const handleViewDocument = useCallback((document: any) => {
     try {
       const documentId = document.id;
       window.open(`/${locale}/owner-dashboard/documents/${documentId}`, '_blank');
@@ -131,10 +162,10 @@ export function DashboardContent() {
       console.error("Error viewing document:", error);
       toast.error(t("documents.errorViewing") || "Error viewing document");
     }
-  }) as any;
+  }, [locale, t]);
   
-  // Cast functions with "any" to bypass TypeScript's strict checking
-  const handleDownloadDocument = (async (document: any) => {
+  // Handle download document
+  const handleDownloadDocument = useCallback(async (document: any) => {
     const documentId = document.id;
     try {
       const result = await getDownloadUrl.mutateAsync({ documentId });
@@ -147,7 +178,7 @@ export function DashboardContent() {
       console.error("Error downloading document:", error);
       toast.error(`${t("documents.errorDownloading") || "Error downloading document"}: ${error.message || t("common.unknownError") || "Unknown error"}`);
     }
-  }) as any;
+  }, [getDownloadUrl, t]);
 
   // If information section is active
   if (typeParam === "information") {
@@ -161,7 +192,7 @@ export function DashboardContent() {
   }
 
   // If loading
-  if (isLoading) {
+  if (isLoading || isManuallyFetching) {
     return (
       <div className="flex justify-center items-center h-64" data-testid="loading-spinner">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" role="status"></div>
@@ -170,19 +201,19 @@ export function DashboardContent() {
   }
 
   // If error
-  if (error) {
+  if (isError) {
     return (
       <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded" data-testid="error-message">
         <p className="font-bold">{t("common.error") || "Error"}</p>
-        <p>{error.message}</p>
+        <p>{error?.message || t("documents.unknownError") || "Unknown error"}</p>
         <button 
-          onClick={() => {
-            setRetryCount(prev => prev + 1);
-            refetch();
-          }}
+          onClick={handleManualRetry}
           className="mt-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-800 rounded transition-colors"
+          disabled={isManuallyFetching}
         >
-          {t("common.retry") || "Retry"}
+          {isManuallyFetching 
+            ? t("common.retrying") || "Retrying..." 
+            : t("common.retry") || "Retry"}
         </button>
       </div>
     );

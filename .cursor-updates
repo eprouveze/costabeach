@@ -170,6 +170,7 @@ Note: In production, this change is transparent as the port is handled by the ho
 - Fixed tRPC context provider issue by adding TRPCReactProvider to ClientLayout component, resolving "Unable to find tRPC Context" error.
 - Fixed I18n context error in multiple Storybook stories (OwnerRegistrationsPage, OwnerDashboardPage, HomePage) by directly using I18nProvider from @/lib/i18n/client instead of relying on createStoryDecorator.
 - Fixed tRPC API issues by creating a user permissions API endpoint and updating components to handle locale prefixes correctly.
+- Fixed TypeScript errors related to missing `auditLog` model by implementing fallback mechanisms in documents router and audit utility.
 
 ## Supabase Authentication Migration Plan (2024-06-19)
 

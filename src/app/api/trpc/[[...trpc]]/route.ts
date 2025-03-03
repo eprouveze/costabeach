@@ -27,6 +27,8 @@ const handler = (req: NextRequest) =>
         ? ({ path, error }) => {
             console.error(
               `❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`,
+              error.stack ? `\nStack: ${error.stack}` : "",
+              error.cause ? `\nCause: ${error.cause}` : ""
             );
           }
         : ({ path, error }) => {
