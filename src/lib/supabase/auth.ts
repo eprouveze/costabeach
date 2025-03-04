@@ -1,4 +1,4 @@
-import { createClient as createClientBrowser } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { createClient as createClientServer } from '@/lib/supabase/server'
 import { User } from '@/lib/types'
 import { redirect } from 'next/navigation'
@@ -8,7 +8,7 @@ export type AuthUser = User & {
 }
 
 export async function signUp(email: string, password: string, userData: Partial<User>) {
-  const supabase = createClientBrowser()
+  const supabase = createClient()
   
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -31,7 +31,7 @@ export async function signUp(email: string, password: string, userData: Partial<
 }
 
 export async function signIn(email: string, password: string) {
-  const supabase = createClientBrowser()
+  const supabase = createClient()
   
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
@@ -42,13 +42,13 @@ export async function signIn(email: string, password: string) {
 }
 
 export async function signOut() {
-  const supabase = createClientBrowser()
+  const supabase = createClient()
   const { error } = await supabase.auth.signOut()
   return { error }
 }
 
 export async function resetPassword(email: string) {
-  const supabase = createClientBrowser()
+  const supabase = createClient()
   const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${window.location.origin}/auth/reset-password`,
   })
@@ -57,7 +57,7 @@ export async function resetPassword(email: string) {
 }
 
 export async function updatePassword(password: string) {
-  const supabase = createClientBrowser()
+  const supabase = createClient()
   const { data, error } = await supabase.auth.updateUser({
     password,
   })
@@ -139,4 +139,93 @@ export async function hasPermission(permission: string): Promise<boolean> {
   }
   
   return user.permissions.includes(permission as any)
+}
+
+/**
+ * Sign in with Google
+ */
+export async function signInWithGoogle(redirectUrl: string) {
+  const supabase = createClient()
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: redirectUrl,
+      queryParams: {
+        access_type: 'offline',
+        prompt: 'consent',
+      },
+    },
+  })
+  
+  return { data, error }
+}
+
+/**
+ * Sign in with Facebook
+ */
+export async function signInWithFacebook(redirectUrl: string) {
+  const supabase = createClient()
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'facebook',
+    options: {
+      redirectTo: redirectUrl,
+      scopes: 'email',
+    },
+  })
+  
+  return { data, error }
+}
+
+/**
+ * Check if the user has completed their profile
+ * Required for social login to collect building/apartment info
+ */
+export async function checkProfileCompletion(userId: string) {
+  const supabase = createClient()
+  
+  // Check if user has building/apartment info in the users table
+  const { data, error } = await supabase
+    .from('users')
+    .select('building_number, apartment_number')
+    .eq('id', userId)
+    .single()
+  
+  if (error) {
+    console.error('Error checking profile completion:', error)
+    return { isComplete: false, error }
+  }
+  
+  // Profile is complete if both building and apartment numbers exist
+  const isComplete = !!data?.building_number && !!data?.apartment_number
+  
+  return { isComplete, data, error: null }
+}
+
+/**
+ * Update user profile after social login
+ */
+export async function updateUserProfile(userId: string, profileData: {
+  name?: string;
+  buildingNumber?: string;
+  apartmentNumber?: string;
+  phoneNumber?: string;
+  preferredLanguage?: string;
+}) {
+  const supabase = createClient()
+  
+  // Convert the profileData to snake_case for database
+  const dbData = {
+    name: profileData.name,
+    building_number: profileData.buildingNumber,
+    apartment_number: profileData.apartmentNumber,
+    phone_number: profileData.phoneNumber,
+    preferred_language: profileData.preferredLanguage,
+  }
+  
+  const { data, error } = await supabase
+    .from('users')
+    .update(dbData)
+    .eq('id', userId)
+  
+  return { data, error }
 } 

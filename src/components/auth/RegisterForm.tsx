@@ -8,6 +8,7 @@ import { signUp } from '@/lib/supabase/auth';
 import { toast } from 'react-toastify';
 import { Language } from '@/lib/types';
 import { useI18n } from '@/lib/i18n/client';
+import SocialLoginButtons from './SocialLoginButtons';
 
 export default function RegisterForm() {
   const { t } = useI18n();
@@ -330,6 +331,10 @@ export default function RegisterForm() {
                 {t('auth.signup.privacyPolicy')}
               </Link>
             </p>
+          </div>
+          
+          <div className="mt-6">
+            <SocialLoginButtons />
           </div>
         </div>
       </div>

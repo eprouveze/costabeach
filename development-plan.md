@@ -773,35 +773,7 @@ This development plan outlines the transformation of the Costa Beach application
 
 ## 5. Public Area Extensions
 
-### 5.1 HOA Services Section
-- [ ] Create service cards for document access and key HOA functions
-- [ ] Implement community announcements preview
-- [ ] Add contact information component
-- [ ] Create important dates/calendar preview
-
-**Implementation Details:**
-- Design service cards with icons representing key HOA functions
-- Create a community announcements preview showing recent items
-- Include a contact information component with key contact details
-- Add a calendar preview showing upcoming important dates
-- Ensure all components are responsive and properly translated
-
-**Tests:**
-- [ ] Test service cards layout and responsiveness
-- [ ] Test announcement previews with sample content
-- [ ] Test calendar display with various date formats
-
-**Testing Instructions:**
-- Verify service cards display correctly on all screen sizes
-- Test announcement previews with different content lengths
-- Check calendar display with various date formats and language settings
-- Verify all interactive elements function correctly
-
-**Storybook:**
-- [ ] Create Storybook stories for service cards component
-- [ ] Document announcement and calendar components
-
-### 5.2 Location Section
+### 5.1 Location Section
 - [ ] Implement interactive map showing Costa Beach 3 location
 - [ ] Add information about nearby amenities and attractions
 - [ ] Include transportation information
@@ -828,7 +800,7 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Create Storybook stories for location section component
 - [ ] Document map integration and responsive behavior
 
-### 5.3 Photo Gallery
+### 5.2 Photo Gallery
 - [ ] Create responsive photo gallery grid
 - [ ] Implement category-based organization (Common Areas, Beach, Facilities)
 - [ ] Add lightbox viewer for full-size images
@@ -857,7 +829,7 @@ This development plan outlines the transformation of the Costa Beach application
 - [ ] Create Storybook stories for photo gallery component
 - [ ] Document category filtering and lightbox interactions
 
-### 5.4 Enhanced Footer
+### 5.3 Enhanced Footer
 - [ ] Design and implement enhanced footer with contact information
 - [ ] Add quick links to important pages
 - [ ] Include language switcher component
@@ -1407,6 +1379,99 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key (server-side only)
 **Implementation Timeline:**
 - Total estimated effort: 5.5 story points
 - Recommended implementation order: Setup → Client Integration → Auth UI → Middleware → User Migration → Session Management → Testing → Documentation
+
+### 8.6 Social Login Implementation with Required Owner Information
+
+- [ ] Configure Google OAuth provider in Supabase
+- [ ] Configure Facebook OAuth provider in Supabase
+- [ ] Create multi-step registration flow for social login users
+- [ ] Design and implement account completion page
+- [ ] Store owner-specific information for social login users
+
+**Implementation Details:**
+- Set up Google OAuth in Supabase dashboard with proper redirect URIs and credentials
+- Set up Facebook OAuth in Supabase dashboard with proper app configuration
+- Create a dedicated "Account Completion" page that appears after social login if required information is missing
+- Implement form validation for building and apartment fields
+- Store additional owner information in a separate table linked to the Supabase user ID
+- Add admin verification process for social login registrations
+- Ensure proper linking of social identity with owner profile
+- Implement session checking to require profile completion before accessing protected content
+- Add language preference selection during the profile completion process
+
+**Technical Architecture:**
+1. **Social Provider Configuration**
+   - Register applications with Google and Facebook developer consoles
+   - Configure callback URLs in both provider dashboards
+   - Add provider credentials to Supabase Auth settings
+   - Test connection with each provider separately
+
+2. **User Flow Design**
+   - Social login → Check if profile complete → Redirect to profile completion if needed → Dashboard access
+   - Implement "registrationComplete" flag in user metadata
+   - Create middleware redirects based on completion status
+
+3. **UI Components**
+   - Create `SocialLoginButtons` component with Google and Facebook options
+   - Implement `ProfileCompletion` form with building and apartment fields
+   - Add profile verification status indicator
+   - Design admin review interface for social registrations
+
+4. **Database Architecture**
+   - Create `owner_profiles` table linked to `auth.users` by user_id
+   - Add trigger to check profile completion status on login
+   - Implement proper indexes for efficient lookups
+   - Store social identity information with proper relation to owner profiles
+
+**Tests:**
+- [ ] Test OAuth flow with Google provider
+- [ ] Test OAuth flow with Facebook provider
+- [ ] Test profile completion form submission
+- [ ] Test redirects for incomplete profiles
+- [ ] Test validation of required owner fields
+- [ ] Test admin verification flow for social registrations
+- [ ] Test auth state persistence through the multi-step process
+
+**Testing Instructions:**
+- Create test applications in Google and Facebook developer consoles
+- Configure test applications with proper redirect URIs
+- Test the complete registration flow from social login through profile completion
+- Verify building and apartment information is correctly stored
+- Test the admin approval workflow for social login registrations
+- Verify error handling for incomplete profile submissions
+- Test with various browser settings including cookie policies and privacy modes
+
+**Storybook:**
+- [ ] Create Storybook stories for social login buttons
+- [ ] Create Storybook stories for profile completion form
+- [ ] Document the multi-step registration flow
+
+**Required Environment Variables:**
+```
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=your-google-client-id
+FACEBOOK_CLIENT_ID=your-facebook-client-id
+```
+
+**Implementation Timeline:**
+- Total estimated effort: 2 story points
+- Recommended implementation order: 
+  1. Provider configuration
+  2. Database schema updates
+  3. Profile completion UI
+  4. Flow implementation
+  5. Admin verification integration
+
+**Security Considerations:**
+- Implement proper CSRF protection for all auth forms
+- Ensure secure handling of tokens and session data
+- Add rate limiting for profile completion attempts
+- Validate and sanitize all user inputs
+- Ensure social identity verification follows best practices
+- Monitor for suspicious registration patterns
+- Implement proper logging for security audits
 
 ## Notes for Implementation
 

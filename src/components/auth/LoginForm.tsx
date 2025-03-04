@@ -8,6 +8,7 @@ import { signIn } from '@/lib/supabase/auth';
 import { toast } from 'react-toastify';
 import { useI18n } from '@/lib/i18n/client';
 import { createClient } from '@/lib/supabase/client';
+import SocialLoginButtons from './SocialLoginButtons';
 
 export default function LoginForm() {
   const { t } = useI18n();
@@ -239,6 +240,10 @@ export default function LoginForm() {
                 {t('auth.signin.resetPassword')}
               </Link>
             </p>
+          </div>
+          
+          <div className="mt-6">
+            <SocialLoginButtons />
           </div>
         </div>
       </div>
