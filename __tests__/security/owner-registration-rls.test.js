@@ -1,5 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
-import { jest, describe, test, expect } from '@jest/globals';
+const { createClient } = require('@supabase/supabase-js');
+const { describe, test, expect } = require('@jest/globals');
 
 // Mark these tests as being run in a simulated environment
 const SIMULATED_ENVIRONMENT = true;

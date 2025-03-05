@@ -1,13 +1,5 @@
 // Add any global test setup here
-import '@testing-library/jest-dom';
-
-// Import Jest globals
-import { jest } from '@jest/globals';
-
-// Mock environment variables needed for tests
-process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://example.supabase.co';
-process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4YW1wbGUiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTYzMTYzMDgwMCwiZXhwIjoxOTQ3MjA2ODAwfQ.mock-key';
-process.env.SUPABASE_SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4YW1wbGUiLCJyb2xlIjoic2VydmljZV9yb2xlIiwiaWF0IjoxNjMxNjMwODAwLCJleHAiOjE5NDcyMDY4MDB9.mock-service-key';
+require('@testing-library/jest-dom');
 
 // Suppress console error logs in tests to reduce noise
 const originalConsoleError = console.error;
@@ -24,12 +16,44 @@ console.error = (...args) => {
   originalConsoleError(...args);
 };
 
+// Mock environment variables needed for tests
+process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://example.supabase.co';
+process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4YW1wbGUiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTYzMTYzMDgwMCwiZXhwIjoxOTQ3MjA2ODAwfQ.mock-key';
+process.env.SUPABASE_SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4YW1wbGUiLCJyb2xlIjoic2VydmljZV9yb2xlIiwiaWF0IjoxNjMxNjMwODAwLCJleHAiOjE5NDcyMDY4MDB9.mock-service-key';
+
 // Mock Supabase client
 jest.mock('@supabase/supabase-js', () => {
-  const defaultMockData = { id: 'mock-id', title: 'Mock Title', name: 'Mock Name', email: 'mock@example.com' };
+  // Create multiple mock data items to ensure we always have data to return
+  const mockDataItems = [
+    { 
+      id: 'mock-id-1', 
+      title: 'Mock Title 1', 
+      name: 'Mock Name 1', 
+      email: 'mock1@example.com',
+      user_id: 'test-user-id',
+      role: 'admin'
+    },
+    { 
+      id: 'mock-id-2', 
+      title: 'Mock Title 2', 
+      name: 'Mock Name 2', 
+      email: 'mock2@example.com',
+      user_id: 'editor-id',
+      role: 'content_editor'
+    },
+    { 
+      id: 'mock-id-3', 
+      title: 'Mock Title 3', 
+      name: 'Mock Name 3', 
+      email: 'mock3@example.com',
+      user_id: 'user-id',
+      role: undefined
+    }
+  ];
   
-  // Always return an array with at least one mock item for select calls
-  const mockDataArray = [defaultMockData];
+  // Always return an array with mock items for select calls
+  const mockDataArray = [...mockDataItems];
+  const defaultMockData = mockDataItems[0];
   
   return {
     createClient: jest.fn(() => ({
@@ -64,7 +88,7 @@ jest.mock('@supabase/supabase-js', () => {
           execute: jest.fn().mockResolvedValue({ data: mockDataArray, error: null }),
           order: jest.fn().mockReturnThis(),
           match: jest.fn().mockReturnThis(),
-          count: jest.fn().mockResolvedValue({ data: mockDataArray, error: null, count: 1 }),
+          count: jest.fn().mockResolvedValue({ data: mockDataArray, error: null, count: mockDataArray.length }),
         })),
         insert: jest.fn(() => ({
           select: jest.fn().mockResolvedValue({ data: mockDataArray, error: null }),

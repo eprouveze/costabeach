@@ -8,11 +8,12 @@ const config = {
       tsconfig: 'tsconfig.json',
       useESM: true,
     }],
+    '^.+\\.(js|jsx)$': ['babel-jest', { configFile: './babel.config.js' }],
   },
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
   transformIgnorePatterns: [
     // Transform ESM modules from node_modules
-    'node_modules/(?!(uuid)/)',
+    'node_modules/(?!(uuid|@supabase|@testing-library)/)',
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
@@ -26,4 +27,4 @@ const config = {
   ],
 };
 
-export default config; 
+module.exports = config; 

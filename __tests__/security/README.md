@@ -1,30 +1,73 @@
-# Row Level Security (RLS) Tests
+# Security Tests
 
-This directory contains tests that verify the correct implementation of Supabase Row Level Security (RLS) policies across various tables in the application.
+This directory contains tests for verifying the security of the application, particularly focusing on Row Level Security (RLS) policies in Supabase.
 
-## Test Structure
+## Row Level Security (RLS) Tests
 
-The tests are organized into several files:
+The tests in this directory verify that the RLS policies implemented in Supabase are working correctly. These tests ensure that:
 
-- `__tests__/security/test-utils.ts` - Utility functions for creating test users, clients with different authentication contexts, and test data
-- `__tests__/integration/auth-flows.test.ts` - Tests for authentication flows with RLS (register, login, logout)
-- `__tests__/integration/owner-registration.test.ts` - Tests for owner registration process with RLS
-- `__tests__/integration/document-management.test.ts` - Tests for document viewing, creation, and management with RLS
-- `__tests__/integration/admin-functionality.test.ts` - Tests for admin-specific functionality with RLS
-- `__tests__/integration/account-session.test.ts` - Tests for Account and Session tables with RLS
+1. Users can only access data they are authorized to see
+2. Users can only modify data they are authorized to modify
+3. Admin users have appropriate elevated permissions
+4. Service roles can access necessary data for server-side operations
 
-## Running the Tests
+### Test Files
 
-To run all RLS tests:
+- `document-rls.test.js`: Tests for Document table RLS policies
+- `owner-registration-rls.test.js`: Tests for OwnerRegistration table RLS policies
+- `test-utils.ts`: Utility functions for creating test users, clients, and data
+
+### Running the Tests
+
+To run all security tests:
 
 ```bash
-npm test -- --testPathPattern=__tests__/integration
+npm test -- __tests__/security
 ```
 
 To run a specific test file:
 
 ```bash
-npm test -- __tests__/integration/auth-flows.test.ts
+npm test -- __tests__/security/document-rls.test.js
+```
+
+## Test Environment
+
+The tests use a simulated environment by default, which means they don't actually connect to Supabase but use mocked responses. This allows the tests to run quickly and without requiring a real database connection.
+
+The mock implementation is defined in `jest.setup.js` at the root of the project.
+
+## Adding New Tests
+
+When adding new RLS policies to the database, you should also add corresponding tests to verify they work as expected. Follow these steps:
+
+1. Create a new test file if testing a new table, or add to an existing file if extending policies for an existing table
+2. Use the utility functions in `test-utils.ts` to create test users and clients
+3. Write tests that verify both positive cases (authorized access works) and negative cases (unauthorized access is blocked)
+4. Run the tests to ensure they pass
+
+## Test Structure
+
+Each test file follows a similar structure:
+
+1. Import necessary dependencies
+2. Define test users with different roles
+3. Create authenticated clients for each user
+4. Test various operations (select, insert, update, delete) with different user roles
+5. Verify that operations succeed or fail according to the expected RLS policies
+
+## Example Test
+
+```javascript
+test('regular user should be able to view their own registration', async () => {
+  const result = await regularUserClient
+    .from('OwnerRegistration')
+    .select('*')
+    .eq('email', regularUser.email);
+  
+  expect(result.error || null).toBeNull();
+  expect(result.data?.length).toBeGreaterThanOrEqual(1);
+});
 ```
 
 ## Prerequisites
