@@ -628,3 +628,7 @@ Fixed multiple issues with document loading and the build process:
    - Enhanced error logging and recovery mechanisms
 
 These changes ensure that the owner dashboard properly displays documents, the build process completes successfully, and the application is more resilient to data format variations and schema evolution.
+
+## Implemented social login with Google and Facebook using Supabase auth, including profile completion to collect building and apartment numbers.
+
+## Created comprehensive test suite for Supabase Row Level Security (RLS) policies covering authentication, document management, and admin functionality.
