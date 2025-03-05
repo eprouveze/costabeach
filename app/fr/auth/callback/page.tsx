@@ -1,5 +1,7 @@
 "use client";
 
-import AuthCallback from '@/app/auth/callback/page';
+import AuthCallback from '@/components/auth/AuthCallback';
 
-export default AuthCallback; 
+export default function CallbackPage() {
+  return <AuthCallback />;
+} 

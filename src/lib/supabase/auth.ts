@@ -222,4 +222,52 @@ export async function updateUserProfile(userId: string, profileData: {
     .eq('id', userId)
   
   return { data, error }
+}
+
+/**
+ * Handle the OAuth callback
+ * This should be called from the callback page to complete the authentication flow
+ */
+export async function handleAuthCallback() {
+  try {
+    const supabase = createClient();
+    
+    // Get the code from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    
+    if (!code) {
+      return { error: { message: 'Missing authorization code' } };
+    }
+    
+    // Exchange the code for a session
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+    
+    if (error) {
+      console.error('Error exchanging code for session:', error);
+      return { error };
+    }
+    
+    if (!data.session || !data.session.user) {
+      return { error: { message: 'Failed to get user session' } };
+    }
+    
+    // Check if the user needs to complete their profile (e.g., for social login)
+    const { isComplete, error: profileError } = await checkProfileCompletion(data.session.user.id);
+    
+    if (profileError) {
+      console.error('Error checking profile completion:', profileError);
+    }
+    
+    // Store the profile completion status for the component to use for redirection
+    return { 
+      session: data.session, 
+      user: data.session.user, 
+      isProfileComplete: isComplete, 
+      error: null 
+    };
+  } catch (err: any) {
+    console.error('Unexpected error in auth callback:', err);
+    return { error: { message: err.message || 'An unexpected error occurred' } };
+  }
 } 

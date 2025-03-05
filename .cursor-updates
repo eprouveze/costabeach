@@ -647,3 +647,26 @@ Required Google Cloud Console Configuration:
 1. Use wildcard ports in redirect URIs: http://localhost:*/auth/callback
 2. Add locale-specific callback paths: http://localhost:*/en/auth/callback, etc.
 3. For production, add domain-specific URLs without wildcards
+
+## Fixed Babel Configuration for Next.js 15 and Jest (2024-07-28)
+
+Resolved build issues related to Babel configuration conflicts between Next.js and Jest:
+
+1. Created a minimal `babel.config.js` that works for both Next.js and Jest:
+   - Added `@babel/preset-env` for ES features targeting Node current version
+   - Added `@babel/preset-typescript` for TypeScript support
+   - Added `@babel/preset-react` with automatic runtime for React JSX
+   - Added `@babel/plugin-syntax-import-attributes` for import attributes support
+
+2. Fixed Next.js build errors related to experimental syntax:
+   - Installed missing Babel plugins for handling import attributes
+   - Configured Babel presets with appropriate options for Next.js compatibility
+   - Removed conflicting Babel configuration files (.babelrc)
+
+3. Successfully built the application with the new Babel configuration:
+   - Next.js build completed without errors
+   - Environment variables loaded correctly
+   - All routes generated successfully
+   - Middleware size within acceptable limits
+
+Note: Some tests are still failing due to type errors and outdated test implementations, but these can be addressed separately as they don't affect the build or runtime functionality.

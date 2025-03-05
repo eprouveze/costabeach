@@ -1,9 +1,6 @@
 import '@/styles/globals.css';
-import { Inter } from 'next/font/google';
 import ClientLayout from '@/components/ClientLayout';
 import { ReactNode } from 'react';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'Costa Beach 3 - Homeowners Association Portal',
@@ -26,7 +23,7 @@ export default function RootLayout({
   
   return (
     <html lang={locale} dir={dir}>
-      <body className={inter.className}>
+      <body className="font-sans">
         <ClientLayout>
           {children}
         </ClientLayout>
