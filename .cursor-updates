@@ -634,3 +634,16 @@ These changes ensure that the owner dashboard properly displays documents, the b
 ## Created comprehensive test suite for Supabase Row Level Security (RLS) policies covering authentication, document management, and admin functionality.
 
 ## Removed Facebook authentication option, keeping only Google sign-in for social authentication
+
+## Implemented port-agnostic Google OAuth redirect handling
+
+- Updated Supabase Google authentication to work with dynamic ports during local development
+- Modified signInWithGoogle to create port-agnostic redirect URLs for localhost
+- Enhanced SocialLoginButtons to properly include locale in redirect URLs
+- Added comprehensive OAuth callback handling in auth/callback routes
+- Improved error reporting and user feedback during authentication flow
+
+Required Google Cloud Console Configuration:
+1. Use wildcard ports in redirect URIs: http://localhost:*/auth/callback
+2. Add locale-specific callback paths: http://localhost:*/en/auth/callback, etc.
+3. For production, add domain-specific URLs without wildcards

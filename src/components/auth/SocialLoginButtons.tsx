@@ -11,21 +11,43 @@ interface SocialLoginButtonsProps {
   redirectUrl?: string;
 }
 
-export default function SocialLoginButtons({ redirectUrl = '/auth/complete-profile' }: SocialLoginButtonsProps) {
+export default function SocialLoginButtons({ redirectUrl = '/auth/callback' }: SocialLoginButtonsProps) {
   const { t } = useI18n();
   const router = useRouter();
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   // Get the current URL to use as the redirect URL
   const getFullRedirectUrl = () => {
+    // Handle both development and production environments
+    if (typeof window === 'undefined') {
+      return redirectUrl; // Server-side rendering fallback
+    }
+
     // Get the base URL (domain)
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-    return `${baseUrl}${redirectUrl}`;
+    const baseUrl = window.location.origin;
+    
+    // Ensure we have a path that starts with /
+    const path = redirectUrl.startsWith('/') ? redirectUrl : `/${redirectUrl}`;
+    
+    // Extract the locale from the current URL if possible
+    const currentPath = window.location.pathname;
+    const locale = currentPath.split('/')[1];
+    const isLocale = ['en', 'fr', 'ar'].includes(locale);
+    
+    // If we're on a localized path, include locale in redirect
+    if (isLocale && !path.startsWith(`/${locale}`)) {
+      return `${baseUrl}/${locale}${path}`;
+    }
+    
+    return `${baseUrl}${path}`;
   };
 
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true);
     try {
+      // Log the redirect URL for debugging
+      console.log('Redirect URL:', getFullRedirectUrl());
+      
       const { error } = await signInWithGoogle(getFullRedirectUrl());
       if (error) {
         console.error('Google sign in error:', error);

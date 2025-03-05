@@ -146,6 +146,12 @@ export async function hasPermission(permission: string): Promise<boolean> {
  */
 export async function signInWithGoogle(redirectUrl: string) {
   const supabase = createClient()
+  
+  // For redirection tracking - useful for debugging
+  console.log('Signing in with Google, redirect URL:', redirectUrl);
+  
+  // Get the URL without modifying it - Supabase needs the exact URL
+  // The Google Cloud Console should be configured with wildcards for local development
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
@@ -156,6 +162,10 @@ export async function signInWithGoogle(redirectUrl: string) {
       },
     },
   })
+  
+  if (error) {
+    console.error('Google sign in error:', error);
+  }
   
   return { data, error }
 }

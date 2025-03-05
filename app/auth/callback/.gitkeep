@@ -1,0 +1,2 @@
+# This file ensures the auth/callback directory is tracked in git
+# Remove once the callback functionality is fully implemented 
