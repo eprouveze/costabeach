@@ -161,22 +161,6 @@ export async function signInWithGoogle(redirectUrl: string) {
 }
 
 /**
- * Sign in with Facebook
- */
-export async function signInWithFacebook(redirectUrl: string) {
-  const supabase = createClient()
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'facebook',
-    options: {
-      redirectTo: redirectUrl,
-      scopes: 'email',
-    },
-  })
-  
-  return { data, error }
-}
-
-/**
  * Check if the user has completed their profile
  * Required for social login to collect building/apartment info
  */

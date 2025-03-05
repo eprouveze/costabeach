@@ -632,3 +632,5 @@ These changes ensure that the owner dashboard properly displays documents, the b
 ## Implemented social login with Google and Facebook using Supabase auth, including profile completion to collect building and apartment numbers.
 
 ## Created comprehensive test suite for Supabase Row Level Security (RLS) policies covering authentication, document management, and admin functionality.
+
+## Removed Facebook authentication option, keeping only Google sign-in for social authentication

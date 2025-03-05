@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signInWithGoogle, signInWithFacebook } from '@/lib/supabase/auth';
+import { signInWithGoogle } from '@/lib/supabase/auth';
 import { toast } from 'react-toastify';
 import { useI18n } from '@/lib/i18n/client';
 import { Loader2 } from 'lucide-react';
@@ -15,7 +15,6 @@ export default function SocialLoginButtons({ redirectUrl = '/auth/complete-profi
   const { t } = useI18n();
   const router = useRouter();
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [isFacebookLoading, setIsFacebookLoading] = useState(false);
 
   // Get the current URL to use as the redirect URL
   const getFullRedirectUrl = () => {
@@ -40,22 +39,6 @@ export default function SocialLoginButtons({ redirectUrl = '/auth/complete-profi
     }
   };
 
-  const handleFacebookSignIn = async () => {
-    setIsFacebookLoading(true);
-    try {
-      const { error } = await signInWithFacebook(getFullRedirectUrl());
-      if (error) {
-        console.error('Facebook sign in error:', error);
-        toast.error(error.message || 'Failed to sign in with Facebook');
-      }
-    } catch (error: any) {
-      console.error('Facebook sign in error:', error);
-      toast.error(error.message || 'Failed to sign in with Facebook');
-    } finally {
-      setIsFacebookLoading(false);
-    }
-  };
-
   return (
     <div className="space-y-4">
       <div className="relative">
@@ -69,12 +52,12 @@ export default function SocialLoginButtons({ redirectUrl = '/auth/complete-profi
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="flex justify-center">
         <button
           type="button"
           onClick={handleGoogleSignIn}
-          disabled={isGoogleLoading || isFacebookLoading}
-          className="flex items-center justify-center w-full px-4 py-2.5 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-750 transition-colors"
+          disabled={isGoogleLoading}
+          className="flex items-center justify-center w-full max-w-xs px-4 py-2.5 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-750 transition-colors"
         >
           {isGoogleLoading ? (
             <Loader2 className="h-5 w-5 animate-spin text-neutral-600 dark:text-neutral-400" />
@@ -89,27 +72,6 @@ export default function SocialLoginButtons({ redirectUrl = '/auth/complete-profi
                 </g>
               </svg>
               Google
-            </>
-          )}
-        </button>
-
-        <button
-          type="button"
-          onClick={handleFacebookSignIn}
-          disabled={isGoogleLoading || isFacebookLoading}
-          className="flex items-center justify-center w-full px-4 py-2.5 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-750 transition-colors"
-        >
-          {isFacebookLoading ? (
-            <Loader2 className="h-5 w-5 animate-spin text-neutral-600 dark:text-neutral-400" />
-          ) : (
-            <>
-              <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
-                <path
-                  fill="#1877F2"
-                  d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
-                />
-              </svg>
-              Facebook
             </>
           )}
         </button>
