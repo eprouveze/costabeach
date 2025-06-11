@@ -143,7 +143,7 @@ export const DocumentCard = ({
   
   return (
     <>
-      <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
         <div className="p-4">
           <div className="flex items-start">
             <div className="mr-4 flex-shrink-0">
@@ -194,7 +194,7 @@ export const DocumentCard = ({
         </div>
         
         {showActions && (
-          <div className="bg-gray-50 dark:bg-gray-600 px-4 py-3 flex justify-end">
+          <div className="bg-gray-50 px-4 py-3 flex justify-end">
             <button
               onClick={handlePreview}
               className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mr-4 flex items-center text-sm"

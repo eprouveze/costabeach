@@ -116,7 +116,7 @@ export const DocumentList = ({
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search documents..."
-                  className="w-full px-4 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
+                  className="w-full px-4 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
                   type="submit"
@@ -133,7 +133,7 @@ export const DocumentList = ({
               <select
                 value={selectedCategory || ""}
                 onChange={(e) => setSelectedCategory(e.target.value as DocumentCategory || undefined)}
-                className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
+                className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">All Categories</option>
                 {Object.values(DocumentCategory).map((cat) => (
@@ -146,7 +146,7 @@ export const DocumentList = ({
               <select
                 value={selectedLanguage || ""}
                 onChange={(e) => setSelectedLanguage(e.target.value as Language || undefined)}
-                className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
+                className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">All Languages</option>
                 {Object.values(Language).map((lang) => (

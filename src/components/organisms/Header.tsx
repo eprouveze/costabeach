@@ -65,11 +65,11 @@ export const Header = ({ className = "" }: HeaderProps) => {
   };
 
   return (
-    <header className={`w-full bg-white dark:bg-gray-800 shadow-sm ${className}`}>
+    <header className={`w-full bg-white shadow-sm ${className}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl font-bold text-gray-900">
               <Link href={`/${locale}`} className="hover:text-blue-600 transition-colors">
                 {t("common.siteTitle")}
               </Link>
@@ -112,7 +112,7 @@ export const Header = ({ className = "" }: HeaderProps) => {
           <div className="md:hidden flex items-center">
             <LanguageSwitcher variant="dropdown" className="mr-2" />
             <button
-              className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="p-2 rounded-md text-gray-600 hover:bg-gray-100"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label={t("navigation.toggleMenu")}
               aria-expanded={isMenuOpen}
@@ -124,7 +124,7 @@ export const Header = ({ className = "" }: HeaderProps) => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <nav className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700">
+          <nav className="md:hidden py-4 border-t border-gray-200">
             <div className="flex flex-col space-y-2">
               {navItems.map((item) => (
                 <NavItem
