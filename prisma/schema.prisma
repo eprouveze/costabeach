@@ -8,98 +8,7 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model User {
-  id                String      @id @db.Uuid
-  name              String?
-  email             String?     @unique
-  emailVerified     DateTime?   @map("email_verified") @db.Timestamp(6)
-  image             String?
-  role              String?     @default("user")
-  isAdmin           Boolean?    @default(false) @map("is_admin")
-  buildingNumber    String?     @map("building_number")
-  apartmentNumber   String?     @map("apartment_number")
-  phoneNumber       String?     @map("phone_number")
-  isVerifiedOwner   Boolean?    @default(false) @map("is_verified_owner")
-  permissions       String[]
-  preferredLanguage String?     @default("french") @map("preferred_language")
-  createdAt         DateTime?   @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt         DateTime?   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
-  is_verified       Boolean?    @default(false)
-  
-  // Existing relations
-  audit_log         audit_log[]
-  documents         Document[]
-  accounts          Account[]
-  sessions          Session[]
-  
-  // Phase 2+ relations
-  documentTranslations      DocumentTranslation[]
-  documentVersions          DocumentVersion[]
-  createdPolls             Poll[]
-  votes                    Vote[]
-  notifications            Notification[]
-  notificationPreferences  NotificationPreference[]
-  whatsappContact          WhatsAppContact?
-  qaConversations          QAConversation[]
-
-  @@map("users")
-}
-
-model Document {
-  id                   String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title                String
-  description          String?
-  filePath             String     @map("file_path")
-  fileType             String     @map("file_type")
-  fileSize             BigInt     @map("file_size")
-  category             String
-  language             String?    @default("fr")
-  is_public            Boolean?   @default(false)
-  viewCount            Int?       @default(0) @map("view_count")
-  downloadCount        Int?       @default(0) @map("download_count")
-  createdAt            DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt            DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
-  created_by           String?    @db.Uuid
-  original_document_id String?    @db.Uuid
-  is_translation       Boolean?   @default(false)
-  searchable_text      String?    // Add field for full-text search
-  
-  // Existing relations
-  users                User?      @relation(fields: [created_by], references: [id], onUpdate: NoAction)
-  documents            Document?  @relation("documentsTodocuments", fields: [original_document_id], references: [id], onUpdate: NoAction)
-  other_documents      Document[] @relation("documentsTodocuments")
-  
-  // Phase 2+ relations
-  translations         DocumentTranslation[]
-  summaries            DocumentSummary[]
-  versions             DocumentVersion[]
-  searchIndex          DocumentSearchIndex?
-  embeddings           DocumentEmbedding[]
-
-  @@map("documents")
-}
-
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model audit_log {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id     String?  @db.Uuid
-  action      String
-  entity_type String
-  entity_id   String
-  details     Json?
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  users       User?    @relation(fields: [user_id], references: [id], onUpdate: NoAction)
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model document_categories {
-  id          String   @id
-  name        String
-  description String?
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime @default(now()) @db.Timestamptz(6)
-}
-
 model Account {
   id                String  @id
   userId            String
@@ -113,42 +22,18 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-  user              User    @relation(fields: [userId], references: [id])
 
   @@unique([provider, providerAccountId])
 }
 
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model Allowlist {
   id        String   @id
   email     String   @unique
   createdAt DateTime @default(now())
 }
 
-// Duplicate model - commenting out
-/*
-model Document {
-  id                   String           @id
-  title                String
-  description          String?
-  filePath             String
-  fileSize             Int
-  fileType             String
-  category             DocumentCategory
-  language             Language
-  translatedDocumentId String?
-  isTranslated         Boolean          @default(false)
-  isPublished          Boolean          @default(true)
-  viewCount            Int              @default(0)
-  downloadCount        Int              @default(0)
-  createdAt            DateTime         @default(now())
-  updatedAt            DateTime
-  authorId             String
-  User                 User             @relation(fields: [authorId], references: [id])
-  Document             Document?        @relation("DocumentToDocument", fields: [translatedDocumentId], references: [id])
-  other_Document       Document[]       @relation("DocumentToDocument")
-}
-*/
-
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model OwnerRegistration {
   id                String             @id
   email             String             @unique
@@ -163,40 +48,15 @@ model OwnerRegistration {
   preferredLanguage Language           @default(french)
 }
 
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model Session {
   id           String   @id
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// Duplicate model - commenting out
-/*
-model User {
-  id                String       @id
-  name              String?
-  email             String?      @unique
-  emailVerified     DateTime?
-  image             String?
-  hashedPassword    String?
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime
-  login             String?
-  role              UserRole     @default(user)
-  isAdmin           Boolean      @default(false)
-  apartmentNumber   String?
-  buildingNumber    String?
-  isVerifiedOwner   Boolean      @default(false)
-  permissions       Permission[]
-  phoneNumber       String?
-  preferredLanguage Language     @default(french)
-  Account           Account[]
-  Document          Document[]
-  Session           Session[]
-}
-*/
-
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model VerificationToken {
   identifier String
   token      String   @unique
@@ -205,30 +65,409 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-enum UserRole {
-  user
-  admin
-  contentEditor
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model audit_log {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id     String?  @db.Uuid
+  action      String
+  entity_type String
+  entity_id   String
+  details     Json?
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  users       users?   @relation(fields: [user_id], references: [id], onUpdate: NoAction)
 }
 
-enum Language {
-  french
-  arabic
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model document_categories {
+  id          String   @id
+  name        String
+  description String?
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @db.Timestamptz(6)
 }
 
-enum Permission {
-  manageUsers
-  manageDocuments
-  manageComiteDocuments
-  manageSocieteDocuments
-  manageLegalDocuments
-  approveRegistrations
+model document_embeddings {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  document_id      String   @db.Uuid
+  chunk_index      Int
+  content_excerpt  String
+  embedding_vector Float[]
+  language         Language
+  metadata         Json?
+  created_at       DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([document_id, chunk_index])
+  @@index([document_id])
 }
 
-enum RegistrationStatus {
-  pending
-  approved
-  rejected
+model document_search_index {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  document_id     String   @unique @db.Uuid
+  searchable_text String
+  language        Language
+  last_indexed    DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model document_summaries {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  document_id  String   @db.Uuid
+  language     Language
+  summary_text String
+  key_points   String[]
+  word_count   Int
+  reading_time Int
+  confidence   Float?
+  generated_by String
+  created_at   DateTime @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([document_id, language])
+  @@index([language])
+}
+
+model document_translations {
+  id                   String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  document_id          String            @db.Uuid
+  source_language      Language
+  target_language      Language
+  status               TranslationStatus @default(pending)
+  translated_content   String?
+  confidence_score     Float?
+  quality_score        Float?
+  service_used         String?
+  job_id               String?
+  requested_by         String            @db.Uuid
+  started_at           DateTime?         @db.Timestamptz(6)
+  completed_at         DateTime?         @db.Timestamptz(6)
+  error_message        String?
+  estimated_cost_cents Int?
+  actual_cost_cents    Int?
+  progress             Int?              @default(0)
+  user_rating          Int?
+  user_feedback        String?
+  notes                String?
+  created_at           DateTime          @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime          @default(now()) @db.Timestamptz(6)
+
+  @@unique([document_id, target_language])
+  @@index([requested_by])
+  @@index([status])
+}
+
+model document_versions {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  document_id     String   @db.Uuid
+  version_number  Int
+  file_path       String
+  file_size       BigInt
+  changes_summary String?
+  uploaded_by     String   @db.Uuid
+  created_at      DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([document_id, version_number])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model documents {
+  id                   String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title                String
+  description          String?
+  file_path            String
+  file_type            String
+  file_size            BigInt
+  category             String
+  language             String?     @default("fr")
+  is_public            Boolean?    @default(false)
+  view_count           Int?        @default(0)
+  download_count       Int?        @default(0)
+  created_at           DateTime    @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime    @default(now()) @db.Timestamptz(6)
+  created_by           String?     @db.Uuid
+  original_document_id String?     @db.Uuid
+  is_translation       Boolean?    @default(false)
+  searchable_text      String?
+  users                users?      @relation(fields: [created_by], references: [id], onUpdate: NoAction)
+  documents            documents?  @relation("documentsTodocuments", fields: [original_document_id], references: [id], onUpdate: NoAction)
+  other_documents      documents[] @relation("documentsTodocuments")
+}
+
+model feature_flags {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name               String   @unique
+  description        String?
+  is_enabled         Boolean  @default(false)
+  rollout_percentage Int      @default(0)
+  user_groups        String[]
+  created_at         DateTime @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model notification_preferences {
+  id         String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String                @db.Uuid
+  type       NotificationType
+  email      Boolean               @default(true)
+  whatsapp   Boolean               @default(false)
+  frequency  NotificationFrequency @default(immediate)
+  created_at DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at DateTime              @default(now()) @db.Timestamptz(6)
+
+  @@unique([user_id, type])
+}
+
+model notification_templates {
+  id         String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String           @unique
+  subject    String
+  body       String
+  type       NotificationType
+  language   Language
+  is_active  Boolean          @default(true)
+  created_at DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at DateTime         @default(now()) @db.Timestamptz(6)
+}
+
+model notifications {
+  id            String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  template_id   String?             @db.Uuid
+  user_id       String              @db.Uuid
+  type          NotificationType
+  channel       NotificationChannel
+  subject       String
+  body          String
+  status        NotificationStatus  @default(pending)
+  sent_at       DateTime?           @db.Timestamptz(6)
+  read_at       DateTime?           @db.Timestamptz(6)
+  error_message String?
+  metadata      Json?
+  created_at    DateTime            @default(now()) @db.Timestamptz(6)
+
+  @@index([user_id, status])
+}
+
+model performance_metrics {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  metric_name String
+  value       Float
+  unit        String
+  tags        Json?
+  recorded_at DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([metric_name, recorded_at])
+}
+
+model poll_options {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  poll_id     String   @db.Uuid
+  option_text String
+  order_index Int
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([poll_id])
+}
+
+model poll_translations {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  poll_id     String   @db.Uuid
+  language    Language
+  question    String
+  description String?
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([poll_id, language])
+}
+
+model polls {
+  id             String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  question       String
+  description    String?
+  poll_type      PollType   @default(single_choice)
+  status         PollStatus @default(draft)
+  is_anonymous   Boolean    @default(true)
+  allow_comments Boolean    @default(false)
+  start_date     DateTime?  @db.Timestamptz(6)
+  end_date       DateTime?  @db.Timestamptz(6)
+  created_by     String     @db.Uuid
+  created_at     DateTime   @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime   @default(now()) @db.Timestamptz(6)
+
+  @@index([created_by])
+  @@index([status])
+}
+
+model qa_conversations {
+  id                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id             String?  @db.Uuid
+  whatsapp_contact_id String?  @db.Uuid
+  session_id          String
+  language            Language @default(french)
+  started_at          DateTime @default(now()) @db.Timestamptz(6)
+  last_activity       DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([user_id])
+  @@index([whatsapp_contact_id])
+}
+
+model qa_interactions {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  conversation_id  String   @db.Uuid
+  question         String
+  answer           String
+  sources_used     String[]
+  confidence_score Float?
+  response_time_ms Int?
+  tokens_used      Int?
+  cost_cents       Int?
+  feedback_rating  Int?
+  feedback_comment String?
+  created_at       DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([conversation_id])
+}
+
+model system_settings {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key         String   @unique
+  value       String
+  description String?
+  category    String
+  is_public   Boolean  @default(false)
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([category])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model users {
+  id                 String      @id @db.Uuid
+  name               String?
+  email              String?     @unique
+  email_verified     DateTime?   @db.Timestamp(6)
+  image              String?
+  role               String?     @default("user")
+  is_admin           Boolean?    @default(false)
+  building_number    String?
+  apartment_number   String?
+  phone_number       String?
+  is_verified_owner  Boolean?    @default(false)
+  permissions        String[]
+  preferred_language String?     @default("french")
+  created_at         DateTime?   @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime?   @default(now()) @db.Timestamptz(6)
+  is_verified        Boolean?    @default(false)
+  audit_log          audit_log[]
+  documents          documents[]
+}
+
+model votes {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  poll_id    String   @db.Uuid
+  option_id  String   @db.Uuid
+  user_id    String   @db.Uuid
+  comment    String?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([poll_id, user_id])
+  @@index([poll_id, user_id])
+}
+
+model whatsapp_contacts {
+  id                String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id           String         @unique @db.Uuid
+  phone_number      String         @unique
+  country_code      String
+  is_verified       Boolean        @default(false)
+  verification_code String?
+  opt_in_date       DateTime?      @db.Timestamptz(6)
+  opt_out_date      DateTime?      @db.Timestamptz(6)
+  status            WhatsAppStatus @default(pending)
+  last_message_at   DateTime?      @db.Timestamptz(6)
+  created_at        DateTime       @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime       @default(now()) @db.Timestamptz(6)
+
+  @@index([phone_number])
+  @@index([status])
+}
+
+model whatsapp_digest_logs {
+  id              String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  contact_id      String       @db.Uuid
+  digest_type     DigestType
+  period_start    DateTime     @db.Timestamptz(6)
+  period_end      DateTime     @db.Timestamptz(6)
+  content_summary Json
+  message_id      String?      @db.Uuid
+  status          DigestStatus @default(generated)
+  sent_at         DateTime?    @db.Timestamptz(6)
+  created_at      DateTime     @default(now()) @db.Timestamptz(6)
+
+  @@index([contact_id])
+}
+
+model whatsapp_group_messages {
+  id                  String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  group_id            String                   @db.Uuid
+  message_type        WhatsAppGroupMessageType
+  content             String
+  whatsapp_message_id String?
+  status              MessageStatus            @default(pending)
+  error_message       String?
+  sent_at             DateTime                 @default(now()) @db.Timestamptz(6)
+  created_at          DateTime                 @default(now()) @db.Timestamptz(6)
+
+  @@index([group_id])
+  @@index([message_type])
+  @@index([sent_at])
+}
+
+model whatsapp_groups {
+  id                String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name              String
+  whatsapp_group_id String                @unique
+  category          WhatsAppGroupCategory
+  description       String?
+  language          Language              @default(french)
+  is_active         Boolean               @default(true)
+  created_at        DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime              @default(now()) @db.Timestamptz(6)
+
+  @@index([category])
+  @@index([is_active])
+}
+
+model whatsapp_messages {
+  id            String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  contact_id    String           @db.Uuid
+  direction     MessageDirection
+  message_type  MessageType      @default(text)
+  content       String
+  template_name String?
+  template_data Json?
+  whatsapp_id   String?
+  status        MessageStatus    @default(pending)
+  error_message String?
+  sent_at       DateTime?        @db.Timestamptz(6)
+  delivered_at  DateTime?        @db.Timestamptz(6)
+  read_at       DateTime?        @db.Timestamptz(6)
+  created_at    DateTime         @default(now()) @db.Timestamptz(6)
+
+  @@index([contact_id])
+  @@index([status])
+}
+
+enum DigestStatus {
+  generated
+  sent
+  failed
+  skipped
+}
+
+enum DigestType {
+  daily
+  weekly
+  monthly
+  on_demand
 }
 
 enum DocumentCategory {
@@ -244,261 +483,52 @@ enum DocumentCategory {
   other
 }
 
-// ================================
-// PHASE 2: DOCUMENT MANAGEMENT EXTENSIONS
-// ================================
-
-/// Document translation management
-model DocumentTranslation {
-  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  document_id       String              @db.Uuid
-  source_language   Language
-  target_language   Language
-  status            TranslationStatus   @default(pending)
-  translated_content String?
-  confidence_score  Float?
-  quality_score     Float?
-  service_used      String?             // 'deepl', 'openai', etc.
-  job_id            String?             // External service job ID
-  requested_by      String              @db.Uuid
-  started_at        DateTime?           @db.Timestamptz(6)
-  completed_at      DateTime?           @db.Timestamptz(6)
-  error_message     String?
-  estimated_cost_cents Int?
-  actual_cost_cents Int?
-  progress          Int?                @default(0)
-  user_rating       Int?                // 1-5 user rating
-  user_feedback     String?
-  notes             String?
-  created_at        DateTime            @default(now()) @db.Timestamptz(6)
-  updated_at        DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
-
-  // Relations
-  document          Document            @relation(fields: [document_id], references: [id], onDelete: Cascade)
-  requester         User                @relation(fields: [requested_by], references: [id])
-
-  @@unique([document_id, target_language])
-  @@index([status])
-  @@index([requested_by])
-  @@map("document_translations")
+enum Language {
+  french
+  arabic
 }
 
-/// AI-generated document summaries
-model DocumentSummary {
-  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  document_id     String    @db.Uuid
-  language        Language
-  summary_text    String
-  key_points      String[]  // JSON array of key points
-  word_count      Int
-  reading_time    Int       // in minutes
-  confidence      Float?
-  generated_by    String    // AI service used
-  created_at      DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at      DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
-
-  // Relations
-  document        Document  @relation(fields: [document_id], references: [id], onDelete: Cascade)
-
-  @@unique([document_id, language])
-  @@index([language])
-  @@map("document_summaries")
+enum MessageDirection {
+  inbound
+  outbound
 }
 
-/// Document versioning
-model DocumentVersion {
-  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  document_id       String   @db.Uuid
-  version_number    Int
-  file_path         String
-  file_size         BigInt
-  changes_summary   String?
-  uploaded_by       String   @db.Uuid
-  created_at        DateTime @default(now()) @db.Timestamptz(6)
-
-  // Relations
-  document          Document @relation(fields: [document_id], references: [id], onDelete: Cascade)
-  uploader          User     @relation(fields: [uploaded_by], references: [id])
-
-  @@unique([document_id, version_number])
-  @@map("document_versions")
-}
-
-/// Full-text search optimization
-model DocumentSearchIndex {
-  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  document_id     String    @unique @db.Uuid
-  searchable_text String    // Extracted text content
-  language        Language
-  last_indexed    DateTime  @default(now()) @db.Timestamptz(6)
-
-  // Relations
-  document        Document  @relation(fields: [document_id], references: [id], onDelete: Cascade)
-
-  @@map("document_search_index")
-}
-
-enum TranslationStatus {
+enum MessageStatus {
   pending
-  in_progress
-  completed
+  sent
+  delivered
+  read
+  failed
+}
+
+enum MessageType {
+  text
+  template
+  document
+  image
+  interactive
+}
+
+enum NotificationChannel {
+  email
+  whatsapp
+  in_app
+}
+
+enum NotificationFrequency {
+  immediate
+  daily
+  weekly
+  monthly
+  disabled
+}
+
+enum NotificationStatus {
+  pending
+  sent
+  delivered
   failed
   cancelled
-}
-
-// ================================
-// PHASE 3: COMMUNITY MANAGEMENT
-// ================================
-
-/// Community polls
-model Poll {
-  id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  question          String
-  description       String?
-  poll_type         PollType          @default(single_choice)
-  status            PollStatus        @default(draft)
-  is_anonymous      Boolean           @default(true)
-  allow_comments    Boolean           @default(false)
-  start_date        DateTime?         @db.Timestamptz(6)
-  end_date          DateTime?         @db.Timestamptz(6)
-  created_by        String            @db.Uuid
-  created_at        DateTime          @default(now()) @db.Timestamptz(6)
-  updated_at        DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
-
-  // Relations
-  creator           User              @relation(fields: [created_by], references: [id])
-  options           PollOption[]
-  votes             Vote[]
-  translations      PollTranslation[]
-
-  @@index([status])
-  @@index([created_by])
-  @@map("polls")
-}
-
-/// Poll options/choices
-model PollOption {
-  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  poll_id     String  @db.Uuid
-  option_text String
-  order_index Int
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-
-  // Relations
-  poll        Poll    @relation(fields: [poll_id], references: [id], onDelete: Cascade)
-  votes       Vote[]
-
-  @@index([poll_id])
-  @@map("poll_options")
-}
-
-/// User votes (anonymous but tracked for one-per-user)
-model Vote {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  poll_id     String   @db.Uuid
-  option_id   String   @db.Uuid
-  user_id     String   @db.Uuid
-  comment     String?
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-
-  // Relations
-  poll        Poll       @relation(fields: [poll_id], references: [id], onDelete: Cascade)
-  option      PollOption @relation(fields: [option_id], references: [id], onDelete: Cascade)
-  voter       User       @relation(fields: [user_id], references: [id])
-
-  @@unique([poll_id, user_id]) // One vote per user per poll
-  @@index([poll_id, user_id])
-  @@map("votes")
-}
-
-/// Poll translations for multilingual support
-model PollTranslation {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  poll_id     String   @db.Uuid
-  language    Language
-  question    String
-  description String?
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-
-  // Relations
-  poll        Poll     @relation(fields: [poll_id], references: [id], onDelete: Cascade)
-
-  @@unique([poll_id, language])
-  @@map("poll_translations")
-}
-
-enum PollType {
-  single_choice
-  multiple_choice
-  yes_no
-  rating
-}
-
-enum PollStatus {
-  draft
-  published
-  closed
-  archived
-}
-
-/// Notification templates and preferences
-model NotificationTemplate {
-  id          String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String              @unique
-  subject     String
-  body        String
-  type        NotificationType
-  language    Language
-  is_active   Boolean             @default(true)
-  created_at  DateTime            @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
-
-  // Relations
-  notifications Notification[]
-
-  @@map("notification_templates")
-}
-
-/// Individual notifications sent
-model Notification {
-  id              String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  template_id     String?               @db.Uuid
-  user_id         String                @db.Uuid
-  type            NotificationType
-  channel         NotificationChannel
-  subject         String
-  body            String
-  status          NotificationStatus    @default(pending)
-  sent_at         DateTime?             @db.Timestamptz(6)
-  read_at         DateTime?             @db.Timestamptz(6)
-  error_message   String?
-  metadata        Json?                 // Additional data for the notification
-  created_at      DateTime              @default(now()) @db.Timestamptz(6)
-
-  // Relations
-  template        NotificationTemplate? @relation(fields: [template_id], references: [id])
-  user            User                  @relation(fields: [user_id], references: [id])
-
-  @@index([user_id, status])
-  @@map("notifications")
-}
-
-/// User notification preferences
-model NotificationPreference {
-  id          String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id     String              @db.Uuid
-  type        NotificationType
-  email       Boolean             @default(true)
-  whatsapp    Boolean             @default(false)
-  frequency   NotificationFrequency @default(immediate)
-  created_at  DateTime            @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
-
-  // Relations
-  user        User                @relation(fields: [user_id], references: [id])
-
-  @@unique([user_id, type])
-  @@map("notification_preferences")
 }
 
 enum NotificationType {
@@ -512,296 +542,47 @@ enum NotificationType {
   admin_action
 }
 
-enum NotificationChannel {
-  email
-  whatsapp
-  in_app
+enum Permission {
+  manageUsers
+  manageDocuments
+  manageComiteDocuments
+  manageSocieteDocuments
+  manageLegalDocuments
+  approveRegistrations
 }
 
-enum NotificationStatus {
+enum PollStatus {
+  draft
+  published
+  closed
+  archived
+}
+
+enum PollType {
+  single_choice
+  multiple_choice
+  yes_no
+  rating
+}
+
+enum RegistrationStatus {
   pending
-  sent
-  delivered
+  approved
+  rejected
+}
+
+enum TranslationStatus {
+  pending
+  in_progress
+  completed
   failed
   cancelled
 }
 
-enum NotificationFrequency {
-  immediate
-  daily
-  weekly
-  monthly
-  disabled
-}
-
-// ================================
-// PHASE 4: WHATSAPP INTEGRATION
-// ================================
-
-/// WhatsApp contact information
-model WhatsAppContact {
-  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id           String              @unique @db.Uuid
-  phone_number      String              @unique
-  country_code      String
-  is_verified       Boolean             @default(false)
-  verification_code String?
-  opt_in_date       DateTime?           @db.Timestamptz(6)
-  opt_out_date      DateTime?           @db.Timestamptz(6)
-  status            WhatsAppStatus      @default(pending)
-  last_message_at   DateTime?           @db.Timestamptz(6)
-  created_at        DateTime            @default(now()) @db.Timestamptz(6)
-  updated_at        DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
-
-  // Relations
-  user              User                @relation(fields: [user_id], references: [id])
-  messages          WhatsAppMessage[]
-  digest_logs       WhatsAppDigestLog[]
-  qa_conversations  QAConversation[]
-
-  @@index([phone_number])
-  @@index([status])
-  @@map("whatsapp_contacts")
-}
-
-/// WhatsApp message history
-model WhatsAppMessage {
-  id              String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  contact_id      String              @db.Uuid
-  direction       MessageDirection
-  message_type    MessageType         @default(text)
-  content         String
-  template_name   String?             // For template messages
-  template_data   Json?               // Template variable data
-  whatsapp_id     String?             // WhatsApp's message ID
-  status          MessageStatus       @default(pending)
-  error_message   String?
-  sent_at         DateTime?           @db.Timestamptz(6)
-  delivered_at    DateTime?           @db.Timestamptz(6)
-  read_at         DateTime?           @db.Timestamptz(6)
-  created_at      DateTime            @default(now()) @db.Timestamptz(6)
-
-  // Relations
-  contact         WhatsAppContact     @relation(fields: [contact_id], references: [id])
-
-  @@index([contact_id])
-  @@index([status])
-  @@map("whatsapp_messages")
-}
-
-/// WhatsApp digest delivery logs
-model WhatsAppDigestLog {
-  id              String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  contact_id      String              @db.Uuid
-  digest_type     DigestType
-  period_start    DateTime            @db.Timestamptz(6)
-  period_end      DateTime            @db.Timestamptz(6)
-  content_summary Json                // Summary of what was included
-  message_id      String?             @db.Uuid // Reference to WhatsAppMessage
-  status          DigestStatus        @default(generated)
-  sent_at         DateTime?           @db.Timestamptz(6)
-  created_at      DateTime            @default(now()) @db.Timestamptz(6)
-
-  // Relations
-  contact         WhatsAppContact     @relation(fields: [contact_id], references: [id])
-
-  @@index([contact_id])
-  @@map("whatsapp_digest_logs")
-}
-
-enum WhatsAppStatus {
-  pending
-  verified
-  opted_in
-  opted_out
-  blocked
-}
-
-enum MessageDirection {
-  inbound
-  outbound
-}
-
-enum MessageType {
-  text
-  template
-  document
-  image
-  interactive
-}
-
-enum MessageStatus {
-  pending
-  sent
-  delivered
-  read
-  failed
-}
-
-enum DigestType {
-  daily
-  weekly
-  monthly
-  on_demand
-}
-
-enum DigestStatus {
-  generated
-  sent
-  failed
-  skipped
-}
-
-/// Vector embeddings for semantic search
-model DocumentEmbedding {
-  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  document_id       String    @db.Uuid
-  chunk_index       Int       // For large documents split into chunks
-  content_excerpt   String    // First 200 chars of the chunk
-  embedding_vector  Float[]   // Vector embedding (1536 dimensions for OpenAI)
-  language          Language
-  metadata          Json?     // Additional context (page number, section, etc.)
-  created_at        DateTime  @default(now()) @db.Timestamptz(6)
-
-  // Relations
-  document          Document  @relation(fields: [document_id], references: [id], onDelete: Cascade)
-
-  @@unique([document_id, chunk_index])
-  @@index([document_id])
-  @@map("document_embeddings")
-}
-
-/// Q&A conversation history
-model QAConversation {
-  id                    String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id               String?             @db.Uuid // Null for anonymous WhatsApp users
-  whatsapp_contact_id   String?             @db.Uuid // For WhatsApp conversations
-  session_id            String              // To group related questions
-  language              Language            @default(french)
-  started_at            DateTime            @default(now()) @db.Timestamptz(6)
-  last_activity         DateTime            @default(now()) @db.Timestamptz(6)
-
-  // Relations
-  user                  User?               @relation(fields: [user_id], references: [id])
-  whatsapp_contact      WhatsAppContact?    @relation(fields: [whatsapp_contact_id], references: [id])
-  interactions          QAInteraction[]
-
-  @@index([user_id])
-  @@index([whatsapp_contact_id])
-  @@map("qa_conversations")
-}
-
-/// Individual Q&A interactions
-model QAInteraction {
-  id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  conversation_id   String          @db.Uuid
-  question          String
-  answer            String
-  sources_used      String[]        // Document IDs that provided context
-  confidence_score  Float?
-  response_time_ms  Int?
-  tokens_used       Int?
-  cost_cents        Int?            // API cost in cents
-  feedback_rating   Int?            // 1-5 user rating
-  feedback_comment  String?
-  created_at        DateTime        @default(now()) @db.Timestamptz(6)
-
-  // Relations
-  conversation      QAConversation  @relation(fields: [conversation_id], references: [id], onDelete: Cascade)
-
-  @@index([conversation_id])
-  @@map("qa_interactions")
-}
-
-// ================================
-// PHASE 5: SYSTEM CONFIGURATION
-// ================================
-
-/// Global system settings
-model SystemSetting {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  key         String   @unique
-  value       String
-  description String?
-  category    String
-  is_public   Boolean  @default(false)  // Whether setting is visible to non-admins
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-
-  @@index([category])
-  @@map("system_settings")
-}
-
-/// Feature flags for gradual rollouts
-model FeatureFlag {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String   @unique
-  description String?
-  is_enabled  Boolean  @default(false)
-  rollout_percentage Int @default(0)  // 0-100 percentage rollout
-  user_groups String[] // Which user groups have access
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-
-  @@map("feature_flags")
-}
-
-/// Application performance metrics
-model PerformanceMetric {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  metric_name String
-  value       Float
-  unit        String   // 'ms', 'bytes', 'count', etc.
-  tags        Json?    // Additional metadata
-  recorded_at DateTime @default(now()) @db.Timestamptz(6)
-
-  @@index([metric_name, recorded_at])
-  @@map("performance_metrics")
-}
-
-// ================================
-// PHASE 4B: WHATSAPP GROUPS INTEGRATION
-// ================================
-
-/// WhatsApp Groups configuration
-model WhatsAppGroup {
-  id                String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name              String                 // Display name like "Costa Beach - Documents 📄"
-  whatsapp_group_id String                 @unique // Actual WhatsApp group ID like "120363025246125016@g.us"
-  category          WhatsAppGroupCategory
-  description       String?
-  language          Language               @default(french)
-  is_active         Boolean                @default(true)
-  created_at        DateTime               @default(now()) @db.Timestamptz(6)
-  updated_at        DateTime               @default(now()) @updatedAt @db.Timestamptz(6)
-
-  // Relations
-  messages          WhatsAppGroupMessage[]
-
-  @@index([category])
-  @@index([is_active])
-  @@map("whatsapp_groups")
-}
-
-/// WhatsApp Group message history
-model WhatsAppGroupMessage {
-  id                    String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  group_id              String                    @db.Uuid
-  message_type          WhatsAppGroupMessageType
-  content               String
-  whatsapp_message_id   String?                   // WhatsApp's message ID from API response
-  status                MessageStatus             @default(pending)
-  error_message         String?
-  sent_at               DateTime                  @default(now()) @db.Timestamptz(6)
-  created_at            DateTime                  @default(now()) @db.Timestamptz(6)
-
-  // Relations
-  group                 WhatsAppGroup             @relation(fields: [group_id], references: [id], onDelete: Cascade)
-
-  @@index([group_id])
-  @@index([message_type])
-  @@index([sent_at])
-  @@map("whatsapp_group_messages")
+enum UserRole {
+  user
+  admin
+  contentEditor
 }
 
 enum WhatsAppGroupCategory {
@@ -818,4 +599,12 @@ enum WhatsAppGroupMessageType {
   general
   weekly_digest
   system_announcement
+}
+
+enum WhatsAppStatus {
+  pending
+  verified
+  opted_in
+  opted_out
+  blocked
 }

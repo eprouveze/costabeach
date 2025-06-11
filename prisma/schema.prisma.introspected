@@ -1,0 +1,215 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Account {
+  id                String  @id
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  User              User    @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerAccountId])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Allowlist {
+  id        String   @id
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Document {
+  id                   String           @id
+  title                String
+  description          String?
+  filePath             String
+  fileSize             Int
+  fileType             String
+  category             DocumentCategory
+  language             Language
+  translatedDocumentId String?
+  isTranslated         Boolean          @default(false)
+  isPublished          Boolean          @default(true)
+  viewCount            Int              @default(0)
+  downloadCount        Int              @default(0)
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime
+  authorId             String
+  User                 User             @relation(fields: [authorId], references: [id])
+  Document             Document?        @relation("DocumentToDocument", fields: [translatedDocumentId], references: [id])
+  other_Document       Document[]       @relation("DocumentToDocument")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model OwnerRegistration {
+  id                String             @id
+  email             String             @unique
+  name              String
+  buildingNumber    String
+  apartmentNumber   String
+  phoneNumber       String
+  status            RegistrationStatus @default(pending)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime
+  notes             String?
+  preferredLanguage Language           @default(french)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Session {
+  id           String   @id
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model User {
+  id                String       @id
+  name              String?
+  email             String?      @unique
+  emailVerified     DateTime?
+  image             String?
+  hashedPassword    String?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime
+  login             String?
+  role              UserRole     @default(user)
+  isAdmin           Boolean      @default(false)
+  apartmentNumber   String?
+  buildingNumber    String?
+  isVerifiedOwner   Boolean      @default(false)
+  permissions       Permission[]
+  phoneNumber       String?
+  preferredLanguage Language     @default(french)
+  Account           Account[]
+  Document          Document[]
+  Session           Session[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model audit_log {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id     String?  @db.Uuid
+  action      String
+  entity_type String
+  entity_id   String
+  details     Json?
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  users       users?   @relation(fields: [user_id], references: [id], onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model document_categories {
+  id          String   @id
+  name        String
+  description String?
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @db.Timestamptz(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model documents {
+  id                   String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title                String
+  description          String?
+  file_path            String
+  file_type            String
+  file_size            BigInt
+  category             String
+  language             String?     @default("fr")
+  is_public            Boolean?    @default(false)
+  view_count           Int?        @default(0)
+  download_count       Int?        @default(0)
+  created_at           DateTime    @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime    @default(now()) @db.Timestamptz(6)
+  created_by           String?     @db.Uuid
+  original_document_id String?     @db.Uuid
+  is_translation       Boolean?    @default(false)
+  users                users?      @relation(fields: [created_by], references: [id], onUpdate: NoAction)
+  documents            documents?  @relation("documentsTodocuments", fields: [original_document_id], references: [id], onUpdate: NoAction)
+  other_documents      documents[] @relation("documentsTodocuments")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model users {
+  id                 String      @id @db.Uuid
+  name               String?
+  email              String?     @unique
+  email_verified     DateTime?   @db.Timestamp(6)
+  image              String?
+  role               String?     @default("user")
+  is_admin           Boolean?    @default(false)
+  building_number    String?
+  apartment_number   String?
+  phone_number       String?
+  is_verified_owner  Boolean?    @default(false)
+  permissions        String[]
+  preferred_language String?     @default("french")
+  created_at         DateTime?   @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime?   @default(now()) @db.Timestamptz(6)
+  is_verified        Boolean?    @default(false)
+  audit_log          audit_log[]
+  documents          documents[]
+}
+
+enum DocumentCategory {
+  comiteDeSuivi
+  societeDeGestion
+  legal
+  financial
+  general
+}
+
+enum Language {
+  french
+  arabic
+}
+
+enum Permission {
+  manageUsers
+  manageDocuments
+  manageComiteDocuments
+  manageSocieteDocuments
+  manageLegalDocuments
+  approveRegistrations
+}
+
+enum RegistrationStatus {
+  pending
+  approved
+  rejected
+}
+
+enum UserRole {
+  user
+  admin
+  contentEditor
+}

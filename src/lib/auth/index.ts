@@ -12,6 +12,7 @@ import { headers } from "next/headers";
 export enum UserRole {
   user = "user",
   admin = "admin",
+  contentEditor = "contentEditor",
 }
 
 /**
@@ -168,3 +169,14 @@ export const authOptions: NextAuthOptions = {
 };
 
 export const getServerAuthSession = () => getServerSession(authOptions);
+
+// Util: Get the current authenticated user (or null if none)
+export const getCurrentUser = async () => {
+  try {
+    const session = await getServerSession(authOptions);
+    return session?.user ?? null;
+  } catch (error) {
+    console.error("Failed to retrieve current user:", error);
+    return null;
+  }
+};

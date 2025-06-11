@@ -10,9 +10,9 @@ const handler = (req: Request) =>
     req,
     router: appRouter,
     createContext: async () => {
-      const user = await getServerAuthSession();
+      const session = await getServerAuthSession();
       return {
-        user,
+        user: session?.user ?? null,
         headers: req.headers,
         db,
       };
