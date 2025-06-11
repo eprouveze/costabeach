@@ -21,7 +21,7 @@ export default function Hero({ className = "" }: HeroProps) {
   return (
     <div className={`relative h-[600px] w-full overflow-hidden ${className}`}>
       {/* Hero Background Image */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 w-full h-full">
         <Image
           src="/images/hero-banner.jpeg"
           alt="Costa Beach 3"

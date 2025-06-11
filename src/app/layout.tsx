@@ -20,17 +20,7 @@ const DirectionProvider = dynamic(() => import("@/components/DirectionProvider")
   ssr: false,
 });
 
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Costa Beach Owner Portal",
-  description: "Secure access to Costa Beach condo resources and documents",
-  icons: {
-    icon: "/favicon.ico",
-  },
-};
-
-function AuthButton() {
+const AuthButton = dynamic(() => Promise.resolve(function AuthButton() {
   const { data: session } = useSession();
 
   if (session) {
@@ -51,7 +41,19 @@ function AuthButton() {
       Sign In
     </button>
   );
-}
+}), {
+  ssr: false,
+});
+
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Costa Beach Owner Portal",
+  description: "Secure access to Costa Beach condo resources and documents",
+  icons: {
+    icon: "/favicon.ico",
+  },
+};
 
 export default function RootLayout({
   children,
@@ -61,7 +63,7 @@ export default function RootLayout({
   return (
     <SessionProvider>
       <html lang="fr" className="h-full">
-        <body className={`${inter.className} h-full`}>
+        <body className={`${inter.className} h-full`} suppressHydrationWarning={true}>
           <ThemeProvider defaultTheme="system" enableSystem>
             <ClientProvider>
               <TRPCReactProvider>

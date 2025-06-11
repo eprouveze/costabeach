@@ -37,10 +37,11 @@ export default function AboutSection({ className = "" }: AboutSectionProps) {
         <div className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16 ${locale === 'ar' ? 'lg:grid-flow-col-reverse' : ''}`}>
           <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl">
             <Image
-              src="/images/costa-beach-building.jpg"
+              src="/images/hero-banner.jpeg"
               alt="Costa Beach 3 Building"
               fill
               className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
           <div className={textAlignClass}>
