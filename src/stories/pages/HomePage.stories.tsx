@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import ClientProvider from "@/components/ClientProvider";
+import { FlowButton } from '@/components/atoms/FlowButton';
 import { I18nProvider } from '@/lib/i18n/client';
 import { SessionProvider } from 'next-auth/react';
 
@@ -28,13 +29,17 @@ function HomePage() {
                 <h1 className="text-4xl font-bold mt-10">
                   Welcome - Click the button below to get started
                 </h1>
-                <Link
-                  href="/auth/signin"
-                  className="group w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg px-8 py-4 text-lg font-medium shadow-lg shadow-blue-500/20 transition-all duration-200 hover:shadow-xl hover:shadow-blue-500/30"
-                >
-                  Get Started
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
+                <div className="w-full sm:w-auto flex justify-center">
+                  <FlowButton
+                    text="Get Started"
+                    variant="gradient"
+                    className="text-lg px-8 py-4 shadow-lg"
+                    onClick={() => {
+                      // In a real app, this would navigate to /auth/signin
+                      alert('Navigation to /auth/signin would happen here');
+                    }}
+                  />
+                </div>
               </div>
             </section>
           </div>
@@ -81,4 +86,86 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof HomePage>;
 
-export const Default: Story = {}; 
+export const Default: Story = {};
+
+export const EnhancedWithFlowButtons: Story = {
+  render: () => (
+    <div className="min-h-screen flex flex-col relative">
+      <main className="flex-1 flex flex-col w-full mx-auto">
+        <ClientProvider>
+          <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
+            <section className="max-w-4xl w-full space-y-12 text-center px-4">
+              <div className="space-y-6">
+                <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
+                  Welcome to CostaBeach
+                </h1>
+                <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                  Experience the future of web development with our cutting-edge platform featuring beautiful animations and modern design.
+                </p>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-6 items-center justify-center">
+                <FlowButton
+                  text="Get Started"
+                  variant="gradient"
+                  className="text-lg px-10 py-4"
+                  onClick={() => alert('Get Started clicked!')}
+                />
+                <FlowButton
+                  text="Learn More"
+                  variant="default"
+                  className="text-lg px-10 py-4"
+                  onClick={() => alert('Learn More clicked!')}
+                />
+                <FlowButton
+                  text="Try Demo"
+                  variant="wave"
+                  className="text-lg px-10 py-4"
+                  onClick={() => alert('Try Demo clicked!')}
+                />
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-8 mt-16">
+                <div className="text-center space-y-4">
+                  <div className="text-4xl mb-4">🚀</div>
+                  <h3 className="text-xl font-semibold">Fast Performance</h3>
+                  <p className="text-gray-600 dark:text-gray-400">Lightning-fast loading times with optimized code</p>
+                </div>
+                <div className="text-center space-y-4">
+                  <div className="text-4xl mb-4">🎨</div>
+                  <h3 className="text-xl font-semibold">Beautiful Design</h3>
+                  <p className="text-gray-600 dark:text-gray-400">Stunning animations and modern UI components</p>
+                </div>
+                <div className="text-center space-y-4">
+                  <div className="text-4xl mb-4">📱</div>
+                  <h3 className="text-xl font-semibold">Responsive</h3>
+                  <p className="text-gray-600 dark:text-gray-400">Perfect experience on all devices</p>
+                </div>
+              </div>
+            </section>
+          </div>
+        </ClientProvider>
+      </main>
+
+      <footer className="border-t border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <span className="text-sm text-neutral-600 dark:text-neutral-400">
+            © {new Date().getFullYear()} CostaBeach. All Rights Reserved
+          </span>
+          <div className="flex items-center gap-6">
+            <FlowButton text="Contact Us" variant="default" className="text-sm px-4 py-2" />
+          </div>
+        </div>
+      </footer>
+    </div>
+  ),
+  decorators: [withProviders],
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story: 'Enhanced homepage featuring FlowButton components with multiple variants, improved layout, and modern design elements.',
+      },
+    },
+  },
+}; 

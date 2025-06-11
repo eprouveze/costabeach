@@ -5,13 +5,17 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils/shared";
 
-interface FlowButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface FlowButtonProps {
   text?: string;
   variant?: "default" | "gradient" | "wave";
+  className?: string;
+  onClick?: () => void;
+  disabled?: boolean;
+  type?: "button" | "submit" | "reset";
 }
 
 const FlowButton = React.forwardRef<HTMLButtonElement, FlowButtonProps>(
-  ({ text = "Flow Button", variant = "default", className, ...props }, ref) => {
+  ({ text = "Flow Button", variant = "default", className, onClick, disabled, type = "button" }, ref) => {
     const [isHovered, setIsHovered] = React.useState(false);
 
     const variants = {
@@ -43,7 +47,9 @@ const FlowButton = React.forwardRef<HTMLButtonElement, FlowButtonProps>(
         onMouseLeave={() => setIsHovered(false)}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        {...props}
+        onClick={onClick}
+        disabled={disabled}
+        type={type}
       >
         {/* Flow Background */}
         <motion.div

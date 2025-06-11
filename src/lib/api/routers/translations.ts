@@ -55,7 +55,7 @@ export const translationsRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const { documentId, targetLanguage } = input;
-      const userId = ctx.session.user.id;
+      const userId = ctx.user.id;
       
       // Get the document to translate
       const document = await prisma.document.findUnique({

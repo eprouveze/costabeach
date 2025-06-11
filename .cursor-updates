@@ -199,6 +199,48 @@ Added a comprehensive plan to migrate from NextAuth to Supabase Authentication, 
 6. Testing strategy and required environment variables
 7. Estimated effort (5.5 story points) with implementation timeline
 
+## Enhanced Storybook Pages with FlowButton Integration (2025-01-18)
+
+Successfully integrated FlowButton component across multiple page stories to replace standard buttons and enhance visual appeal:
+
+1. **HomePage Stories Enhancement**: Updated existing HomePage story to use FlowButton instead of standard Link button, added new "EnhancedWithFlowButtons" story variant with modern landing page design featuring all three FlowButton variants (default, gradient, wave)
+
+2. **OwnerSignUpPage Enhancement**: Replaced standard signup button with FlowButton gradient variant, created comprehensive "EnhancedWithFlowButtons" story with improved form design, additional fields, social login options, and multiple FlowButton variants
+
+3. **FlowButtonShowcase Creation**: Created dedicated showcase story demonstrating FlowButton integration across different page contexts including landing pages, dashboards, product pages, and blog layouts
+
+4. **Component Integration**: All page stories now demonstrate practical FlowButton usage with proper event handlers, accessibility features, and responsive design patterns
+
+The FlowButton component successfully enhances user interface appeal while maintaining functionality and accessibility standards across all page types in Storybook.
+
+## FileUpload Component Integration (2025-01-18)
+
+Successfully integrated a modern drag-and-drop FileUpload component into the shadcn-based UI component library:
+
+1. **Component Installation**: Added FileUpload component to `/src/components/ui/file-upload.tsx` with proper TypeScript interfaces and shadcn structure compatibility
+
+2. **Dependencies**: Installed required packages (`react-dropzone`, `@tabler/icons-react`) while leveraging existing `framer-motion` for animations
+
+3. **Component Features**: 
+   - Drag & drop functionality with visual feedback
+   - Click-to-upload traditional file picker
+   - Smooth Framer Motion animations on hover and file selection
+   - File preview with details (name, size, type, modification date)
+   - Dark mode support with proper theming
+   - Multiple file handling with progress indicators
+
+4. **Comprehensive Documentation**: Created detailed Storybook stories (`/src/stories/ui/FileUpload.stories.tsx`) with multiple variants:
+   - Default usage with callback handling
+   - Container-wrapped version with styling
+   - Custom styling examples for different use cases
+   - Interactive demo with state management and file tracking
+   - Compact version for smaller spaces
+   - Multiple upload areas for different purposes
+
+5. **Demo Components**: Built FileUploadDemo wrapper component and comprehensive test page showcasing real-world usage patterns and integration examples
+
+The FileUpload component follows project conventions, integrates seamlessly with the existing Tailwind CSS styling, and provides a modern, accessible file upload experience.
+
 Updated related sections in the development plan to reflect the authentication change:
 1. Marked NextAuth Integration section as deprecated
 2. Updated Owner Registration Flow section with Supabase migration notes
@@ -673,4 +715,29 @@ Note: Some tests are still failing due to type errors and outdated test implemen
 
 ## Implemented smart 21st.dev integration with Storybook including custom addon architecture, interactive component search and generation demo, design pattern documentation, and MCP tool integration examples.
 
+- Created FlowButton component using 21st.dev MCP tools with three animated variants (default, gradient, wave), smooth hover effects, floating particles, and comprehensive Storybook documentation.
+
+## Latest Changes
+
+### Fixed TailwindCSS v4 Compatibility - All Formatting Should Now Work
+- **ROOT CAUSE IDENTIFIED**: Project is using TailwindCSS v4.1.8 which has completely different syntax and configuration
+- **MAJOR FIX**: Updated CSS imports from old v3 syntax to v4 syntax:
+  - BEFORE: `@tailwind base; @tailwind components; @tailwind utilities;`
+  - AFTER: `@import "tailwindcss";`
+- **IMPACT**: This should restore ALL component formatting across atoms, molecules, and organisms
+- **TailwindCSS v4 Changes**: 
+  - Uses CSS-first configuration instead of JavaScript config files
+  - Different import syntax for base styles
+  - Maintains backwards compatibility for utility classes
+- **STATUS**: Storybook running successfully at http://localhost:6006 - all formatting should now be restored
+
+### Previous Fixes
+- Converted problematic @apply statements to standard CSS properties
+- Fixed PostCSS configuration for TailwindCSS v4 compatibility
+- Resolved all CSS compilation errors
+
+### FileUpload Component
+- Beautiful Aceternity UI with drag-drop functionality at http://localhost:6006/?path=/story/ui-fileupload--default
+
+### Previous Changes
 - Created FlowButton component using 21st.dev MCP tools with three animated variants (default, gradient, wave), smooth hover effects, floating particles, and comprehensive Storybook documentation.

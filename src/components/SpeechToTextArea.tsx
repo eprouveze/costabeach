@@ -282,7 +282,7 @@ export const SpeechToTextArea = forwardRef<
                 : "text-dark-blue dark:text-slate-100"
             } ${
               isLoading ? "opacity-50" : ""
-            } hide-scrollbar transition-height m-0 flex-1 resize-none border-0 bg-transparent px-3 py-2 transition-colors focus:outline-none focus:ring-0 focus-visible:ring-0`}
+            } hide-scrollbar transition-height flex-1 resize-none border-0 bg-transparent px-3 py-2 transition-colors focus:outline-none focus:ring-0 focus-visible:ring-0`}
             value={value}
             onChange={handleTextareaChange}
             onKeyDown={(e) => {

@@ -37,7 +37,7 @@ export const documentsRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const { fileName, fileType, fileSize, category, language } = input;
-      const userId = ctx.session?.user?.id;
+      const userId = ctx.user?.id;
       
       // Get the user from the database to check permissions
       const user = await prisma.user.findUnique({
@@ -89,13 +89,13 @@ export const documentsRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.session?.user?.id) {
+      if (!ctx.user?.id) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "You must be logged in to create documents",
         });
       }
-      const userId = ctx.session.user.id;
+      const userId = ctx.user.id;
       
       // Get the user from the database to check permissions
       const user = await prisma.user.findUnique({
@@ -190,7 +190,7 @@ export const documentsRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const { documentId } = input;
-      const userId = ctx.session?.user?.id || 'anonymous';
+      const userId = ctx.user?.id || 'anonymous';
       
       try {
         // Increment download count
@@ -241,7 +241,7 @@ export const documentsRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const { documentId } = input;
-      const userId = ctx.session?.user?.id || 'anonymous';
+      const userId = ctx.user?.id || 'anonymous';
       
       try {
         await incrementViewCount(documentId);
@@ -283,13 +283,13 @@ export const documentsRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const { documentId } = input;
-      if (!ctx.session?.user?.id) {
+      if (!ctx.user?.id) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "You must be logged in to delete documents",
         });
       }
-      const userId = ctx.session.user.id;
+      const userId = ctx.user.id;
       
       try {
         // Get the document to check category
@@ -365,7 +365,7 @@ export const documentsRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const userId = ctx.session?.user?.id;
+      const userId = ctx.user?.id;
       
       // Get the user to check if they are an admin or content editor
       const user = await prisma.user.findUnique({
@@ -440,7 +440,7 @@ export const documentsRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.session?.user?.id) {
+      if (!ctx.user?.id) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "You must be logged in to update documents",
@@ -460,7 +460,7 @@ export const documentsRouter = router({
       
       // Get user permissions from database
       const user = await prisma.user.findUnique({
-        where: { id: ctx.session?.user?.id },
+        where: { id: ctx.user?.id },
         select: { permissions: true, isAdmin: true }
       });
       
@@ -510,7 +510,7 @@ export const documentsRouter = router({
 
       // Log the update action
       await createAuditLog(
-        ctx.session?.user?.id || 'system',
+        ctx.user?.id || 'system',
         "update",
         "Document",
         input.id,

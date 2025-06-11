@@ -25,10 +25,22 @@ model User {
   createdAt         DateTime?   @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt         DateTime?   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
   is_verified       Boolean?    @default(false)
+  
+  // Existing relations
   audit_log         audit_log[]
   documents         Document[]
   accounts          Account[]
   sessions          Session[]
+  
+  // Phase 2+ relations
+  documentTranslations      DocumentTranslation[]
+  documentVersions          DocumentVersion[]
+  createdPolls             Poll[]
+  votes                    Vote[]
+  notifications            Notification[]
+  notificationPreferences  NotificationPreference[]
+  whatsappContact          WhatsAppContact?
+  qaConversations          QAConversation[]
 
   @@map("users")
 }
@@ -50,9 +62,19 @@ model Document {
   created_by           String?    @db.Uuid
   original_document_id String?    @db.Uuid
   is_translation       Boolean?   @default(false)
+  searchable_text      String?    // Add field for full-text search
+  
+  // Existing relations
   users                User?      @relation(fields: [created_by], references: [id], onUpdate: NoAction)
   documents            Document?  @relation("documentsTodocuments", fields: [original_document_id], references: [id], onUpdate: NoAction)
   other_documents      Document[] @relation("documentsTodocuments")
+  
+  // Phase 2+ relations
+  translations         DocumentTranslation[]
+  summaries            DocumentSummary[]
+  versions             DocumentVersion[]
+  searchIndex          DocumentSearchIndex?
+  embeddings           DocumentEmbedding[]
 
   @@map("documents")
 }
@@ -215,4 +237,585 @@ enum DocumentCategory {
   legal
   financial
   general
+  bylaw
+  maintenance
+  announcement
+  meeting_minutes
+  other
+}
+
+// ================================
+// PHASE 2: DOCUMENT MANAGEMENT EXTENSIONS
+// ================================
+
+/// Document translation management
+model DocumentTranslation {
+  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  document_id       String              @db.Uuid
+  source_language   Language
+  target_language   Language
+  status            TranslationStatus   @default(pending)
+  translated_content String?
+  confidence_score  Float?
+  quality_score     Float?
+  service_used      String?             // 'deepl', 'openai', etc.
+  job_id            String?             // External service job ID
+  requested_by      String              @db.Uuid
+  started_at        DateTime?           @db.Timestamptz(6)
+  completed_at      DateTime?           @db.Timestamptz(6)
+  error_message     String?
+  estimated_cost_cents Int?
+  actual_cost_cents Int?
+  progress          Int?                @default(0)
+  user_rating       Int?                // 1-5 user rating
+  user_feedback     String?
+  notes             String?
+  created_at        DateTime            @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  document          Document            @relation(fields: [document_id], references: [id], onDelete: Cascade)
+  requester         User                @relation(fields: [requested_by], references: [id])
+
+  @@unique([document_id, target_language])
+  @@index([status])
+  @@index([requested_by])
+  @@map("document_translations")
+}
+
+/// AI-generated document summaries
+model DocumentSummary {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  document_id     String    @db.Uuid
+  language        Language
+  summary_text    String
+  key_points      String[]  // JSON array of key points
+  word_count      Int
+  reading_time    Int       // in minutes
+  confidence      Float?
+  generated_by    String    // AI service used
+  created_at      DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  document        Document  @relation(fields: [document_id], references: [id], onDelete: Cascade)
+
+  @@unique([document_id, language])
+  @@index([language])
+  @@map("document_summaries")
+}
+
+/// Document versioning
+model DocumentVersion {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  document_id       String   @db.Uuid
+  version_number    Int
+  file_path         String
+  file_size         BigInt
+  changes_summary   String?
+  uploaded_by       String   @db.Uuid
+  created_at        DateTime @default(now()) @db.Timestamptz(6)
+
+  // Relations
+  document          Document @relation(fields: [document_id], references: [id], onDelete: Cascade)
+  uploader          User     @relation(fields: [uploaded_by], references: [id])
+
+  @@unique([document_id, version_number])
+  @@map("document_versions")
+}
+
+/// Full-text search optimization
+model DocumentSearchIndex {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  document_id     String    @unique @db.Uuid
+  searchable_text String    // Extracted text content
+  language        Language
+  last_indexed    DateTime  @default(now()) @db.Timestamptz(6)
+
+  // Relations
+  document        Document  @relation(fields: [document_id], references: [id], onDelete: Cascade)
+
+  @@map("document_search_index")
+}
+
+enum TranslationStatus {
+  pending
+  in_progress
+  completed
+  failed
+  cancelled
+}
+
+// ================================
+// PHASE 3: COMMUNITY MANAGEMENT
+// ================================
+
+/// Community polls
+model Poll {
+  id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  question          String
+  description       String?
+  poll_type         PollType          @default(single_choice)
+  status            PollStatus        @default(draft)
+  is_anonymous      Boolean           @default(true)
+  allow_comments    Boolean           @default(false)
+  start_date        DateTime?         @db.Timestamptz(6)
+  end_date          DateTime?         @db.Timestamptz(6)
+  created_by        String            @db.Uuid
+  created_at        DateTime          @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  creator           User              @relation(fields: [created_by], references: [id])
+  options           PollOption[]
+  votes             Vote[]
+  translations      PollTranslation[]
+
+  @@index([status])
+  @@index([created_by])
+  @@map("polls")
+}
+
+/// Poll options/choices
+model PollOption {
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  poll_id     String  @db.Uuid
+  option_text String
+  order_index Int
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  // Relations
+  poll        Poll    @relation(fields: [poll_id], references: [id], onDelete: Cascade)
+  votes       Vote[]
+
+  @@index([poll_id])
+  @@map("poll_options")
+}
+
+/// User votes (anonymous but tracked for one-per-user)
+model Vote {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  poll_id     String   @db.Uuid
+  option_id   String   @db.Uuid
+  user_id     String   @db.Uuid
+  comment     String?
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  // Relations
+  poll        Poll       @relation(fields: [poll_id], references: [id], onDelete: Cascade)
+  option      PollOption @relation(fields: [option_id], references: [id], onDelete: Cascade)
+  voter       User       @relation(fields: [user_id], references: [id])
+
+  @@unique([poll_id, user_id]) // One vote per user per poll
+  @@index([poll_id, user_id])
+  @@map("votes")
+}
+
+/// Poll translations for multilingual support
+model PollTranslation {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  poll_id     String   @db.Uuid
+  language    Language
+  question    String
+  description String?
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  // Relations
+  poll        Poll     @relation(fields: [poll_id], references: [id], onDelete: Cascade)
+
+  @@unique([poll_id, language])
+  @@map("poll_translations")
+}
+
+enum PollType {
+  single_choice
+  multiple_choice
+  yes_no
+  rating
+}
+
+enum PollStatus {
+  draft
+  published
+  closed
+  archived
+}
+
+/// Notification templates and preferences
+model NotificationTemplate {
+  id          String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String              @unique
+  subject     String
+  body        String
+  type        NotificationType
+  language    Language
+  is_active   Boolean             @default(true)
+  created_at  DateTime            @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  notifications Notification[]
+
+  @@map("notification_templates")
+}
+
+/// Individual notifications sent
+model Notification {
+  id              String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  template_id     String?               @db.Uuid
+  user_id         String                @db.Uuid
+  type            NotificationType
+  channel         NotificationChannel
+  subject         String
+  body            String
+  status          NotificationStatus    @default(pending)
+  sent_at         DateTime?             @db.Timestamptz(6)
+  read_at         DateTime?             @db.Timestamptz(6)
+  error_message   String?
+  metadata        Json?                 // Additional data for the notification
+  created_at      DateTime              @default(now()) @db.Timestamptz(6)
+
+  // Relations
+  template        NotificationTemplate? @relation(fields: [template_id], references: [id])
+  user            User                  @relation(fields: [user_id], references: [id])
+
+  @@index([user_id, status])
+  @@map("notifications")
+}
+
+/// User notification preferences
+model NotificationPreference {
+  id          String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id     String              @db.Uuid
+  type        NotificationType
+  email       Boolean             @default(true)
+  whatsapp    Boolean             @default(false)
+  frequency   NotificationFrequency @default(immediate)
+  created_at  DateTime            @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  user        User                @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, type])
+  @@map("notification_preferences")
+}
+
+enum NotificationType {
+  document_uploaded
+  document_translated
+  poll_created
+  poll_reminder
+  poll_results
+  system_announcement
+  whatsapp_digest
+  admin_action
+}
+
+enum NotificationChannel {
+  email
+  whatsapp
+  in_app
+}
+
+enum NotificationStatus {
+  pending
+  sent
+  delivered
+  failed
+  cancelled
+}
+
+enum NotificationFrequency {
+  immediate
+  daily
+  weekly
+  monthly
+  disabled
+}
+
+// ================================
+// PHASE 4: WHATSAPP INTEGRATION
+// ================================
+
+/// WhatsApp contact information
+model WhatsAppContact {
+  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id           String              @unique @db.Uuid
+  phone_number      String              @unique
+  country_code      String
+  is_verified       Boolean             @default(false)
+  verification_code String?
+  opt_in_date       DateTime?           @db.Timestamptz(6)
+  opt_out_date      DateTime?           @db.Timestamptz(6)
+  status            WhatsAppStatus      @default(pending)
+  last_message_at   DateTime?           @db.Timestamptz(6)
+  created_at        DateTime            @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  user              User                @relation(fields: [user_id], references: [id])
+  messages          WhatsAppMessage[]
+  digest_logs       WhatsAppDigestLog[]
+  qa_conversations  QAConversation[]
+
+  @@index([phone_number])
+  @@index([status])
+  @@map("whatsapp_contacts")
+}
+
+/// WhatsApp message history
+model WhatsAppMessage {
+  id              String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  contact_id      String              @db.Uuid
+  direction       MessageDirection
+  message_type    MessageType         @default(text)
+  content         String
+  template_name   String?             // For template messages
+  template_data   Json?               // Template variable data
+  whatsapp_id     String?             // WhatsApp's message ID
+  status          MessageStatus       @default(pending)
+  error_message   String?
+  sent_at         DateTime?           @db.Timestamptz(6)
+  delivered_at    DateTime?           @db.Timestamptz(6)
+  read_at         DateTime?           @db.Timestamptz(6)
+  created_at      DateTime            @default(now()) @db.Timestamptz(6)
+
+  // Relations
+  contact         WhatsAppContact     @relation(fields: [contact_id], references: [id])
+
+  @@index([contact_id])
+  @@index([status])
+  @@map("whatsapp_messages")
+}
+
+/// WhatsApp digest delivery logs
+model WhatsAppDigestLog {
+  id              String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  contact_id      String              @db.Uuid
+  digest_type     DigestType
+  period_start    DateTime            @db.Timestamptz(6)
+  period_end      DateTime            @db.Timestamptz(6)
+  content_summary Json                // Summary of what was included
+  message_id      String?             @db.Uuid // Reference to WhatsAppMessage
+  status          DigestStatus        @default(generated)
+  sent_at         DateTime?           @db.Timestamptz(6)
+  created_at      DateTime            @default(now()) @db.Timestamptz(6)
+
+  // Relations
+  contact         WhatsAppContact     @relation(fields: [contact_id], references: [id])
+
+  @@index([contact_id])
+  @@map("whatsapp_digest_logs")
+}
+
+enum WhatsAppStatus {
+  pending
+  verified
+  opted_in
+  opted_out
+  blocked
+}
+
+enum MessageDirection {
+  inbound
+  outbound
+}
+
+enum MessageType {
+  text
+  template
+  document
+  image
+  interactive
+}
+
+enum MessageStatus {
+  pending
+  sent
+  delivered
+  read
+  failed
+}
+
+enum DigestType {
+  daily
+  weekly
+  monthly
+  on_demand
+}
+
+enum DigestStatus {
+  generated
+  sent
+  failed
+  skipped
+}
+
+/// Vector embeddings for semantic search
+model DocumentEmbedding {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  document_id       String    @db.Uuid
+  chunk_index       Int       // For large documents split into chunks
+  content_excerpt   String    // First 200 chars of the chunk
+  embedding_vector  Float[]   // Vector embedding (1536 dimensions for OpenAI)
+  language          Language
+  metadata          Json?     // Additional context (page number, section, etc.)
+  created_at        DateTime  @default(now()) @db.Timestamptz(6)
+
+  // Relations
+  document          Document  @relation(fields: [document_id], references: [id], onDelete: Cascade)
+
+  @@unique([document_id, chunk_index])
+  @@index([document_id])
+  @@map("document_embeddings")
+}
+
+/// Q&A conversation history
+model QAConversation {
+  id                    String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id               String?             @db.Uuid // Null for anonymous WhatsApp users
+  whatsapp_contact_id   String?             @db.Uuid // For WhatsApp conversations
+  session_id            String              // To group related questions
+  language              Language            @default(french)
+  started_at            DateTime            @default(now()) @db.Timestamptz(6)
+  last_activity         DateTime            @default(now()) @db.Timestamptz(6)
+
+  // Relations
+  user                  User?               @relation(fields: [user_id], references: [id])
+  whatsapp_contact      WhatsAppContact?    @relation(fields: [whatsapp_contact_id], references: [id])
+  interactions          QAInteraction[]
+
+  @@index([user_id])
+  @@index([whatsapp_contact_id])
+  @@map("qa_conversations")
+}
+
+/// Individual Q&A interactions
+model QAInteraction {
+  id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  conversation_id   String          @db.Uuid
+  question          String
+  answer            String
+  sources_used      String[]        // Document IDs that provided context
+  confidence_score  Float?
+  response_time_ms  Int?
+  tokens_used       Int?
+  cost_cents        Int?            // API cost in cents
+  feedback_rating   Int?            // 1-5 user rating
+  feedback_comment  String?
+  created_at        DateTime        @default(now()) @db.Timestamptz(6)
+
+  // Relations
+  conversation      QAConversation  @relation(fields: [conversation_id], references: [id], onDelete: Cascade)
+
+  @@index([conversation_id])
+  @@map("qa_interactions")
+}
+
+// ================================
+// PHASE 5: SYSTEM CONFIGURATION
+// ================================
+
+/// Global system settings
+model SystemSetting {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key         String   @unique
+  value       String
+  description String?
+  category    String
+  is_public   Boolean  @default(false)  // Whether setting is visible to non-admins
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@index([category])
+  @@map("system_settings")
+}
+
+/// Feature flags for gradual rollouts
+model FeatureFlag {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String   @unique
+  description String?
+  is_enabled  Boolean  @default(false)
+  rollout_percentage Int @default(0)  // 0-100 percentage rollout
+  user_groups String[] // Which user groups have access
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("feature_flags")
+}
+
+/// Application performance metrics
+model PerformanceMetric {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  metric_name String
+  value       Float
+  unit        String   // 'ms', 'bytes', 'count', etc.
+  tags        Json?    // Additional metadata
+  recorded_at DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([metric_name, recorded_at])
+  @@map("performance_metrics")
+}
+
+// ================================
+// PHASE 4B: WHATSAPP GROUPS INTEGRATION
+// ================================
+
+/// WhatsApp Groups configuration
+model WhatsAppGroup {
+  id                String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name              String                 // Display name like "Costa Beach - Documents 📄"
+  whatsapp_group_id String                 @unique // Actual WhatsApp group ID like "120363025246125016@g.us"
+  category          WhatsAppGroupCategory
+  description       String?
+  language          Language               @default(french)
+  is_active         Boolean                @default(true)
+  created_at        DateTime               @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime               @default(now()) @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  messages          WhatsAppGroupMessage[]
+
+  @@index([category])
+  @@index([is_active])
+  @@map("whatsapp_groups")
+}
+
+/// WhatsApp Group message history
+model WhatsAppGroupMessage {
+  id                    String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  group_id              String                    @db.Uuid
+  message_type          WhatsAppGroupMessageType
+  content               String
+  whatsapp_message_id   String?                   // WhatsApp's message ID from API response
+  status                MessageStatus             @default(pending)
+  error_message         String?
+  sent_at               DateTime                  @default(now()) @db.Timestamptz(6)
+  created_at            DateTime                  @default(now()) @db.Timestamptz(6)
+
+  // Relations
+  group                 WhatsAppGroup             @relation(fields: [group_id], references: [id], onDelete: Cascade)
+
+  @@index([group_id])
+  @@index([message_type])
+  @@index([sent_at])
+  @@map("whatsapp_group_messages")
+}
+
+enum WhatsAppGroupCategory {
+  documents
+  polls
+  emergency
+  general
+}
+
+enum WhatsAppGroupMessageType {
+  document_notification
+  poll_notification
+  emergency
+  general
+  weekly_digest
+  system_announcement
 }

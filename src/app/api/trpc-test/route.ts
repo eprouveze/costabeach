@@ -5,13 +5,13 @@ import { prisma } from "@/lib/db";
 
 export async function GET() {
   try {
-    // Get the session
-    const session = await getServerAuthSession();
+    // Get the user
+    const user = await getServerAuthSession();
     
     // Create a tRPC caller with the required context
     const createCaller = createCallerFactory(appRouter);
     const caller = createCaller({
-      session,
+      user,
       headers: new Headers(),
       db: prisma,
     });

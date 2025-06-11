@@ -2,7 +2,7 @@ import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { appRouter } from '@/lib/api/root';
 import { createTRPCContext } from '@/lib/api/trpc';
 import { getServerAuthSession } from '@/lib/auth';
-import { prisma } from '@/lib/db';
+import { db } from '@/lib/db';
 
 const handler = (req: Request) =>
   fetchRequestHandler({
@@ -10,11 +10,11 @@ const handler = (req: Request) =>
     req,
     router: appRouter,
     createContext: async () => {
-      const session = await getServerAuthSession();
+      const user = await getServerAuthSession();
       return {
-        session,
+        user,
         headers: req.headers,
-        db: prisma,
+        db,
       };
     },
   });

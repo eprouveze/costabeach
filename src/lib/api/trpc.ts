@@ -11,15 +11,15 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 import { Context } from './context';
 
-import { getServerAuthSession, UserRole } from "../auth";
-import { prisma } from '@/lib/db';
+import { getCurrentUser } from "../auth";
+import { db } from '@/lib/db';
 
 /**
  * 1. CONTEXT
  *
  * This section defines the "contexts" that are available in the backend API.
  *
- * These allow you to access things when processing a request, like the database, the session, etc.
+ * These allow you to access things when processing a request, like the database, the user session, etc.
  *
  * This helper generates the "internals" for a tRPC context. The API handler and RSC clients each
  * wrap this and provides the required context.
@@ -27,12 +27,12 @@ import { prisma } from '@/lib/db';
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-  const session = await getServerAuthSession();
+  const user = await getCurrentUser();
 
   return {
-    session,
+    user,
     headers: opts.headers,
-    db: prisma,
+    db: db,
   };
 };
 
@@ -91,18 +91,18 @@ export const publicProcedure = t.procedure;
  * Protected (authenticated) procedure
  *
  * If you want a query or mutation to ONLY be accessible to logged in users, use this. It verifies
- * the session is valid and guarantees `ctx.session.user` is not null.
+ * the user is authenticated and guarantees `ctx.user` is not null.
  *
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user) {
+  if (!ctx.user) {
     throw new TRPCError({ code: 'UNAUTHORIZED' });
   }
   return next({
     ctx: {
       ...ctx,
-      session: { ...ctx.session, user: ctx.session.user },
+      user: ctx.user,
     },
   });
 });

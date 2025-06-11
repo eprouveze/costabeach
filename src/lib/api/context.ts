@@ -1,17 +1,16 @@
 import { inferAsyncReturnType } from '@trpc/server';
 import { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
-import { getServerSession } from "next-auth";
-import { getServerAuthSession } from '@/lib/auth';
-import { prisma } from '@/lib/db';
+import { getCurrentUser } from '@/lib/auth';
+import { db } from '@/lib/db';
 
 export async function createContext({ req, resHeaders }: FetchCreateContextFnOptions) {
-  // Get the session from the request if available
-  const session = await getServerAuthSession();
+  // Get the current user from the request if available
+  const user = await getCurrentUser();
   
   return {
-    session,
+    user,
     headers: req.headers,
-    db: prisma,
+    db: db,
   };
 }
 
