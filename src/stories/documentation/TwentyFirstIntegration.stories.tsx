@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
+import { FlowButton } from '@/components/atoms/FlowButton';
 
 const meta = {
   title: 'Documentation/21st.dev Integration',
@@ -61,6 +62,18 @@ const TwentyFirstDemo: React.FC = () => {
   };
 
   const sampleComponents = [
+    {
+      name: 'FlowButton',
+      category: 'Atoms',
+      description: 'Animated button with flow effects and particle animations',
+      code: `import { FlowButton } from '@/components/atoms/FlowButton';
+
+<FlowButton 
+  text="Get Started" 
+  variant="gradient"
+  onClick={() => console.log('Flow button clicked!')}
+/>`
+    },
     {
       name: 'Modern Button',
       category: 'Atoms',
@@ -319,13 +332,17 @@ const TwentyFirstDemo: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <h3 className="font-medium text-yellow-800 mb-2">🚀 Quick Start</h3>
-              <p className="text-yellow-700 text-sm">
-                Navigate through the tabs above to explore different integration features. 
-                Try the Component Search to see the integration in action!
-              </p>
-            </div>
+                          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <h3 className="font-medium text-yellow-800 mb-2">🚀 Quick Start</h3>
+                <p className="text-yellow-700 text-sm mb-4">
+                  Navigate through the tabs above to explore different integration features. 
+                  Try the Component Search to see the integration in action!
+                </p>
+                <div className="flex gap-3 justify-center">
+                  <FlowButton text="Explore Components" variant="default" />
+                  <FlowButton text="Generate with AI" variant="gradient" />
+                </div>
+              </div>
           </div>
         );
     }
