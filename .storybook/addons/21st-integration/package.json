@@ -1,0 +1,18 @@
+{
+  "name": "twentyfirst-integration",
+  "version": "1.0.0",
+  "description": "21st.dev integration addon for Storybook",
+  "main": "manager.js",
+  "module": "manager.js",
+  "types": "manager.d.ts",
+  "files": [
+    "manager.js",
+    "preview.js",
+    "*.d.ts"
+  ],
+  "keywords": [
+    "storybook",
+    "addon",
+    "21st.dev"
+  ]
+} 

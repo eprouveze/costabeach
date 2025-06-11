@@ -1,5 +1,6 @@
 import type { Preview } from "@storybook/react";
 import "../src/app/globals.css"; // Import your Tailwind CSS file
+import "./addons/21st-integration/preview";
 
 const preview: Preview = {
   parameters: {

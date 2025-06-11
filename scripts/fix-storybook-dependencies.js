@@ -12,7 +12,6 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { globSync } from 'glob';
 
 // Get the directory name in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -128,8 +127,33 @@ function getTitleFromContent(content) {
   return titleMatch ? titleMatch[1] : 'Unknown';
 }
 
+// Function to recursively find story files
+function findStoryFiles(dir) {
+  const files = [];
+  
+  function walkDir(currentDir) {
+    const entries = fs.readdirSync(currentDir, { withFileTypes: true });
+    
+    for (const entry of entries) {
+      const fullPath = path.join(currentDir, entry.name);
+      
+      if (entry.isDirectory()) {
+        walkDir(fullPath);
+      } else if (entry.isFile() && entry.name.endsWith('.stories.tsx')) {
+        files.push(fullPath);
+      }
+    }
+  }
+  
+  if (fs.existsSync(dir)) {
+    walkDir(dir);
+  }
+  
+  return files;
+}
+
 // Get all story files
-const storyFiles = globSync(path.join(STORIES_DIR, '**/*.stories.tsx'));
+const storyFiles = findStoryFiles(STORIES_DIR);
 
 console.log(`Found ${storyFiles.length} story files to analyze`);
 
