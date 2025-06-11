@@ -11,13 +11,13 @@ export async function GET(req: NextRequest) {
     // Build the query
     const query: any = {
       where: {
-        isPublished: true
+        is_public: true
       },
       orderBy: {
-        createdAt: 'desc'
+        created_at: 'desc'
       },
       include: {
-        author: {
+        users: {
           select: {
             id: true,
             name: true
@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
     }
     
     // Get documents from the database
-    const documents = await prisma.document.findMany(query);
+    const documents = await prisma.documents.findMany(query);
     
     // Return the documents
     return NextResponse.json(documents);

@@ -7,16 +7,16 @@ async function main() {
   const email = "manu@prouveze.fr";
   
   try {
-    const user = await prisma.user.upsert({
+    const user = await prisma.users.upsert({
       where: { email },
       update: {
-        isAdmin: true,
+        is_admin: true,
         role: "admin"
       },
       create: {
         id: crypto.randomUUID(),
         email,
-        isAdmin: true,
+        is_admin: true,
         role: "admin",
         name: "Manu Prouveze"
       }

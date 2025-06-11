@@ -26,11 +26,11 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: { email: session.user.email ?? undefined },
     });
 
-    if (!user?.isAdmin) {
+    if (!user?.is_admin) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -73,15 +73,15 @@ export async function PUT(request: NextRequest) {
 
     // If approved, create a user account
     if (action === "approve") {
-      await prisma.user.create({
+      await prisma.users.create({
         data: {
           id: crypto.randomUUID(),
           name: registration.name,
           email: registration.email,
-          buildingNumber: registration.buildingNumber,
-          apartmentNumber: registration.apartmentNumber,
-          phoneNumber: registration.phoneNumber,
-          isVerifiedOwner: true,
+          building_number: registration.buildingNumber,
+          apartment_number: registration.apartmentNumber,
+          phone_number: registration.phoneNumber,
+          is_verified_owner: true,
           role: "user",
         },
       });

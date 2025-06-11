@@ -12,7 +12,7 @@ export async function GET(
     const { id } = params;
     
     // Retrieve the document from the database
-    const document = await prisma.document.findUnique({
+    const document = await prisma.documents.findUnique({
       where: { id }
     });
     
@@ -25,12 +25,12 @@ export async function GET(
     
     try {
       // Try to get a signed URL from S3
-      const downloadUrl = await getDownloadUrl(document.filePath);
+      const downloadUrl = await getDownloadUrl(document.file_path);
       
       // Increment the download count
-      await prisma.document.update({
+      await prisma.documents.update({
         where: { id },
-        data: { downloadCount: { increment: 1 } }
+        data: { download_count: { increment: 1 } }
       });
       
       // Redirect to the signed URL
@@ -49,9 +49,9 @@ export async function GET(
         const filename = `${document.title.replace(/[^a-zA-Z0-9\._-]/g, '_')}.pdf`;
         
         // Increment the download count
-        await prisma.document.update({
+        await prisma.documents.update({
           where: { id },
-          data: { downloadCount: { increment: 1 } }
+          data: { download_count: { increment: 1 } }
         });
         
         // Return the file as a response

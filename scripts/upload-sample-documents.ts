@@ -97,19 +97,19 @@ async function uploadSampleDocuments() {
     console.log("Starting to upload sample documents...\n");
 
     // First get or create a system admin user
-    let adminUser = await prisma.user.findFirst({
-      where: { isAdmin: true }
+    let adminUser = await prisma.users.findFirst({
+      where: { is_admin: true }
     });
 
     if (!adminUser) {
-      adminUser = await prisma.user.create({
+      adminUser = await prisma.users.create({
         data: {
           id: crypto.randomUUID(),
           email: "info@costabeach.ma",
           name: "System Admin",
-          isAdmin: true,
+          is_admin: true,
           role: "admin",
-          preferredLanguage: "french"
+          preferred_language: "french"
         }
       });
     }
@@ -122,14 +122,14 @@ async function uploadSampleDocuments() {
       console.log(`✅ Uploaded to S3: ${filePath}`);
 
       // Create database entry
-      const dbEntry = await prisma.document.create({
+      const dbEntry = await prisma.documents.create({
         data: {
           title: doc.title,
           description: doc.description,
           category: doc.category,
-          filePath: filePath,
-          fileSize: fs.statSync(path.join(process.cwd(), "public", "dummy.pdf")).size,
-          fileType: "application/pdf",
+          file_path: filePath,
+          file_size: fs.statSync(path.join(process.cwd(), "public", "dummy.pdf")).size,
+          file_type: "application/pdf",
           language: "french",
           is_public: true,
           created_by: adminUser.id

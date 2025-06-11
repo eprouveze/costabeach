@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
     // For other statuses, only return user's own polls unless admin
     if (user.role !== 'admin' && user.role !== 'contentEditor') {
       const polls = await pollsService.getPollsByCreator(user.id);
-      const filteredPolls = polls.filter(poll => poll.status === status);
+      const filteredPolls = polls.filter((poll: any) => poll.status === status);
       return NextResponse.json({ polls: filteredPolls });
     }
 

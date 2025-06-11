@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Get the document to translate
-    const document = await prisma.document.findUnique({
+    const document = await prisma.documents.findUnique({
       where: { id: documentId },
     });
 
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if translation already exists
-    const existingTranslation = await prisma.document.findFirst({
+    const existingTranslation = await prisma.documents.findFirst({
       where: {
         original_document_id: documentId,
         language: targetLanguage,
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
       data: {
         documentId,
         targetLanguage,
-        userId: user.id,
+        userId: user.user?.id,
       },
     });
 

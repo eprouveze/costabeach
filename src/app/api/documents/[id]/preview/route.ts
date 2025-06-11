@@ -12,7 +12,7 @@ export async function GET(
     const { id } = params;
     
     // Retrieve the document from the database
-    const document = await prisma.document.findUnique({
+    const document = await prisma.documents.findUnique({
       where: { id }
     });
     
@@ -25,12 +25,12 @@ export async function GET(
     
     try {
       // Try to get a signed URL from S3 with inline disposition
-      const previewUrl = await getDownloadUrl(document.filePath, 3600, false);
+      const previewUrl = await getDownloadUrl(document.file_path, 3600, false);
       
       // Increment the view count
-      await prisma.document.update({
+      await prisma.documents.update({
         where: { id },
-        data: { viewCount: { increment: 1 } }
+        data: { view_count: { increment: 1 } }
       });
       
       // Redirect to the signed URL
@@ -46,9 +46,9 @@ export async function GET(
         const fileBuffer = fs.readFileSync(filePath);
         
         // Increment the view count
-        await prisma.document.update({
+        await prisma.documents.update({
           where: { id },
-          data: { viewCount: { increment: 1 } }
+          data: { view_count: { increment: 1 } }
         });
         
         // Return the file as a response with inline disposition

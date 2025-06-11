@@ -11,7 +11,7 @@ export async function GET() {
     // Create a tRPC caller with the required context
     const createCaller = createCallerFactory(appRouter);
     const caller = createCaller({
-      user,
+      user: user?.user ?? null,
       headers: new Headers(),
       db: prisma,
     });

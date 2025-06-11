@@ -58,7 +58,7 @@ export const translationsRouter = router({
       const userId = ctx.user.id;
       
       // Get the document to translate
-      const document = await prisma.document.findUnique({
+      const document = await prisma.documents.findUnique({
         where: { id: documentId },
       });
       
@@ -78,7 +78,7 @@ export const translationsRouter = router({
       }
       
       // Check if translation already exists
-      const existingTranslation = await prisma.document.findFirst({
+      const existingTranslation = await prisma.documents.findFirst({
         where: {
           original_document_id: documentId,
           language: targetLanguage as unknown as any,
@@ -131,7 +131,7 @@ export const translationsRouter = router({
       const { documentId, targetLanguage } = input;
       
       // Check if translation exists
-      const translatedDocument = await prisma.document.findFirst({
+      const translatedDocument = await prisma.documents.findFirst({
         where: {
           original_document_id: documentId,
           language: targetLanguage as unknown as any,

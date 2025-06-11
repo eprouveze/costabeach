@@ -136,7 +136,7 @@ export const createTranslatedDocument = async (
   targetLanguage: Language
 ): Promise<Document> => {
   // Get the original document
-  const originalDocument = await prisma.document.findUnique({
+  const originalDocument = await prisma.documents.findUnique({
     where: { id: originalDocumentId },
   });
   
@@ -145,7 +145,7 @@ export const createTranslatedDocument = async (
   }
   
   // Check if translation already exists
-  const existingTranslation = await prisma.document.findFirst({
+  const existingTranslation = await prisma.documents.findFirst({
     where: {
       original_document_id: originalDocumentId,
       language: targetLanguage as any,
@@ -157,13 +157,13 @@ export const createTranslatedDocument = async (
   }
   
   // For text-based documents, we can translate the content
-  if (originalDocument.fileType.includes('text') || 
-      originalDocument.fileType.includes('pdf') ||
-      originalDocument.fileType.includes('doc')) {
+  if (originalDocument.file_type.includes('text') || 
+      originalDocument.file_type.includes('pdf') ||
+      originalDocument.file_type.includes('doc')) {
     
     try {
       // Get the document content (this would need to be implemented)
-      const downloadUrl = await getDownloadUrl(originalDocument.filePath);
+      const downloadUrl = await getDownloadUrl(originalDocument.file_path);
       const response = await fetch(downloadUrl);
       const content = await response.text();
       
@@ -182,9 +182,9 @@ export const createTranslatedDocument = async (
         `${originalDocument.title} (${targetLanguage})`,
         originalDocument.description ? 
           `${originalDocument.description} (Translated from ${originalDocument.language})` : null,
-        originalDocument.filePath, // This would need to be updated with the new file path
-        Number(originalDocument.fileSize),
-        originalDocument.fileType,
+        originalDocument.file_path, // This would need to be updated with the new file path
+        Number(originalDocument.file_size),
+        originalDocument.file_type,
         originalDocument.category as unknown as DocumentCategory,
         targetLanguage as any,
         originalDocument.created_by || '',
@@ -192,7 +192,7 @@ export const createTranslatedDocument = async (
       );
       
       // Update the relationship between original and translated documents
-      await prisma.document.update({
+      await prisma.documents.update({
         where: { id: translatedDocument.id },
         data: {
           original_document_id: originalDocument.id,
@@ -212,9 +212,9 @@ export const createTranslatedDocument = async (
       `${originalDocument.title} (Original in ${originalDocument.language})`,
       originalDocument.description ? 
         `${originalDocument.description} (Original in ${originalDocument.language})` : null,
-      originalDocument.filePath,
-      Number(originalDocument.fileSize),
-      originalDocument.fileType,
+      originalDocument.file_path,
+      Number(originalDocument.file_size),
+      originalDocument.file_type,
       originalDocument.category as unknown as DocumentCategory,
       targetLanguage as any,
       originalDocument.created_by || '',
@@ -222,7 +222,7 @@ export const createTranslatedDocument = async (
     );
     
     // Update the relationship
-    await prisma.document.update({
+    await prisma.documents.update({
       where: { id: translatedDocument.id },
       data: {
         original_document_id: originalDocument.id,
@@ -242,7 +242,7 @@ export const getOrCreateTranslatedDocument = async (
   targetLanguage: Language
 ): Promise<Document> => {
   // Check if translation already exists
-  const existingTranslation = await prisma.document.findFirst({
+  const existingTranslation = await prisma.documents.findFirst({
     where: {
       original_document_id: documentId,
       language: targetLanguage as any,

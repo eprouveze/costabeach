@@ -91,16 +91,16 @@ export async function GET(req: NextRequest) {
       }
       
       // Now try to create or update the user
-      const existingUser = await prisma.user.findUnique({
+      const existingUser = await prisma.users.findUnique({
         where: { id: authUser.id }
       });
       
       if (existingUser) {
         // Update the user to ensure owner status
-        const updatedUser = await prisma.user.update({
+        const updatedUser = await prisma.users.update({
           where: { id: authUser.id },
           data: {
-            isVerifiedOwner: true,
+            is_verified_owner: true,
             role: 'owner',
             permissions: ['viewDocuments', 'downloadDocuments', 'requestTranslations']
           }
@@ -113,17 +113,17 @@ export async function GET(req: NextRequest) {
         });
       } else {
         // Create the user
-        const newUser = await prisma.user.create({
+        const newUser = await prisma.users.create({
           data: {
             id: authUser.id,
             email: authUser.email || '',
             name: authUser.user_metadata?.name || authUser.email?.split('@')[0] || 'Owner',
             role: 'owner',
-            isVerifiedOwner: true,
-            preferredLanguage: authUser.user_metadata?.preferred_language || 'french',
+            is_verified_owner: true,
+            preferred_language: authUser.user_metadata?.preferred_language || 'french',
             permissions: ['viewDocuments', 'downloadDocuments', 'requestTranslations'],
-            createdAt: new Date(),
-            updatedAt: new Date()
+            created_at: new Date(),
+            updated_at: new Date()
           }
         });
         

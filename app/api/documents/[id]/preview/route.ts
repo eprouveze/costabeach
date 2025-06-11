@@ -12,7 +12,7 @@ export async function GET(
     const { id: documentId } = await context.params;
     
     // Get the document from the database
-    const document = await prisma.document.findUnique({
+    const document = await prisma.documents.findUnique({
       where: { id: documentId },
     });
     
@@ -47,7 +47,7 @@ export async function GET(
       'application/json'
     ];
     
-    const fileType = document.fileType.toLowerCase();
+    const fileType = document.file_type.toLowerCase();
     const canPreview = previewableTypes.some(type => fileType.includes(type));
     
     if (!canPreview) {
@@ -58,14 +58,14 @@ export async function GET(
     }
     
     // Increment the view count
-    await prisma.document.update({
+    await prisma.documents.update({
       where: { id: documentId },
-      data: { viewCount: { increment: 1 } },
+      data: { view_count: { increment: 1 } },
     });
     
     // Generate a signed URL for the document with inline content disposition
     // Use a shorter expiration time for previews (15 minutes)
-    const previewUrl = await getDownloadUrl(document.filePath, 15 * 60, false);
+    const previewUrl = await getDownloadUrl(document.file_path, 15 * 60, false);
     
     return NextResponse.json({ previewUrl });
   } catch (error) {

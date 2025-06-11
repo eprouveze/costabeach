@@ -73,7 +73,7 @@ export const grantPermission = async (
   userId: string,
   permission: Permission
 ): Promise<void> => {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.users.findUnique({
     where: { id: userId },
     select: { permissions: true },
   });
@@ -83,7 +83,7 @@ export const grantPermission = async (
   const currentPermissions = user.permissions || [];
   
   if (!currentPermissions.includes(permission)) {
-    await prisma.user.update({
+    await prisma.users.update({
       where: { id: userId },
       data: {
         permissions: {
@@ -101,7 +101,7 @@ export const revokePermission = async (
   userId: string,
   permission: Permission
 ): Promise<void> => {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.users.findUnique({
     where: { id: userId },
     select: { permissions: true },
   });
@@ -111,7 +111,7 @@ export const revokePermission = async (
   const currentPermissions = user.permissions || [];
   
   if (currentPermissions.includes(permission)) {
-    await prisma.user.update({
+    await prisma.users.update({
       where: { id: userId },
       data: {
         permissions: {
@@ -129,7 +129,7 @@ export const setUserRole = async (
   userId: string,
   role: 'user' | 'admin' | 'contentEditor'
 ): Promise<void> => {
-  await prisma.user.update({
+  await prisma.users.update({
     where: { id: userId },
     data: { role },
   });
@@ -141,7 +141,7 @@ export const setUserRole = async (
 export const getUsersWithPermission = async (
   permission: Permission
 ): Promise<{ id: string; name: string | null; email: string | null }[]> => {
-  return prisma.user.findMany({
+  return prisma.users.findMany({
     where: {
       permissions: {
         has: permission,

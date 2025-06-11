@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     }
 
     // Check if email is already registered
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await prisma.users.findUnique({
       where: { email },
     });
 

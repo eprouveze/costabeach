@@ -12,7 +12,7 @@ export async function GET(
     const { id: documentId } = await context.params;
     
     // Get the document from the database
-    const document = await prisma.document.findUnique({
+    const document = await prisma.documents.findUnique({
       where: { id: documentId },
     });
     
@@ -36,13 +36,13 @@ export async function GET(
     }
     
     // Increment the download count
-    await prisma.document.update({
+    await prisma.documents.update({
       where: { id: documentId },
-      data: { downloadCount: { increment: 1 } },
+      data: { download_count: { increment: 1 } },
     });
     
     // Generate a signed URL for the document with content disposition header
-    const downloadUrl = await getDownloadUrl(document.filePath);
+    const downloadUrl = await getDownloadUrl(document.file_path);
     
     return NextResponse.json({ downloadUrl });
   } catch (error) {

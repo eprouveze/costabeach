@@ -33,7 +33,7 @@ export class TranslationService {
    */
   async requestTranslation(request: TranslationRequest) {
     // Validate document exists
-    const document = await this.prisma.document.findUnique({
+    const document = await this.prisma.documents.findUnique({
       where: { id: request.document_id }
     });
 
@@ -42,7 +42,7 @@ export class TranslationService {
     }
 
     // Check for existing translation
-    const existing = await this.prisma.documentTranslation.findUnique({
+    const existing = await this.prisma.document_translations.findUnique({
       where: {
         document_id_target_language: {
           document_id: request.document_id,
@@ -64,7 +64,7 @@ export class TranslationService {
     );
 
     // Create translation request
-    const translation = await this.prisma.documentTranslation.create({
+    const translation = await this.prisma.document_translations.create({
       data: {
         document_id: request.document_id,
         source_language: request.source_language,
@@ -83,7 +83,7 @@ export class TranslationService {
    * Start processing a translation with specified service
    */
   async processTranslation(translationId: string, service: string) {
-    const translation = await this.prisma.documentTranslation.findUnique({
+    const translation = await this.prisma.document_translations.findUnique({
       where: { id: translationId }
     });
 
@@ -96,7 +96,7 @@ export class TranslationService {
     }
 
     // Update translation status to in_progress
-    const updatedTranslation = await this.prisma.documentTranslation.update({
+    const updatedTranslation = await this.prisma.document_translations.update({
       where: { id: translationId },
       data: {
         status: 'in_progress',
@@ -120,7 +120,7 @@ export class TranslationService {
     confidenceScore: number,
     actualCostCents: number
   ) {
-    const translation = await this.prisma.documentTranslation.update({
+    const translation = await this.prisma.document_translations.update({
       where: { id: translationId },
       data: {
         status: 'completed',
@@ -139,7 +139,7 @@ export class TranslationService {
    * Mark a translation as failed
    */
   async failTranslation(translationId: string, errorMessage: string) {
-    const translation = await this.prisma.documentTranslation.update({
+    const translation = await this.prisma.document_translations.update({
       where: { id: translationId },
       data: {
         status: 'failed',
@@ -191,7 +191,7 @@ export class TranslationService {
    * Update quality score for a translation
    */
   async updateQualityScore(translationId: string, qualityScore: number) {
-    const translation = await this.prisma.documentTranslation.update({
+    const translation = await this.prisma.document_translations.update({
       where: { id: translationId },
       data: { quality_score: qualityScore }
     });
@@ -211,7 +211,7 @@ export class TranslationService {
       throw new Error('Rating must be between 1 and 5');
     }
 
-    const translation = await this.prisma.documentTranslation.update({
+    const translation = await this.prisma.document_translations.update({
       where: { id: translationId },
       data: {
         user_rating: rating,
@@ -226,7 +226,7 @@ export class TranslationService {
    * Get translations for a specific document
    */
   async getTranslationsByDocument(documentId: string) {
-    const translations = await this.prisma.documentTranslation.findMany({
+    const translations = await this.prisma.document_translations.findMany({
       where: { document_id: documentId },
       include: {
         requester: {
@@ -243,7 +243,7 @@ export class TranslationService {
    * Get translations requested by a specific user
    */
   async getTranslationsByUser(userId: string) {
-    const translations = await this.prisma.documentTranslation.findMany({
+    const translations = await this.prisma.document_translations.findMany({
       where: { requested_by: userId },
       include: {
         document: {
@@ -260,7 +260,7 @@ export class TranslationService {
    * Get translation by ID
    */
   async getTranslationById(translationId: string) {
-    const translation = await this.prisma.documentTranslation.findUnique({
+    const translation = await this.prisma.document_translations.findUnique({
       where: { id: translationId },
       include: {
         document: {
@@ -287,12 +287,12 @@ export class TranslationService {
       failed,
       costData
     ] = await Promise.all([
-      this.prisma.documentTranslation.count(),
-      this.prisma.documentTranslation.count({ where: { status: 'pending' } }),
-      this.prisma.documentTranslation.count({ where: { status: 'in_progress' } }),
-      this.prisma.documentTranslation.count({ where: { status: 'completed' } }),
-      this.prisma.documentTranslation.count({ where: { status: 'failed' } }),
-      this.prisma.documentTranslation.aggregate({
+      this.prisma.document_translations.count(),
+      this.prisma.document_translations.count({ where: { status: 'pending' } }),
+      this.prisma.document_translations.count({ where: { status: 'in_progress' } }),
+      this.prisma.document_translations.count({ where: { status: 'completed' } }),
+      this.prisma.document_translations.count({ where: { status: 'failed' } }),
+      this.prisma.document_translations.aggregate({
         _sum: { actual_cost_cents: true },
         _avg: { actual_cost_cents: true },
         where: { actual_cost_cents: { not: null } }
@@ -319,7 +319,7 @@ export class TranslationService {
     sourceLang: Language,
     targetLang: Language
   ): Promise<number> {
-    const document = await this.prisma.document.findUnique({
+    const document = await this.prisma.documents.findUnique({
       where: { id: documentId }
     });
 
@@ -348,7 +348,7 @@ export class TranslationService {
    * Cancel a pending translation
    */
   async cancelTranslation(translationId: string) {
-    const translation = await this.prisma.documentTranslation.findUnique({
+    const translation = await this.prisma.document_translations.findUnique({
       where: { id: translationId }
     });
 
@@ -360,7 +360,7 @@ export class TranslationService {
       throw new Error('Can only cancel pending translations');
     }
 
-    const cancelledTranslation = await this.prisma.documentTranslation.update({
+    const cancelledTranslation = await this.prisma.document_translations.update({
       where: { id: translationId },
       data: { status: 'cancelled' }
     });
@@ -372,7 +372,7 @@ export class TranslationService {
    * Get active translation queue
    */
   async getTranslationQueue() {
-    const queue = await this.prisma.documentTranslation.findMany({
+    const queue = await this.prisma.document_translations.findMany({
       where: {
         status: { in: ['pending', 'in_progress'] }
       },

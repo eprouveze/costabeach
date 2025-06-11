@@ -40,7 +40,7 @@ export const documentsRouter = router({
       const userId = ctx.user?.id;
       
       // Get the user from the database to check permissions
-      const user = await prisma.user.findUnique({
+      const user = await prisma.users.findUnique({
         where: { id: userId },
         select: { permissions: true }
       });
@@ -98,7 +98,7 @@ export const documentsRouter = router({
       const userId = ctx.user.id;
       
       // Get the user from the database to check permissions
-      const user = await prisma.user.findUnique({
+      const user = await prisma.users.findUnique({
         where: { id: userId },
         select: { permissions: true }
       });
@@ -197,9 +197,9 @@ export const documentsRouter = router({
         await incrementDownloadCount(documentId);
         
         // Get document from database to get the file path
-        const document = await prisma.document.findUnique({
+        const document = await prisma.documents.findUnique({
           where: { id: documentId },
-          select: { filePath: true, title: true },
+          select: { file_path: true, title: true },
         });
         
         if (!document) {
@@ -220,7 +220,7 @@ export const documentsRouter = router({
           );
         }
         
-        const downloadUrl = await getDownloadUrl(document.filePath);
+        const downloadUrl = await getDownloadUrl(document.file_path);
         
         return { downloadUrl };
       } catch (error) {
@@ -248,7 +248,7 @@ export const documentsRouter = router({
         
         // Create audit log for document view (if user is logged in)
         if (userId !== 'anonymous') {
-          const document = await prisma.document.findUnique({
+          const document = await prisma.documents.findUnique({
             where: { id: documentId },
             select: { title: true },
           });
@@ -293,7 +293,7 @@ export const documentsRouter = router({
       
       try {
         // Get the document to check category
-        const document = await prisma.document.findUnique({
+        const document = await prisma.documents.findUnique({
           where: { id: documentId },
           select: { category: true, created_by: true, title: true },
         });
@@ -306,15 +306,15 @@ export const documentsRouter = router({
         }
         
         // Get the user from the database to check permissions
-        const user = await prisma.user.findUnique({
+        const user = await prisma.users.findUnique({
           where: { id: userId },
-          select: { permissions: true, isAdmin: true }
+          select: { permissions: true, is_admin: true }
         });
         
         // Check if user has permission to delete this document
         const userPermissions = user?.permissions || [];
         const canDelete = 
-          user?.isAdmin || 
+          user?.is_admin || 
           document.created_by === userId || 
           canManageDocumentCategory(userPermissions, document.category as DocumentCategory);
         
@@ -338,7 +338,7 @@ export const documentsRouter = router({
         );
         
         // Delete document from database
-        await prisma.document.delete({
+        await prisma.documents.delete({
           where: { id: documentId },
         });
         
@@ -368,7 +368,7 @@ export const documentsRouter = router({
       const userId = ctx.user?.id;
       
       // Get the user to check if they are an admin or content editor
-      const user = await prisma.user.findUnique({
+      const user = await prisma.users.findUnique({
         where: { id: userId },
         select: { role: true }
       });
@@ -459,9 +459,9 @@ export const documentsRouter = router({
       const requiredPermission = permissionMap[input.category] || Permission.MANAGE_DOCUMENTS;
       
       // Get user permissions from database
-      const user = await prisma.user.findUnique({
+      const user = await prisma.users.findUnique({
         where: { id: ctx.user?.id },
-        select: { permissions: true, isAdmin: true }
+        select: { permissions: true, is_admin: true }
       });
       
       if (!user) {
@@ -473,7 +473,7 @@ export const documentsRouter = router({
       
       const userPermissions = user.permissions as Permission[] || [];
       
-      if (!checkPermission(userPermissions, requiredPermission) && !user.isAdmin) {
+      if (!checkPermission(userPermissions, requiredPermission) && !user.is_admin) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You don't have permission to update this document.",
@@ -481,7 +481,7 @@ export const documentsRouter = router({
       }
 
       // Get the existing document
-      const existingDoc = await ctx.db.document.findUnique({
+      const existingDoc = await ctx.db.documents.findUnique({
         where: { id: input.id },
         select: {
           id: true,
@@ -499,7 +499,7 @@ export const documentsRouter = router({
       }
 
       // Update the document
-      const updatedDocument = await ctx.db.document.update({
+      const updatedDocument = await ctx.db.documents.update({
         where: { id: input.id },
         data: {
           title: input.title,

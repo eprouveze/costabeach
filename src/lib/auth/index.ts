@@ -114,7 +114,7 @@ export const authOptions: NextAuthOptions = {
       // Only allow sign in if the user exists and is verified
       if (!user.email) return false;
 
-      const dbUser = await prisma.user.findUnique({
+      const dbUser = await prisma.users.findUnique({
         where: { email: user.email },
       });
 
@@ -135,14 +135,14 @@ export const authOptions: NextAuthOptions = {
       if (token && session.user) {
         session.user.id = token.sub!;
         session.user.role = token.role as UserRole;
-        session.user.isAdmin = token.isAdmin as boolean;
+        session.user.isAdmin = token.is_admin as boolean;
       }
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
         token.role = user.role;
-        token.isAdmin = user.isAdmin;
+        token.is_admin = user.is_admin;
       }
       return token;
     },

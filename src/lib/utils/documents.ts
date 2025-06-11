@@ -115,13 +115,13 @@ export const createDocument = async (
       prismaLanguage = 'french'; // Default fallback
   }
   
-  const document = await prisma.document.create({
+  const document = await prisma.documents.create({
     data: {
       title,
       description,
-      filePath,
-      fileSize,
-      fileType,
+      file_path: filePath,
+      file_size: fileSize,
+      file_type: fileType,
       category: prismaCategory as any,
       language: prismaLanguage as any,
       created_by: authorId,
@@ -131,15 +131,24 @@ export const createDocument = async (
   
   // Convert the document to the expected type
   return {
-    ...document,
-    fileSize: Number(document.fileSize),
+    id: document.id,
+    title: document.title,
+    description: document.description,
+    filePath: document.file_path,
+    fileSize: Number(document.file_size),
+    fileType: document.file_type,
     category: category,
     language: language,
+    createdAt: document.created_at,
+    updatedAt: document.updated_at,
+    translatedDocument: null,
+    translatedDocumentId: null,
     isTranslated: document.is_translation || false,
     isPublished: document.is_public || false,
     authorId: document.created_by || '',
-    viewCount: document.viewCount || 0,
-    downloadCount: document.downloadCount || 0
+    viewCount: document.view_count || 0,
+    downloadCount: document.download_count || 0,
+    author: { id: document.created_by || '', name: '' }
   } as Document;
 };
 
@@ -229,9 +238,9 @@ export const getDocumentsByCategory = async (
   }
   
   try {
-    const documents = await prisma.document.findMany({
+    const documents = await prisma.documents.findMany({
       where,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { created_at: 'desc' },
       take: limit,
       skip: offset,
       include: {
@@ -246,17 +255,23 @@ export const getDocumentsByCategory = async (
     
     // Convert the documents to the expected type
     return documents.map(doc => ({
-      ...doc,
-      fileSize: Number(doc.fileSize),
+      id: doc.id,
+      title: doc.title,
+      description: doc.description,
+      filePath: doc.file_path,
+      fileSize: Number(doc.file_size),
+      fileType: doc.file_type,
       category: category,
       language: language || (doc.language === 'french' ? Language.FRENCH : Language.ARABIC),
+      createdAt: doc.created_at,
+      updatedAt: doc.updated_at,
       translatedDocument: null, // Add this field to satisfy the type, even though it doesn't exist in the database
       translatedDocumentId: null, // Add this field to satisfy the type
       isTranslated: doc.is_translation || false,
       isPublished: doc.is_public || false,
       authorId: doc.created_by || '',
-      viewCount: doc.viewCount || 0,
-      downloadCount: doc.downloadCount || 0,
+      viewCount: doc.view_count || 0,
+      downloadCount: doc.download_count || 0,
       author: doc.users ? { id: doc.users.id, name: doc.users.name || '' } : { id: doc.created_by || '', name: '' }
     })) as Document[];
   } catch (error) {
@@ -328,9 +343,9 @@ export const getDocumentsByCategory = async (
  * Increment view count for a document
  */
 export const incrementViewCount = async (documentId: string): Promise<void> => {
-  await prisma.document.update({
+  await prisma.documents.update({
     where: { id: documentId },
-    data: { viewCount: { increment: 1 } },
+    data: { view_count: { increment: 1 } },
   });
 };
 
@@ -338,9 +353,9 @@ export const incrementViewCount = async (documentId: string): Promise<void> => {
  * Increment download count for a document
  */
 export const incrementDownloadCount = async (documentId: string): Promise<void> => {
-  await prisma.document.update({
+  await prisma.documents.update({
     where: { id: documentId },
-    data: { downloadCount: { increment: 1 } },
+    data: { download_count: { increment: 1 } },
   });
 };
 

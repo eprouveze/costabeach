@@ -196,7 +196,7 @@ export async function GET(
 
     // Get user's voting history for this poll
     const votingHistory = await pollsService.getUserVotingHistory(user.id);
-    const pollVotes = votingHistory.filter(vote => vote.poll_id === params.id);
+    const pollVotes = votingHistory.filter((vote: any) => vote.poll_id === params.id);
 
     return NextResponse.json({ 
       has_voted: true,

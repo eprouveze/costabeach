@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     
     // Check if the user exists using Prisma
     try {
-      let user = await prisma.user.findUnique({
+      let user = await prisma.users.findUnique({
         where: { id: userId }
       });
       
@@ -32,10 +32,10 @@ export async function POST(req: NextRequest) {
         console.log('[API] User exists, ensuring owner status if needed');
         
         // Check if the user needs to be upgraded to verified owner
-        if (!user.isVerifiedOwner) {
-          user = await prisma.user.update({
+        if (!user.is_verified_owner) {
+          user = await prisma.users.update({
             where: { id: userId },
-            data: { isVerifiedOwner: true }
+            data: { is_verified_owner: true }
           });
           console.log('[API] User updated to verified owner status');
         }
@@ -51,14 +51,14 @@ export async function POST(req: NextRequest) {
         
         try {
           // Create user with Prisma
-          const newUser = await prisma.user.create({
+          const newUser = await prisma.users.create({
             data: {
               id: userId,
               email: userEmail,
               name: userEmail.split('@')[0] || 'User',
               role: 'user',
-              isVerifiedOwner: true, // Set to true for owner dashboard
-              preferredLanguage: 'french',
+              is_verified_owner: true, // Set to true for owner dashboard
+              preferred_language: 'french',
               permissions: ['viewDocuments', 'downloadDocuments']
             }
           });
