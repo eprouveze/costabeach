@@ -46,7 +46,7 @@ export const DocumentEdit = ({ document, onClose, onSave }: DocumentEditProps) =
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black bg-opacity-50">
-      <div className="relative w-full max-w-md p-6 mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-xl">
+      <div className="relative w-full max-w-md p-6 mx-auto bg-white dark:bg-gray-700 rounded-lg shadow-xl">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             {t("documents.editDocument")}

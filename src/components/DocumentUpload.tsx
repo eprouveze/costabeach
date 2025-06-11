@@ -100,7 +100,7 @@ export const DocumentUpload = ({
   };
   
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6">
       <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
         Upload Document
       </h2>
@@ -200,7 +200,7 @@ export const DocumentUpload = ({
               onDrop={handleDrop}
               className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
                 isDragging
-                  ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                  ? "border-blue-500 bg-blue-50 dark:bg-blue-600/20"
                   : "border-gray-300 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500"
               }`}
             >

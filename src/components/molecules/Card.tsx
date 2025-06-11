@@ -20,7 +20,7 @@ export const Card: React.FC<CardProps> = ({
   children,
 }) => {
   return (
-    <div className={`rounded-lg shadow-md overflow-hidden bg-white dark:bg-gray-800 ${className}`}>
+    <div className={`rounded-lg shadow-md overflow-hidden bg-white dark:bg-gray-700 ${className}`}>
       {imageUrl && (
         <div className="relative h-48 w-full">
           <img

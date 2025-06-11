@@ -23,6 +23,12 @@ This development plan outlines the transformation of the Costa Beach application
 - Automatic AI translation workflow
 - Production-ready implementation
 
+**Recent UI Improvements** (2025-01-06):
+- Fixed dark mode background colors in document components
+- Changed `dark:bg-gray-800` to `dark:bg-gray-700` for lighter backgrounds
+- Updated `dark:bg-blue-900` to `dark:bg-blue-600` for better visibility
+- Improved contrast and readability in dark mode across DocumentCard, DocumentPreview, DocumentUpload, DocumentEdit, and Card components
+
 ## 🔧 Development Process Rules
 
 ### **Test-Driven Development (TDD)**
