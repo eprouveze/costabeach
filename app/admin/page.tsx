@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Users, ClipboardList, FileText, History } from "lucide-react";
+import { Users, ClipboardList, FileText, History, MessageSquare, AlertTriangle } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -125,20 +125,60 @@ export default function AdminDashboardPage() {
             </div>
           </Link>
           
+          {/* WhatsApp Management Card */}
+          <Link
+            href="/admin/whatsapp"
+            className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-center">
+              <div className="flex-shrink-0 bg-green-100 rounded-md p-3">
+                <MessageSquare className="h-6 w-6 text-green-600" />
+              </div>
+              <div className="ml-4">
+                <h2 className="text-lg font-medium text-gray-900">
+                  WhatsApp Management
+                </h2>
+                <p className="text-sm text-gray-500">
+                  Manage WhatsApp communications
+                </p>
+              </div>
+            </div>
+          </Link>
+          
+          {/* Emergency Alerts Card */}
+          <Link
+            href="/admin/emergency-alerts"
+            className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-center">
+              <div className="flex-shrink-0 bg-red-100 rounded-md p-3">
+                <AlertTriangle className="h-6 w-6 text-red-600" />
+              </div>
+              <div className="ml-4">
+                <h2 className="text-lg font-medium text-gray-900">
+                  Emergency Alerts
+                </h2>
+                <p className="text-sm text-gray-500">
+                  Send emergency notifications
+                </p>
+              </div>
+            </div>
+          </Link>
+          
           {/* Reports Card */}
           <Link
             href="/admin/reports"
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
+            className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
           >
             <div className="flex items-center">
-              <div className="flex-shrink-0 bg-yellow-100 dark:bg-yellow-900 rounded-md p-3">
-                <ClipboardList className="h-6 w-6 text-yellow-600 dark:text-yellow-300" />
+              <div className="flex-shrink-0 bg-yellow-100 rounded-md p-3">
+                <ClipboardList className="h-6 w-6 text-yellow-600" />
               </div>
               <div className="ml-4">
-                <h2 className="text-lg font-medium text-gray-900 dark:text-white">
+                <h2 className="text-lg font-medium text-gray-900">
                   {t("admin.reports")}
                 </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-500">
                   {t("admin.reportsDescription")}
                 </p>
               </div>

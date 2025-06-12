@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
         created_at: 'desc'
       },
       include: {
-        users: {
+        user: {
           select: {
             id: true,
             name: true

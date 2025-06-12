@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     
     // Check if the user exists using Prisma
     try {
-      let user = await prisma.users.findUnique({
+      let user = await prisma.user.findUnique({
         where: { id: userId }
       });
       
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
         
         // Check if the user needs to be upgraded to verified owner
         if (!user.is_verified_owner) {
-          user = await prisma.users.update({
+          user = await prisma.user.update({
             where: { id: userId },
             data: { is_verified_owner: true }
           });
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
         
         try {
           // Create user with Prisma
-          const newUser = await prisma.users.create({
+          const newUser = await prisma.user.create({
             data: {
               id: userId,
               email: userEmail,

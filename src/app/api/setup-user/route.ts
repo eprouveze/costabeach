@@ -91,13 +91,13 @@ export async function GET(req: NextRequest) {
       }
       
       // Now try to create or update the user
-      const existingUser = await prisma.users.findUnique({
+      const existingUser = await prisma.user.findUnique({
         where: { id: authUser.id }
       });
       
       if (existingUser) {
         // Update the user to ensure owner status
-        const updatedUser = await prisma.users.update({
+        const updatedUser = await prisma.user.update({
           where: { id: authUser.id },
           data: {
             is_verified_owner: true,
@@ -113,7 +113,7 @@ export async function GET(req: NextRequest) {
         });
       } else {
         // Create the user
-        const newUser = await prisma.users.create({
+        const newUser = await prisma.user.create({
           data: {
             id: authUser.id,
             email: authUser.email || '',

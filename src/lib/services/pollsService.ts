@@ -3,6 +3,7 @@
 
 import { PrismaClient, PollType, PollStatus, Language } from '@prisma/client';
 import { db } from '@/lib/db';
+import { whatsappNotificationService } from './whatsappNotificationService';
 
 export interface PollCreationData {
   question: string;
@@ -119,6 +120,32 @@ export class PollsService {
         status: 'published',
       },
     });
+
+    // Send WhatsApp notification for poll publication
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { email: true, firstName: true, lastName: true }
+      });
+      
+      const creatorName = user ? 
+        `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email : 
+        'Unknown User';
+      
+      // Create poll URL (this would be the actual URL to view/vote on the poll)
+      const pollUrl = `${process.env.NEXTAUTH_URL || 'https://costabeach.com'}/polls/${pollId}`;
+      
+      await whatsappNotificationService.sendPollNotification({
+        title: updatedPoll.question,
+        description: `A new community poll has been published and is ready for voting.`,
+        createdBy: creatorName,
+        endDate: updatedPoll.end_date || undefined,
+        pollUrl
+      });
+    } catch (notificationError) {
+      // Don't fail the poll publication if notification fails
+      console.error('Failed to send WhatsApp notification for poll:', notificationError);
+    }
 
     return updatedPoll;
   }

@@ -26,7 +26,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await prisma.users.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email: session.user.email ?? undefined },
     });
 
@@ -73,7 +73,7 @@ export async function PUT(request: NextRequest) {
 
     // If approved, create a user account
     if (action === "approve") {
-      await prisma.users.create({
+      await prisma.user.create({
         data: {
           id: crypto.randomUUID(),
           name: registration.name,

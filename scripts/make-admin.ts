@@ -7,7 +7,7 @@ async function main() {
   const email = "manu@prouveze.fr";
   
   try {
-    const user = await prisma.users.upsert({
+    const user = await prisma.user.upsert({
       where: { email },
       update: {
         is_admin: true,

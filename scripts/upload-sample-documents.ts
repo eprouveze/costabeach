@@ -97,12 +97,12 @@ async function uploadSampleDocuments() {
     console.log("Starting to upload sample documents...\n");
 
     // First get or create a system admin user
-    let adminUser = await prisma.users.findFirst({
+    let adminUser = await prisma.user.findFirst({
       where: { is_admin: true }
     });
 
     if (!adminUser) {
-      adminUser = await prisma.users.create({
+      adminUser = await prisma.user.create({
         data: {
           id: crypto.randomUUID(),
           email: "info@costabeach.ma",

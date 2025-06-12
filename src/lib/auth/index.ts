@@ -6,6 +6,7 @@ import {
   type DefaultSession,
 } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
+import GoogleProvider from "next-auth/providers/google";
 import { Resend } from "resend";
 import { headers } from "next/headers";
 
@@ -55,9 +56,15 @@ declare module "next-auth" {
   }
 }
 
+// Using standard PrismaAdapter with proper NextAuth model naming conventions
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
     EmailProvider({
       server: {
         host: process.env.SMTP_HOST,
@@ -105,46 +112,60 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   session: {
-    strategy: "jwt",
+    strategy: "database",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async signIn({ user }) {
+      console.log('🔍 [SIGNIN] Callback called for:', user.email);
+      
       // Only allow sign in if the user exists and is verified
-      if (!user.email) return false;
+      if (!user.email) {
+        console.log('❌ [SIGNIN] No email provided');
+        return false;
+      }
 
-      const dbUser = await prisma.users.findUnique({
-        where: { email: user.email },
-      });
-
-      // If user doesn't exist, check if they have a pending registration
-      if (!dbUser) {
-        const registration = await prisma.ownerRegistration.findUnique({
+      try {
+        const dbUser = await prisma.user.findUnique({
           where: { email: user.email },
         });
 
-        if (!registration || registration.status !== "approved") {
-          return false;
-        }
-      }
+        console.log('🔍 [SIGNIN] Database user found:', !!dbUser);
 
-      return true;
+        // If user doesn't exist, check if they have a pending registration
+        if (!dbUser) {
+          console.log('🔍 [SIGNIN] No user found, checking registration...');
+          const registration = await prisma.ownerRegistration.findUnique({
+            where: { email: user.email },
+          });
+
+          console.log('🔍 [SIGNIN] Registration found:', !!registration, 'Status:', registration?.status);
+
+          if (!registration || registration.status !== "approved") {
+            console.log('❌ [SIGNIN] Registration not approved, blocking signin');
+            return false;
+          }
+        }
+
+        console.log('✅ [SIGNIN] Signin approved');
+        return true;
+      } catch (error) {
+        console.error('❌ [SIGNIN] Error in signin callback:', error);
+        return false;
+      }
     },
-    async session({ session, token }) {
-      if (token && session.user) {
-        session.user.id = token.sub!;
-        session.user.role = token.role as UserRole;
-        session.user.isAdmin = token.is_admin as boolean;
+    async session({ session, user }) {
+      console.log('🔍 [SESSION] Session callback called');
+      console.log('🔍 [SESSION] User object:', user ? { id: user.id, email: user.email } : 'No user');
+      console.log('🔍 [SESSION] Session object:', session.user ? { email: session.user.email } : 'No session user');
+      
+      if (user && session.user) {
+        session.user.id = user.id;
+        session.user.role = user.role as UserRole;
+        session.user.isAdmin = user.isAdmin as boolean;
       }
       return session;
-    },
-    async jwt({ token, user }) {
-      if (user) {
-        token.role = user.role;
-        token.is_admin = user.is_admin;
-      }
-      return token;
     },
     async redirect({ url, baseUrl }) {
       // Get the current request's host

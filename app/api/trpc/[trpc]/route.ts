@@ -1,7 +1,7 @@
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { appRouter } from '@/lib/api/root';
 import { createTRPCContext } from '@/lib/api/trpc';
-import { getServerAuthSession } from '@/lib/auth';
+import { getServerAuthSession } from '@/lib/auth/index';
 import { db } from '@/lib/db';
 
 const handler = (req: Request) =>

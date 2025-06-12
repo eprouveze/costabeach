@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { whatsappClient } from '@/lib/whatsapp/client';
+import { getWhatsAppClient } from '@/src/lib/whatsapp/client';
+import { whatsappAssistant } from '@/src/lib/services/whatsappAssistant';
 import { createSupabaseClient } from '@/lib/supabase/server';
 import { inngest } from '@/lib/inngest';
 
@@ -23,6 +24,8 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.text();
     const signature = request.headers.get('x-hub-signature-256');
+    
+    const whatsappClient = getWhatsAppClient();
     
     if (!signature || !whatsappClient.verifyWebhookSignature(body, signature)) {
       return new NextResponse('Unauthorized', { status: 401 });
@@ -65,11 +68,8 @@ async function processIncomingMessage(message: {
       .single();
 
     if (!contact) {
-      // Send welcome message for unknown contacts
-      await whatsappClient.sendTextMessage(
-        message.from,
-        "Welcome to Costabeach! To access our services, please register at https://costabeach.com/owner-register"
-      );
+      // Send welcome message for unknown contacts using the assistant
+      await whatsappAssistant.sendWelcomeMessage(message.from);
       return;
     }
 
@@ -86,8 +86,17 @@ async function processIncomingMessage(message: {
         sent_at: new Date(message.timestamp * 1000).toISOString(),
       });
 
-    // Process text messages for Q&A
+    // Process text messages for Q&A using our assistant
     if (message.type === 'text' && message.text) {
+      // Use the WhatsApp assistant to handle the message
+      await whatsappAssistant.handleIncomingMessage({
+        from: message.from,
+        messageId: message.messageId,
+        text: message.text,
+        timestamp: new Date(message.timestamp * 1000)
+      });
+      
+      // Also queue for additional processing if needed
       await inngest.send({
         name: 'whatsapp.process-qa',
         data: {
@@ -102,10 +111,7 @@ async function processIncomingMessage(message: {
   } catch (error) {
     console.error('Error processing incoming message:', error);
     
-    // Send error message to user
-    await whatsappClient.sendTextMessage(
-      message.from,
-      "Sorry, I'm experiencing technical difficulties. Please try again later."
-    );
+    // Send error message to user using the assistant
+    await whatsappAssistant.sendErrorResponse(message.from);
   }
 }

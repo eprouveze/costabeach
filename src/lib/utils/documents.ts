@@ -244,7 +244,7 @@ export const getDocumentsByCategory = async (
       take: limit,
       skip: offset,
       include: {
-        users: {
+        user: {
           select: {
             id: true,
             name: true,
@@ -272,7 +272,7 @@ export const getDocumentsByCategory = async (
       authorId: doc.created_by || '',
       viewCount: doc.view_count || 0,
       downloadCount: doc.download_count || 0,
-      author: doc.users ? { id: doc.users.id, name: doc.users.name || '' } : { id: doc.created_by || '', name: '' }
+      author: doc.user ? { id: doc.user.id, name: doc.user.name || '' } : { id: doc.created_by || '', name: '' }
     })) as Document[];
   } catch (error) {
     // If we get a Prisma error about the translatedDocumentId column, fall back to a simpler query

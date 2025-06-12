@@ -10,8 +10,8 @@ datasource db {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model Account {
-  id                String  @id
-  userId            String
+  id                String  @id @default(cuid())
+  userId            String  @db.Uuid
   type              String
   provider          String
   providerAccountId String
@@ -23,7 +23,10 @@ model Account {
   id_token          String?
   session_state     String?
 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([provider, providerAccountId])
+  @@map("Account")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -50,10 +53,14 @@ model OwnerRegistration {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model Session {
-  id           String   @id
+  id           String   @id @default(cuid())
   sessionToken String   @unique
-  userId       String
+  userId       String   @db.Uuid
   expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("Session")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -63,6 +70,7 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+  @@map("VerificationToken")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -74,7 +82,7 @@ model audit_log {
   entity_id   String
   details     Json?
   created_at  DateTime @default(now()) @db.Timestamptz(6)
-  users       users?   @relation(fields: [user_id], references: [id], onUpdate: NoAction)
+  user        User?    @relation("UserAuditLog", fields: [user_id], references: [id], onUpdate: NoAction)
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -186,7 +194,7 @@ model documents {
   original_document_id String?     @db.Uuid
   is_translation       Boolean?    @default(false)
   searchable_text      String?
-  users                users?      @relation(fields: [created_by], references: [id], onUpdate: NoAction)
+  user                 User?       @relation(fields: [created_by], references: [id], onUpdate: NoAction)
   documents            documents?  @relation("documentsTodocuments", fields: [original_document_id], references: [id], onUpdate: NoAction)
   other_documents      documents[] @relation("documentsTodocuments")
 }
@@ -339,25 +347,33 @@ model system_settings {
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model users {
-  id                 String      @id @db.Uuid
-  name               String?
-  email              String?     @unique
-  email_verified     DateTime?   @db.Timestamp(6)
-  image              String?
-  role               String?     @default("user")
-  is_admin           Boolean?    @default(false)
-  building_number    String?
-  apartment_number   String?
-  phone_number       String?
-  is_verified_owner  Boolean?    @default(false)
-  permissions        String[]
-  preferred_language String?     @default("french")
-  created_at         DateTime?   @default(now()) @db.Timestamptz(6)
-  updated_at         DateTime?   @default(now()) @db.Timestamptz(6)
-  is_verified        Boolean?    @default(false)
-  audit_log          audit_log[]
-  documents          documents[]
+model User {
+  id                String      @id @db.Uuid
+  name              String?
+  email             String?     @unique
+  emailVerified     DateTime?   @map("email_verified") @db.Timestamp(6)
+  image             String?
+  role              String?     @default("user")
+  isAdmin           Boolean?    @map("is_admin") @default(false)
+  buildingNumber    String?     @map("building_number")
+  apartmentNumber   String?     @map("apartment_number")
+  phoneNumber       String?     @map("phone_number")
+  isVerifiedOwner   Boolean?    @map("is_verified_owner") @default(false)
+  permissions       String[]
+  preferredLanguage String?     @map("preferred_language") @default("french")
+  createdAt         DateTime?   @map("created_at") @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime?   @map("updated_at") @default(now()) @db.Timestamptz(6)
+  isVerified        Boolean?    @map("is_verified") @default(false)
+  
+  // NextAuth relations
+  accounts          Account[]
+  sessions          Session[]
+  
+  // Application relations
+  auditLog          audit_log[] @relation("UserAuditLog")
+  documents         documents[]
+  
+  @@map("users") // Keep existing table name
 }
 
 model votes {
@@ -608,3 +624,4 @@ enum WhatsAppStatus {
   opted_out
   blocked
 }
+

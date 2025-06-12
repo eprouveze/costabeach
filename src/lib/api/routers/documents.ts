@@ -14,6 +14,7 @@ import { DocumentCategory, Language, Permission } from "@/lib/types";
 import { PrismaClient } from "@prisma/client";
 import { createAuditLog } from "@/lib/utils/audit";
 import { checkPermission } from "@/lib/utils/permissions";
+import { whatsappNotificationService } from "@/lib/services/whatsappNotificationService";
 
 const prisma = new PrismaClient();
 
@@ -40,7 +41,7 @@ export const documentsRouter = router({
       const userId = ctx.user?.id;
       
       // Get the user from the database to check permissions
-      const user = await prisma.users.findUnique({
+      const user = await prisma.user.findUnique({
         where: { id: userId },
         select: { permissions: true }
       });
@@ -98,7 +99,7 @@ export const documentsRouter = router({
       const userId = ctx.user.id;
       
       // Get the user from the database to check permissions
-      const user = await prisma.users.findUnique({
+      const user = await prisma.user.findUnique({
         where: { id: userId },
         select: { permissions: true }
       });
@@ -137,6 +138,33 @@ export const documentsRouter = router({
             language: document.language
           }
         );
+        
+        // Send WhatsApp notification for document upload
+        try {
+          const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { email: true, firstName: true, lastName: true }
+          });
+          
+          const uploaderName = user ? 
+            `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email : 
+            'Unknown User';
+          
+          // Create document URL (this would be the actual URL to view the document)
+          const documentUrl = `${process.env.NEXTAUTH_URL || 'https://costabeach.com'}/documents/${document.id}`;
+          
+          await whatsappNotificationService.sendDocumentNotification({
+            title: document.title,
+            category: document.category,
+            language: document.language,
+            uploadedBy: uploaderName,
+            fileSize: document.fileSize,
+            documentUrl
+          });
+        } catch (notificationError) {
+          // Don't fail the document creation if notification fails
+          console.error('Failed to send WhatsApp notification for document:', notificationError);
+        }
         
         return document;
       } catch (error) {
@@ -306,7 +334,7 @@ export const documentsRouter = router({
         }
         
         // Get the user from the database to check permissions
-        const user = await prisma.users.findUnique({
+        const user = await prisma.user.findUnique({
           where: { id: userId },
           select: { permissions: true, is_admin: true }
         });
@@ -368,7 +396,7 @@ export const documentsRouter = router({
       const userId = ctx.user?.id;
       
       // Get the user to check if they are an admin or content editor
-      const user = await prisma.users.findUnique({
+      const user = await prisma.user.findUnique({
         where: { id: userId },
         select: { role: true }
       });
@@ -459,7 +487,7 @@ export const documentsRouter = router({
       const requiredPermission = permissionMap[input.category] || Permission.MANAGE_DOCUMENTS;
       
       // Get user permissions from database
-      const user = await prisma.users.findUnique({
+      const user = await prisma.user.findUnique({
         where: { id: ctx.user?.id },
         select: { permissions: true, is_admin: true }
       });
@@ -481,7 +509,7 @@ export const documentsRouter = router({
       }
 
       // Get the existing document
-      const existingDoc = await ctx.db.documents.findUnique({
+      const existingDoc = await prisma.documents.findUnique({
         where: { id: input.id },
         select: {
           id: true,
@@ -499,7 +527,7 @@ export const documentsRouter = router({
       }
 
       // Update the document
-      const updatedDocument = await ctx.db.documents.update({
+      const updatedDocument = await prisma.documents.update({
         where: { id: input.id },
         data: {
           title: input.title,

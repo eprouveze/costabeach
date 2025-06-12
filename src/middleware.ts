@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { locales, defaultLocale } from "@/lib/i18n";
-import { createServerClient } from '@supabase/ssr';
-import { Database } from '@/lib/types/database.types';
 
 // Cookie name for storing locale
 const LOCALE_COOKIE = "NEXT_LOCALE";
@@ -27,31 +25,11 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  // Create a Supabase client for authentication checks
-  const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value;
-        },
-        set(name: string, value: string, options: any) {
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-          });
-        },
-        remove(name: string, options: any) {
-          response.cookies.set({
-            name,
-            value: '',
-            ...options,
-          });
-        },
-      },
-    }
+  // Check for NextAuth session cookie (we're using database sessions)
+  const sessionCookie = request.cookies.get(
+    process.env.NODE_ENV === "production" 
+      ? "__Secure-next-auth.session-token" 
+      : "next-auth.session-token"
   );
 
   // Skip for non-page requests (API routes, static files, etc.)
@@ -99,36 +77,21 @@ export async function middleware(request: NextRequest) {
     pathname.includes('/admin') ||
     pathname.includes('/profile')
   ) {
-    const { data: { session } } = await supabase.auth.getSession();
+    console.log('[Middleware] Checking authentication for protected route:', pathname);
+    console.log('[Middleware] Available cookies:', request.cookies.getAll().map(c => c.name));
+    console.log('[Middleware] NextAuth session cookie exists:', !!sessionCookie);
     
-    if (!session) {
+    if (!sessionCookie) {
       // Get the current locale from the URL
       const pathLocale = pathname.split('/')[1];
       
       // Redirect to the signin page with the current locale
-      const redirectUrl = `${origin}/${pathLocale}/auth/signin?returnUrl=${encodeURIComponent(request.nextUrl.pathname)}`;
+      const redirectUrl = `${origin}/${pathLocale}/owner-login?returnUrl=${encodeURIComponent(request.nextUrl.pathname)}`;
       logRedirect(pathname, redirectUrl);
       return NextResponse.redirect(redirectUrl);
     }
     
-    // For owner-dashboard routes, check if the user is a verified owner
-    if (pathname.includes('/owner-dashboard')) {
-      const { data: userData, error } = await supabase
-        .from('users')
-        .select('is_verified_owner')
-        .eq('id', session.user.id)
-        .single();
-      
-      if (error || !userData?.is_verified_owner) {
-        // Get the current locale from the URL
-        const pathLocale = pathname.split('/')[1];
-        
-        // Redirect to the home page with the current locale
-        const redirectUrl = `${origin}/${pathLocale}`;
-        logRedirect(pathname, redirectUrl);
-        return NextResponse.redirect(redirectUrl);
-      }
-    }
+    console.log('[Middleware] User authenticated via session cookie');
   }
 
   // Extract the locale from the pathname

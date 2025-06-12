@@ -36,7 +36,7 @@ export const Header = ({ className = "" }: HeaderProps) => {
     },
     { 
       label: t("navigation.ownerPortal"), 
-      href: isAuthenticated ? `/${locale}/owner-dashboard` : `/${locale}/auth/signin`, 
+      href: isAuthenticated ? `/${locale}/owner-dashboard` : `/${locale}/owner-login`, 
       icon: User 
     },
     { 
@@ -60,7 +60,7 @@ export const Header = ({ className = "" }: HeaderProps) => {
       router.push(`/${locale}`);
     } else {
       // Use direct navigation to ensure the redirect works
-      window.location.href = `/${locale}/auth/signin`;
+      window.location.href = `/${locale}/owner-login`;
     }
   };
 

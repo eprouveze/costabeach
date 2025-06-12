@@ -26,7 +26,8 @@
     "whatsapp:meta": "tsx scripts/whatsapp-meta-test.ts",
     "whatsapp:debug": "tsx scripts/whatsapp-debug-test.ts",
     "whatsapp:send": "tsx scripts/whatsapp-send-test.ts",
-    "whatsapp:demo": "tsx scripts/whatsapp-demo.ts"
+    "whatsapp:demo": "tsx scripts/whatsapp-demo.ts",
+    "whatsapp:test-assistant": "tsx scripts/test-whatsapp-assistant.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.758.0",
