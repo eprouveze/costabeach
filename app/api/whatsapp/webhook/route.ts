@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getWhatsAppClient } from '@/lib/whatsapp/client';
 import { whatsappAssistant } from '@/lib/services/whatsappAssistant';
-import { createSupabaseClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { inngest } from '@/lib/inngest';
 
 // GET: Webhook verification
@@ -53,7 +53,7 @@ async function processIncomingMessage(message: {
   type: string;
   timestamp: number;
 }) {
-  const supabase = createSupabaseClient();
+  const supabase = createClient();
 
   try {
     // Find user by phone number
@@ -104,7 +104,7 @@ async function processIncomingMessage(message: {
           userId: contact.user_id,
           question: message.text,
           messageId: message.messageId,
-          language: contact.user.language || 'en',
+          language: (contact.user as any)?.language || 'en',
         },
       });
     }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@/lib/auth/index";
 import { prisma } from "@/lib/db";
 import { getDownloadUrl } from "@/lib/utils/documents";
 

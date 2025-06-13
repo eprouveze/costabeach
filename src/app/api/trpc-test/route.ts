@@ -1,6 +1,6 @@
 import { createCallerFactory } from "@/lib/api/trpc";
 import { appRouter } from "@/lib/api/root";
-import { getServerAuthSession } from "@/lib/auth";
+import { getServerAuthSession } from "@/lib/auth/index";
 import { prisma } from "@/lib/db";
 
 export async function GET() {

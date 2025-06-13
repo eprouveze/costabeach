@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/index';
 import { db } from '@/lib/db';
+import crypto from 'crypto';
 
 export async function GET(request: NextRequest) {
   try {
@@ -53,14 +54,15 @@ export async function POST(request: NextRequest) {
     const updatedUser = await db.user.upsert({
       where: { email: session.user.email },
       update: {
-        is_admin: true,
+        isAdmin: true,
         permissions: ['manageDocuments', 'manageComiteDocuments'],
         role: 'admin'
       },
       create: {
+        id: crypto.randomUUID(),
         email: session.user.email,
         name: session.user.name || 'Admin User',
-        is_admin: true,
+        isAdmin: true,
         permissions: ['manageDocuments', 'manageComiteDocuments'],
         role: 'admin'
       }

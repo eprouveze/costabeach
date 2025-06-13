@@ -100,7 +100,7 @@ export async function GET(req: NextRequest) {
         const updatedUser = await prisma.user.update({
           where: { id: authUser.id },
           data: {
-            is_verified_owner: true,
+            isVerifiedOwner: true,
             role: 'owner',
             permissions: ['viewDocuments', 'downloadDocuments', 'requestTranslations']
           }
@@ -119,11 +119,11 @@ export async function GET(req: NextRequest) {
             email: authUser.email || '',
             name: authUser.user_metadata?.name || authUser.email?.split('@')[0] || 'Owner',
             role: 'owner',
-            is_verified_owner: true,
-            preferred_language: authUser.user_metadata?.preferred_language || 'french',
+            isVerifiedOwner: true,
+            preferredLanguage: authUser.user_metadata?.preferred_language || 'french',
             permissions: ['viewDocuments', 'downloadDocuments', 'requestTranslations'],
-            created_at: new Date(),
-            updated_at: new Date()
+            createdAt: new Date(),
+            updatedAt: new Date()
           }
         });
         
