@@ -56,8 +56,9 @@ export default function AdminUsersPage() {
     }
   }, [session, status]);
 
-  const canManageUsers = 
-    checkPermission(userPermissions, Permission.MANAGE_DOCUMENTS) ||
+const canManageUsers = 
+  checkPermission(userPermissions, Permission.MANAGE_USERS) ||
+   checkPermission(userPermissions, Permission.MANAGE_DOCUMENTS) ||
     checkPermission(userPermissions, Permission.MANAGE_COMITE_DOCUMENTS) ||
     (session?.user as any)?.isAdmin === true;
 
@@ -96,9 +97,9 @@ export default function AdminUsersPage() {
 
   // Filter users based on search and role filter
   const filteredUsers = users.filter(user => {
-    const matchesSearch = 
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+const matchesSearch =
+  (user.name ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+  (user.email ?? '').toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesRole = filterRole === "" || user.role === filterRole;
     

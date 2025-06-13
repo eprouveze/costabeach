@@ -41,6 +41,7 @@
     "documents": "Documents",
     "contact": "Contact",
     "ownerPortal": "Owner Portal",
+    "admin": "Admin",
     "toggleMenu": "Toggle Menu",
     "dashboard": "Dashboard",
     "community": "Community",
@@ -313,11 +314,16 @@
     "downloadInstead": "Download Instead"
   },
   "admin": {
+    "dashboard": "Dashboard",
+    "dashboardDescription": "Manage your community portal and communication tools",
     "users": "Users",
     "documents": "Documents",
     "settings": "Settings",
+    "systemSettings": "System Settings",
     "analytics": "Analytics",
     "permissions": "Permissions",
+    "whatsappManagement": "WhatsApp Management",
+    "whatsappDescription": "Send messages and manage WhatsApp communications",
     "roles": {
       "admin": "Administrator",
       "contentEditor": "Content Editor",

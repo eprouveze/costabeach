@@ -2,28 +2,38 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Users, ClipboardList, FileText, History, MessageSquare, AlertTriangle } from "lucide-react";
+import { Users, ClipboardList, FileText, History, MessageSquare, AlertTriangle, Settings, Shield } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { checkPermission } from "@/lib/utils/permissions";
 import { Permission } from "@/lib/types";
 import { toast } from "react-toastify";
+import { Header } from "@/components/organisms/Header";
 
 export default function AdminDashboardPage() {
   const { t } = useI18n();
   const session = useSession();
   const router = useRouter();
+  const pathname = usePathname();
   const [userPermissions, setUserPermissions] = useState<Permission[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Get current locale from pathname
+  const locale = pathname?.split('/')[1] || 'fr';
   
   useEffect(() => {
     const fetchPermissions = async () => {
       try {
+        // Wait for session to be determined
+        if (session.status === 'loading') {
+          return;
+        }
+
         // Check if user is authenticated
-        if (!session.data?.user?.id) {
+        if (session.status === 'unauthenticated' || !session.data?.user?.id) {
           toast.error("You must be logged in to access this page");
-          router.push("/login");
+          router.push(`/${locale}/owner-login`);
           return;
         }
 
@@ -39,127 +49,205 @@ export default function AdminDashboardPage() {
       } catch (error) {
         console.error("Error fetching permissions:", error);
         toast.error("Failed to fetch permissions");
-        router.push("/");
+        router.push(`/${locale}/`);
       }
     };
 
     fetchPermissions();
-  }, [session, router]);
+  }, [session, router, locale]);
   
   const canManageDocuments = checkPermission(
     userPermissions,
     Permission.MANAGE_DOCUMENTS
   );
   
-  if (isLoading) {
-    return <div className="p-4">Loading...</div>;
+  const canManageComiteDocuments = checkPermission(
+    userPermissions,
+    Permission.MANAGE_COMITE_DOCUMENTS
+  );
+
+  const canManageWhatsApp = 
+    canManageDocuments || 
+    canManageComiteDocuments || 
+    (session.data?.user?.isAdmin === true);
+  
+  if (isLoading || session.status === 'loading') {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+        </div>
+      </div>
+    );
   }
   
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <Header />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-          {t("admin.dashboard")}
-        </h1>
+        {/* Header Section */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            {t("admin.dashboard")}
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Manage your community portal and communication tools
+          </p>
+        </div>
         
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+            <div className="flex items-center">
+              <div className="flex-shrink-0 bg-blue-100 dark:bg-blue-900 rounded-md p-2">
+                <Users className="h-5 w-5 text-blue-600 dark:text-blue-300" />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Users</p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">--</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+            <div className="flex items-center">
+              <div className="flex-shrink-0 bg-green-100 dark:bg-green-900 rounded-md p-2">
+                <FileText className="h-5 w-5 text-green-600 dark:text-green-300" />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Documents</p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">--</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+            <div className="flex items-center">
+              <div className="flex-shrink-0 bg-yellow-100 dark:bg-yellow-900 rounded-md p-2">
+                <MessageSquare className="h-5 w-5 text-yellow-600 dark:text-yellow-300" />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Messages Sent</p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">--</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+            <div className="flex items-center">
+              <div className="flex-shrink-0 bg-purple-100 dark:bg-purple-900 rounded-md p-2">
+                <Shield className="h-5 w-5 text-purple-600 dark:text-purple-300" />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Active Sessions</p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">--</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Actions Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* User Management Card */}
           <Link
-            href="/admin/users"
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
+            href={`/${locale}/admin/users`}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600"
           >
-            <div className="flex items-center">
-              <div className="flex-shrink-0 bg-blue-100 dark:bg-blue-900 rounded-md p-3">
+            <div className="flex items-start">
+              <div className="flex-shrink-0 bg-blue-100 dark:bg-blue-900 rounded-lg p-3">
                 <Users className="h-6 w-6 text-blue-600 dark:text-blue-300" />
               </div>
               <div className="ml-4">
-                <h2 className="text-lg font-medium text-gray-900 dark:text-white">
-                  {t("admin.userManagement")}
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                  {t("admin.userManagement") || "User Management"}
                 </h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {t("admin.userManagementDescription")}
+                  {t("admin.userManagementDescription") || "Manage user accounts and permissions"}
                 </p>
               </div>
             </div>
           </Link>
           
           {/* Document Management Card */}
-          {canManageDocuments && (
+          {(canManageDocuments || canManageComiteDocuments) && (
             <Link
-              href="/admin/documents"
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
+              href={`/${locale}/admin/documents`}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-600"
             >
-              <div className="flex items-center">
-                <div className="flex-shrink-0 bg-green-100 dark:bg-green-900 rounded-md p-3">
+              <div className="flex items-start">
+                <div className="flex-shrink-0 bg-green-100 dark:bg-green-900 rounded-lg p-3">
                   <FileText className="h-6 w-6 text-green-600 dark:text-green-300" />
                 </div>
                 <div className="ml-4">
-                  <h2 className="text-lg font-medium text-gray-900 dark:text-white">
-                    {t("admin.documentManagement")}
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                    {t("admin.documentManagement") || "Document Management"}
                   </h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {t("admin.documentManagementDescription")}
+                    {t("admin.documentManagementDescription") || "Upload and organize community documents"}
                   </p>
                 </div>
               </div>
             </Link>
           )}
           
-          {/* Activity Logs Card */}
-          <Link
-            href="/admin/logs"
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
-          >
-            <div className="flex items-center">
-              <div className="flex-shrink-0 bg-purple-100 dark:bg-purple-900 rounded-md p-3">
-                <History className="h-6 w-6 text-purple-600 dark:text-purple-300" />
-              </div>
-              <div className="ml-4">
-                <h2 className="text-lg font-medium text-gray-900 dark:text-white">
-                  {t("admin.activityLogs")}
-                </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {t("admin.activityLogsDescription")}
-                </p>
-              </div>
-            </div>
-          </Link>
-          
           {/* WhatsApp Management Card */}
-          <Link
-            href="/admin/whatsapp"
-            className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
-          >
-            <div className="flex items-center">
-              <div className="flex-shrink-0 bg-green-100 rounded-md p-3">
-                <MessageSquare className="h-6 w-6 text-green-600" />
+          {canManageWhatsApp && (
+            <Link
+              href={`/${locale}/admin/whatsapp`}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-600"
+            >
+              <div className="flex items-start">
+                <div className="flex-shrink-0 bg-green-100 dark:bg-green-900 rounded-lg p-3">
+                  <MessageSquare className="h-6 w-6 text-green-600 dark:text-green-300" />
+                </div>
+                <div className="ml-4">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                    WhatsApp Management
+                  </h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Send messages and manage WhatsApp communications
+                  </p>
+                </div>
               </div>
-              <div className="ml-4">
-                <h2 className="text-lg font-medium text-gray-900">
-                  WhatsApp Management
-                </h2>
-                <p className="text-sm text-gray-500">
-                  Manage WhatsApp communications
-                </p>
-              </div>
-            </div>
-          </Link>
+            </Link>
+          )}
           
           {/* Emergency Alerts Card */}
           <Link
-            href="/admin/emergency-alerts"
-            className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
+            href={`/${locale}/admin/emergency-alerts`}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-red-300 dark:hover:border-red-600"
           >
-            <div className="flex items-center">
-              <div className="flex-shrink-0 bg-red-100 rounded-md p-3">
-                <AlertTriangle className="h-6 w-6 text-red-600" />
+            <div className="flex items-start">
+              <div className="flex-shrink-0 bg-red-100 dark:bg-red-900 rounded-lg p-3">
+                <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-300" />
               </div>
               <div className="ml-4">
-                <h2 className="text-lg font-medium text-gray-900">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
                   Emergency Alerts
                 </h2>
-                <p className="text-sm text-gray-500">
-                  Send emergency notifications
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Send urgent notifications to residents
+                </p>
+              </div>
+            </div>
+          </Link>
+          
+          {/* Activity Logs Card */}
+          <Link
+            href={`/${locale}/admin/logs`}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600"
+          >
+            <div className="flex items-start">
+              <div className="flex-shrink-0 bg-purple-100 dark:bg-purple-900 rounded-lg p-3">
+                <History className="h-6 w-6 text-purple-600 dark:text-purple-300" />
+              </div>
+              <div className="ml-4">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                  {t("admin.activityLogs") || "Activity Logs"}
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {t("admin.activityLogsDescription") || "View system activity and audit trails"}
                 </p>
               </div>
             </div>
@@ -167,19 +255,39 @@ export default function AdminDashboardPage() {
           
           {/* Reports Card */}
           <Link
-            href="/admin/reports"
-            className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
+            href={`/${locale}/admin/reports`}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-yellow-300 dark:hover:border-yellow-600"
           >
-            <div className="flex items-center">
-              <div className="flex-shrink-0 bg-yellow-100 rounded-md p-3">
-                <ClipboardList className="h-6 w-6 text-yellow-600" />
+            <div className="flex items-start">
+              <div className="flex-shrink-0 bg-yellow-100 dark:bg-yellow-900 rounded-lg p-3">
+                <ClipboardList className="h-6 w-6 text-yellow-600 dark:text-yellow-300" />
               </div>
               <div className="ml-4">
-                <h2 className="text-lg font-medium text-gray-900">
-                  {t("admin.reports")}
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                  {t("admin.reports") || "Reports"}
                 </h2>
-                <p className="text-sm text-gray-500">
-                  {t("admin.reportsDescription")}
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {t("admin.reportsDescription") || "Generate analytics and usage reports"}
+                </p>
+              </div>
+            </div>
+          </Link>
+
+          {/* System Settings Card */}
+          <Link
+            href={`/${locale}/admin/settings`}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500"
+          >
+            <div className="flex items-start">
+              <div className="flex-shrink-0 bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
+                <Settings className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+              </div>
+              <div className="ml-4">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                  System Settings
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Configure application settings and preferences
                 </p>
               </div>
             </div>

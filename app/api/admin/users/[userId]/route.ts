@@ -34,8 +34,7 @@ export async function PUT(
     const userPermissions = (currentUser.permissions as Permission[]) || [];
     const canManageUsers = 
       currentUser.isAdmin ||
-      checkPermission(userPermissions, Permission.MANAGE_DOCUMENTS) ||
-      checkPermission(userPermissions, Permission.MANAGE_COMITE_DOCUMENTS);
+  checkPermission(userPermissions, Permission.MANAGE_USERS);
 
     if (!canManageUsers) {
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 });

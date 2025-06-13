@@ -58,6 +58,7 @@
     "documents": "المستندات",
     "contact": "اتصل بنا",
     "ownerPortal": "بوابة المالك",
+    "admin": "الإدارة",
     "toggleMenu": "تبديل القائمة",
     "dashboard": "لوحة التحكم",
     "community": "المجتمع",
@@ -237,6 +238,14 @@
     "downloadInstead": "التنزيل بدلاً من ذلك"
   },
   "admin": {
+    "dashboard": "لوحة التحكم",
+    "users": "المستخدمون",
+    "documents": "المستندات", 
+    "settings": "الإعدادات",
+    "systemSettings": "إعدادات النظام",
+    "dashboardDescription": "إدارة بوابة المجتمع وأدوات التواصل",
+    "whatsappManagement": "إدارة واتساب",
+    "whatsappDescription": "إرسال الرسائل وإدارة اتصالات واتساب",
     "userManagement": "إدارة المستخدمين",
     "documentManagement": "إدارة المستندات",
     "approveRegistration": "الموافقة على التسجيل",

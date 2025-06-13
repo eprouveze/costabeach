@@ -5,11 +5,12 @@ import { db } from '@/lib/db';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
-  console.log('Permissions API called for user:', params.userId);
-  
   try {
+    const { userId } = await params;
+    console.log('Permissions API called for user:', userId);
+    
     // Get the current session
     const session = await getServerSession(authOptions);
     console.log('Session in permissions API:', { 
@@ -24,8 +25,6 @@ export async function GET(
         { status: 401 }
       );
     }
-
-    const { userId } = params;
     console.log('Fetching permissions for userId:', userId);
     
     // Only allow users to access their own permissions, or admins to access any user's permissions
@@ -45,7 +44,7 @@ export async function GET(
         email: true,
         name: true,
         permissions: true,
-        is_admin: true,
+        isAdmin: true,
         role: true
       }
     });
@@ -75,7 +74,7 @@ export async function GET(
       firstName: firstName,
       lastName: lastName,
       permissions: user.permissions || [],
-      isAdmin: user.is_admin || false,
+      isAdmin: user.isAdmin || false,
       role: user.role || 'user'
     };
 

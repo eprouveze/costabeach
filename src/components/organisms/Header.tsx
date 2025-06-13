@@ -4,11 +4,13 @@ import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { NavItem } from "../molecules/NavItem";
 import LanguageSwitcher from "../LanguageSwitcher";
-import { Menu, X, Home, FileText, Mail, User, Info, LogIn, LogOut } from "lucide-react";
+import { Menu, X, Home, FileText, Mail, User, Info, LogIn, LogOut, Shield } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
-import { signOut } from "@/lib/supabase/auth";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
-import { useSupabaseSession } from "@/lib/supabase/hooks";
+import { useSession } from "next-auth/react";
+import { checkPermission } from "@/lib/utils/permissions";
+import { Permission } from "@/lib/types";
 
 interface HeaderProps {
   className?: string;
@@ -16,17 +18,46 @@ interface HeaderProps {
 
 export const Header = ({ className = "" }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [userPermissions, setUserPermissions] = useState<Permission[]>([]);
   const pathname = usePathname();
   const { t, locale } = useI18n();
   const router = useRouter();
-  const { session, isLoading } = useSupabaseSession();
+  const { data: session, status } = useSession();
   
   const isAuthenticated = !!session;
+  const isLoading = status === "loading";
+
+  // Fetch user permissions when authenticated
+  useEffect(() => {
+    const fetchPermissions = async () => {
+      if (session?.user?.id) {
+        try {
+          const response = await fetch(`/api/users/${session.user.id}/permissions`);
+          if (response.ok) {
+            const userData = await response.json();
+            setUserPermissions(userData.permissions || []);
+          }
+        } catch (error) {
+          console.error("Error fetching user permissions:", error);
+        }
+      } else {
+        setUserPermissions([]);
+      }
+    };
+
+    fetchPermissions();
+  }, [session]);
 
   // Close mobile menu when navigating
   useEffect(() => {
     setIsMenuOpen(false);
   }, [pathname]);
+
+  // Check if user has admin privileges
+  const canManageDocuments = checkPermission(userPermissions, Permission.MANAGE_DOCUMENTS);
+  const canManageComiteDocuments = checkPermission(userPermissions, Permission.MANAGE_COMITE_DOCUMENTS);
+  const isAdmin = (session?.user as any)?.isAdmin === true;
+  const hasAdminAccess = isAdmin || canManageDocuments || canManageComiteDocuments;
 
   const navItems = [
     { 
@@ -39,6 +70,11 @@ export const Header = ({ className = "" }: HeaderProps) => {
       href: isAuthenticated ? `/${locale}/owner-dashboard` : `/${locale}/owner-login`, 
       icon: User 
     },
+    ...(hasAdminAccess ? [{ 
+      label: t("navigation.admin") || "Admin", 
+      href: `/${locale}/admin`, 
+      icon: Shield 
+    }] : []),
     { 
       label: t("navigation.contact"), 
       href: `/${locale}/contact`, 
@@ -56,8 +92,10 @@ export const Header = ({ className = "" }: HeaderProps) => {
 
   const handleAuthAction = async () => {
     if (isAuthenticated) {
-      await signOut();
-      router.push(`/${locale}`);
+      await signOut({ 
+        callbackUrl: `/${locale}`,
+        redirect: true 
+      });
     } else {
       // Use direct navigation to ensure the redirect works
       window.location.href = `/${locale}/owner-login`;

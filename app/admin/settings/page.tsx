@@ -95,8 +95,7 @@ export default function AdminSettingsPage() {
   }, [session, status]);
 
   const canManageSettings = 
-    checkPermission(userPermissions, Permission.MANAGE_DOCUMENTS) ||
-    checkPermission(userPermissions, Permission.MANAGE_COMITE_DOCUMENTS) ||
+  checkPermission(userPermissions, Permission.MANAGE_SETTINGS) ||
     (session?.user as any)?.isAdmin === true;
 
   // Redirect if no permissions

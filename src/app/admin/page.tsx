@@ -3,30 +3,22 @@
 import React from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n/client";
-import { Users, FileText, Settings } from "lucide-react";
+import { Users, FileText, Settings, MessageSquare } from "lucide-react";
+import { Header } from "@/components/organisms/Header";
 
 export default function AdminPage() {
   const { t } = useI18n();
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <h1 className="text-2xl font-bold text-gray-900">{t("admin.dashboard")}</h1>
-            <div>
-              <Link 
-                href="/"
-                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-              >
-                {t("common.home")}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{t("admin.dashboard")}</h1>
+          <p className="text-gray-600">{t("admin.dashboardDescription")}</p>
+        </div>
+        
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <Link 
             href="/admin/users"
@@ -84,6 +76,21 @@ export default function AdminPage() {
               <div className="ml-5">
                 <h3 className="text-lg font-medium text-gray-900">{t("admin.settings")}</h3>
                 <p className="text-sm text-gray-500">{t("admin.systemSettings")}</p>
+              </div>
+            </div>
+          </Link>
+
+          <Link 
+            href="/admin/whatsapp"
+            className="bg-white overflow-hidden shadow rounded-lg p-6 hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-center">
+              <div className="flex-shrink-0 bg-green-500 rounded-md p-3">
+                <MessageSquare className="h-6 w-6 text-white" />
+              </div>
+              <div className="ml-5">
+                <h3 className="text-lg font-medium text-gray-900">{t("admin.whatsappManagement")}</h3>
+                <p className="text-sm text-gray-500">{t("admin.whatsappDescription")}</p>
               </div>
             </div>
           </Link>

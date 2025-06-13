@@ -70,8 +70,7 @@ export async function GET(req: NextRequest) {
     const userPermissions = (user.permissions as Permission[]) || [];
     const canManageSettings = 
       user.isAdmin ||
-      checkPermission(userPermissions, Permission.MANAGE_DOCUMENTS) ||
-      checkPermission(userPermissions, Permission.MANAGE_COMITE_DOCUMENTS);
+  checkPermission(userPermissions, Permission.MANAGE_SETTINGS);
 
     if (!canManageSettings) {
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 });
