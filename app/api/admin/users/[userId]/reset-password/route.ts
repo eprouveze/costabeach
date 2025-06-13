@@ -8,8 +8,8 @@ import crypto from 'crypto';
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { userId: string } }
- )
+  { params }: { params: Promise<{ userId: string }> }
+) {
   try {
     const session = await getServerSession(authOptions);
     
@@ -41,7 +41,7 @@ export async function POST(
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 });
     }
 
-    const { userId } = params;
+    const { userId } = await params;
 
     // Find the target user
     const targetUser = await db.user.findUnique({

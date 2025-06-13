@@ -8,7 +8,7 @@ import { AlertTriangle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { checkPermission } from "@/lib/utils/permissions";
 import { Permission } from "@/lib/types";
-import EmergencyAlertForm from "@/src/components/admin/EmergencyAlertForm";
+import EmergencyAlertForm from "@/components/admin/EmergencyAlertForm";
 
 export default function AdminEmergencyAlertsPage() {
   const session = useSession();

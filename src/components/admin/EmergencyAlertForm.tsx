@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { AlertTriangle, Send, Clock, Shield, Zap, CloudRain, Wrench, Megaphone } from "lucide-react";
 import { toast } from "react-toastify";
-import { whatsappNotificationService } from "@/src/lib/services/whatsappNotificationService";
+import { whatsappNotificationService } from "@/lib/services/whatsappNotificationService";
 
 type AlertSeverity = 'low' | 'medium' | 'high' | 'critical';
 type AlertType = 'maintenance' | 'security' | 'weather' | 'utilities' | 'other';

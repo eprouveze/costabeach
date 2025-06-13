@@ -13,7 +13,7 @@ export default function VerifyEmailPage() {
 
   useEffect(() => {
     // Extract email from URL params if available
-    const emailParam = searchParams.get("email");
+    const emailParam = searchParams?.get("email");
     if (emailParam) {
       setEmail(emailParam);
     }

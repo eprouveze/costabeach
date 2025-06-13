@@ -32,10 +32,10 @@ export async function POST(req: NextRequest) {
         console.log('[API] User exists, ensuring owner status if needed');
         
         // Check if the user needs to be upgraded to verified owner
-        if (!user.is_verified_owner) {
+        if (!user.isVerifiedOwner) {
           user = await prisma.user.update({
             where: { id: userId },
-            data: { is_verified_owner: true }
+            data: { isVerifiedOwner: true }
           });
           console.log('[API] User updated to verified owner status');
         }
@@ -57,8 +57,8 @@ export async function POST(req: NextRequest) {
               email: userEmail,
               name: userEmail.split('@')[0] || 'User',
               role: 'user',
-              is_verified_owner: true, // Set to true for owner dashboard
-              preferred_language: 'french',
+              isVerifiedOwner: true, // Set to true for owner dashboard
+              preferredLanguage: 'french',
               permissions: ['viewDocuments', 'downloadDocuments']
             }
           });

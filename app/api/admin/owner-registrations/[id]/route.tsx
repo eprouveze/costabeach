@@ -30,7 +30,7 @@ export async function PUT(request: NextRequest) {
       where: { email: session.user.email ?? undefined },
     });
 
-    if (!user?.is_admin) {
+    if (!user?.isAdmin) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -78,10 +78,10 @@ export async function PUT(request: NextRequest) {
           id: crypto.randomUUID(),
           name: registration.name,
           email: registration.email,
-          building_number: registration.buildingNumber,
-          apartment_number: registration.apartmentNumber,
-          phone_number: registration.phoneNumber,
-          is_verified_owner: true,
+          buildingNumber: registration.buildingNumber,
+          apartmentNumber: registration.apartmentNumber,
+          phoneNumber: registration.phoneNumber,
+          isVerifiedOwner: true,
           role: "user",
         },
       });

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getWhatsAppClient } from '@/src/lib/whatsapp/client';
-import { whatsappAssistant } from '@/src/lib/services/whatsappAssistant';
+import { getWhatsAppClient } from '@/lib/whatsapp/client';
+import { whatsappAssistant } from '@/lib/services/whatsappAssistant';
 import { createSupabaseClient } from '@/lib/supabase/server';
 import { inngest } from '@/lib/inngest';
 

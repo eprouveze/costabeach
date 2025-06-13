@@ -15,7 +15,7 @@ export async function GET() {
       where: { email: session.user.email ?? undefined },
     });
 
-    if (!user?.is_admin) {
+    if (!user?.isAdmin) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
