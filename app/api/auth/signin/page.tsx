@@ -7,7 +7,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export default function SignInPage() {
-  const [providers, setProviders] = useState(null);
+  const [providers, setProviders] = useState<any>(null);
   const [csrfToken, setCsrfToken] = useState("");
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +20,7 @@ export default function SignInPage() {
       const providers = await getProviders();
       const csrfToken = await getCsrfToken();
       setProviders(providers);
-      setCsrfToken(csrfToken);
+      setCsrfToken(csrfToken || "");
     }
     fetchData();
   }, []);

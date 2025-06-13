@@ -52,32 +52,14 @@ export async function POST(
       return NextResponse.json({ error: 'Target user not found' }, { status: 404 });
     }
 
-    // Generate password reset token
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-
-    // Update user with reset token
-    await db.user.update({
-      where: { id: userId },
-      data: {
-        resetToken,
-        resetTokenExpiry,
-        updatedAt: new Date()
-      }
-    });
-
-    // TODO: Send password reset email
-    // For now, we'll just log the reset link
-    const resetLink = `${process.env.NEXTAUTH_URL}/auth/reset-password?token=${resetToken}`;
-    console.log(`Password reset link for ${targetUser.email}: ${resetLink}`);
-
-    // In a real application, you would send an email here
-    // await sendPasswordResetEmail(targetUser.email, resetLink);
+    // TODO: Implement proper password reset functionality
+    // This would require adding resetToken and resetTokenExpiry fields to the User model
+    // For now, just return a placeholder response
+    
+    console.log(`Password reset requested for user: ${targetUser.email}`);
 
     return NextResponse.json({ 
-      message: 'Password reset email sent successfully',
-      // In development, return the reset link for testing
-      ...(process.env.NODE_ENV === 'development' && { resetLink })
+      message: 'Password reset functionality is not yet implemented. Please contact the administrator.',
     });
 
   } catch (error) {

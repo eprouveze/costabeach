@@ -42,7 +42,7 @@ export async function PUT(
 
     const { userId } = await params;
     const body = await req.json();
-    const { role, isAdmin, isVerifiedOwner, isActive, permissions } = body;
+    const { role, isAdmin, isVerifiedOwner, permissions } = body;
 
     // Find the user to update
     const targetUser = await db.user.findUnique({
@@ -80,9 +80,6 @@ export async function PUT(
     if (isVerifiedOwner !== undefined && isVerifiedOwner !== targetUser.isVerifiedOwner) {
       changes.isVerifiedOwner = { from: targetUser.isVerifiedOwner, to: isVerifiedOwner };
     }
-    if (isActive !== undefined && isActive !== targetUser.isActive) {
-      changes.isActive = { from: targetUser.isActive, to: isActive };
-    }
     if (permissions !== undefined && JSON.stringify(permissions) !== JSON.stringify(targetUser.permissions)) {
       changes.permissions = { from: targetUser.permissions, to: permissions };
     }
@@ -94,7 +91,6 @@ export async function PUT(
         role: role || targetUser.role,
         isAdmin: isAdmin !== undefined ? isAdmin : targetUser.isAdmin,
         isVerifiedOwner: isVerifiedOwner !== undefined ? isVerifiedOwner : targetUser.isVerifiedOwner,
-        isActive: isActive !== undefined ? isActive : targetUser.isActive,
         permissions: permissions !== undefined ? permissions : targetUser.permissions,
         updatedAt: new Date()
       }
@@ -131,9 +127,7 @@ export async function PUT(
       isAdmin: updatedUser.isAdmin,
       isVerifiedOwner: updatedUser.isVerifiedOwner,
       permissions: (updatedUser.permissions as string[]) || [],
-      createdAt: updatedUser.createdAt.toISOString(),
-      lastLogin: updatedUser.lastLogin?.toISOString(),
-      isActive: updatedUser.isActive !== false
+      createdAt: updatedUser.createdAt?.toISOString() || new Date().toISOString()
     };
 
     return NextResponse.json(formattedUser);

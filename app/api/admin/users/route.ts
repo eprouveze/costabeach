@@ -47,9 +47,7 @@ export async function GET(req: NextRequest) {
         isAdmin: true,
         isVerifiedOwner: true,
         permissions: true,
-        createdAt: true,
-        lastLogin: true,
-        isActive: true
+        createdAt: true
       },
       orderBy: {
         createdAt: 'desc'
@@ -65,9 +63,7 @@ export async function GET(req: NextRequest) {
       isAdmin: user.isAdmin || false,
       isVerifiedOwner: user.isVerifiedOwner || false,
       permissions: (user.permissions as string[]) || [],
-      createdAt: user.createdAt.toISOString(),
-      lastLogin: user.lastLogin?.toISOString(),
-      isActive: user.isActive !== false // Default to true if null
+      createdAt: user.createdAt?.toISOString() || new Date().toISOString()
     }));
 
     return NextResponse.json({ users: formattedUsers });
