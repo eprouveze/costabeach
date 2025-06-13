@@ -126,6 +126,19 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
                 {t("common.information") || "Informations"}
               </Link>
 
+              {/* Polls section */}
+              <Link
+                href={`/${locale}/polls`}
+                className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
+                  pathname?.startsWith(`/${locale}/polls`)
+                    ? "text-blue-600 bg-blue-50"
+                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
+                }`}
+              >
+                <FileQuestion className="w-5 h-5" />
+                {t("navigation.polls") || "Polls"}
+              </Link>
+
               {/* Document Categories */}
               <div className="pt-4 pb-2">
                 <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">

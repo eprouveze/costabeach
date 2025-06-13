@@ -211,16 +211,14 @@ export const DocumentCard = ({
               Download
             </button>
             
-            {document.language !== Language.ENGLISH && document.language !== Language.FRENCH && document.language !== Language.ARABIC && (
-              <button
-                onClick={() => handleRequestTranslation(document.id)}
-                disabled={isTranslating}
-                className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 mr-4 flex items-center text-sm disabled:opacity-50"
-              >
-                <Languages className="h-4 w-4 mr-1" />
-                {isTranslating ? "Requesting..." : "Translate"}
-              </button>
-            )}
+            <button
+              onClick={() => handleRequestTranslation(document.id)}
+              disabled={isTranslating}
+              className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 mr-4 flex items-center text-sm disabled:opacity-50"
+            >
+              <Languages className="h-4 w-4 mr-1" />
+              {isTranslating ? "Requesting..." : "Translate"}
+            </button>
             
             {onDelete && (
               <button
