@@ -143,11 +143,11 @@ export const documentsRouter = router({
         try {
           const user = await prisma.user.findUnique({
             where: { id: userId },
-            select: { email: true, firstName: true, lastName: true }
+            select: { email: true, name: true }
           });
           
           const uploaderName = user ? 
-            `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email : 
+            user.name || user.email : 
             'Unknown User';
           
           // Create document URL (this would be the actual URL to view the document)

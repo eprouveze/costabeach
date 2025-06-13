@@ -110,6 +110,25 @@ prisma/
 - Row Level Security (RLS) enabled for sensitive tables
 - User permissions stored as JSON array in user table
 
+**CRITICAL RULE: Prisma Property Naming Consistency**:
+When working with Prisma models and database operations, ALWAYS use camelCase property names in TypeScript/JavaScript code, even if the database uses snake_case. Prisma automatically handles the conversion between camelCase (TypeScript) and snake_case (database) via the @map() directive in the schema.
+
+Examples:
+- ✅ user.isAdmin (NOT user.is_admin)
+- ✅ user.createdAt (NOT user.created_at)
+- ✅ user.updatedAt (NOT user.updated_at)
+- ✅ user.isVerifiedOwner (NOT user.is_verified_owner)
+- ✅ user.preferredLanguage (NOT user.preferred_language)
+- ✅ user.buildingNumber (NOT user.building_number)
+
+Apply this rule to:
+- Prisma queries (findMany, update, create, etc.)
+- API route data objects
+- TypeScript interfaces
+- All database operations
+
+When in doubt, check the Prisma schema file to see the correct camelCase property names.
+
 **tRPC Integration**:
 - API routers in `src/lib/api/routers/`
 - Client-side usage via `@/lib/trpc/react`

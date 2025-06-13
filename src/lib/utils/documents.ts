@@ -276,8 +276,8 @@ export const getDocumentsByCategory = async (
     })) as Document[];
   } catch (error) {
     // If we get a Prisma error about the translatedDocumentId column, fall back to a simpler query
-    if (error instanceof Error && error.message.includes('translated_document_id')) {
-      console.warn('Falling back to simple query due to missing translated_document_id column');
+    if (error instanceof Error && error.message.includes('translatedDocumentId')) {
+      console.warn('Falling back to simple query due to missing translatedDocumentId column');
       
       // Construct conditions separately for the query
       let languageCondition = '';
@@ -304,17 +304,17 @@ export const getDocumentsByCategory = async (
       // Build the query with proper parameter placeholders - removing the is_translated column
       const query = `
         SELECT 
-          id, title, description, file_path as "filePath", file_size as "fileSize", 
-          file_type as "fileType", category, language, 
-          is_public as "isPublished", view_count as "viewCount", 
-          download_count as "downloadCount", created_at as "createdAt", 
-          updated_at as "updatedAt", created_by as "authorId"
+          id, title, description, "filePath", "fileSize", 
+          "fileType", category, language, 
+          "isPublic", "viewCount", 
+          "downloadCount", "createdAt", 
+          "updatedAt", "createdBy" as "authorId"
         FROM documents
         WHERE category = $${params.length - 2}
           ${languageCondition}
-          AND is_public = true
+          AND "isPublic" = true
           ${searchCondition}
-        ORDER BY created_at DESC
+        ORDER BY "createdAt" DESC
         LIMIT $${params.length - 1} OFFSET $${params.length}
       `;
       

@@ -152,13 +152,13 @@ export async function POST(request: NextRequest) {
     // Create poll
     const result = await pollsService.createPoll({
       question: body.question,
-      poll_type: body.poll_type as PollType,
+      pollType: body.poll_type as PollType,
       options: body.options,
-      created_by: user.id,
-      max_choices: body.max_choices,
-      is_anonymous: body.is_anonymous,
-      voting_deadline: votingDeadline,
-      require_explanation: body.require_explanation,
+      createdBy: user.id,
+      maxChoices: body.max_choices,
+      isAnonymous: body.is_anonymous,
+      votingDeadline: votingDeadline,
+      requireExplanation: body.require_explanation,
     });
 
     return NextResponse.json(

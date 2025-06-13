@@ -125,9 +125,9 @@ export async function POST(
       const translationService = new PollTranslationService();
 
       const results = await translationService.requestPollTranslation({
-        poll_id: pollId,
-        target_languages: body.target_languages as Language[],
-        requested_by: user.id,
+        pollId: pollId,
+        targetLanguages: body.target_languages as Language[],
+        requestedBy: user.id,
       });
 
       return NextResponse.json(
@@ -146,7 +146,7 @@ export async function POST(
       const translationService = new PollTranslationService();
 
       const translation = await translationService.createPollTranslation({
-        poll_id: pollId,
+        pollId: pollId,
         language: body.language as Language,
         question: body.question,
         description: body.description,

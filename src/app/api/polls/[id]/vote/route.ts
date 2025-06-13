@@ -76,9 +76,9 @@ export async function POST(
 
     // Cast the vote
     const votes = await pollsService.castVote({
-      poll_id: params.id,
-      user_id: user.id,
-      option_ids: body.option_ids,
+      pollId: params.id,
+      userId: user.id,
+      optionIds: body.option_ids,
       explanation: body.explanation,
     });
 
