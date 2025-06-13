@@ -18,66 +18,26 @@ export default function DocumentViewerPage() {
   const documentId = params?.id as string;
   const [isLoading, setIsLoading] = useState(true);
   const [documentUrl, setDocumentUrl] = useState<string | null>(null);
-  const [documentDetails, setDocumentDetails] = useState<any>(null);
-  const [userLanguage, setUserLanguage] = useState<Language>(Language.FRENCH);
+
+  // Derive language directly from locale to avoid stale queries
+  const derivedLanguage: Language =
+    locale === "fr" ? Language.FRENCH :
+    locale === "ar" ? Language.ARABIC :
+    Language.ENGLISH;
 
   // Set up mutations
   const incrementViewCount = api.documents.incrementViewCount.useMutation();
   const getDownloadUrl = api.documents.getDownloadUrl.useMutation();
 
-  // Set user language based on locale
-  useEffect(() => {
-    if (locale === "fr") {
-      setUserLanguage(Language.FRENCH);
-    } else if (locale === "ar") {
-      setUserLanguage(Language.ARABIC);
-    } else {
-      setUserLanguage(Language.ENGLISH);
-    }
-  }, [locale]);
-
-  // Fetch all documents and filter by ID
-  // Since there's no direct getDocumentById endpoint, we'll fetch by category and filter
-  const comiteDocuments = api.documents.getDocumentsByCategory.useQuery({
-    category: DocumentCategory.COMITE_DE_SUIVI,
-    language: userLanguage
-  });
-
-  const societeDocuments = api.documents.getDocumentsByCategory.useQuery({
-    category: DocumentCategory.SOCIETE_DE_GESTION,
-    language: userLanguage
-  });
-
-  const legalDocuments = api.documents.getDocumentsByCategory.useQuery({
-    category: DocumentCategory.LEGAL,
-    language: userLanguage
-  });
-
-  const financeDocuments = api.documents.getDocumentsByCategory.useQuery({
-    category: DocumentCategory.FINANCE,
-    language: userLanguage
-  });
-
-  const generalDocuments = api.documents.getDocumentsByCategory.useQuery({
-    category: DocumentCategory.GENERAL,
-    language: userLanguage
-  });
-
-  // Find the document by ID from all categories
-  useEffect(() => {
-    const allDocuments = [
-      ...(comiteDocuments.data || []),
-      ...(societeDocuments.data || []),
-      ...(legalDocuments.data || []),
-      ...(financeDocuments.data || []),
-      ...(generalDocuments.data || [])
-    ];
-    
-    const document = allDocuments.find(doc => doc.id === documentId);
-    if (document) {
-      setDocumentDetails(document);
-    }
-  }, [documentId, comiteDocuments.data, societeDocuments.data, legalDocuments.data, financeDocuments.data, generalDocuments.data]);
+  // Fetch the specific document by ID
+  const { 
+    data: documentDetails, 
+    isLoading: isDocumentLoading, 
+    error: documentError 
+  } = api.documents.getDocumentById.useQuery(
+    { documentId },
+    { enabled: !!documentId }
+  );
 
   // Get document preview URL and increment view count
   useEffect(() => {
@@ -179,7 +139,7 @@ export default function DocumentViewerPage() {
         </button>
       </div>
       
-      {isLoading ? (
+      {isLoading || isDocumentLoading ? (
         <div className="bg-white rounded-lg shadow-md p-8 text-center">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-3/4 mx-auto mb-4"></div>
@@ -288,7 +248,9 @@ export default function DocumentViewerPage() {
         <div className="bg-white rounded-lg shadow-md p-8 text-center">
           <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
           <h2 className="text-xl font-semibold mb-2">{t("documents.documentNotFound")}</h2>
-          <p className="text-gray-500 mb-4">{t("documents.documentNotFoundDescription")}</p>
+          <p className="text-gray-500 mb-4">
+            {documentError?.message || t("documents.documentNotFoundDescription")}
+          </p>
           <Link
             href={`/${locale}/owner-dashboard`}
             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"

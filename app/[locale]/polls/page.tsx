@@ -55,7 +55,7 @@ export default function PollsPage() {
   // Load polls
   useEffect(() => {
     loadPolls();
-  }, [filter.status]);
+  }, [filter.status, filter.search]);
 
   const loadPolls = async () => {
     try {
@@ -63,9 +63,12 @@ export default function PollsPage() {
       setError(null);
       
       const params = new URLSearchParams();
-      if (filter.status !== 'all') {
-        params.append('status', filter.status);
-      }
+if (filter.status !== 'all') {
+     params.append('status', filter.status);
+   }
+  if (filter.search.trim()) {
+    params.append('search', filter.search.trim());
+  }
       
       const response = await fetch(`/api/polls?${params.toString()}`);
       

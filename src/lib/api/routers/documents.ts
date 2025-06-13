@@ -177,6 +177,64 @@ export const documentsRouter = router({
     }),
   
   // Get documents by category
+  // Get a single document by ID
+  getDocumentById: publicProcedure
+    .input(
+      z.object({
+        documentId: z.string(),
+      })
+    )
+    .query(async ({ input }) => {
+      const { documentId } = input;
+      
+      try {
+        const document = await prisma.documents.findUnique({
+          where: { id: documentId },
+          include: {
+            author: {
+              select: {
+                name: true,
+                email: true
+              }
+            }
+          }
+        });
+        
+        if (!document) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Document not found",
+          });
+        }
+        
+        return {
+          id: document.id,
+          title: document.title,
+          description: document.description,
+          category: document.category,
+          language: document.language,
+          fileType: document.file_type,
+          fileSize: document.file_size,
+          filePath: document.file_path,
+          viewCount: document.view_count,
+          downloadCount: document.download_count,
+          createdAt: document.created_at,
+          updatedAt: document.updated_at,
+          author: document.author,
+          translatedDocumentId: document.translated_document_id
+        };
+      } catch (error) {
+        console.error("Error fetching document:", error);
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch document",
+        });
+      }
+    }),
+
   getDocumentsByCategory: publicProcedure
     .input(
       z.object({

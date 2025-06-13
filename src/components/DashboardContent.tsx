@@ -26,21 +26,15 @@ export function DashboardContent() {
   const typeParam = searchParams?.get('type');
   const searchQuery = searchParams?.get('search') || "";
   
-  const [userLanguage, setUserLanguage] = useState<Language>(Language.FRENCH);
   const [viewingDocumentId, setViewingDocumentId] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
   const [isManuallyFetching, setIsManuallyFetching] = useState(false);
   
-  // Set user language based on locale
-  useEffect(() => {
-    if (locale === "fr") {
-      setUserLanguage(Language.FRENCH);
-    } else if (locale === "ar") {
-      setUserLanguage(Language.ARABIC);
-    } else {
-      setUserLanguage(Language.ENGLISH);
-    }
-  }, [locale]);
+  // Derive language directly from locale to avoid stale queries
+  const derivedLanguage: Language =
+    locale === "fr" ? Language.FRENCH :
+    locale === "ar" ? Language.ARABIC :
+    Language.ENGLISH;
 
   // Determine which category to fetch
   let category: DocumentCategory;
@@ -85,7 +79,7 @@ export function DashboardContent() {
   } = api.documents.getDocumentsByCategory.useQuery(
     {
       category,
-      language: userLanguage,
+      language: derivedLanguage,
       searchQuery
     }, 
     {
