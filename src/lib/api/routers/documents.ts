@@ -480,8 +480,8 @@ export const documentsRouter = router({
         [DocumentCategory.COMITE_DE_SUIVI]: Permission.MANAGE_COMITE_DOCUMENTS,
         [DocumentCategory.LEGAL]: Permission.MANAGE_LEGAL_DOCUMENTS,
         [DocumentCategory.SOCIETE_DE_GESTION]: Permission.MANAGE_SOCIETE_DOCUMENTS,
-        [DocumentCategory.GENERAL]: Permission.MANAGE_DOCUMENTS,
-        [DocumentCategory.FINANCE]: Permission.MANAGE_DOCUMENTS,
+        [DocumentCategory.GENERAL]: Permission.MANAGE_GENERAL_DOCUMENTS,
+        [DocumentCategory.FINANCE]: Permission.MANAGE_FINANCE_DOCUMENTS,
       };
 
       const requiredPermission = permissionMap[input.category] || Permission.MANAGE_DOCUMENTS;

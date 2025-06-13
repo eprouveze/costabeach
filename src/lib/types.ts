@@ -13,12 +13,30 @@ export enum Language {
 }
 
 export enum Permission {
+  // User Management
   MANAGE_USERS = 'manageUsers',
+  VIEW_USERS = 'viewUsers',
+  APPROVE_REGISTRATIONS = 'approveRegistrations',
+  
+  // Document Management - General
   MANAGE_DOCUMENTS = 'manageDocuments',
+  VIEW_DOCUMENTS = 'viewDocuments',
+  
+  // Document Management - Category Specific
   MANAGE_COMITE_DOCUMENTS = 'manageComiteDocuments',
   MANAGE_SOCIETE_DOCUMENTS = 'manageSocieteDocuments',
   MANAGE_LEGAL_DOCUMENTS = 'manageLegalDocuments',
-  APPROVE_REGISTRATIONS = 'approveRegistrations'
+  MANAGE_FINANCE_DOCUMENTS = 'manageFinanceDocuments',
+  MANAGE_GENERAL_DOCUMENTS = 'manageGeneralDocuments',
+  
+  // System Administration
+  MANAGE_SETTINGS = 'manageSettings',
+  VIEW_AUDIT_LOGS = 'viewAuditLogs',
+  MANAGE_NOTIFICATIONS = 'manageNotifications',
+  
+  // WhatsApp Management
+  MANAGE_WHATSAPP = 'manageWhatsapp',
+  SEND_WHATSAPP_MESSAGES = 'sendWhatsappMessages'
 }
 
 export interface Document {

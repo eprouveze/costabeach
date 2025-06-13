@@ -377,6 +377,10 @@ export const canManageDocumentCategory = (
       return userPermissions.includes('manageSocieteDocuments');
     case DocumentCategory.LEGAL:
       return userPermissions.includes('manageLegalDocuments');
+    case DocumentCategory.FINANCE:
+      return userPermissions.includes('manageFinanceDocuments');
+    case DocumentCategory.GENERAL:
+      return userPermissions.includes('manageGeneralDocuments');
     default:
       return false;
   }
