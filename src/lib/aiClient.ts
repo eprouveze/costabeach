@@ -196,3 +196,11 @@ export async function generateChatCompletion(
     throw error;
   }
 }
+
+// Export aiClient for backwards compatibility
+export const aiClient = {
+  generateChatCompletion,
+  generateGeminiWebResponse,
+  parseJsonResponse,
+  AI_MODELS,
+};

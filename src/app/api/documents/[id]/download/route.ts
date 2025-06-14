@@ -25,12 +25,12 @@ export async function GET(
     
     try {
       // Try to get a signed URL from S3
-      const downloadUrl = await getDownloadUrl(document.file_path);
+      const downloadUrl = await getDownloadUrl(document.filePath);
       
       // Increment the download count
       await prisma.documents.update({
         where: { id },
-        data: { download_count: { increment: 1 } }
+        data: { downloadCount: { increment: 1 } }
       });
       
       // Redirect to the signed URL
@@ -51,7 +51,7 @@ export async function GET(
         // Increment the download count
         await prisma.documents.update({
           where: { id },
-          data: { download_count: { increment: 1 } }
+          data: { downloadCount: { increment: 1 } }
         });
         
         // Return the file as a response

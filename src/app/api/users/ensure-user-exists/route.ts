@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 import { PrismaClient } from "@prisma/client";
-import crypto from "crypto";
+import { UserRole, Language } from "@/lib/types";
 
 const prisma = new PrismaClient();
 
@@ -18,9 +17,6 @@ export async function POST(req: NextRequest) {
     }
     
     console.log(`[API] ensure-user-exists called for user: ${userEmail} (${userId})`);
-    
-    // Get the supabase admin client with service role
-    const supabase = createClient();
     
     // Check if the user exists using Prisma
     try {
@@ -56,10 +52,9 @@ export async function POST(req: NextRequest) {
               id: userId,
               email: userEmail,
               name: userEmail.split('@')[0] || 'User',
-              role: 'user',
+              role: UserRole.USER,
               isVerifiedOwner: true,
-              preferredLanguage: 'french',
-              permissions: ['viewDocuments', 'downloadDocuments']
+              preferredLanguage: Language.FRENCH,
             }
           });
           

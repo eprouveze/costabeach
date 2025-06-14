@@ -27,7 +27,10 @@
     "whatsapp:debug": "tsx scripts/whatsapp-debug-test.ts",
     "whatsapp:send": "tsx scripts/whatsapp-send-test.ts",
     "whatsapp:demo": "tsx scripts/whatsapp-demo.ts",
-    "whatsapp:test-assistant": "tsx scripts/test-whatsapp-assistant.ts"
+    "whatsapp:test-assistant": "tsx scripts/test-whatsapp-assistant.ts",
+    "validate-naming": "node scripts/validate-prisma-naming.js",
+    "build-safe": "npm run validate-naming && prisma generate && next build",
+    "precommit-check": "npm run validate-naming && npm run lint"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.758.0",

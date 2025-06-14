@@ -62,9 +62,9 @@ export interface Document {
 }
 
 export enum UserRole {
-  user = "user",
-  admin = "admin",
-  contentEditor = "contentEditor",
+  USER = "user",
+  ADMIN = "admin",
+  CONTENT_EDITOR = "contentEditor",
 }
 
 export interface User {
@@ -83,4 +83,14 @@ export interface User {
   preferredLanguage: Language;
   createdAt: Date;
   updatedAt: Date;
+}
+
+// Type for tRPC context user (matches NextAuth session user structure)
+export interface AppUser {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  role?: UserRole;
+  isAdmin?: boolean;
 }

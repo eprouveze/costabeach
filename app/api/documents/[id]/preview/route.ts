@@ -24,7 +24,7 @@ export async function GET(
     }
     
     // If the document is not published, check if the user is authenticated
-    if (!document.is_public) {
+    if (!document.isPublic) {
       const session = await getServerSession(authOptions);
       
       if (!session?.user) {
@@ -47,7 +47,7 @@ export async function GET(
       'application/json'
     ];
     
-    const fileType = document.file_type.toLowerCase();
+    const fileType = document.fileType.toLowerCase();
     const canPreview = previewableTypes.some(type => fileType.includes(type));
     
     if (!canPreview) {
@@ -60,12 +60,12 @@ export async function GET(
     // Increment the view count
     await prisma.documents.update({
       where: { id: documentId },
-      data: { view_count: { increment: 1 } },
+      data: { viewCount: { increment: 1 } },
     });
     
     // Generate a signed URL for the document with inline content disposition
     // Use a shorter expiration time for previews (15 minutes)
-    const previewUrl = await getDownloadUrl(document.file_path, 15 * 60, false);
+    const previewUrl = await getDownloadUrl(document.filePath, 15 * 60, false);
     
     return NextResponse.json({ previewUrl });
   } catch (error) {

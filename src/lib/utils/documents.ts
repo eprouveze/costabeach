@@ -119,13 +119,13 @@ export const createDocument = async (
     data: {
       title,
       description,
-      file_path: filePath,
-      file_size: fileSize,
-      file_type: fileType,
+      filePath: filePath,
+      fileSize: fileSize,
+      fileType: fileType,
       category: prismaCategory as any,
       language: prismaLanguage as any,
-      created_by: authorId,
-      is_public: isPublished,
+      createdBy: authorId,
+      isPublic: isPublished,
     },
   });
   
@@ -134,21 +134,21 @@ export const createDocument = async (
     id: document.id,
     title: document.title,
     description: document.description,
-    filePath: document.file_path,
-    fileSize: Number(document.file_size),
-    fileType: document.file_type,
+    filePath: document.filePath,
+    fileSize: Number(document.fileSize),
+    fileType: document.fileType,
     category: category,
     language: language,
-    createdAt: document.created_at,
-    updatedAt: document.updated_at,
+    createdAt: document.createdAt,
+    updatedAt: document.updatedAt,
     translatedDocument: null,
     translatedDocumentId: null,
-    isTranslated: document.is_translation || false,
-    isPublished: document.is_public || false,
-    authorId: document.created_by || '',
-    viewCount: document.view_count || 0,
-    downloadCount: document.download_count || 0,
-    author: { id: document.created_by || '', name: '' }
+    isTranslated: document.isTranslation || false,
+    isPublished: document.isPublic || false,
+    authorId: document.createdBy || '',
+    viewCount: document.viewCount || 0,
+    downloadCount: document.downloadCount || 0,
+    author: { id: document.createdBy || '', name: '' }
   } as Document;
 };
 
@@ -258,21 +258,21 @@ export const getDocumentsByCategory = async (
       id: doc.id,
       title: doc.title,
       description: doc.description,
-      filePath: doc.file_path,
-      fileSize: Number(doc.file_size),
-      fileType: doc.file_type,
+      filePath: doc.filePath,
+      fileSize: Number(doc.fileSize),
+      fileType: doc.fileType,
       category: category,
       language: language || (doc.language === 'french' ? Language.FRENCH : Language.ARABIC),
-      createdAt: doc.created_at,
-      updatedAt: doc.updated_at,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
       translatedDocument: null, // Add this field to satisfy the type, even though it doesn't exist in the database
       translatedDocumentId: null, // Add this field to satisfy the type
-      isTranslated: doc.is_translation || false,
-      isPublished: doc.is_public || false,
-      authorId: doc.created_by || '',
-      viewCount: doc.view_count || 0,
-      downloadCount: doc.download_count || 0,
-      author: doc.user ? { id: doc.user.id, name: doc.user.name || '' } : { id: doc.created_by || '', name: '' }
+      isTranslated: doc.isTranslation || false,
+      isPublished: doc.isPublic || false,
+      authorId: doc.createdBy || '',
+      viewCount: doc.viewCount || 0,
+      downloadCount: doc.downloadCount || 0,
+      author: doc.user ? { id: doc.user.id, name: doc.user.name || '' } : { id: doc.createdBy || '', name: '' }
     })) as Document[];
   } catch (error) {
     // If we get a Prisma error about the translatedDocumentId column, fall back to a simpler query

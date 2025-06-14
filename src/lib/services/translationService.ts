@@ -228,11 +228,6 @@ export class TranslationService {
   async getTranslationsByDocument(documentId: string) {
     const translations = await this.prisma.document_translations.findMany({
       where: { document_id: documentId },
-      include: {
-        requester: {
-          select: { id: true, name: true, email: true }
-        }
-      },
       orderBy: { created_at: 'desc' }
     });
 
@@ -245,11 +240,6 @@ export class TranslationService {
   async getTranslationsByUser(userId: string) {
     const translations = await this.prisma.document_translations.findMany({
       where: { requested_by: userId },
-      include: {
-        document: {
-          select: { id: true, title: true, category: true }
-        }
-      },
       orderBy: { created_at: 'desc' }
     });
 
@@ -261,15 +251,7 @@ export class TranslationService {
    */
   async getTranslationById(translationId: string) {
     const translation = await this.prisma.document_translations.findUnique({
-      where: { id: translationId },
-      include: {
-        document: {
-          select: { id: true, title: true, category: true, fileSize: true }
-        },
-        requester: {
-          select: { id: true, name: true, email: true }
-        }
-      }
+      where: { id: translationId }
     });
 
     return translation;
@@ -375,14 +357,6 @@ export class TranslationService {
     const queue = await this.prisma.document_translations.findMany({
       where: {
         status: { in: ['pending', 'in_progress'] }
-      },
-      include: {
-        document: {
-          select: { id: true, title: true, category: true }
-        },
-        requester: {
-          select: { id: true, name: true }
-        }
       },
       orderBy: { created_at: 'asc' }
     });

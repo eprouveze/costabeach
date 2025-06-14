@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
     // Check if translation already exists
     const existingTranslation = await prisma.documents.findFirst({
       where: {
-        original_document_id: documentId,
+        originalDocumentId: documentId,
         language: targetLanguage,
       },
     });

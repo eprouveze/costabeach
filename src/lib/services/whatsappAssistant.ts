@@ -187,13 +187,11 @@ If you don't know something specific about Costa Beach, direct them to contact m
 
 Query: ${query}`;
 
-      const response = await aiClient.generateText({
-        model: 'gpt-3.5-turbo',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: query }
-        ],
-        maxTokens: 150,
+      const response = await aiClient.generateChatCompletion([
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: query }
+      ], 'GPT_4O_MINI', {
+        max_tokens: 150,
         temperature: 0.7
       });
 

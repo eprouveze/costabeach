@@ -84,7 +84,7 @@ export async function PATCH(
     }
 
     // Check permissions (only creator or admin)
-    if (poll.created_by !== user.id && user.role !== 'admin') {
+    if (poll.createdBy !== user.id && user.role !== 'admin') {
       return NextResponse.json(
         { error: 'Access denied' },
         { status: 403 }
@@ -194,7 +194,7 @@ export async function DELETE(
     }
 
     // Check permissions (only creator or admin)
-    if (poll.created_by !== user.id && user.role !== 'admin') {
+    if (poll.createdBy !== user.id && user.role !== 'admin') {
       return NextResponse.json(
         { error: 'Access denied' },
         { status: 403 }

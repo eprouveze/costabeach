@@ -24,7 +24,7 @@ export async function GET(
     }
     
     // If the document is not published, check if the user is authenticated
-    if (!document.is_public) {
+    if (!document.isPublic) {
       const session = await getServerSession(authOptions);
       
       if (!session?.user) {
@@ -38,11 +38,11 @@ export async function GET(
     // Increment the download count
     await prisma.documents.update({
       where: { id: documentId },
-      data: { download_count: { increment: 1 } },
+      data: { downloadCount: { increment: 1 } },
     });
     
     // Generate a signed URL for the document with content disposition header
-    const downloadUrl = await getDownloadUrl(document.file_path);
+    const downloadUrl = await getDownloadUrl(document.filePath);
     
     return NextResponse.json({ downloadUrl });
   } catch (error) {

@@ -147,7 +147,7 @@ export const documentsRouter = router({
           });
           
           const uploaderName = user ? 
-            user.name || user.email : 
+            user.name || user.email || 'Unknown User' : 
             'Unknown User';
           
           // Create document URL (this would be the actual URL to view the document)
@@ -191,7 +191,7 @@ export const documentsRouter = router({
         const document = await prisma.documents.findUnique({
           where: { id: documentId },
           include: {
-            author: {
+            user: {
               select: {
                 name: true,
                 email: true
@@ -213,15 +213,15 @@ export const documentsRouter = router({
           description: document.description,
           category: document.category,
           language: document.language,
-          fileType: document.file_type,
-          fileSize: document.file_size,
-          filePath: document.file_path,
-          viewCount: document.view_count,
-          downloadCount: document.download_count,
-          createdAt: document.created_at,
-          updatedAt: document.updated_at,
-          author: document.author,
-          translatedDocumentId: document.translated_document_id
+          fileType: document.fileType,
+          fileSize: Number(document.fileSize),
+          filePath: document.filePath,
+          viewCount: document.viewCount || 0,
+          downloadCount: document.downloadCount || 0,
+          createdAt: document.createdAt,
+          updatedAt: document.updatedAt,
+          author: document.user,
+          originalDocumentId: document.originalDocumentId
         };
       } catch (error) {
         console.error("Error fetching document:", error);
@@ -285,7 +285,7 @@ export const documentsRouter = router({
         // Get document from database to get the file path
         const document = await prisma.documents.findUnique({
           where: { id: documentId },
-          select: { file_path: true, title: true },
+          select: { filePath: true, title: true },
         });
         
         if (!document) {
@@ -306,7 +306,7 @@ export const documentsRouter = router({
           );
         }
         
-        const downloadUrl = await getDownloadUrl(document.file_path);
+        const downloadUrl = await getDownloadUrl(document.filePath);
         
         return { downloadUrl };
       } catch (error) {
@@ -381,7 +381,7 @@ export const documentsRouter = router({
         // Get the document to check category
         const document = await prisma.documents.findUnique({
           where: { id: documentId },
-          select: { category: true, created_by: true, title: true },
+          select: { category: true, createdBy: true, title: true },
         });
         
         if (!document) {
@@ -394,14 +394,14 @@ export const documentsRouter = router({
         // Get the user from the database to check permissions
         const user = await prisma.user.findUnique({
           where: { id: userId },
-          select: { permissions: true, is_admin: true }
+          select: { permissions: true, isAdmin: true }
         });
         
         // Check if user has permission to delete this document
         const userPermissions = user?.permissions || [];
         const canDelete = 
-          user?.is_admin || 
-          document.created_by === userId || 
+          user?.isAdmin || 
+          document.createdBy === userId || 
           canManageDocumentCategory(userPermissions, document.category as DocumentCategory);
         
         if (!canDelete) {
@@ -547,7 +547,7 @@ export const documentsRouter = router({
       // Get user permissions from database
       const user = await prisma.user.findUnique({
         where: { id: ctx.user?.id },
-        select: { permissions: true, is_admin: true }
+        select: { permissions: true, isAdmin: true }
       });
       
       if (!user) {
@@ -559,7 +559,7 @@ export const documentsRouter = router({
       
       const userPermissions = user.permissions as Permission[] || [];
       
-      if (!checkPermission(userPermissions, requiredPermission) && !user.is_admin) {
+      if (!checkPermission(userPermissions, requiredPermission) && !user.isAdmin) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You don't have permission to update this document.",

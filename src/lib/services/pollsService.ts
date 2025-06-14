@@ -129,7 +129,7 @@ export class PollsService {
       });
       
       const creatorName = user ? 
-        user.name || user.email : 
+        user.name || user.email || 'Unknown User' : 
         'Unknown User';
       
       // Create poll URL (this would be the actual URL to view/vote on the poll)
@@ -187,7 +187,7 @@ export class PollsService {
     // Get poll information
     const poll = await this.prisma.polls.findUnique({
       where: { id: voteData.pollId },
-      include: { poll_options: true },
+      include: { options: true },
     });
 
     if (!poll) {
@@ -223,7 +223,7 @@ export class PollsService {
     // Multiple choice polls allow multiple selections
 
     // Validate that all option IDs belong to this poll
-    const validOptionIds = poll.poll_options.map(opt => opt.id);
+    const validOptionIds = poll.options.map(opt => opt.id);
     const invalidOptions = voteData.optionIds.filter(id => !validOptionIds.includes(id));
     if (invalidOptions.length > 0) {
       throw new Error('Invalid option IDs provided');
@@ -267,7 +267,7 @@ export class PollsService {
   async getPollStatistics(pollId: string): Promise<PollStatistics> {
     const poll = await this.prisma.polls.findUnique({
       where: { id: pollId },
-      include: { poll_options: true },
+      include: { options: true },
     });
 
     if (!poll) {
@@ -276,34 +276,34 @@ export class PollsService {
 
     // Get vote counts per option using raw aggregation
     const voteResults = await this.prisma.votes.findMany({
-      where: { poll_id: pollId },
+      where: { pollId: pollId },
       select: {
-        option_id: true,
+        optionId: true,
         id: true,
       },
     });
 
     // Count votes per option
     const voteCounts = voteResults.reduce((acc, vote) => {
-      acc[vote.option_id] = (acc[vote.option_id] || 0) + 1;
+      acc[vote.optionId] = (acc[vote.optionId] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
 
     // Get total unique voters
     const uniqueVoters = await this.prisma.votes.groupBy({
-      by: ['user_id'],
-      where: { poll_id: pollId },
+      by: ['userId'],
+      where: { pollId: pollId },
     });
     const totalVotes = uniqueVoters.length;
 
     // Calculate option results
-    const optionResults: OptionResult[] = poll.poll_options.map(option => {
+    const optionResults: OptionResult[] = poll.options.map(option => {
       const voteCount = voteCounts[option.id] || 0;
       const percentage = totalVotes > 0 ? Number(((voteCount / totalVotes) * 100).toFixed(2)) : 0;
 
       return {
         optionId: option.id,
-        optionText: option.option_text,
+        optionText: option.optionText,
         voteCount: voteCount,
         percentage,
       };
@@ -328,7 +328,7 @@ export class PollsService {
           select: { votes: true },
         },
       },
-      orderBy: { created_at: 'desc' },
+      orderBy: { createdAt: 'desc' },
     });
 
     return polls;
@@ -339,14 +339,14 @@ export class PollsService {
    */
   async getPollsByCreator(userId: string) {
     const polls = await this.prisma.polls.findMany({
-      where: { created_by: userId },
+      where: { createdBy: userId },
       include: {
         options: true,
         _count: {
           select: { votes: true },
         },
       },
-      orderBy: { created_at: 'desc' },
+      orderBy: { createdAt: 'desc' },
     });
 
     return polls;
@@ -357,16 +357,16 @@ export class PollsService {
    */
   async getUserVotingHistory(userId: string) {
     const votes = await this.prisma.votes.findMany({
-      where: { user_id: userId },
+      where: { userId: userId },
       include: {
         poll: {
           select: { question: true, status: true },
         },
         option: {
-          select: { option_text: true },
+          select: { optionText: true },
         },
       },
-      orderBy: { created_at: 'desc' },
+      orderBy: { createdAt: 'desc' },
     });
 
     return votes;
@@ -380,7 +380,7 @@ export class PollsService {
       where: { id: pollId },
       include: {
         options: {
-          orderBy: { order_index: 'asc' },
+          orderBy: { orderIndex: 'asc' },
         },
         creator: {
           select: { id: true, name: true },
@@ -400,8 +400,8 @@ export class PollsService {
   async hasUserVoted(pollId: string, userId: string): Promise<boolean> {
     const vote = await this.prisma.votes.findFirst({
       where: {
-        poll_id: pollId,
-        user_id: userId,
+        pollId: pollId,
+        userId: userId,
       },
     });
 
@@ -420,7 +420,7 @@ export class PollsService {
       throw new Error('Poll not found');
     }
 
-    if (poll.created_by !== userId) {
+    if (poll.createdBy !== userId) {
       throw new Error('Only poll creator can delete');
     }
 
@@ -431,17 +431,17 @@ export class PollsService {
     // Delete poll and related options/votes in transaction
     await this.prisma.$transaction(async (tx) => {
       // Delete votes first
-      await tx.vote.deleteMany({
-        where: { poll_id: pollId },
+      await tx.votes.deleteMany({
+        where: { pollId: pollId },
       });
 
       // Delete options
-      await tx.pollOption.deleteMany({
-        where: { poll_id: pollId },
+      await tx.poll_options.deleteMany({
+        where: { pollId: pollId },
       });
 
       // Delete poll
-      await tx.poll.delete({
+      await tx.polls.delete({
         where: { id: pollId },
       });
     });
@@ -461,7 +461,7 @@ export class PollsService {
       throw new Error('Poll not found');
     }
 
-    if (poll.created_by !== userId) {
+    if (poll.createdBy !== userId) {
       throw new Error('Only poll creator can update');
     }
 
@@ -474,9 +474,9 @@ export class PollsService {
       where: { id: pollId },
       data: {
         question: updates.question,
-        poll_type: updates.poll_type,
-        is_anonymous: updates.is_anonymous,
-        end_date: updates.voting_deadline,
+        pollType: updates.pollType,
+        isAnonymous: updates.isAnonymous,
+        endDate: updates.votingDeadline,
       },
     });
 
@@ -484,17 +484,17 @@ export class PollsService {
     if (updates.options && updates.options.length >= 2) {
       await this.prisma.$transaction(async (tx) => {
         // Delete existing options
-        await tx.pollOption.deleteMany({
-          where: { poll_id: pollId },
+        await tx.poll_options.deleteMany({
+          where: { pollId: pollId },
         });
 
         // Create new options
         for (let i = 0; i < updates.options!.length; i++) {
-          await tx.pollOption.create({
+          await tx.poll_options.create({
             data: {
-              poll_id: pollId,
-              option_text: updates.options![i],
-              order_index: i,
+              pollId: pollId,
+              optionText: updates.options![i],
+              orderIndex: i,
             },
           });
         }

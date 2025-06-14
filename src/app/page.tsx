@@ -1,7 +1,7 @@
 import React from "react";
 import ClientProvider from "@/components/ClientProvider";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@/lib/auth/index";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import PublicLandingTemplate from "@/components/PublicLandingTemplate";

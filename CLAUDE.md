@@ -110,24 +110,80 @@ prisma/
 - Row Level Security (RLS) enabled for sensitive tables
 - User permissions stored as JSON array in user table
 
-**CRITICAL RULE: Prisma Property Naming Consistency**:
-When working with Prisma models and database operations, ALWAYS use camelCase property names in TypeScript/JavaScript code, even if the database uses snake_case. Prisma automatically handles the conversion between camelCase (TypeScript) and snake_case (database) via the @map() directive in the schema.
+**CRITICAL RULE: Prisma Property Naming Consistency** ✅ FIXED:
 
-Examples:
-- ✅ user.isAdmin (NOT user.is_admin)
-- ✅ user.createdAt (NOT user.created_at)
-- ✅ user.updatedAt (NOT user.updated_at)
-- ✅ user.isVerifiedOwner (NOT user.is_verified_owner)
-- ✅ user.preferredLanguage (NOT user.preferred_language)
-- ✅ user.buildingNumber (NOT user.building_number)
+**ALL models now use consistent camelCase with @map() directives!**
 
-Apply this rule to:
-- Prisma queries (findMany, update, create, etc.)
-- API route data objects
-- TypeScript interfaces
-- All database operations
+✅ **UNIFIED NAMING PATTERN** - All Prisma models follow this pattern:
+- **TypeScript/JavaScript**: Always use camelCase (e.g., `createdAt`, `isPublic`, `pollType`)  
+- **Database**: Always uses snake_case via @map() directives (e.g., `created_at`, `is_public`, `poll_type`)
+- **Clean separation**: Application code stays readable, database follows conventions
 
-When in doubt, check the Prisma schema file to see the correct camelCase property names.
+✅ **EXAMPLES**:
+```typescript
+// ✅ CORRECT - Always use camelCase in TypeScript
+await prisma.documents.create({
+  data: {
+    title: "Document",
+    filePath: "/path/to/file",
+    createdBy: userId,
+    isPublic: true
+  }
+})
+
+// ✅ CORRECT - Relations use camelCase  
+await prisma.polls.findMany({
+  include: { 
+    options: true,  // NOT poll_options
+    votes: true     // NOT poll_votes
+  }
+})
+
+// ❌ NEVER do this anymore
+await prisma.documents.create({
+  data: {
+    file_path: "/path",  // WRONG - use filePath
+    created_by: userId   // WRONG - use createdBy
+  }
+})
+```
+
+**COMPREHENSIVE ENFORCEMENT RULES**:
+
+1. **FIELD NAMING** - Always use camelCase in TypeScript:
+   - ✅ `createdAt`, `updatedAt`, `createdBy`
+   - ✅ `filePath`, `fileType`, `fileSize`  
+   - ✅ `isPublic`, `isAnonymous`, `isVerifiedOwner`
+   - ✅ `pollType`, `pollId`, `optionText`, `orderIndex`
+   - ❌ NEVER: `created_at`, `file_path`, `is_public`, `poll_type`
+
+2. **MODEL RELATIONS** - Use camelCase relation names:
+   - ✅ `prisma.polls.findMany({ include: { options: true, votes: true } })`
+   - ✅ `prisma.documents.findMany({ include: { user: true } })`
+   - ❌ NEVER: `poll_options`, `poll_votes`, `created_by_user`
+
+3. **WHERE CLAUSES** - All field references use camelCase:
+   - ✅ `where: { createdBy: userId, isPublic: true }`
+   - ✅ `where: { pollType: 'single_choice', endDate: { gte: new Date() } }`
+   - ❌ NEVER: `where: { created_by: userId, is_public: true }`
+
+4. **UNIQUE CONSTRAINTS** - Check schema for exact constraint names:
+   - ✅ `poll_id_language: { poll_id: "123", language: "fr" }`
+   - ✅ Schema defines the constraint name, NOT the TypeScript field name
+
+5. **VALIDATION CHECKLIST** - Before any Prisma operation:
+   - [ ] Check schema for correct camelCase field names
+   - [ ] Verify relation names are camelCase
+   - [ ] Confirm unique constraint names match schema exactly
+   - [ ] Test with `npm run build` to catch errors early
+
+6. **ERROR RECOVERY** - If you encounter snake_case errors:
+   - Step 1: Check `prisma/schema.prisma` for the correct camelCase name
+   - Step 2: Update TypeScript code to use camelCase
+   - Step 3: Re-run `npm run build` to verify fix
+   - Step 4: NEVER add @map() directives - they're already consistent
+
+**ZERO TOLERANCE POLICY** - Any snake_case in TypeScript Prisma operations is an error that must be fixed immediately!
 
 **tRPC Integration**:
 - API routers in `src/lib/api/routers/`

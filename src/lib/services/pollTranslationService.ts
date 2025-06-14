@@ -107,8 +107,8 @@ export class PollTranslationService {
     // Try to get translation
     const translation = await this.prisma.poll_translations.findUnique({
       where: {
-        pollId_language: {
-          pollId: pollId,
+        poll_id_language: {
+          poll_id: pollId,
           language: language,
         },
       },
@@ -122,13 +122,13 @@ export class PollTranslationService {
       pollType: poll.pollType,
       status: poll.status,
       isAnonymous: poll.isAnonymous,
-      voting_deadline: poll.endDate || undefined,
+      votingDeadline: poll.endDate || undefined,
       createdAt: poll.createdAt,
       language: translation ? language : 'french', // Default language
       options: poll.options.map(option => ({
         id: option.id,
         optionText: option.optionText, // Would need option translations too
-        option_order: option.orderIndex,
+        optionOrder: option.orderIndex,
       })),
     };
 
@@ -141,7 +141,7 @@ export class PollTranslationService {
   async requestPollTranslation(request: PollTranslationRequest) {
     // Get the poll
     const poll = await this.prisma.polls.findUnique({
-      where: { id: request.poll_id },
+      where: { id: request.pollId },
       include: {
         options: true,
       },
@@ -154,13 +154,13 @@ export class PollTranslationService {
     const results = [];
 
     // Request translation for each target language
-    for (const targetLanguage of request.target_languages) {
+    for (const targetLanguage of request.targetLanguages) {
       try {
         // Check if translation already exists
         const existingTranslation = await this.prisma.poll_translations.findUnique({
           where: {
-            pollId_language: {
-              pollId: request.poll_id,
+            poll_id_language: {
+              poll_id: request.pollId,
               language: targetLanguage,
             },
           },
@@ -187,7 +187,7 @@ export class PollTranslationService {
 
         // Create the translation
         const translation = await this.createPollTranslation({
-          pollId: request.poll_id,
+          pollId: request.pollId,
           language: targetLanguage,
           question: questionTranslation,
           description: descriptionTranslation || undefined,
@@ -215,8 +215,8 @@ export class PollTranslationService {
    */
   async getPollTranslations(pollId: string) {
     const translations = await this.prisma.poll_translations.findMany({
-      where: { pollId: pollId },
-      orderBy: { createdAt: 'asc' },
+      where: { poll_id: pollId },
+      orderBy: { created_at: 'asc' },
     });
 
     return translations;
@@ -233,8 +233,8 @@ export class PollTranslationService {
     // Check if translation exists
     const existingTranslation = await this.prisma.poll_translations.findUnique({
       where: {
-        pollId_language: {
-          pollId: pollId,
+        poll_id_language: {
+          poll_id: pollId,
           language: language,
         },
       },
@@ -247,8 +247,8 @@ export class PollTranslationService {
     // Update translation
     const updatedTranslation = await this.prisma.poll_translations.update({
       where: {
-        pollId_language: {
-          pollId: pollId,
+        poll_id_language: {
+          poll_id: pollId,
           language: language,
         },
       },
@@ -265,8 +265,8 @@ export class PollTranslationService {
     // Check if translation exists
     const existingTranslation = await this.prisma.poll_translations.findUnique({
       where: {
-        pollId_language: {
-          pollId: pollId,
+        poll_id_language: {
+          poll_id: pollId,
           language: language,
         },
       },
@@ -279,8 +279,8 @@ export class PollTranslationService {
     // Delete translation
     await this.prisma.poll_translations.delete({
       where: {
-        pollId_language: {
-          pollId: pollId,
+        poll_id_language: {
+          poll_id: pollId,
           language: language,
         },
       },
@@ -293,15 +293,12 @@ export class PollTranslationService {
    * Get polls in user's preferred language with fallback
    */
   async getLocalizedPolls(language: Language, status?: string) {
-    // Get all polls with their translations
+    // Get all polls
     const polls = await this.prisma.polls.findMany({
       where: status ? { status: status as any } : undefined,
       include: {
         options: {
           orderBy: { orderIndex: 'asc' },
-        },
-        translations: {
-          where: { language },
         },
         _count: {
           select: { votes: true },
@@ -310,9 +307,23 @@ export class PollTranslationService {
       orderBy: { createdAt: 'desc' },
     });
 
+    // Get translations for all polls in the specified language
+    const pollIds = polls.map(poll => poll.id);
+    const translations = await this.prisma.poll_translations.findMany({
+      where: {
+        poll_id: { in: pollIds },
+        language: language,
+      },
+    });
+
+    // Create a map of translations by poll_id
+    const translationMap = new Map(
+      translations.map(translation => [translation.poll_id, translation])
+    );
+
     // Transform to localized format
     const localizedPolls: LocalizedPoll[] = polls.map(poll => {
-      const translation = poll.translations[0]; // Should only be one per language
+      const translation = translationMap.get(poll.id);
 
       return {
         id: poll.id,
@@ -321,13 +332,13 @@ export class PollTranslationService {
         pollType: poll.pollType,
         status: poll.status,
         isAnonymous: poll.isAnonymous,
-        voting_deadline: poll.endDate || undefined,
+        votingDeadline: poll.endDate || undefined,
         createdAt: poll.createdAt,
         language: translation ? language : 'french',
         options: poll.options.map(option => ({
           id: option.id,
           optionText: option.optionText,
-          option_order: option.orderIndex,
+          optionOrder: option.orderIndex,
         })),
       };
     });
@@ -340,7 +351,7 @@ export class PollTranslationService {
    */
   async getAvailableLanguages(pollId: string): Promise<Language[]> {
     const translations = await this.prisma.poll_translations.findMany({
-      where: { pollId: pollId },
+      where: { poll_id: pollId },
       select: { language: true },
     });
 
@@ -360,8 +371,8 @@ export class PollTranslationService {
   async hasTranslation(pollId: string, language: Language): Promise<boolean> {
     const translation = await this.prisma.poll_translations.findUnique({
       where: {
-        pollId_language: {
-          pollId: pollId,
+        poll_id_language: {
+          poll_id: pollId,
           language: language,
         },
       },

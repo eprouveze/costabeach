@@ -75,14 +75,14 @@ model VerificationToken {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model audit_log {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id     String?  @db.Uuid
-  action      String
-  entity_type String
-  entity_id   String
-  details     Json?
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  user        User?    @relation("UserAuditLog", fields: [user_id], references: [id], onUpdate: NoAction)
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String?  @map("user_id") @db.Uuid
+  action     String
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id")
+  details    Json?
+  createdAt  DateTime @map("created_at") @default(now()) @db.Timestamptz(6)
+  user       User?    @relation("UserAuditLog", fields: [userId], references: [id], onUpdate: NoAction)
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -180,22 +180,22 @@ model documents {
   id                   String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title                String
   description          String?
-  file_path            String
-  file_type            String
-  file_size            BigInt
+  filePath             String      @map("file_path")
+  fileType             String      @map("file_type")
+  fileSize             BigInt      @map("file_size")
   category             String
   language             String?     @default("fr")
-  is_public            Boolean?    @default(false)
-  view_count           Int?        @default(0)
-  download_count       Int?        @default(0)
-  created_at           DateTime    @default(now()) @db.Timestamptz(6)
-  updated_at           DateTime    @default(now()) @db.Timestamptz(6)
-  created_by           String?     @db.Uuid
-  original_document_id String?     @db.Uuid
-  is_translation       Boolean?    @default(false)
-  searchable_text      String?
-  user                 User?       @relation(fields: [created_by], references: [id], onUpdate: NoAction)
-  documents            documents?  @relation("documentsTodocuments", fields: [original_document_id], references: [id], onUpdate: NoAction)
+  isPublic             Boolean?    @map("is_public") @default(false)
+  viewCount            Int?        @map("view_count") @default(0)
+  downloadCount        Int?        @map("download_count") @default(0)
+  createdAt            DateTime    @map("created_at") @default(now()) @db.Timestamptz(6)
+  updatedAt            DateTime    @map("updated_at") @default(now()) @db.Timestamptz(6)
+  createdBy            String?     @map("created_by") @db.Uuid
+  originalDocumentId   String?     @map("original_document_id") @db.Uuid
+  isTranslation        Boolean?    @map("is_translation") @default(false)
+  searchableText       String?     @map("searchable_text")
+  user                 User?       @relation(fields: [createdBy], references: [id], onUpdate: NoAction)
+  documents            documents?  @relation("documentsTodocuments", fields: [originalDocumentId], references: [id], onUpdate: NoAction)
   other_documents      documents[] @relation("documentsTodocuments")
 }
 
@@ -266,12 +266,16 @@ model performance_metrics {
 
 model poll_options {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  poll_id     String   @db.Uuid
-  option_text String
-  order_index Int
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  pollId      String   @map("poll_id") @db.Uuid
+  optionText  String   @map("option_text")
+  orderIndex  Int      @map("order_index")
+  createdAt   DateTime @map("created_at") @default(now()) @db.Timestamptz(6)
+  
+  // Relations
+  poll        polls    @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes       votes[]
 
-  @@index([poll_id])
+  @@index([pollId])
 }
 
 model poll_translations {
@@ -286,20 +290,25 @@ model poll_translations {
 }
 
 model polls {
-  id             String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  question       String
-  description    String?
-  poll_type      PollType   @default(single_choice)
-  status         PollStatus @default(draft)
-  is_anonymous   Boolean    @default(true)
-  allow_comments Boolean    @default(false)
-  start_date     DateTime?  @db.Timestamptz(6)
-  end_date       DateTime?  @db.Timestamptz(6)
-  created_by     String     @db.Uuid
-  created_at     DateTime   @default(now()) @db.Timestamptz(6)
-  updated_at     DateTime   @default(now()) @db.Timestamptz(6)
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  question      String
+  description   String?
+  pollType      PollType       @map("poll_type") @default(single_choice)
+  status        PollStatus     @default(draft)
+  isAnonymous   Boolean        @map("is_anonymous") @default(true)
+  allowComments Boolean        @map("allow_comments") @default(false)
+  startDate     DateTime?      @map("start_date") @db.Timestamptz(6)
+  endDate       DateTime?      @map("end_date") @db.Timestamptz(6)
+  createdBy     String         @map("created_by") @db.Uuid
+  createdAt     DateTime       @map("created_at") @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime       @map("updated_at") @default(now()) @db.Timestamptz(6)
+  
+  // Relations
+  options       poll_options[]
+  votes         votes[]
+  creator       User          @relation("PollCreator", fields: [createdBy], references: [id], onDelete: Cascade)
 
-  @@index([created_by])
+  @@index([createdBy])
   @@index([status])
 }
 
@@ -372,20 +381,25 @@ model User {
   // Application relations
   auditLog          audit_log[] @relation("UserAuditLog")
   documents         documents[]
+  pollsCreated      polls[]     @relation("PollCreator")
   
   @@map("users") // Keep existing table name
 }
 
 model votes {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  poll_id    String   @db.Uuid
-  option_id  String   @db.Uuid
-  user_id    String   @db.Uuid
-  comment    String?
-  created_at DateTime @default(now()) @db.Timestamptz(6)
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pollId    String   @map("poll_id") @db.Uuid
+  optionId  String   @map("option_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  comment   String?
+  createdAt DateTime @map("created_at") @default(now()) @db.Timestamptz(6)
+  
+  // Relations  
+  poll      polls         @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  option    poll_options  @relation(fields: [optionId], references: [id], onDelete: Cascade)
 
-  @@unique([poll_id, user_id])
-  @@index([poll_id, user_id])
+  @@unique([pollId, userId])
+  @@index([pollId, userId])
 }
 
 model whatsapp_contacts {

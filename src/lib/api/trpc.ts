@@ -13,6 +13,7 @@ import { Context } from './context';
 
 import { getCurrentUser } from "../auth";
 import { db } from '@/lib/db';
+import { AppUser } from '@/lib/types';
 
 /**
  * 1. CONTEXT
@@ -30,7 +31,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   const user = await getCurrentUser();
 
   return {
-    user: user as any, // Cast to avoid NextAuth type conflicts
+    user: user as AppUser | null,
     headers: opts.headers,
     db: db,
   };
