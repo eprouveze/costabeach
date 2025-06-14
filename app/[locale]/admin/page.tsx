@@ -17,6 +17,7 @@ export default function AdminDashboardPage() {
   const router = useRouter();
   const pathname = usePathname();
   const [userPermissions, setUserPermissions] = useState<Permission[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   
   // Get current locale from pathname
@@ -45,6 +46,7 @@ export default function AdminDashboardPage() {
         
         const userData = await response.json();
         setUserPermissions(userData.permissions || []);
+        setIsAdmin(userData.isAdmin || false);
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching permissions:", error);
@@ -69,7 +71,12 @@ export default function AdminDashboardPage() {
   const canManageWhatsApp = 
     canManageDocuments || 
     canManageComiteDocuments || 
-    (session.data?.user?.isAdmin === true);
+    isAdmin;
+
+  const canManageTranslations = 
+    canManageDocuments || 
+    canManageComiteDocuments || 
+    isAdmin;
   
   if (isLoading || session.status === 'loading') {
     return (
@@ -254,24 +261,26 @@ export default function AdminDashboardPage() {
           </Link>
 
           {/* Translation Management Card */}
-          <Link
-            href={`/${locale}/admin/translations`}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-600"
-          >
-            <div className="flex items-start">
-              <div className="flex-shrink-0 bg-orange-100 dark:bg-orange-900 rounded-lg p-3">
-                <Languages className="h-6 w-6 text-orange-600 dark:text-orange-300" />
+          {canManageTranslations && (
+            <Link
+              href={`/${locale}/admin/translations`}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-600"
+            >
+              <div className="flex items-start">
+                <div className="flex-shrink-0 bg-orange-100 dark:bg-orange-900 rounded-lg p-3">
+                  <Languages className="h-6 w-6 text-orange-600 dark:text-orange-300" />
+                </div>
+                <div className="ml-4">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                    Translation Management
+                  </h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Monitor and control document translation system
+                  </p>
+                </div>
               </div>
-              <div className="ml-4">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                  Translation Management
-                </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Monitor and control document translation system
-                </p>
-              </div>
-            </div>
-          </Link>
+            </Link>
+          )}
 
           {/* System Settings Card */}
           <Link
