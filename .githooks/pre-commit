@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Pre-commit hook to validate Prisma naming conventions
+echo "🔍 Running Prisma naming validation..."
+
+# Run the validation script
+npm run validate-naming
+
+# Check if validation passed
+if [ $? -ne 0 ]; then
+    echo "❌ Prisma naming validation failed!"
+    echo "Please fix naming violations before committing."
+    echo "Run 'npm run validate-naming' to see details."
+    exit 1
+fi
+
+echo "✅ Prisma naming validation passed!"
+exit 0

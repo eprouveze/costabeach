@@ -4,7 +4,6 @@ import { TRPCError } from "@trpc/server";
 import { Language } from "@/lib/types";
 import { translateText, getOrCreateTranslatedDocument } from "@/lib/utils/translations";
 import { PrismaClient } from "@prisma/client";
-import { inngest } from "@/lib/inngest";
 
 const prisma = new PrismaClient();
 
@@ -55,7 +54,6 @@ export const translationsRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const { documentId, targetLanguage } = input;
-      const userId = ctx.user.id;
       
       // Get the document to translate
       const document = await prisma.documents.findUnique({
@@ -95,20 +93,17 @@ export const translationsRouter = router({
       }
       
       try {
-        // Create a background job for translation using Inngest
-        await inngest.send({
-          name: "document/translate",
-          data: {
-            documentId,
-            targetLanguage,
-            userId,
-          },
-        });
+        // Process translation synchronously since Inngest is not configured
+        const translatedDocument = await getOrCreateTranslatedDocument(
+          documentId,
+          targetLanguage
+        );
         
         return { 
           success: true, 
-          message: "Document translation requested",
-          status: "pending"
+          documentId: translatedDocument.id,
+          message: "Document translation completed",
+          status: "completed"
         };
       } catch (error) {
         console.error("Document translation request error:", error);
@@ -145,10 +140,10 @@ export const translationsRouter = router({
         };
       }
       
-      // For now, we'll just return "pending" if the translation doesn't exist
-      // In a real implementation, we would check the job status in Inngest
+      // Since we're processing translations synchronously, 
+      // if it doesn't exist, it means it hasn't been requested yet
       return {
-        status: "pending",
+        status: "not_requested",
       };
     }),
 }); 
