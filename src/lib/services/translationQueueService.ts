@@ -256,6 +256,47 @@ export class TranslationQueueService {
   }
 
   /**
+   * Clean up orphaned translation jobs (jobs for deleted documents)
+   */
+  static async cleanupOrphanedJobs(): Promise<number> {
+    try {
+      // Get all existing document IDs
+      const existingDocumentIds = await prisma.documents.findMany({
+        select: { id: true }
+      }).then(docs => docs.map(d => d.id));
+
+      // Find translation jobs where the document no longer exists
+      const orphanedJobs = await prisma.document_translations.findMany({
+        where: {
+          document_id: {
+            notIn: existingDocumentIds
+          }
+        },
+        select: { id: true, document_id: true }
+      });
+
+      if (orphanedJobs.length === 0) {
+        return 0;
+      }
+
+      // Delete orphaned jobs
+      const result = await prisma.document_translations.deleteMany({
+        where: {
+          id: {
+            in: orphanedJobs.map(job => job.id)
+          }
+        }
+      });
+
+      console.log(`Cleaned up ${result.count} orphaned translation jobs`);
+      return result.count;
+    } catch (error) {
+      console.error('Failed to cleanup orphaned jobs:', error);
+      return 0;
+    }
+  }
+
+  /**
    * Get translation statistics
    */
   static async getTranslationStats(): Promise<{

@@ -542,6 +542,7 @@ enum DocumentCategory {
 enum Language {
   french
   arabic
+  english
 }
 
 enum MessageDirection {

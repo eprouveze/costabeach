@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import { Language } from "@/lib/types";
+import { Language, Permission } from "@/lib/types";
 import { translateText, getOrCreateTranslatedDocument } from "@/lib/utils/translations";
 import { prisma } from "@/lib/db";
+import { TranslationService } from "@/lib/services/translationService";
 
 export const translationsRouter = router({
   // Translate text from one language to another
@@ -143,5 +144,84 @@ export const translationsRouter = router({
       return {
         status: "not_requested",
       };
+    }),
+    
+  // Admin procedures for translation management
+  adminGetTranslationStats: protectedProcedure
+    .query(async ({ ctx }) => {
+      // Check if user is admin
+      if (ctx.user.role !== 'admin') {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Admin permissions required",
+        });
+      }
+
+      const translationService = new TranslationService();
+      const [stats, orphanedTranslations] = await Promise.all([
+        translationService.getTranslationStats(),
+        translationService.getOrphanedTranslations()
+      ]);
+
+      return {
+        stats,
+        orphanedTranslations,
+        orphanedCount: orphanedTranslations.length
+      };
+    }),
+
+  adminCleanupOrphanedTranslations: protectedProcedure
+    .mutation(async ({ ctx }) => {
+      // Check if user is admin
+      if (ctx.user.role !== 'admin') {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Admin permissions required",
+        });
+      }
+
+      const translationService = new TranslationService();
+      const result = await translationService.cleanupOrphanedTranslations();
+
+      return {
+        message: `Successfully cleaned up ${result.count} orphaned translation(s)`,
+        count: result.count,
+        deletedIds: result.deletedIds
+      };
+    }),
+
+  adminDeleteTranslation: protectedProcedure
+    .input(z.object({
+      translationId: z.string(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      // Check if user is admin
+      if (ctx.user.role !== 'admin') {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Admin permissions required",
+        });
+      }
+
+      const translationService = new TranslationService();
+      
+      try {
+        const deletedTranslation = await translationService.deleteTranslation(input.translationId);
+        return {
+          message: "Translation deleted successfully",
+          translation: deletedTranslation
+        };
+      } catch (error) {
+        if (error instanceof Error && error.message === 'Translation not found') {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Translation not found",
+          });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `Failed to delete translation: ${(error as Error).message}`,
+        });
+      }
     }),
 }); 

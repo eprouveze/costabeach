@@ -247,6 +247,40 @@ export class TranslationService {
   }
 
   /**
+   * Get translations by status with optional limit
+   */
+  async getTranslationsByStatus(status: string, limit: number = 50) {
+    const translations = await this.prisma.document_translations.findMany({
+      where: { status: status as any },
+      orderBy: { 
+        completed_at: status === 'completed' ? 'desc' : undefined,
+        created_at: status !== 'completed' ? 'desc' : undefined
+      },
+      take: limit
+    });
+
+    // Manually fetch document details for each translation
+    const translationsWithDocuments = await Promise.all(
+      translations.map(async (translation) => {
+        const document = await this.prisma.documents.findUnique({
+          where: { id: translation.document_id },
+          select: {
+            title: true,
+            category: true
+          }
+        });
+
+        return {
+          ...translation,
+          documents: document
+        };
+      })
+    );
+
+    return translationsWithDocuments;
+  }
+
+  /**
    * Get translation by ID
    */
   async getTranslationById(translationId: string) {
@@ -362,5 +396,70 @@ export class TranslationService {
     });
 
     return queue;
+  }
+
+  /**
+   * Find and cleanup orphaned translation jobs
+   * Returns the number of orphaned translations that were cleaned up
+   */
+  async cleanupOrphanedTranslations(): Promise<{ count: number, deletedIds: string[] }> {
+    // Find translations that reference non-existent documents
+    const orphanedTranslations = await this.prisma.document_translations.findMany({
+      where: {
+        document_id: {
+          notIn: await this.prisma.documents.findMany({ select: { id: true } }).then(docs => docs.map(d => d.id))
+        }
+      },
+      select: { id: true, document_id: true, target_language: true, status: true }
+    });
+
+    if (orphanedTranslations.length === 0) {
+      return { count: 0, deletedIds: [] };
+    }
+
+    // Delete the orphaned translations
+    const deletedIds = orphanedTranslations.map(t => t.id);
+    await this.prisma.document_translations.deleteMany({
+      where: { id: { in: deletedIds } }
+    });
+
+    return { count: orphanedTranslations.length, deletedIds };
+  }
+
+  /**
+   * Get orphaned translations without deleting them (for preview)
+   */
+  async getOrphanedTranslations() {
+    const existingDocumentIds = await this.prisma.documents.findMany({ 
+      select: { id: true } 
+    }).then(docs => docs.map(d => d.id));
+
+    const orphanedTranslations = await this.prisma.document_translations.findMany({
+      where: {
+        document_id: { notIn: existingDocumentIds }
+      },
+      orderBy: { created_at: 'desc' }
+    });
+
+    return orphanedTranslations;
+  }
+
+  /**
+   * Delete a specific translation (admin only operation)
+   */
+  async deleteTranslation(translationId: string) {
+    const translation = await this.prisma.document_translations.findUnique({
+      where: { id: translationId }
+    });
+
+    if (!translation) {
+      throw new Error('Translation not found');
+    }
+
+    await this.prisma.document_translations.delete({
+      where: { id: translationId }
+    });
+
+    return translation;
   }
 }

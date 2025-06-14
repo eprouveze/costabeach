@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Users, ClipboardList, FileText, History, MessageSquare, AlertTriangle, Settings, Shield } from "lucide-react";
+import { Users, ClipboardList, FileText, History, MessageSquare, AlertTriangle, Settings, Shield, Languages } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
 import { useSession } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
@@ -185,6 +185,28 @@ export default function AdminDashboardPage() {
                   </h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     {t("admin.documentManagementDescription") || "Upload and organize community documents"}
+                  </p>
+                </div>
+              </div>
+            </Link>
+          )}
+
+          {/* Translation Management Card */}
+          {(canManageDocuments || canManageComiteDocuments) && (
+            <Link
+              href={`/${locale}/admin/translations`}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600"
+            >
+              <div className="flex items-start">
+                <div className="flex-shrink-0 bg-indigo-100 dark:bg-indigo-900 rounded-lg p-3">
+                  <Languages className="h-6 w-6 text-indigo-600 dark:text-indigo-300" />
+                </div>
+                <div className="ml-4">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                    Translation Management
+                  </h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Manage translation jobs and cleanup orphaned translations
                   </p>
                 </div>
               </div>
