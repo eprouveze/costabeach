@@ -51,7 +51,9 @@ export const metadata: Metadata = {
   title: "Costa Beach Owner Portal",
   description: "Secure access to Costa Beach condo resources and documents",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/images/cropped-IMG_0005.webp",
+    shortcut: "/images/cropped-IMG_0005.webp",
+    apple: "/images/cropped-IMG_0005.webp",
   },
 };
 

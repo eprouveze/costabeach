@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { NavItem } from "../molecules/NavItem";
 import LanguageSwitcher from "../LanguageSwitcher";
 import { Menu, X, Home, FileText, Mail, User, Info, LogIn, LogOut, Shield } from "lucide-react";
+import Image from "next/image";
 import { useI18n } from "@/lib/i18n/client";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
@@ -120,11 +121,18 @@ export const Header = ({ className = "" }: HeaderProps) => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold text-gray-900">
-              <Link href={`/${locale}`} className="hover:text-blue-600 transition-colors">
+            <Link href={`/${locale}`} className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+              <Image
+                src="/images/cropped-IMG_0005.webp"
+                alt="Costa Beach Logo"
+                width={40}
+                height={40}
+                className="w-10 h-10"
+              />
+              <h1 className="text-2xl font-bold text-gray-900">
                 {t("common.siteTitle")}
-              </Link>
-            </h1>
+              </h1>
+            </Link>
           </div>
           
           {/* Desktop Navigation */}
