@@ -209,10 +209,10 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: "/owner-login",
-    signOut: "/auth/signout",
-    error: "/auth/error",
-    verifyRequest: "/auth/verify",
+    signIn: "/fr/owner-login", // Default to French locale
+    signOut: "/fr/auth/signout",
+    error: "/fr/auth/error", 
+    verifyRequest: "/fr/auth/verify",
   },
 };
 
