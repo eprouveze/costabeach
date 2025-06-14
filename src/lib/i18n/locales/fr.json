@@ -255,10 +255,6 @@
     "documents": "Gestion des Documents",
     "documentsTitle": "Gestion des Documents",
     "documentsDescription": "Gérez tous les documents de la communauté, surveillez les statistiques et organisez le contenu",
-    "totalDocuments": "Total des documents",
-    "published": "Publiés",
-    "totalViews": "Total des vues",
-    "totalDownloads": "Total des téléchargements",
     "settings": "Paramètres",
     "systemSettings": "Paramètres système",
     "userManagement": "Gestion des utilisateurs",
@@ -294,8 +290,6 @@
     "reports": "Rapports",
     "reportsDescription": "Générer des analyses et des rapports d'utilisation",
     "dashboardSubtitle": "Gérez votre portail communautaire et vos outils de communication",
-    "totalUsers": "Total des utilisateurs",
-    "totalDocuments": "Documents",
     "messagesSent": "Messages envoyés",
     "activeSessions": "Sessions actives",
     "whatsappManagement": "Gestion WhatsApp",
@@ -333,7 +327,6 @@
     "users": {
       "title": "Gestion des utilisateurs",
       "description": "Gérer les comptes d'utilisateur et les permissions",
-      "totalUsers": "Total des utilisateurs",
       "activeUsers": "Utilisateurs actifs",
       "verifiedOwners": "Propriétaires vérifiés",
       "pendingRequests": "Demandes en attente",
@@ -448,14 +441,6 @@
       },
       "beachfront": {
         "title": "Accès Direct à la Plage",
-        "description": "Accès direct à une plage privée immaculée avec une vue imprenable sur l'océan Atlantique."
-      },
-      "modern": {
-        "title": "Architecture moderne",
-        "description": "Design contemporain avec des agencements spacieux et des finitions haut de gamme dans toute la propriété."
-      },
-      "beach": {
-        "title": "Accès direct à la plage",
         "description": "Accès direct à une plage privée immaculée avec une vue imprenable sur l'océan Atlantique."
       },
       "amenities": {
