@@ -92,8 +92,8 @@ export default function AdminWhatsAppPage() {
   
   // Allow access for admins, Comité de Suivi members, or users with document management permissions
   const canManageWhatsApp = 
-    userPermissions.includes(Permission.MANAGE_DOCUMENTS) ||
-    userPermissions.includes(Permission.MANAGE_COMITE_DOCUMENTS) ||
+  userPermissions.includes(Permission.MANAGE_WHATSAPP) ||
+  userPermissions.includes(Permission.MANAGE_COMITE_DOCUMENTS) ||
     (session.data?.user?.isAdmin === true);
   
   if (isLoading || session.status === 'loading') {

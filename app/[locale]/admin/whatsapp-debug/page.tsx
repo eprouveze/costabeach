@@ -108,7 +108,7 @@ export default function WhatsAppDebugPage() {
           <h2 className="text-xl font-semibold mb-4">Navigation</h2>
           <div className="space-x-4">
             <button
-              onClick={() => router.push('/admin')}
+              onClick={() => router.push(`/${window.location.pathname.split('/')[1]}/admin`)}
               className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
             >
               Back to Admin

@@ -36,10 +36,9 @@ export const DocumentCard = ({
   onDownload: externalDownloadHandler
 }: DocumentCardProps) => {
   const { t } = useI18n();
-  const [isDeleting, setIsDeleting] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
-  const { downloadDocument, deleteDocument } = useDocuments();
+  const { downloadDocument } = useDocuments();
   const requestTranslation = api.translations.requestDocumentTranslation.useMutation();
   const utils = api.useContext();
   
@@ -225,11 +224,10 @@ export const DocumentCard = ({
             {onDelete && (
               <button
                 onClick={handleDelete}
-                disabled={isDeleting}
-                className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 flex items-center text-sm disabled:opacity-50 whitespace-nowrap"
+                className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 flex items-center text-sm whitespace-nowrap"
               >
                 <Trash2 className="h-4 w-4 mr-1" />
-                {isDeleting ? t("documents.deleting") : t("common.delete")}
+                {t("common.delete")}
               </button>
             )}
           </div>

@@ -80,8 +80,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ polls: filteredPolls });
     }
 
-    // Admin can see all polls with any status
-    const polls = await pollsService.getActivePolls(); // Would need to extend service for status filtering
+    // Admin can see polls with any status
+    const polls = status
+      ? await pollsService.getPollsByStatus(status)
+      : await pollsService.getActivePolls();
     return NextResponse.json({ polls });
 
   } catch (error) {

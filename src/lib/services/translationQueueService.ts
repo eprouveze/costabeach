@@ -1,8 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from "@/lib/db";
 import { Language, TranslationStatus, TranslationQuality } from '@/lib/types';
 import { translateText, getOrCreateTranslatedDocument } from '@/lib/utils/translations';
-
-const prisma = new PrismaClient();
 
 export class TranslationQueueService {
   /**
@@ -20,12 +18,10 @@ export class TranslationQueueService {
     for (const targetLanguage of filteredTargets) {
       try {
         // Check if job already exists
-        const existingJob = await prisma.document_translations.findUnique({
+        const existingJob = await prisma.document_translations.findFirst({
           where: {
-            document_id_target_language: {
-              document_id: documentId,
-              target_language: targetLanguage
-            }
+            document_id: documentId,
+            target_language: targetLanguage
           }
         });
 
@@ -52,19 +48,13 @@ export class TranslationQueueService {
    * Process pending translation jobs
    */
   static async processPendingJobs(batchSize: number = 5): Promise<void> {
-    const pendingJobs = await prisma.documentTranslationJob.findMany({
+    const pendingJobs = await prisma.document_translations.findMany({
       where: {
-        status: TranslationStatus.PENDING,
-        attempts: {
-          lt: prisma.documentTranslationJob.fields.maxAttempts
-        }
-      },
-      include: {
-        document: true
+        status: TranslationStatus.PENDING
       },
       take: batchSize,
       orderBy: {
-        createdAt: 'asc'
+        created_at: 'asc'
       }
     });
 
@@ -77,51 +67,68 @@ export class TranslationQueueService {
    * Process a specific translation job
    */
   static async processTranslationJob(jobId: string): Promise<void> {
-    const job = await prisma.documentTranslationJob.findUnique({
-      where: { id: jobId },
-      include: { document: true }
+    const job = await prisma.document_translations.findUnique({
+      where: { id: jobId }
     });
 
-    if (!job || !job.document) {
+    if (!job) {
       console.error(`Translation job not found: ${jobId}`);
+      return;
+    }
+
+    // Get the document separately
+    const document = await prisma.documents.findUnique({
+      where: { id: job.document_id },
+      select: {
+        id: true,
+        fileType: true,
+        language: true,
+        sourceLanguage: true,
+        title: true,
+        description: true,
+        filePath: true,
+        fileSize: true,
+        category: true,
+        isPublic: true,
+        createdBy: true
+      }
+    });
+
+    if (!document) {
+      console.error(`Document not found for translation job: ${job.document_id}`);
       return;
     }
 
     try {
       // Mark job as processing
-      await prisma.documentTranslationJob.update({
+      await prisma.document_translations.update({
         where: { id: jobId },
         data: {
           status: TranslationStatus.PROCESSING,
-          startedAt: new Date(),
-          attempts: {
-            increment: 1
-          }
+          started_at: new Date()
         }
       });
 
-      const sourceLanguage = job.document.sourceLanguage || job.document.language;
-      
       // Check if content is extractable for translation
-      const isExtractable = await this.isContentExtractable(job.document.fileType);
+      const isExtractable = await this.isContentExtractable(document.fileType);
       
       if (!isExtractable) {
         // Create metadata-only translation
-        await this.createMetadataOnlyTranslation(job.document, job.targetLanguage as Language);
+        await this.createMetadataOnlyTranslation(document, job.target_language as Language);
       } else {
         // Create full content translation
         await getOrCreateTranslatedDocument(
-          job.document.id,
-          job.targetLanguage as Language
+          job.document_id,
+          job.target_language as Language
         );
       }
 
       // Mark job as completed
-      await prisma.documentTranslationJob.update({
+      await prisma.document_translations.update({
         where: { id: jobId },
         data: {
           status: TranslationStatus.COMPLETED,
-          completedAt: new Date()
+          completed_at: new Date()
         }
       });
 
@@ -131,11 +138,11 @@ export class TranslationQueueService {
       console.error(`Translation job failed: ${jobId}`, error);
       
       // Update job with error
-      await prisma.documentTranslationJob.update({
+      await prisma.document_translations.update({
         where: { id: jobId },
         data: {
           status: TranslationStatus.FAILED,
-          errorMessage: (error as Error).message
+          error_message: (error as Error).message
         }
       });
     }
@@ -228,22 +235,19 @@ export class TranslationQueueService {
    * Retry failed translation jobs
    */
   static async retryFailedJobs(): Promise<void> {
-    const failedJobs = await prisma.documentTranslationJob.findMany({
+    const failedJobs = await prisma.document_translations.findMany({
       where: {
-        status: TranslationStatus.FAILED,
-        attempts: {
-          lt: prisma.documentTranslationJob.fields.maxAttempts
-        }
+        status: TranslationStatus.FAILED
       }
     });
 
     for (const job of failedJobs) {
       // Reset job status to pending for retry
-      await prisma.documentTranslationJob.update({
+      await prisma.document_translations.update({
         where: { id: job.id },
         data: {
           status: TranslationStatus.PENDING,
-          errorMessage: null
+          error_message: null
         }
       });
     }
@@ -262,11 +266,11 @@ export class TranslationQueueService {
     total: number;
   }> {
     const [pending, processing, completed, failed, total] = await Promise.all([
-      prisma.documentTranslationJob.count({ where: { status: TranslationStatus.PENDING } }),
-      prisma.documentTranslationJob.count({ where: { status: TranslationStatus.PROCESSING } }),
-      prisma.documentTranslationJob.count({ where: { status: TranslationStatus.COMPLETED } }),
-      prisma.documentTranslationJob.count({ where: { status: TranslationStatus.FAILED } }),
-      prisma.documentTranslationJob.count()
+      prisma.document_translations.count({ where: { status: TranslationStatus.PENDING } }),
+      prisma.document_translations.count({ where: { status: TranslationStatus.PROCESSING } }),
+      prisma.document_translations.count({ where: { status: TranslationStatus.COMPLETED } }),
+      prisma.document_translations.count({ where: { status: TranslationStatus.FAILED } }),
+      prisma.document_translations.count()
     ]);
 
     return { pending, processing, completed, failed, total };

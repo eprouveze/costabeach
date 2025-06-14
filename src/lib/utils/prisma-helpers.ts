@@ -5,7 +5,7 @@
  * and provide compile-time safety against snake_case field usage.
  */
 
-import { PrismaClient } from '@prisma/client';
+import { prisma } from "@/lib/db";
 
 // Type utility to detect snake_case field names and show compile errors
 type DetectSnakeCase<T extends string> = T extends `${string}_${string}` 
@@ -30,8 +30,6 @@ type ValidateFieldNames<T> = {
  * await db.documents.create({ data: { file_path: "/path" } });
  */
 export function createSafePrismaClient() {
-  const prisma = new PrismaClient();
-  
   // Add runtime validation helper
   const validateFieldNames = (fields: Record<string, any>, modelName: string) => {
     const snakeCaseFields = Object.keys(fields).filter(key => key.includes('_'));

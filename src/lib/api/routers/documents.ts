@@ -14,12 +14,10 @@ import {
 import { DocumentCategory, Language, Permission, TranslationQuality, TranslationStatus } from "@/lib/types";
 import { TranslationQueueService } from "@/lib/services/translationQueueService";
 import { ContentDetector } from "@/lib/utils/contentDetection";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
 import { createAuditLog } from "@/lib/utils/audit";
 import { checkPermission } from "@/lib/utils/permissions";
 import { whatsappNotificationService } from "@/lib/services/whatsappNotificationService";
-
-const prisma = new PrismaClient();
 
 export const documentsRouter = router({
   // Health check procedure

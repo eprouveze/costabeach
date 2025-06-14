@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/db";
 import crypto from "crypto";
-
-const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
   // Define variables at the highest scope to make them available in catch blocks

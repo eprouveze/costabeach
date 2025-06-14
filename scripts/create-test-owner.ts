@@ -1,7 +1,6 @@
-import { PrismaClient, RegistrationStatus } from '@prisma/client';
+import { RegistrationStatus } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
-
-const prisma = new PrismaClient();
+import { prisma } from "../src/lib/db";
 
 async function main() {
   // Create a test owner registration

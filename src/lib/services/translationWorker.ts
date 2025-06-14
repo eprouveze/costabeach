@@ -6,10 +6,8 @@
  */
 
 import { TranslationQueueService } from './translationQueueService';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from "@/lib/db";
 import { TranslationStatus } from '@/lib/types';
-
-const prisma = new PrismaClient();
 
 export class TranslationWorker {
   private isRunning = false;

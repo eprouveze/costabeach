@@ -116,7 +116,7 @@ export default function AdminSettingsPage() {
         const response = await fetch('/api/admin/settings');
         if (response.ok) {
           const data = await response.json();
-          setSettings({ ...settings, ...data.settings });
+          setSettings(prev => ({ ...prev, ...data.settings }));
         }
       } catch (error) {
         console.error("Error fetching settings:", error);

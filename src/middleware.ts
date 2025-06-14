@@ -119,6 +119,6 @@ export const config = {
     // Match the root path exactly
     '/',
     // Exclude API routes, static files, and other non-page resources
-    '/((?!api/|_next/|favicon.ico|robots.txt|sitemap.xml|test-).*)',
+    '/((?!api/|_next/|static/|favicon.ico|robots.txt|sitemap.xml|test-).*)',
   ],
 }; 

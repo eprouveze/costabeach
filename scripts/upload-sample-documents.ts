@@ -2,13 +2,12 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { config } from "dotenv";
 import fs from "fs";
 import path from "path";
-import { PrismaClient, DocumentCategory, Language } from "@prisma/client";
+import { prisma } from "../src/lib/db";
 import crypto from "crypto";
 
 // Load environment variables
 config();
 
-const prisma = new PrismaClient();
 const s3Client = new S3Client({
   region: process.env.AWS_REGION!,
   credentials: {

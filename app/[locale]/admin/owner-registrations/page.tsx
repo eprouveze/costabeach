@@ -22,6 +22,7 @@ export default function OwnerRegistrationsPage() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
   const [notes, setNotes] = React.useState("");
+  const [notesById, setNotesById] = React.useState<Record<string, string>>({});
 
   const fetchRegistrations = async () => {
     try {
@@ -49,7 +50,7 @@ export default function OwnerRegistrationsPage() {
         },
         body: JSON.stringify({
           action,
-          notes: notes.trim() || undefined,
+          notes: notesById[id]?.trim() || undefined,
         }),
       });
 
@@ -57,7 +58,11 @@ export default function OwnerRegistrationsPage() {
       
       toast.success(`Registration ${action}d successfully`);
       setSelectedId(null);
-      setNotes("");
+      setNotesById(prev => {
+        const newState = { ...prev };
+        delete newState[id];
+        return newState;
+      });
       fetchRegistrations();
     } catch (error) {
       toast.error(`Failed to ${action} registration`);
@@ -124,8 +129,10 @@ export default function OwnerRegistrationsPage() {
                             <textarea
                               className="block w-48 rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm"
                               placeholder="Add notes (optional)"
-                              value={notes}
-                              onChange={(e) => setNotes(e.target.value)}
+                              value={notesById[registration.id] ?? ""}
+                              onChange={(e) =>
+                                setNotesById((m) => ({ ...m, [registration.id]: e.target.value }))
+                              }
                             />
                             <button
                               onClick={() => handleAction(registration.id, "approve")}
@@ -142,7 +149,11 @@ export default function OwnerRegistrationsPage() {
                             <button
                               onClick={() => {
                                 setSelectedId(null);
-                                setNotes("");
+                                setNotesById(prev => {
+                                  const newState = { ...prev };
+                                  delete newState[registration.id];
+                                  return newState;
+                                });
                               }}
                               className="inline-flex items-center p-1 border border-gray-300 dark:border-gray-600 rounded-full text-gray-700 dark:text-gray-200 bg-white dark:bg-neutral-700 hover:bg-gray-50 dark:hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                             >

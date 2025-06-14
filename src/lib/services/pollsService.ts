@@ -353,6 +353,24 @@ export class PollsService {
   }
 
   /**
+   * Get polls by status
+   */
+  async getPollsByStatus(status: string) {
+    const polls = await this.prisma.polls.findMany({
+      where: { status: status as any },
+      include: {
+        options: true,
+        _count: {
+          select: { votes: true },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return polls;
+  }
+
+  /**
    * Get user's voting history
    */
   async getUserVotingHistory(userId: string) {

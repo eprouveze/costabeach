@@ -3,9 +3,7 @@ import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { Language } from "@/lib/types";
 import { translateText, getOrCreateTranslatedDocument } from "@/lib/utils/translations";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/db";
 
 export const translationsRouter = router({
   // Translate text from one language to another

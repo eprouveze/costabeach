@@ -18,8 +18,8 @@ export default function AdminEmergencyAlertsPage() {
   
   useEffect(() => {
     const fetchPermissions = async () => {
+      if (session.status === "loading") return;
       try {
-        // Check if user is authenticated
         if (!session.data?.user?.id) {
           toast.error("You must be logged in to access this page");
           router.push("/login");

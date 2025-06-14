@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../src/lib/db";
 import crypto from "crypto";
-
-const prisma = new PrismaClient();
 
 async function main() {
   const email = "manu@prouveze.fr";
