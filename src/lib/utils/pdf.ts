@@ -44,6 +44,14 @@ export async function extractPdfText(buffer: Buffer): Promise<string> {
  */
 export async function generatePdfFromPages(pages: string[]): Promise<Uint8Array> {
   const pdfDoc = await PDFDocument.create();
+  // Register fontkit so we can embed custom TTF fonts (required for Arabic/Unicode)
+  try {
+    const { default: fontkit } = await import('@pdf-lib/fontkit');
+    // @ts-expect-error – pdf-lib's type defs don't include registerFontkit yet
+    pdfDoc.registerFontkit(fontkit);
+  } catch (err) {
+    console.error('Failed to load @pdf-lib/fontkit – unicode font embedding will fail', err);
+  }
   const latinFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
   let unicodeFont: any = null;
 
