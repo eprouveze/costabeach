@@ -119,6 +119,6 @@ export const config = {
     // Match the root path exactly
     '/',
     // Match all paths that don't start with excluded patterns
-    '/((?!_next/|api/|static/|favicon.ico|robots.txt|sitemap.xml).*)',
+    '/((?!_next/|api/|static/|favicon.ico|robots.txt|sitemap.xml|test-).*)',
   ],
 }; 
