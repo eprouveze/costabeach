@@ -292,6 +292,8 @@
     "dashboardSubtitle": "Gérez votre portail communautaire et vos outils de communication",
     "messagesSent": "Messages envoyés",
     "activeSessions": "Sessions actives",
+    "totalUsers": "Total des utilisateurs",
+    "totalDocuments": "Total des documents",
     "whatsappManagement": "Gestion WhatsApp",
     "whatsappDescription": "Envoyer des messages et gérer les communications WhatsApp",
     "emergencyAlerts": "Alertes d'urgence",

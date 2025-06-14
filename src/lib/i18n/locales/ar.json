@@ -279,6 +279,8 @@
     "dashboardSubtitle": "إدارة بوابة المجتمع وأدوات التواصل",
     "messagesSent": "الرسائل المُرسلة",
     "activeSessions": "الجلسات النشطة",
+    "totalUsers": "إجمالي المستخدمين",
+    "totalDocuments": "إجمالي المستندات",
     "emergencyAlerts": "تنبيهات الطوارئ",
     "emergencyAlertsDescription": "إرسال إشعارات عاجلة للمقيمين",
     "systemSettingsDescription": "تكوين إعدادات وتفضيلات التطبيق",

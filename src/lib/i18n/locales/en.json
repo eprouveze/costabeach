@@ -355,6 +355,8 @@
     "dashboardSubtitle": "Manage your community portal and communication tools",
     "messagesSent": "Messages Sent",
     "activeSessions": "Active Sessions",
+    "totalUsers": "Total Users",
+    "totalDocuments": "Total Documents",
     "emergencyAlerts": "Emergency Alerts",
     "emergencyAlertsDescription": "Send urgent notifications to residents",
     "systemSettingsDescription": "Configure application settings and preferences",
