@@ -379,9 +379,10 @@
       "description": "Create, manage, and monitor community polls",
       "adminTitle": "Poll Management",
       "adminDescription": "Create, manage, and monitor community polls",
-      "adminActions": "Actions",
+      "adminActions": "Admin Actions",
       "viewPublic": "View Public",
       "create": "Create Poll",
+      "createNew": "Create New Poll",
       "createPoll": "Create Poll",
       "activePoll": "Active Poll",
       "closedPoll": "Closed Poll",
@@ -390,8 +391,14 @@
       "activePolls": "Active Polls",
       "completedPolls": "Completed Polls",
       "totalVotes": "Total Votes",
-      "noPolls": "No polls found",
-      "noPollsMessage": "You haven't created any polls yet."
+      "noPolls": "No polls created yet. Create the first one!",
+      "noPollsMessage": "You haven't created any polls yet.",
+      "errorLoading": "Failed to load polls",
+      "created": "Poll created successfully!",
+      "updated": "Poll updated successfully!",
+      "deleted": "Poll deleted successfully!",
+      "confirmDelete": "Are you sure you want to delete this poll?",
+      "adminRequired": "You need admin permissions to manage polls."
     },
     "users": {
       "title": "User Management",
