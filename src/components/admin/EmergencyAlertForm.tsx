@@ -27,18 +27,18 @@ export default function EmergencyAlertForm() {
   const [isSending, setIsSending] = useState(false);
 
   const severityOptions = [
-    { value: 'low', label: 'Low Priority', color: 'text-blue-600 bg-blue-100', icon: '💡' },
-    { value: 'medium', label: 'Medium Priority', color: 'text-yellow-600 bg-yellow-100', icon: '⚠️' },
-    { value: 'high', label: 'High Priority', color: 'text-orange-600 bg-orange-100', icon: '🚨' },
-    { value: 'critical', label: 'Critical', color: 'text-red-600 bg-red-100', icon: '🔴' }
+    { value: 'low', label: t('admin.emergencyAlert.severity.low'), color: 'text-blue-600 bg-blue-100', icon: '💡' },
+    { value: 'medium', label: t('admin.emergencyAlert.severity.medium'), color: 'text-yellow-600 bg-yellow-100', icon: '⚠️' },
+    { value: 'high', label: t('admin.emergencyAlert.severity.high'), color: 'text-orange-600 bg-orange-100', icon: '🚨' },
+    { value: 'critical', label: t('admin.emergencyAlert.severity.critical'), color: 'text-red-600 bg-red-100', icon: '🔴' }
   ];
 
   const alertTypeOptions = [
-    { value: 'maintenance', label: 'Maintenance', icon: Wrench, description: 'Building maintenance and repairs' },
-    { value: 'security', label: 'Security', icon: Shield, description: 'Security-related issues' },
-    { value: 'weather', label: 'Weather', icon: CloudRain, description: 'Weather warnings and alerts' },
-    { value: 'utilities', label: 'Utilities', icon: Zap, description: 'Power, water, or internet issues' },
-    { value: 'other', label: 'General Alert', icon: Megaphone, description: 'General community alerts' }
+    { value: 'maintenance', label: t('admin.emergencyAlert.types.maintenance'), icon: Wrench, description: t('admin.emergencyAlert.types.maintenanceDesc') },
+    { value: 'security', label: t('admin.emergencyAlert.types.security'), icon: Shield, description: t('admin.emergencyAlert.types.securityDesc') },
+    { value: 'weather', label: t('admin.emergencyAlert.types.weather'), icon: CloudRain, description: t('admin.emergencyAlert.types.weatherDesc') },
+    { value: 'utilities', label: t('admin.emergencyAlert.types.utilities'), icon: Zap, description: t('admin.emergencyAlert.types.utilitiesDesc') },
+    { value: 'other', label: t('admin.emergencyAlert.types.other'), icon: Megaphone, description: t('admin.emergencyAlert.types.otherDesc') }
   ];
 
   const handleSendAlert = async () => {
@@ -93,26 +93,26 @@ export default function EmergencyAlertForm() {
 
   const presetAlerts = [
     {
-      title: "Scheduled Maintenance",
-      message: "Scheduled maintenance will be performed tomorrow from 9:00 AM to 12:00 PM. Water service may be temporarily interrupted.",
+      title: t('admin.emergencyAlert.presets.scheduledMaintenance.title'),
+      message: t('admin.emergencyAlert.presets.scheduledMaintenance.message'),
       severity: 'medium' as AlertSeverity,
       alertType: 'maintenance' as AlertType
     },
     {
-      title: "Power Outage",
-      message: "Power outage in the building. Estimated restoration time: 2 hours. Emergency lighting is active.",
+      title: t('admin.emergencyAlert.presets.powerOutage.title'),
+      message: t('admin.emergencyAlert.presets.powerOutage.message'),
       severity: 'high' as AlertSeverity,
       alertType: 'utilities' as AlertType
     },
     {
-      title: "Security Alert",
-      message: "Please ensure all doors and windows are locked. Report any suspicious activity to building management immediately.",
+      title: t('admin.emergencyAlert.presets.securityAlert.title'),
+      message: t('admin.emergencyAlert.presets.securityAlert.message'),
       severity: 'high' as AlertSeverity,
       alertType: 'security' as AlertType
     },
     {
-      title: "Storm Warning",
-      message: "Severe weather expected tonight. Please secure any outdoor items and avoid the balcony areas.",
+      title: t('admin.emergencyAlert.presets.stormWarning.title'),
+      message: t('admin.emergencyAlert.presets.stormWarning.message'),
       severity: 'medium' as AlertSeverity,
       alertType: 'weather' as AlertType
     }
@@ -127,12 +127,12 @@ export default function EmergencyAlertForm() {
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <div className="flex items-center mb-6">
           <AlertTriangle className="h-6 w-6 text-red-500 mr-3" />
-          <h2 className="text-2xl font-bold text-gray-900">Send Emergency Alert</h2>
+          <h2 className="text-2xl font-bold text-gray-900">{t('admin.emergencyAlert.title')}</h2>
         </div>
 
         {/* Preset Alerts */}
         <div className="mb-6">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Quick Presets</h3>
+          <h3 className="text-sm font-medium text-gray-700 mb-3">{t('admin.emergencyAlert.quickPresets')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {presetAlerts.map((preset, index) => (
               <button
@@ -151,14 +151,14 @@ export default function EmergencyAlertForm() {
           {/* Alert Title */}
           <div>
             <label htmlFor="alertTitle" className="block text-sm font-medium text-gray-700 mb-2">
-              Alert Title *
+              {t('admin.emergencyAlert.alertTitle')}
             </label>
             <input
               type="text"
               id="alertTitle"
               value={alert.title}
               onChange={(e) => setAlert(prev => ({ ...prev, title: e.target.value }))}
-              placeholder="Enter alert title"
+              placeholder={t('admin.emergencyAlert.alertTitlePlaceholder')}
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
@@ -168,7 +168,7 @@ export default function EmergencyAlertForm() {
             {/* Severity */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
-                Alert Severity *
+                {t('admin.emergencyAlert.alertSeverity')}
               </label>
               <div className="space-y-2">
                 {severityOptions.map((option) => (
@@ -195,7 +195,7 @@ export default function EmergencyAlertForm() {
             {/* Alert Type */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
-                Alert Type *
+                {t('admin.emergencyAlert.alertType')}
               </label>
               <div className="space-y-2">
                 {alertTypeOptions.map((option) => {
@@ -227,27 +227,27 @@ export default function EmergencyAlertForm() {
           {/* Alert Message */}
           <div>
             <label htmlFor="alertMessage" className="block text-sm font-medium text-gray-700 mb-2">
-              Alert Message *
+              {t('admin.emergencyAlert.alertMessage')}
             </label>
             <textarea
               id="alertMessage"
               value={alert.message}
               onChange={(e) => setAlert(prev => ({ ...prev, message: e.target.value }))}
               rows={4}
-              placeholder="Enter detailed alert message..."
+              placeholder={t('admin.emergencyAlert.alertMessagePlaceholder')}
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
             <p className="mt-1 text-xs text-gray-500">
-              {alert.message.length}/500 characters • Be clear and provide actionable information
+              {t('admin.emergencyAlert.characterLimit', { count: alert.message.length })}
             </p>
           </div>
 
           {/* Preview */}
           {alert.title || alert.message ? (
             <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">WhatsApp Message Preview</h3>
+              <h3 className="text-sm font-medium text-gray-700 mb-2">{t('admin.emergencyAlert.previewTitle')}</h3>
               <div className="bg-white rounded-lg p-3 border border-gray-200 text-sm">
-                <div className="font-semibold">🏖️ Costa Beach Community</div>
+                <div className="font-semibold">{t('admin.emergencyAlert.communityName')}</div>
                 <div className="mt-2">
                   <span className="font-medium">
                     {getSeverityOption(alert.severity)?.icon} {alert.severity.toUpperCase()} ALERT {getSeverityOption(alert.severity)?.icon}
@@ -261,17 +261,17 @@ export default function EmergencyAlertForm() {
                     {getAlertTypeOption(alert.alertType)?.icon === Zap && '⚡'}
                     {getAlertTypeOption(alert.alertType)?.icon === Megaphone && '📢'}
                     {' '}
-                    {alert.title || '[Alert Title]'}
+                    {alert.title || t('admin.emergencyAlert.preview.alertTitle')}
                   </span>
                 </div>
                 <div className="mt-2 text-gray-700">
-                  📢 {alert.message || '[Alert Message]'}
+                  📢 {alert.message || t('admin.emergencyAlert.preview.alertMessage')}
                 </div>
                 <div className="mt-2 text-gray-600 text-xs">
-                  ⚠️ Please take appropriate action and stay safe.
+                  {t('admin.emergencyAlert.preview.actionMessage')}
                 </div>
                 <div className="mt-2 text-gray-500 text-xs italic">
-                  Emergency alert sent by Costa Beach Community Platform
+                  {t('admin.emergencyAlert.preview.signature')}
                 </div>
               </div>
             </div>
@@ -295,12 +295,12 @@ export default function EmergencyAlertForm() {
               {isSending ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Sending Alert...
+                  {t('admin.emergencyAlert.sendingAlert')}
                 </>
               ) : (
                 <>
                   <Send className="h-4 w-4 mr-2" />
-                  Send Emergency Alert
+                  {t('admin.emergencyAlert.sendEmergencyAlert')}
                 </>
               )}
             </button>
@@ -311,10 +311,9 @@ export default function EmergencyAlertForm() {
             <div className="flex">
               <AlertTriangle className="h-5 w-5 text-yellow-400 mr-2 mt-0.5" />
               <div className="text-sm">
-                <p className="text-yellow-800 font-medium">Important:</p>
+                <p className="text-yellow-800 font-medium">{t('admin.emergencyAlert.warningTitle')}</p>
                 <p className="text-yellow-700 mt-1">
-                  Emergency alerts will be sent to all residents via WhatsApp. Use this feature responsibly 
-                  and only for genuine emergencies or important community notifications.
+                  {t('admin.emergencyAlert.warningMessage')}
                 </p>
               </div>
             </div>

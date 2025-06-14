@@ -115,7 +115,7 @@ export default function LoginForm() {
         className="group absolute left-4 top-4 flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200"
       >
         <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-        Back
+        {t('common.back')}
       </Link>
 
       <div className="w-full max-w-md space-y-8">
@@ -194,13 +194,13 @@ export default function LoginForm() {
                   className="h-4 w-4 rounded border-neutral-300 text-brandBlue-600 focus:ring-brandBlue-500"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-neutral-700 dark:text-neutral-300">
-                  Remember me
+                  {t('auth.signin.rememberMe')}
                 </label>
               </div>
 
               <div className="text-sm">
                 <Link href="/auth/reset-password" className="font-medium text-brandBlue-600 dark:text-brandBlue-400 hover:text-brandBlue-500">
-                  Forgot your password?
+                  {t('auth.signin.forgotPassword')}
                 </Link>
               </div>
             </div>

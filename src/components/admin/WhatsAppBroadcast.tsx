@@ -179,23 +179,23 @@ export default function WhatsAppBroadcast() {
   return (
     <div className="p-6">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Broadcast WhatsApp Message</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('admin.whatsapp.broadcastTitle')}</h2>
         
         {/* Message Text */}
         <div className="mb-6">
           <label htmlFor="broadcastMessage" className="block text-sm font-medium text-gray-700 mb-2">
-            Broadcast Message
+            {t('admin.whatsapp.broadcastMessageLabel')}
           </label>
           <textarea
             id="broadcastMessage"
             value={messageText}
             onChange={(e) => setMessageText(e.target.value)}
             rows={4}
-            placeholder="Enter your broadcast message here..."
+            placeholder={t('admin.whatsapp.broadcastMessagePlaceholder')}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
           <p className="mt-1 text-xs text-gray-500">
-            {messageText.length}/1000 characters • This message will be sent to all recipients
+            {t('admin.whatsapp.characterLimit', { count: messageText.length })}
           </p>
         </div>
 
@@ -203,7 +203,7 @@ export default function WhatsAppBroadcast() {
         <div className="bg-gray-50 rounded-lg p-4 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-medium text-gray-900">
-              Recipients ({recipients.length})
+              {t('admin.whatsapp.recipients')} ({recipients.length})
             </h3>
             
             <div className="flex space-x-2">
@@ -212,7 +212,7 @@ export default function WhatsAppBroadcast() {
                 className="inline-flex items-center px-3 py-1 border border-gray-300 rounded text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
               >
                 <Plus className="h-4 w-4 mr-1" />
-                Add Samples
+                {t('admin.whatsapp.addSamples')}
               </button>
               
               {recipients.length > 0 && (
@@ -222,7 +222,7 @@ export default function WhatsAppBroadcast() {
                     className="inline-flex items-center px-3 py-1 border border-gray-300 rounded text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                   >
                     <Download className="h-4 w-4 mr-1" />
-                    Export
+                    {t('admin.whatsapp.export')}
                   </button>
                   
                   <button
@@ -230,7 +230,7 @@ export default function WhatsAppBroadcast() {
                     className="inline-flex items-center px-3 py-1 border border-red-300 rounded text-sm font-medium text-red-700 bg-white hover:bg-red-50"
                   >
                     <Trash2 className="h-4 w-4 mr-1" />
-                    Clear All
+                    {t('admin.whatsapp.clearAll')}
                   </button>
                 </>
               )}
@@ -243,14 +243,14 @@ export default function WhatsAppBroadcast() {
               type="tel"
               value={newRecipientPhone}
               onChange={(e) => setNewRecipientPhone(e.target.value)}
-              placeholder="+1234567890"
+              placeholder={t('admin.whatsapp.phoneNumberPlaceholder')}
               className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
             <input
               type="text"
               value={newRecipientName}
               onChange={(e) => setNewRecipientName(e.target.value)}
-              placeholder="Name (optional)"
+              placeholder={t('admin.whatsapp.namePlaceholder')}
               className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
             <button
@@ -258,7 +258,7 @@ export default function WhatsAppBroadcast() {
               className="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
             >
               <Plus className="h-4 w-4 mr-1" />
-              Add
+              {t('admin.whatsapp.add')}
             </button>
           </div>
 
@@ -270,16 +270,16 @@ export default function WhatsAppBroadcast() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Name
+                        {t('admin.whatsapp.tableHeaders.name')}
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Phone Number
+                        {t('admin.whatsapp.tableHeaders.phoneNumber')}
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
+                        {t('admin.whatsapp.tableHeaders.status')}
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {t('admin.whatsapp.tableHeaders.actions')}
                       </th>
                     </tr>
                   </thead>
@@ -317,8 +317,8 @@ export default function WhatsAppBroadcast() {
           ) : (
             <div className="text-center py-8 text-gray-500">
               <Users className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-              <p>No recipients added yet</p>
-              <p className="text-sm">Add recipients to start broadcasting</p>
+              <p>{t('admin.whatsapp.noRecipients')}</p>
+              <p className="text-sm">{t('admin.whatsapp.addRecipientsToStart')}</p>
             </div>
           )}
         </div>
@@ -337,12 +337,12 @@ export default function WhatsAppBroadcast() {
             {isSending ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                Broadcasting...
+                {t('admin.whatsapp.broadcasting')}
               </>
             ) : (
               <>
                 <Send className="h-4 w-4 mr-2" />
-                Send Broadcast ({recipients.length} recipients)
+                {t('admin.whatsapp.sendBroadcast', { count: recipients.length })}
               </>
             )}
           </button>

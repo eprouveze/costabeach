@@ -30,7 +30,7 @@ export default function RegisterForm() {
     setErrorMessage('');
 
     if (password !== confirmPassword) {
-      setErrorMessage('Passwords do not match');
+      setErrorMessage(t('toast.auth.passwordMismatch'));
       setIsLoading(false);
       return;
     }
@@ -53,8 +53,8 @@ export default function RegisterForm() {
       toast.success(t('toast.auth.registrationSuccess'));
       router.push('/auth/verify');
     } catch (error: any) {
-      setErrorMessage(error.message || 'An error occurred during registration');
-      toast.error(error.message || 'An error occurred during registration');
+      setErrorMessage(error.message || t('toast.auth.unexpectedError'));
+      toast.error(error.message || t('toast.auth.unexpectedError'));
     } finally {
       setIsLoading(false);
     }
@@ -67,7 +67,7 @@ export default function RegisterForm() {
         className="group absolute left-4 top-4 flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200"
       >
         <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-        Back
+        {t('common.back')}
       </Link>
 
       <div className="w-full max-w-md space-y-8">

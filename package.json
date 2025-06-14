@@ -39,7 +39,8 @@
     "i18n:find-hardcoded": "node scripts/find-hardcoded-text.js",
     "i18n:find-toast": "node scripts/find-toast-messages.js",
     "i18n:stats": "node scripts/translation-stats.js",
-    "i18n:report": "npm run i18n:extract && npm run i18n:stats"
+    "i18n:report": "npm run i18n:extract && npm run i18n:stats",
+    "analyze": "ANALYZE=true npm run build"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.758.0",
@@ -100,7 +101,8 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "whatsapp-business": "^1.14.3",
-    "zod": "^3.24.1"
+    "zod": "^3.24.1",
+    "@next/bundle-analyzer": "^0.7.0"
   },
   "devDependencies": {
     "@babel/plugin-syntax-import-attributes": "^7.26.0",

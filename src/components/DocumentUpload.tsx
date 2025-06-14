@@ -104,13 +104,13 @@ export const DocumentUpload = ({
   return (
     <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6">
       <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
-        Upload Document
+        {t('documents.uploadDocument')}
       </h2>
       
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Title *
+            {t('documents.titleRequired')}
           </label>
           <input
             type="text"
@@ -118,21 +118,21 @@ export const DocumentUpload = ({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-            placeholder="Enter document title"
+            placeholder={t('documents.titleFieldPlaceholder')}
             required
           />
         </div>
         
         <div className="mb-4">
           <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Description
+            {t('documents.descriptionField')}
           </label>
           <textarea
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-            placeholder="Enter document description (optional)"
+            placeholder={t('documents.descriptionPlaceholder')}
             rows={3}
           />
         </div>
@@ -140,7 +140,7 @@ export const DocumentUpload = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Category *
+              {t('documents.categoryField')}
             </label>
             <select
               id="category"
@@ -152,9 +152,15 @@ export const DocumentUpload = ({
               {Object.values(DocumentCategory).map((cat) => (
                 <option key={cat} value={cat}>
                   {cat === DocumentCategory.COMITE_DE_SUIVI
-                    ? "Comité de Suivi"
+                    ? t('documents.categories.comiteDeSuivi')
                     : cat === DocumentCategory.SOCIETE_DE_GESTION
-                    ? "Société de Gestion"
+                    ? t('documents.categories.societeDeGestion')
+                    : cat === DocumentCategory.FINANCE
+                    ? t('documents.categories.finance')
+                    : cat === DocumentCategory.LEGAL
+                    ? t('documents.categories.legal')
+                    : cat === DocumentCategory.GENERAL
+                    ? t('documents.categories.general')
                     : cat}
                 </option>
               ))}
@@ -163,7 +169,7 @@ export const DocumentUpload = ({
           
           <div>
             <label htmlFor="language" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Language *
+              {t('documents.languageField')}
             </label>
             <select
               id="language"
@@ -174,7 +180,13 @@ export const DocumentUpload = ({
             >
               {Object.values(Language).map((lang) => (
                 <option key={lang} value={lang}>
-                  {lang}
+                  {lang === Language.FRENCH
+                    ? t('languages.french')
+                    : lang === Language.ARABIC
+                    ? t('languages.arabic')
+                    : lang === Language.ENGLISH
+                    ? t('languages.english')
+                    : lang}
                 </option>
               ))}
             </select>
@@ -183,7 +195,7 @@ export const DocumentUpload = ({
         
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Document File *
+            {t('documents.documentFileField')}
           </label>
           
           <input
@@ -208,10 +220,10 @@ export const DocumentUpload = ({
             >
               <Upload className="h-10 w-10 mx-auto mb-3 text-gray-400 dark:text-gray-500" />
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                Drag and drop your file here, or click to browse
+                {t('documents.dragDropText')}
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-500">
-                Supported formats: PDF, Word, Excel, PowerPoint, Text, CSV, Images
+                {t('documents.supportedFormats')}
               </p>
             </div>
           ) : (
@@ -223,7 +235,7 @@ export const DocumentUpload = ({
                     {file.name}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {formatFileSize(file.size)} • {file.type || "Unknown type"}
+                    {formatFileSize(file.size)} • {file.type || t('documents.unknownFileType')}
                   </p>
                 </div>
                 <button
@@ -247,7 +259,7 @@ export const DocumentUpload = ({
               ></div>
             </div>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-center">
-              Uploading: {uploadProgress}%
+              {t('documents.uploadProgress', { progress: uploadProgress })}
             </p>
           </div>
         )}
@@ -261,12 +273,12 @@ export const DocumentUpload = ({
             {isUploading ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Uploading...
+                {t('documents.uploading')}
               </>
             ) : (
               <>
                 <Upload className="h-4 w-4 mr-2" />
-                Upload Document
+                {t('documents.uploadDocument')}
               </>
             )}
           </button>

@@ -2,6 +2,7 @@
 // Form for creating new community polls
 
 import React from 'react';
+import { useI18n } from '@/lib/i18n/client';
 
 interface PollFormData {
   question: string;
@@ -20,6 +21,7 @@ interface PollCreationFormProps {
 }
 
 export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: PollCreationFormProps) {
+  const { t } = useI18n();
   const [formData, setFormData] = React.useState<PollFormData>({
     question: '',
     poll_type: 'single_choice',
@@ -37,25 +39,25 @@ export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: P
 
     // Validate question
     if (!formData.question.trim()) {
-      newErrors.question = 'Poll question is required';
+      newErrors.question = t('polls.form.questionRequired');
     }
 
     // Validate options
     const nonEmptyOptions = formData.options.filter(opt => opt.trim().length > 0);
     if (nonEmptyOptions.length < 2) {
-      newErrors.options = 'At least 2 options are required';
+      newErrors.options = t('polls.form.optionsRequired');
     }
 
     // Check for duplicate options
     const uniqueOptions = new Set(nonEmptyOptions.map(opt => opt.trim().toLowerCase()));
     if (uniqueOptions.size !== nonEmptyOptions.length) {
-      newErrors.options = 'Options must be unique';
+      newErrors.options = t('polls.form.optionsUnique');
     }
 
     // Validate max_choices for multiple choice
     if (formData.poll_type === 'multiple_choice' && formData.max_choices) {
       if (formData.max_choices < 1 || formData.max_choices > nonEmptyOptions.length) {
-        newErrors.max_choices = `Max choices must be between 1 and ${nonEmptyOptions.length}`;
+        newErrors.max_choices = t('polls.form.maxChoicesError', { max: nonEmptyOptions.length });
       }
     }
 
@@ -63,9 +65,9 @@ export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: P
     if (formData.voting_deadline) {
       const deadline = new Date(formData.voting_deadline);
       if (isNaN(deadline.getTime())) {
-        newErrors.voting_deadline = 'Invalid date format';
+        newErrors.voting_deadline = t('polls.form.invalidDate');
       } else if (deadline <= new Date()) {
-        newErrors.voting_deadline = 'Voting deadline must be in the future';
+        newErrors.voting_deadline = t('polls.form.deadlineInFuture');
       }
     }
 
@@ -127,19 +129,19 @@ export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: P
 
   return (
     <div className="poll-creation-form bg-white rounded-lg border p-6">
-      <h2 className="text-xl font-semibold text-gray-900 mb-6">Create New Poll</h2>
+      <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('polls.createNew')}</h2>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Poll Question */}
         <div>
           <label htmlFor="question" className="block text-sm font-medium text-gray-700 mb-2">
-            Poll Question <span className="text-red-500">*</span>
+            {t('polls.form.question')} <span className="text-red-500">*</span>
           </label>
           <textarea
             id="question"
             value={formData.question}
             onChange={(e) => setFormData(prev => ({ ...prev, question: e.target.value }))}
-            placeholder="What would you like to ask the community?"
+            placeholder={t('polls.form.questionPlaceholder')}
             className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
               errors.question ? 'border-red-300' : 'border-gray-300'
             }`}
@@ -154,7 +156,7 @@ export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: P
         {/* Poll Type */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Poll Type <span className="text-red-500">*</span>
+            {t('polls.form.type')} <span className="text-red-500">*</span>
           </label>
           <div className="space-y-2">
             <label className="flex items-center">
@@ -167,7 +169,7 @@ export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: P
                 className="mr-2"
                 disabled={isSubmitting}
               />
-              <span className="text-sm">Single Choice (users can select one option)</span>
+              <span className="text-sm">{t('polls.form.singleChoiceDescription')}</span>
             </label>
             <label className="flex items-center">
               <input
@@ -179,7 +181,7 @@ export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: P
                 className="mr-2"
                 disabled={isSubmitting}
               />
-              <span className="text-sm">Multiple Choice (users can select multiple options)</span>
+              <span className="text-sm">{t('polls.form.multipleChoiceDescription')}</span>
             </label>
           </div>
         </div>
@@ -188,7 +190,7 @@ export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: P
         {formData.poll_type === 'multiple_choice' && (
           <div>
             <label htmlFor="max_choices" className="block text-sm font-medium text-gray-700 mb-2">
-              Maximum Choices (optional)
+              {t('polls.form.maxChoices')}
             </label>
             <input
               id="max_choices"
@@ -198,7 +200,7 @@ export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: P
                 ...prev, 
                 max_choices: e.target.value ? parseInt(e.target.value) : undefined 
               }))}
-              placeholder="Leave empty for unlimited"
+              placeholder={t('polls.form.maxChoicesPlaceholder')}
               min="1"
               max={formData.options.filter(opt => opt.trim()).length}
               className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
@@ -215,7 +217,7 @@ export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: P
         {/* Poll Options */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Poll Options <span className="text-red-500">*</span>
+            {t('polls.form.options')} <span className="text-red-500">*</span>
           </label>
           <div className="space-y-3">
             {formData.options.map((option, index) => (
@@ -225,7 +227,7 @@ export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: P
                   type="text"
                   value={option}
                   onChange={(e) => updateOption(index, e.target.value)}
-                  placeholder={`Option ${index + 1}`}
+                  placeholder={t('polls.form.optionPlaceholder', { number: index + 1 })}
                   className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   disabled={isSubmitting}
                 />
@@ -235,7 +237,7 @@ export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: P
                     onClick={() => removeOption(index)}
                     className="text-red-600 hover:text-red-800 p-2"
                     disabled={isSubmitting}
-                    title="Remove option"
+                    title={t('polls.form.removeOption')}
                   >
                     ✕
                   </button>
@@ -254,14 +256,14 @@ export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: P
             className="mt-3 text-blue-600 hover:text-blue-800 text-sm font-medium"
             disabled={isSubmitting || formData.options.length >= 10}
           >
-            + Add Option
+            {t('polls.form.addOption')}
           </button>
         </div>
 
         {/* Voting Deadline */}
         <div>
           <label htmlFor="voting_deadline" className="block text-sm font-medium text-gray-700 mb-2">
-            Voting Deadline (optional)
+            {t('polls.form.votingDeadline')}
           </label>
           <input
             id="voting_deadline"
@@ -278,13 +280,13 @@ export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: P
             <p className="mt-1 text-sm text-red-600">{errors.voting_deadline}</p>
           )}
           <p className="mt-1 text-xs text-gray-500">
-            Leave empty for no deadline
+            {t('polls.form.noDeadlineHint')}
           </p>
         </div>
 
         {/* Poll Settings */}
         <div className="space-y-4">
-          <h3 className="text-sm font-medium text-gray-700">Poll Settings</h3>
+          <h3 className="text-sm font-medium text-gray-700">{t('polls.form.settings')}</h3>
           
           <label className="flex items-center">
             <input
@@ -294,7 +296,7 @@ export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: P
               className="mr-2"
               disabled={isSubmitting}
             />
-            <span className="text-sm">Anonymous voting (recommended)</span>
+            <span className="text-sm">{t('polls.form.anonymousVoting')}</span>
           </label>
           
           <label className="flex items-center">
@@ -305,7 +307,7 @@ export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: P
               className="mr-2"
               disabled={isSubmitting}
             />
-            <span className="text-sm">Require explanation for votes</span>
+            <span className="text-sm">{t('polls.form.requireExplanation')}</span>
           </label>
         </div>
 
@@ -318,7 +320,7 @@ export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: P
               className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
               disabled={isSubmitting}
             >
-              Cancel
+              {t('polls.form.cancel')}
             </button>
           )}
           
@@ -327,7 +329,7 @@ export function PollCreationForm({ onSubmit, onCancel, isSubmitting = false }: P
             disabled={isSubmitting}
             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? 'Creating Poll...' : 'Create Poll'}
+            {isSubmitting ? t('polls.creatingPoll') : t('polls.createPoll')}
           </button>
         </div>
       </form>
