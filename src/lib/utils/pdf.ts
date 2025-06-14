@@ -11,9 +11,15 @@ const UNICODE_FONT_URL =
   'https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-arabic@5.0.13/files/noto-sans-arabic-all-400-normal.ttf';
 
 async function embedUnicodeFont(pdfDoc: PDFDocument) {
-  const res = await fetch(UNICODE_FONT_URL);
+  let res = await fetch(UNICODE_FONT_URL);
   if (!res.ok) {
-    throw new Error(`Failed to download fallback font: ${res.status}`);
+    // Fallback to GitHub raw URL if jsDelivr path changed.
+    const GH_URL =
+      'https://raw.githubusercontent.com/googlefonts/noto-fonts/main/hinted/ttf/NotoSansArabic/NotoSansArabic-Regular.ttf';
+    res = await fetch(GH_URL);
+    if (!res.ok) {
+      throw new Error(`Failed to download fallback font (status: ${res.status}). Tried jsDelivr and GitHub.`);
+    }
   }
   const fontBytes = new Uint8Array(await res.arrayBuffer());
   return pdfDoc.embedFont(fontBytes, { subset: true });

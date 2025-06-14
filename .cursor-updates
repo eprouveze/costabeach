@@ -756,3 +756,5 @@ Note: Some tests are still failing due to type errors and outdated test implemen
 + Wrap SignInPage in Suspense boundary to satisfy Next 15 requirement for useSearchParams.
 
 + Embed Unicode font (Noto Sans Arabic) dynamically in pdf utils to support Arabic characters during PDF generation.
+
++ Add GitHub raw fallback for Unicode font download to avoid 404.
