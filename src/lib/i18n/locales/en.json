@@ -385,7 +385,6 @@
     "noDocumentsDescription": "There are currently no documents available in this category.",
     "noDocumentsInCategory": "No documents in this category",
     "noDownloadUrl": "Download URL unavailable",
-    "noFileSelected": "Please select a file",
     "noMatchingCategories": "No matching categories found",
     "noMatchingDocuments": "No matching documents found",
     "noSearchResults": "No documents found for '{{query}}'",
@@ -403,7 +402,6 @@
     "size": "Size",
     "title": "Documents",
     "titlePlaceholder": "Enter title...",
-    "titleRequired": "Please enter a title",
     "translate": "Translate",
     "translation": "Translation",
     "tryDifferentSearch": "Try a different search term or clear the search",
@@ -415,10 +413,8 @@
     "uploadDocument": "Upload Document",
     "uploadedBy": "Uploaded By",
     "uploadedOn": "Uploaded on {{date}}",
-    "uploadError": "Upload Error",
     "uploadFirst": "Upload your first document",
     "uploading": "Uploading...",
-    "uploadSuccess": "Document uploaded successfully",
     "view": "View",
     "viewAll": "View All",
     "viewCount": "views",
@@ -634,17 +630,28 @@
       "translationStatusFetchError": "Failed to fetch translation status"
     },
     "auth": {
+      "accessDenied": "Access denied. Please make sure you have an approved account",
+      "checkEmailForLink": "Check your email for the login link!",
+      "googleSignInFailed": "Failed to sign in with Google",
       "passwordMismatch": "Passwords do not match",
       "passwordTooShort": "Password must be at least 8 characters long",
       "passwordUpdateSuccess": "Password updated successfully",
       "permissionDenied": "You do not have permission to access this page",
+      "profileIncompleteWarning": "Could not fetch complete user profile, redirecting to home page",
       "resetLinkSent": "Password reset link sent to your email",
-      "signOutSuccess": "You have been signed out successfully"
+      "signInError": "An error occurred during sign in. Please try again",
+      "signInFailed": "Failed to sign in. Please try again",
+      "signOutSuccess": "You have been signed out successfully",
+      "unexpectedError": "An unexpected error occurred. Please try again"
     },
     "documents": {
-      "translationRequestError": "",
-      "translationRequestFailed": "",
-      "translationRequestSuccess": ""
+      "fileRequired": "Please select a file to upload",
+      "titleRequired": "Please enter a title for the document",
+      "translationRequestError": "Error requesting translation",
+      "translationRequestFailed": "Translation request failed",
+      "translationRequestSuccess": "Translation requested successfully",
+      "uploadError": "Error uploading document",
+      "uploadSuccess": "Document uploaded successfully"
     },
     "general": {
       "errorOccurred": "An error occurred",
@@ -662,13 +669,27 @@
       "lightModeEnabled": "Light mode enabled"
     },
     "whatsapp": {
+      "broadcastAllFailed": "All messages failed to send",
+      "broadcastFailed": "Broadcast failed: {{error}}",
+      "broadcastSentPartial": "Broadcast sent! {{successCount}} successful, {{failedCount}} failed",
+      "connectionFailed": "Connection failed: {{error}}",
+      "connectionSuccessful": "WhatsApp connection successful!",
       "documentUrlRequired": "Please provide document URL and filename",
       "imageUrlRequired": "Please provide image URL",
       "messageRequired": "Please enter a message",
       "messageSendError": "Failed to send message: {{error}}",
       "messageSentSuccess": "Message sent successfully! ID: {{messageId}}",
+      "phoneNumberDuplicate": "This phone number is already in the list",
       "phoneNumberInvalidFormat": "Phone number must be in international format (+1234567890)",
       "phoneNumberRequired": "Please enter a phone number",
+      "recipientAddedSuccess": "Recipient added successfully",
+      "recipientRequired": "Please add at least one recipient",
+      "recipientsListCleared": "Recipients list cleared",
+      "sampleRecipientsAdded_one": "Added {{count}} sample recipient",
+      "sampleRecipientsAdded_other": "Added {{count}} sample recipients",
+      "sampleRecipientsAlreadyAdded": "Sample recipients are already in the list",
+      "settingsSaveError": "Failed to save settings: {{error}}",
+      "settingsSaveSuccess": "Settings saved successfully!",
       "templateNameRequired": "Please enter a template name"
     }
   }

@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/db';
 import { Document, Language, DocumentCategory } from '@/lib/types';
-import { createDocument } from './documents';
-import { getDownloadUrl } from './documents';
+import { createDocument, getDownloadUrl } from '@/lib/utils/documents';
+import { extractPdfText, generatePdfFromPages, uploadTranslatedPdf } from '@/lib/utils/pdf';
 
 // In-memory cache for translations to avoid redundant API calls
 type TranslationCacheKey = `${string}_${Language}`;
@@ -119,6 +119,31 @@ export const translateText = async (
     context?: string;
   }
 ): Promise<string> => {
+  // If the text is extremely large we split it into smaller chunks to stay under the 200k-token Claude limit.
+  // Rough heuristic: 1 token ≈ 4 characters for typical PDF/plain-text mix. We keep chunks ≤ 40 000 chars (≈10 k tokens).
+  const MAX_CHARS_PER_CHUNK = 40000;
+
+  if (text.length > MAX_CHARS_PER_CHUNK) {
+    const chunks: string[] = [];
+    for (let i = 0; i < text.length; i += MAX_CHARS_PER_CHUNK) {
+      chunks.push(text.slice(i, i + MAX_CHARS_PER_CHUNK));
+    }
+
+    const translatedChunks: string[] = [];
+    for (const [index, chunk] of chunks.entries()) {
+      console.log(`🔄 Translating chunk ${index + 1}/${chunks.length} (length: ${chunk.length})`);
+      const translatedChunk = await translateText(
+        chunk,
+        sourceLanguage,
+        targetLanguage,
+        options,
+      );
+      translatedChunks.push(translatedChunk.trim());
+    }
+
+    return translatedChunks.join('\n');
+  }
+  
   // Check cache first
   const cachedTranslation = getCachedTranslation(text, sourceLanguage, targetLanguage);
   if (cachedTranslation) {
@@ -258,10 +283,70 @@ export const createTranslatedDocument = async (
   }
   
   // For text-based documents, we can translate the content
-  if (originalDocument.fileType.includes('text') || 
-      originalDocument.fileType.includes('pdf') ||
-      originalDocument.fileType.includes('doc')) {
-    
+  if (originalDocument.fileType.includes('pdf')) {
+    try {
+      // 1. Download original PDF
+      const downloadUrl = await getDownloadUrl(originalDocument.filePath);
+      const pdfBuffer = Buffer.from(await (await fetch(downloadUrl)).arrayBuffer());
+
+      // 2. Extract text & split into pages
+      const pdfText = await extractPdfText(pdfBuffer);
+      const pages = pdfText.split(/\f/).filter(Boolean);
+
+      // Fallback when no form-feed page markers found
+      const pageChunks = pages.length > 0 ? pages : pdfText.split(/\n{2,}/);
+
+      // 3. Translate page-by-page
+      const translatedPages: string[] = [];
+      for (const [idx, pageTxt] of pageChunks.entries()) {
+        console.log(`📄 Translating PDF page ${idx + 1}/${pageChunks.length}`);
+        translatedPages.push(
+          await translateText(
+            pageTxt,
+            originalDocument.language as unknown as Language,
+            targetLanguage,
+          ),
+        );
+      }
+
+      // 4. Rebuild PDF
+      const translatedPdfBytes = await generatePdfFromPages(translatedPages);
+
+      // 5. Upload new PDF
+      const newFilePath = await uploadTranslatedPdf(
+        translatedPdfBytes,
+        originalDocument.filePath,
+        targetLanguage as any,
+      );
+
+      // 6. Create DB record
+      const translatedDocument = await createDocument(
+        `${originalDocument.title} (${targetLanguage})`,
+        originalDocument.description ? `${originalDocument.description} (Translated)` : null,
+        newFilePath,
+        translatedPdfBytes.byteLength,
+        'application/pdf',
+        originalDocument.category as unknown as DocumentCategory,
+        targetLanguage as any,
+        originalDocument.createdBy || '',
+        originalDocument.isPublic || false,
+      );
+
+      // Update relationship
+      await prisma.documents.update({
+        where: { id: translatedDocument.id },
+        data: { originalDocumentId: originalDocument.id, isTranslation: true },
+      });
+
+      return translatedDocument as unknown as Document;
+    } catch (error) {
+      console.error('PDF translation error:', error);
+      throw new Error(`Failed to translate PDF: ${(error as Error).message}`);
+    }
+  }
+
+  // Generic text-based flow (txt, doc, etc.)
+  if (originalDocument.fileType.includes('text') || originalDocument.fileType.includes('doc')) {
     try {
       // Get the document content (this would need to be implemented)
       const downloadUrl = await getDownloadUrl(originalDocument.filePath);

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Users, Upload, Download, Send, Trash2, Plus } from "lucide-react";
 import { toast } from "react-toastify";
 import { getWhatsAppClient } from "@/lib/whatsapp/client";
+import { useI18n } from "@/lib/i18n/client";
 
 interface Recipient {
   id: string;
@@ -15,6 +16,7 @@ interface Recipient {
 }
 
 export default function WhatsAppBroadcast() {
+  const { t } = useI18n();
   const [recipients, setRecipients] = useState<Recipient[]>([]);
   const [messageText, setMessageText] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -23,19 +25,19 @@ export default function WhatsAppBroadcast() {
 
   const addRecipient = () => {
     if (!newRecipientPhone.trim()) {
-      toast.error("Please enter a phone number");
+      toast.error(t('toast.whatsapp.phoneNumberRequired'));
       return;
     }
 
     const cleanPhone = newRecipientPhone.replace(/\s+/g, '');
     if (!cleanPhone.startsWith('+') || cleanPhone.length < 10) {
-      toast.error("Phone number must be in international format (+1234567890)");
+      toast.error(t('toast.whatsapp.phoneNumberInvalidFormat'));
       return;
     }
 
     // Check for duplicates
     if (recipients.find(r => r.phoneNumber === cleanPhone)) {
-      toast.error("This phone number is already in the list");
+      toast.error(t('toast.whatsapp.phoneNumberDuplicate'));
       return;
     }
 
@@ -49,7 +51,7 @@ export default function WhatsAppBroadcast() {
     setRecipients([...recipients, newRecipient]);
     setNewRecipientPhone("");
     setNewRecipientName("");
-    toast.success("Recipient added successfully");
+    toast.success(t('toast.whatsapp.recipientAddedSuccess'));
   };
 
   const removeRecipient = (id: string) => {
@@ -77,22 +79,22 @@ export default function WhatsAppBroadcast() {
     );
 
     if (newRecipients.length === 0) {
-      toast.info("Sample recipients are already in the list");
+      toast.info(t('toast.whatsapp.sampleRecipientsAlreadyAdded'));
       return;
     }
 
     setRecipients([...recipients, ...newRecipients]);
-    toast.success(`Added ${newRecipients.length} sample recipients`);
+    toast.success(t('toast.whatsapp.sampleRecipientsAdded', { count: newRecipients.length }));
   };
 
   const handleBroadcast = async () => {
     if (recipients.length === 0) {
-      toast.error("Please add at least one recipient");
+      toast.error(t('toast.whatsapp.recipientRequired'));
       return;
     }
 
     if (!messageText.trim()) {
-      toast.error("Please enter a message");
+      toast.error(t('toast.whatsapp.messageRequired'));
       return;
     }
 
@@ -127,14 +129,14 @@ export default function WhatsAppBroadcast() {
       const failedCount = results.length - successCount;
 
       if (successCount > 0) {
-        toast.success(`Broadcast sent! ${successCount} successful, ${failedCount} failed`);
+        toast.success(t('toast.whatsapp.broadcastSentPartial', { successCount, failedCount }));
       } else {
-        toast.error("All messages failed to send");
+        toast.error(t('toast.whatsapp.broadcastAllFailed'));
       }
 
     } catch (error: any) {
       console.error("Broadcast failed:", error);
-      toast.error(`Broadcast failed: ${error.message}`);
+      toast.error(t('toast.whatsapp.broadcastFailed', { error: error.message }));
       
       // Mark all as failed
       setRecipients(prev => prev.map(r => ({ 
@@ -149,7 +151,7 @@ export default function WhatsAppBroadcast() {
 
   const clearRecipients = () => {
     setRecipients([]);
-    toast.info("Recipients list cleared");
+    toast.info(t('toast.whatsapp.recipientsListCleared'));
   };
 
   const exportRecipients = () => {

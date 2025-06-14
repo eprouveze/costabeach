@@ -47,7 +47,7 @@ export default function LoginForm() {
           if (userError) {
             console.error('Error fetching user data:', userError);
             // Continue with default redirection even if user data fetch fails
-            toast.warning('Could not fetch complete user profile, redirecting to home page');
+            toast.warning(t('toast.auth.profileIncompleteWarning'));
           }
           
           toast.success(t('auth.signin.success'));
@@ -101,8 +101,8 @@ export default function LoginForm() {
         }
       }
     } catch (error: any) {
-      setErrorMessage(error.message || 'An error occurred during sign in');
-      toast.error(error.message || 'An error occurred during sign in');
+      setErrorMessage(error.message || t('toast.auth.signInError'));
+      toast.error(error.message || t('toast.auth.signInError'));
     } finally {
       setIsLoading(false);
     }

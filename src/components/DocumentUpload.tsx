@@ -6,6 +6,7 @@ import { useDocuments } from "@/lib/hooks/useDocuments";
 import { DocumentCategory, Language } from "@/lib/types";
 import { formatFileSize } from "@/lib/utils/shared";
 import { Upload, X, FileText, Loader2 } from "lucide-react";
+import { useI18n } from "@/lib/i18n/client";
 
 interface DocumentUploadProps {
   onSuccess?: () => void;
@@ -18,6 +19,7 @@ export const DocumentUpload = ({
   defaultCategory = DocumentCategory.COMITE_DE_SUIVI,
   defaultLanguage = Language.FRENCH,
 }: DocumentUploadProps) => {
+  const { t } = useI18n();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState<DocumentCategory>(defaultCategory);
@@ -65,12 +67,12 @@ export const DocumentUpload = ({
     e.preventDefault();
     
     if (!file) {
-      toast.error("Please select a file to upload");
+      toast.error(t('toast.documents.fileRequired'));
       return;
     }
     
     if (!title.trim()) {
-      toast.error("Please enter a title for the document");
+      toast.error(t('toast.documents.titleRequired'));
       return;
     }
     

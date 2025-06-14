@@ -44,12 +44,12 @@ export function DocumentUploadForm({ isOpen, onClose, onUploadSuccess }: Documen
     e.preventDefault();
     
     if (selectedFiles.length === 0) {
-      toast.error(t("documents.noFileSelected") || "Please select a file");
+      toast.error(t('toast.documents.fileRequired'));
       return;
     }
 
     if (!title.trim()) {
-      toast.error(t("documents.titleRequired") || "Please enter a title");
+      toast.error(t('toast.documents.titleRequired'));
       return;
     }
 
@@ -94,7 +94,7 @@ export function DocumentUploadForm({ isOpen, onClose, onUploadSuccess }: Documen
         isPublished: true,
       });
 
-      toast.success(t("documents.uploadSuccess") || "Document uploaded successfully!");
+      toast.success(t('toast.documents.uploadSuccess'));
       
       // Reset form
       setSelectedFiles([]);
@@ -109,7 +109,7 @@ export function DocumentUploadForm({ isOpen, onClose, onUploadSuccess }: Documen
       toast.error(
         error instanceof Error 
           ? error.message 
-          : t("documents.uploadError") || "Failed to upload document"
+          : t('toast.documents.uploadError')
       );
     } finally {
       setIsUploading(false);

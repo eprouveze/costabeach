@@ -16,6 +16,7 @@ import {
   EyeOff
 } from "lucide-react";
 import { toast } from "react-toastify";
+import { useI18n } from "@/lib/i18n/client";
 import { getWhatsAppClient } from "@/lib/whatsapp/client";
 
 interface WhatsAppConfig {
@@ -44,6 +45,7 @@ interface Template {
 }
 
 export default function WhatsAppSettings() {
+  const { t } = useI18n();
   const [config, setConfig] = useState<WhatsAppConfig>({
     phoneNumberId: '',
     accessToken: '',
@@ -123,10 +125,10 @@ export default function WhatsAppSettings() {
       await whatsappClient.initialize();
       
       setConfig(prev => ({ ...prev, connectionStatus: 'connected' }));
-      toast.success("WhatsApp connection successful!");
+      toast.success(t('toast.whatsapp.connectionSuccessful'));
     } catch (error: any) {
       setConfig(prev => ({ ...prev, connectionStatus: 'disconnected' }));
-      toast.error(`Connection failed: ${error.message}`);
+      toast.error(t('toast.whatsapp.connectionFailed', { error: error.message }));
     } finally {
       setIsTestingConnection(false);
     }
@@ -141,9 +143,9 @@ export default function WhatsAppSettings() {
       
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
       
-      toast.success("Settings saved successfully!");
+      toast.success(t('toast.whatsapp.settingsSaveSuccess'));
     } catch (error: any) {
-      toast.error(`Failed to save settings: ${error.message}`);
+      toast.error(t('toast.whatsapp.settingsSaveError', { error: error.message }));
     } finally {
       setIsSaving(false);
     }

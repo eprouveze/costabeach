@@ -51,11 +51,11 @@ export default function SocialLoginButtons({ redirectUrl = '/auth/callback' }: S
       const { error } = await signInWithGoogle(getFullRedirectUrl());
       if (error) {
         console.error('Google sign in error:', error);
-        toast.error(error.message || 'Failed to sign in with Google');
+        toast.error(error.message || t('toast.auth.googleSignInFailed'));
       }
     } catch (error: any) {
       console.error('Google sign in error:', error);
-      toast.error(error.message || 'Failed to sign in with Google');
+      toast.error(error.message || t('toast.auth.googleSignInFailed'));
     } finally {
       setIsGoogleLoading(false);
     }

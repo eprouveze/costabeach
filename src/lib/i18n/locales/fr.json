@@ -386,7 +386,6 @@
     "noDocumentsDescription": "Il n'y a actuellement aucun document disponible dans cette catégorie.",
     "noDocumentsInCategory": "Aucun document dans cette catégorie",
     "noDownloadUrl": "URL de téléchargement indisponible",
-    "noFileSelected": "Veuillez sélectionner un fichier",
     "noMatchingCategories": "Aucune catégorie correspondante trouvée",
     "noMatchingDocuments": "Aucun document correspondant trouvé",
     "noSearchResults": "Aucun document trouvé pour '{{query}}'",
@@ -405,7 +404,6 @@
     "size": "Taille",
     "title": "Documents",
     "titlePlaceholder": "Entrez un titre...",
-    "titleRequired": "Veuillez saisir un titre",
     "translate": "Traduire",
     "translation": "Traduction",
     "tryDifferentSearch": "Essayez un terme de recherche différent ou effacez la recherche",
@@ -417,10 +415,8 @@
     "uploadDocument": "Téléverser un document",
     "uploadedBy": "Téléversé par",
     "uploadedOn": "Téléversé le {{date}}",
-    "uploadError": "Erreur lors du téléversement",
     "uploadFirst": "Téléversez votre premier document",
     "uploading": "Téléversement en cours...",
-    "uploadSuccess": "Document téléversé avec succès",
     "view": "Voir",
     "viewAll": "Voir tout",
     "viewCount": "vues",
@@ -637,17 +633,28 @@
       "translationStatusFetchError": "Erreur lors de la récupération du statut de traduction"
     },
     "auth": {
+      "accessDenied": "Accès refusé. Assurez-vous d'avoir un compte approuvé",
+      "checkEmailForLink": "Vérifiez votre email pour le lien de connexion!",
+      "googleSignInFailed": "Échec de la connexion avec Google",
       "passwordMismatch": "Les mots de passe ne correspondent pas",
       "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
       "passwordUpdateSuccess": "Mot de passe mis à jour avec succès",
       "permissionDenied": "Vous n'avez pas l'autorisation d'accéder à cette page",
+      "profileIncompleteWarning": "Impossible de récupérer le profil utilisateur complet, redirection vers la page d'accueil",
       "resetLinkSent": "Lien de réinitialisation envoyé à votre email",
-      "signOutSuccess": "Vous avez été déconnecté avec succès"
+      "signInError": "Une erreur est survenue lors de la connexion. Veuillez réessayer",
+      "signInFailed": "Échec de la connexion. Veuillez réessayer",
+      "signOutSuccess": "Vous avez été déconnecté avec succès",
+      "unexpectedError": "Une erreur inattendue s'est produite. Veuillez réessayer"
     },
     "documents": {
-      "translationRequestError": "",
-      "translationRequestFailed": "",
-      "translationRequestSuccess": ""
+      "fileRequired": "Veuillez sélectionner un fichier à téléverser",
+      "titleRequired": "Veuillez saisir un titre pour le document",
+      "translationRequestError": "Erreur lors de la demande de traduction",
+      "translationRequestFailed": "Demande de traduction échouée",
+      "translationRequestSuccess": "Traduction demandée avec succès",
+      "uploadError": "Erreur lors du téléversement du document",
+      "uploadSuccess": "Document téléversé avec succès"
     },
     "general": {
       "errorOccurred": "Une erreur s'est produite",
@@ -665,13 +672,28 @@
       "lightModeEnabled": "Mode clair activé"
     },
     "whatsapp": {
+      "broadcastAllFailed": "Tous les messages ont échoué à l'envoi",
+      "broadcastFailed": "Échec de la diffusion: {{error}}",
+      "broadcastSentPartial": "Diffusion envoyée! {{successCount}} réussis, {{failedCount}} échoués",
+      "connectionFailed": "Échec de la connexion: {{error}}",
+      "connectionSuccessful": "Connexion WhatsApp réussie!",
       "documentUrlRequired": "Veuillez fournir l'URL du document et le nom du fichier",
       "imageUrlRequired": "Veuillez fournir l'URL de l'image",
       "messageRequired": "Veuillez saisir un message",
       "messageSendError": "Échec de l'envoi du message: {{error}}",
       "messageSentSuccess": "Message envoyé avec succès! ID: {{messageId}}",
+      "phoneNumberDuplicate": "Ce numéro de téléphone est déjà dans la liste",
       "phoneNumberInvalidFormat": "Le numéro de téléphone doit être au format international (+1234567890)",
       "phoneNumberRequired": "Veuillez saisir un numéro de téléphone",
+      "recipientAddedSuccess": "Destinataire ajouté avec succès",
+      "recipientRequired": "Veuillez ajouter au moins un destinataire",
+      "recipientsListCleared": "Liste des destinataires effacée",
+      "sampleRecipientsAdded_one": "{{count}} destinataire d'exemple ajouté",
+      "sampleRecipientsAdded_many": "{{count}} destinataires d'exemple ajoutés",
+      "sampleRecipientsAdded_other": "{{count}} destinataires d'exemple ajoutés",
+      "sampleRecipientsAlreadyAdded": "Les destinataires d'exemple sont déjà dans la liste",
+      "settingsSaveError": "Échec de la sauvegarde des paramètres: {{error}}",
+      "settingsSaveSuccess": "Paramètres sauvegardés avec succès!",
       "templateNameRequired": "Veuillez saisir un nom de modèle"
     }
   }

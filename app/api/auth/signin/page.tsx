@@ -1,12 +1,12 @@
 "use client";
 
 import { getProviders, signIn, getSession, getCsrfToken } from "next-auth/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
-export default function SignInPage() {
+function SignInContent() {
   const [providers, setProviders] = useState<any>(null);
   const [csrfToken, setCsrfToken] = useState("");
   const [email, setEmail] = useState("");
@@ -157,5 +157,13 @@ export default function SignInPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen" />}> 
+      <SignInContent />
+    </Suspense>
   );
 }

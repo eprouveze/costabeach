@@ -746,3 +746,11 @@ Note: Some tests are still failing due to type errors and outdated test implemen
 + Fix: Use correct 'x-api-key' header instead of 'Authorization: Bearer' for Anthropic API in translations.ts
 
 + Refactor aiClient.ts to lazily instantiate OpenAI/Perplexity clients when env vars are present, preventing build failures when keys are missing.
+
++ Handle large texts: translateText now splits input into 40k-char chunks to stay below Anthropic token limits.
+
++ Add PDF support: extract text from original PDF, translate each page, regenerate and upload translated PDF, store as new document linked to original.
+
++ Ignore pdf-parse test fixture via IgnorePlugin and mark pdf-parse external; switched to dynamic import in pdf utils to avoid ENOENT build error.
+
++ Wrap SignInPage in Suspense boundary to satisfy Next 15 requirement for useSearchParams.

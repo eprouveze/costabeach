@@ -8,8 +8,10 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
+import { useI18n } from "@/lib/i18n/client";
 
 function SignInContent() {
+  const { t } = useI18n();
   const [email, setEmail] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const searchParams = useSearchParams();
@@ -21,8 +23,8 @@ function SignInContent() {
     if (error) {
       toast.error(
         error === "AccessDenied"
-          ? "Access denied. Please make sure you have an approved account."
-          : "An error occurred during sign in. Please try again."
+          ? t('toast.auth.accessDenied')
+          : t('toast.auth.signInError')
       );
     }
   }, [error]);
@@ -39,13 +41,13 @@ function SignInContent() {
       });
 
       if (result?.error) {
-        toast.error("Failed to sign in. Please try again.");
+        toast.error(t('toast.auth.signInFailed'));
       } else {
-        toast.success("Check your email for the login link!");
+        toast.success(t('toast.auth.checkEmailForLink'));
         router.push("/auth/verify");
       }
     } catch (error) {
-      toast.error("An unexpected error occurred. Please try again.");
+      toast.error(t('toast.auth.unexpectedError'));
     } finally {
       setIsLoading(false);
     }
