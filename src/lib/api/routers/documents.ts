@@ -10,7 +10,9 @@ import {
   incrementViewCount,
   canManageDocumentCategory
 } from "@/lib/utils/documents";
-import { DocumentCategory, Language, Permission } from "@/lib/types";
+import { DocumentCategory, Language, Permission, TranslationQuality, TranslationStatus } from "@/lib/types";
+import { TranslationQueueService } from "@/lib/services/translationQueueService";
+import { ContentDetector } from "@/lib/utils/contentDetection";
 import { PrismaClient } from "@prisma/client";
 import { createAuditLog } from "@/lib/utils/audit";
 import { checkPermission } from "@/lib/utils/permissions";
@@ -125,6 +127,38 @@ export const documentsRouter = router({
           userId,
           input.isPublished
         );
+        
+        // Analyze content and queue translations for all languages
+        try {
+          const contentAnalysis = await ContentDetector.analyzeFile(
+            input.fileType,
+            input.title,
+            input.fileSize
+          );
+          
+          // Update document with content analysis results
+          await prisma.documents.update({
+            where: { id: document.id },
+            data: {
+              sourceLanguage: input.language,
+              translationQuality: TranslationQuality.ORIGINAL,
+              translationStatus: TranslationStatus.COMPLETED,
+              contentExtractable: contentAnalysis.isExtractable
+            }
+          });
+          
+          // Create translation jobs for all other languages
+          await TranslationQueueService.createTranslationJobs(
+            document.id,
+            input.language,
+            [Language.FRENCH, Language.ENGLISH, Language.ARABIC]
+          );
+          
+          console.log(`Queued translations for document: ${document.id} (${input.language} -> others)`);
+        } catch (translationError) {
+          console.error('Failed to queue translations for document:', document.id, translationError);
+          // Don't fail the upload if translation queueing fails
+        }
         
         // Create audit log for document creation
         await createAuditLog(
@@ -263,6 +297,87 @@ export const documentsRouter = router({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to fetch documents",
+        });
+      }
+    }),
+
+  // Get documents with their translations
+  getDocumentsWithTranslations: publicProcedure
+    .input(
+      z.object({
+        category: z.nativeEnum(DocumentCategory),
+        language: z.nativeEnum(Language).optional(),
+        limit: z.number().min(1).max(100).default(10),
+        offset: z.number().min(0).default(0),
+        searchQuery: z.string().optional(),
+      })
+    )
+    .query(async ({ input }) => {
+      const { category, language, limit, offset, searchQuery } = input;
+      
+      try {
+        // Get original documents (not translations)
+        const originalDocuments = await prisma.documents.findMany({
+          where: {
+            category: category,
+            isTranslation: false,
+            ...(searchQuery && {
+              OR: [
+                { title: { contains: searchQuery, mode: 'insensitive' } },
+                { description: { contains: searchQuery, mode: 'insensitive' } },
+              ],
+            }),
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+            // Get all translations for this document
+            other_documents: {
+              where: {
+                isTranslation: true,
+              },
+              orderBy: {
+                createdAt: 'desc',
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+          take: limit,
+          skip: offset,
+        });
+
+        // Transform the data to include translations grouped by language
+        const documentsWithTranslations = originalDocuments.map((doc) => ({
+          original: {
+            ...doc,
+            fileSize: Number(doc.fileSize),
+            authorId: doc.createdBy || '',
+            author: doc.user ? { id: doc.user.id, name: doc.user.name } : undefined,
+            isTranslated: doc.other_documents.length > 0,
+            isPublished: doc.isPublic || false,
+          },
+          translations: doc.other_documents.map((translation) => ({
+            ...translation,
+            fileSize: Number(translation.fileSize),
+            authorId: translation.createdBy || '',
+            isTranslated: false,
+            isPublished: translation.isPublic || false,
+          })),
+        }));
+
+        return documentsWithTranslations;
+      } catch (error) {
+        console.error("Error fetching documents with translations:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch documents with translations",
         });
       }
     }),

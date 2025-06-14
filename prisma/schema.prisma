@@ -177,26 +177,52 @@ model document_versions {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model documents {
-  id                   String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                   String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title                String
   description          String?
-  filePath             String      @map("file_path")
-  fileType             String      @map("file_type")
-  fileSize             BigInt      @map("file_size")
+  filePath             String               @map("file_path")
+  fileType             String               @map("file_type")
+  fileSize             BigInt               @map("file_size")
   category             String
-  language             String?     @default("fr")
-  isPublic             Boolean?    @map("is_public") @default(false)
-  viewCount            Int?        @map("view_count") @default(0)
-  downloadCount        Int?        @map("download_count") @default(0)
-  createdAt            DateTime    @map("created_at") @default(now()) @db.Timestamptz(6)
-  updatedAt            DateTime    @map("updated_at") @default(now()) @db.Timestamptz(6)
-  createdBy            String?     @map("created_by") @db.Uuid
-  originalDocumentId   String?     @map("original_document_id") @db.Uuid
-  isTranslation        Boolean?    @map("is_translation") @default(false)
-  searchableText       String?     @map("searchable_text")
-  user                 User?       @relation(fields: [createdBy], references: [id], onUpdate: NoAction)
-  documents            documents?  @relation("documentsTodocuments", fields: [originalDocumentId], references: [id], onUpdate: NoAction)
-  other_documents      documents[] @relation("documentsTodocuments")
+  language             String?              @default("fr")
+  sourceLanguage       String?              @map("source_language")
+  translationQuality   TranslationQuality?  @map("translation_quality") @default(original)
+  translationStatus    TranslationStatus?   @map("translation_status") @default(completed)
+  contentExtractable   Boolean?             @map("content_extractable") @default(true)
+  isPublic             Boolean?             @map("is_public") @default(false)
+  viewCount            Int?                 @map("view_count") @default(0)
+  downloadCount        Int?                 @map("download_count") @default(0)
+  createdAt            DateTime             @map("created_at") @default(now()) @db.Timestamptz(6)
+  updatedAt            DateTime             @map("updated_at") @default(now()) @db.Timestamptz(6)
+  createdBy            String?              @map("created_by") @db.Uuid
+  originalDocumentId   String?              @map("original_document_id") @db.Uuid
+  isTranslation        Boolean?             @map("is_translation") @default(false)
+  searchableText       String?              @map("searchable_text")
+  user                 User?                @relation(fields: [createdBy], references: [id], onUpdate: NoAction)
+  documents            documents?           @relation("documentsTodocuments", fields: [originalDocumentId], references: [id], onUpdate: NoAction)
+  other_documents      documents[]          @relation("documentsTodocuments")
+  translationJobs      DocumentTranslationJob[]
+}
+
+model DocumentTranslationJob {
+  id              String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  documentId      String            @map("document_id") @db.Uuid
+  targetLanguage  String            @map("target_language")
+  status          TranslationStatus @default(pending)
+  errorMessage    String?           @map("error_message")
+  attempts        Int               @default(0)
+  maxAttempts     Int               @map("max_attempts") @default(3)
+  createdAt       DateTime          @map("created_at") @default(now()) @db.Timestamptz(6)
+  startedAt       DateTime?         @map("started_at") @db.Timestamptz(6)
+  completedAt     DateTime?         @map("completed_at") @db.Timestamptz(6)
+  
+  document        documents         @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  
+  @@unique([documentId, targetLanguage], map: "document_translation_jobs_document_id_target_language_key")
+  @@index([documentId], map: "document_translation_jobs_document_id_idx")
+  @@index([status], map: "document_translation_jobs_status_idx")
+  @@index([targetLanguage], map: "document_translation_jobs_target_language_idx")
+  @@map("document_translation_jobs")
 }
 
 model feature_flags {
@@ -603,10 +629,16 @@ enum RegistrationStatus {
 
 enum TranslationStatus {
   pending
-  in_progress
+  processing  
   completed
   failed
-  cancelled
+}
+
+enum TranslationQuality {
+  original
+  machine
+  human
+  hybrid
 }
 
 enum UserRole {
