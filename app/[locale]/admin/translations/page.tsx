@@ -360,39 +360,39 @@ export default function TranslationManagementPage() {
             
             {stats ? (
               <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-                  <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+                <div className="text-center p-4 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-lg">
+                  <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-300">
                     {stats.pending}
                   </div>
-                  <div className="text-sm text-yellow-700 dark:text-yellow-300">Pending</div>
+                  <div className="text-sm text-yellow-700 dark:text-yellow-200">Pending</div>
                 </div>
                 
-                <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg">
+                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-300">
                     {stats.processing}
                   </div>
-                  <div className="text-sm text-blue-700 dark:text-blue-300">Processing</div>
+                  <div className="text-sm text-blue-700 dark:text-blue-200">Processing</div>
                 </div>
                 
-                <div className="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                  <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                <div className="text-center p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-lg">
+                  <div className="text-2xl font-bold text-green-600 dark:text-green-300">
                     {stats.completed}
                   </div>
-                  <div className="text-sm text-green-700 dark:text-green-300">Completed</div>
+                  <div className="text-sm text-green-700 dark:text-green-200">Completed</div>
                 </div>
                 
-                <div className="text-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-                  <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+                <div className="text-center p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 rounded-lg">
+                  <div className="text-2xl font-bold text-red-600 dark:text-red-300">
                     {stats.failed}
                   </div>
-                  <div className="text-sm text-red-700 dark:text-red-300">Failed</div>
+                  <div className="text-sm text-red-700 dark:text-red-200">Failed</div>
                 </div>
                 
-                <div className="col-span-2 text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <div className="text-2xl font-bold text-gray-600 dark:text-gray-400">
+                <div className="col-span-2 text-center p-4 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg">
+                  <div className="text-2xl font-bold text-gray-700 dark:text-gray-200">
                     {stats.total}
                   </div>
-                  <div className="text-sm text-gray-700 dark:text-gray-300">Total Jobs</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300">Total Jobs</div>
                 </div>
               </div>
             ) : (
