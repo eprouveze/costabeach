@@ -8,7 +8,8 @@ import {
   getUploadUrl, 
   incrementDownloadCount, 
   incrementViewCount,
-  canManageDocumentCategory
+  canManageDocumentCategory,
+  deleteS3File
 } from "@/lib/utils/documents";
 import { DocumentCategory, Language, Permission, TranslationQuality, TranslationStatus } from "@/lib/types";
 import { TranslationQueueService } from "@/lib/services/translationQueueService";
@@ -45,12 +46,14 @@ export const documentsRouter = router({
       // Get the user from the database to check permissions
       const user = await prisma.user.findUnique({
         where: { id: userId },
-        select: { permissions: true }
+        select: { permissions: true, isAdmin: true }
       });
       
       // Check if user has permission to upload documents in this category
       const userPermissions = user?.permissions || [];
-      if (!canManageDocumentCategory(userPermissions, category)) {
+      const isAdmin = user?.isAdmin || false;
+      
+      if (!isAdmin && !canManageDocumentCategory(userPermissions, category)) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You don't have permission to upload documents in this category",
@@ -103,12 +106,14 @@ export const documentsRouter = router({
       // Get the user from the database to check permissions
       const user = await prisma.user.findUnique({
         where: { id: userId },
-        select: { permissions: true }
+        select: { permissions: true, isAdmin: true }
       });
       
       // Check if user has permission to create documents in this category
       const userPermissions = user?.permissions || [];
-      if (!canManageDocumentCategory(userPermissions, input.category)) {
+      const isAdmin = user?.isAdmin || false;
+      
+      if (!isAdmin && !canManageDocumentCategory(userPermissions, input.category)) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You don't have permission to create documents in this category",
@@ -151,7 +156,8 @@ export const documentsRouter = router({
           await TranslationQueueService.createTranslationJobs(
             document.id,
             input.language,
-            [Language.FRENCH, Language.ENGLISH, Language.ARABIC]
+            [Language.FRENCH, Language.ENGLISH, Language.ARABIC],
+            userId
           );
           
           console.log(`Queued translations for document: ${document.id} (${input.language} -> others)`);
@@ -580,17 +586,16 @@ export const documentsRouter = router({
       const userId = ctx.user.id;
       
       try {
-        // Get the document to check category
+        // Get the document to check category and get file path for S3 deletion
         const document = await prisma.documents.findUnique({
           where: { id: documentId },
-          select: { category: true, createdBy: true, title: true },
+          select: { category: true, createdBy: true, title: true, filePath: true },
         });
         
         if (!document) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Document not found",
-          });
+          // Document already deleted or never existed
+          console.log(`Document ${documentId} not found - it may have already been deleted`);
+          return { success: true, message: "Document was already deleted" };
         }
         
         // Get the user from the database to check permissions
@@ -621,17 +626,25 @@ export const documentsRouter = router({
           documentId,
           { 
             title: document.title,
-            category: document.category
+            category: document.category,
+            filePath: document.filePath
           }
         );
+        
+        // Delete file from S3 first
+        try {
+          await deleteS3File(document.filePath);
+          console.log(`Successfully deleted S3 file: ${document.filePath}`);
+        } catch (s3Error) {
+          console.error(`Failed to delete S3 file: ${document.filePath}`, s3Error);
+          // Continue with database deletion even if S3 deletion fails
+          // The file will be orphaned but the user operation should succeed
+        }
         
         // Delete document from database
         await prisma.documents.delete({
           where: { id: documentId },
         });
-        
-        // Note: We're not deleting the file from S3 here
-        // This could be implemented as a background job or separate function
         
         return { success: true };
       } catch (error) {

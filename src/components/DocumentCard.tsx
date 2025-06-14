@@ -52,13 +52,9 @@ export const DocumentCard = ({
   };
   
   const handleDelete = async () => {
-    if (window.confirm(t("documents.confirmDelete"))) {
-      setIsDeleting(true);
-      const success = await deleteDocument(document.id, document.category as DocumentCategory);
-      if (success && onDelete) {
-        onDelete(document.id);
-      }
-      setIsDeleting(false);
+    // Call the parent's delete handler directly - let the parent handle confirmation
+    if (onDelete) {
+      onDelete(document.id);
     }
   };
   

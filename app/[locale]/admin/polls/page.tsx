@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { checkPermission } from "@/lib/utils/permissions";
 import { Permission } from "@/lib/types";
+import { Header } from "@/components/organisms/Header";
 
 interface Poll {
   id: string;
@@ -210,10 +211,13 @@ export default function AdminPollsPage() {
 
   if (!canManagePolls) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <Header />
+        <div className="container mx-auto px-4 py-8">
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
           <p className="font-bold">{t("common.accessDenied") || "Access Denied"}</p>
           <p>{t("polls.adminRequired") || "You need admin permissions to manage polls."}</p>
+        </div>
         </div>
       </div>
     );
@@ -221,9 +225,12 @@ export default function AdminPollsPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <Header />
+        <div className="container mx-auto px-4 py-8">
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
         </div>
       </div>
     );
@@ -231,7 +238,9 @@ export default function AdminPollsPage() {
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <Header />
+        <div className="container mx-auto px-4 py-8">
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
           <p className="font-bold">{t("common.error") || "Error"}</p>
           <p>{error}</p>
@@ -242,12 +251,15 @@ export default function AdminPollsPage() {
             {t("common.retry") || "Retry"}
           </button>
         </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <Header />
+      <div className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -431,6 +443,7 @@ export default function AdminPollsPage() {
             emptyMessage={t("polls.noPolls") || "No polls created yet. Create the first one!"}
           />
         </div>
+      </div>
       </div>
     </div>
   );

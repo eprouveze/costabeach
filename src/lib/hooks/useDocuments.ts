@@ -14,6 +14,13 @@ export const useDocuments = () => {
   const utils = api.useUtils();
   const router = useRouter();
   
+  // Define mutations at the hook level
+  const getUploadUrlMutation = api.documents.getUploadUrl.useMutation();
+  const createDocumentMutation = api.documents.createDocument.useMutation();
+  const incrementViewCountMutation = api.documents.incrementViewCount.useMutation();
+  const getDownloadUrlMutation = api.documents.getDownloadUrl.useMutation();
+  const deleteDocumentMutation = api.documents.deleteDocument.useMutation();
+  
   // Get documents by category
   const useDocumentsByCategory = (
     category: DocumentCategory,
@@ -83,7 +90,6 @@ export const useDocuments = () => {
     
     try {
       // Step 1: Get a signed URL for uploading
-      const getUploadUrlMutation = api.documents.getUploadUrl.useMutation();
       const { uploadUrl, filePath } = await getUploadUrlMutation.mutateAsync({
         fileName: file.name,
         fileType: file.type,
@@ -126,7 +132,6 @@ export const useDocuments = () => {
       await uploadPromise;
       
       // Step 3: Create document record in database
-      const createDocumentMutation = api.documents.createDocument.useMutation();
       const document = await createDocumentMutation.mutateAsync({
         title,
         description,
@@ -158,11 +163,9 @@ export const useDocuments = () => {
   const downloadDocument = async (documentId: string, fileName: string) => {
     try {
       // Increment view count
-      const incrementViewCountMutation = api.documents.incrementViewCount.useMutation();
       await incrementViewCountMutation.mutateAsync({ documentId });
       
       // Get download URL
-      const getDownloadUrlMutation = api.documents.getDownloadUrl.useMutation();
       const { downloadUrl } = await getDownloadUrlMutation.mutateAsync({ documentId });
       
       // Create a temporary link and trigger download
@@ -184,7 +187,6 @@ export const useDocuments = () => {
   // Delete a document
   const deleteDocument = async (documentId: string, category: DocumentCategory) => {
     try {
-      const deleteDocumentMutation = api.documents.deleteDocument.useMutation();
       await deleteDocumentMutation.mutateAsync({ documentId });
       
       // Invalidate queries to refresh document lists

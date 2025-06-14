@@ -11,7 +11,8 @@ export class TranslationQueueService {
   static async createTranslationJobs(
     documentId: string, 
     sourceLanguage: Language,
-    targetLanguages: Language[] = [Language.FRENCH, Language.ENGLISH, Language.ARABIC]
+    targetLanguages: Language[] = [Language.FRENCH, Language.ENGLISH, Language.ARABIC],
+    requestedBy: string
   ): Promise<void> {
     // Filter out the source language from target languages
     const filteredTargets = targetLanguages.filter(lang => lang !== sourceLanguage);
@@ -19,21 +20,23 @@ export class TranslationQueueService {
     for (const targetLanguage of filteredTargets) {
       try {
         // Check if job already exists
-        const existingJob = await prisma.documentTranslationJob.findUnique({
+        const existingJob = await prisma.document_translations.findUnique({
           where: {
-            documentId_targetLanguage: {
-              documentId,
-              targetLanguage
+            document_id_target_language: {
+              document_id: documentId,
+              target_language: targetLanguage
             }
           }
         });
 
         if (!existingJob) {
-          await prisma.documentTranslationJob.create({
+          await prisma.document_translations.create({
             data: {
-              documentId,
-              targetLanguage,
-              status: TranslationStatus.PENDING
+              document_id: documentId,
+              source_language: sourceLanguage,
+              target_language: targetLanguage,
+              status: TranslationStatus.PENDING,
+              requested_by: requestedBy
             }
           });
           

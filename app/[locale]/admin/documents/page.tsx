@@ -5,6 +5,8 @@ import { api } from "@/lib/trpc/react";
 import { useI18n } from "@/lib/i18n/client";
 import { DocumentCategory, Language } from "@/lib/types";
 import { DocumentCard } from "@/components/DocumentCard";
+import { DocumentUploadForm } from "@/components/DocumentUploadForm";
+import { Header } from "@/components/organisms/Header";
 import { 
   FileText, 
   Upload, 
@@ -38,19 +40,31 @@ export default function AdminDocumentsPage() {
     includePrivate: true // Admin can see all documents
   });
 
+  const utils = api.useUtils();
+  
   const deleteDocument = api.documents.deleteDocument.useMutation({
     onSuccess: () => {
       toast.success("Document deleted successfully");
+      // Invalidate and refetch the documents list
+      utils.documents.getAllDocuments.invalidate();
       refetch();
     },
     onError: (error) => {
-      toast.error(`Failed to delete document: ${error.message}`);
+      // Don't duplicate "Failed to delete document" if it's already in the error message
+      const message = error.message.includes('Failed to delete document') 
+        ? error.message 
+        : `Failed to delete document: ${error.message}`;
+      toast.error(message);
     }
   });
 
   const handleDeleteDocument = async (documentId: string) => {
     if (window.confirm("Are you sure you want to delete this document? This action cannot be undone.")) {
-      deleteDocument.mutate({ documentId });
+      try {
+        deleteDocument.mutate({ documentId });
+      } catch (error) {
+        console.error('Error initiating document deletion:', error);
+      }
     }
   };
 
@@ -101,6 +115,7 @@ export default function AdminDocumentsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <Header />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -290,26 +305,13 @@ export default function AdminDocumentsPage() {
         )}
 
         {/* Upload Form Modal */}
-        {showUploadForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                {t("documents.uploadDocument")}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 mb-4">
-                {t("documents.uploadComingSoon")}
-              </p>
-              <div className="flex justify-end">
-                <button
-                  onClick={() => setShowUploadForm(false)}
-                  className="bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md"
-                >
-                  {t("common.close")}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <DocumentUploadForm
+          isOpen={showUploadForm}
+          onClose={() => setShowUploadForm(false)}
+          onUploadSuccess={() => {
+            refetch(); // Refresh the documents list
+          }}
+        />
       </div>
     </div>
   );
