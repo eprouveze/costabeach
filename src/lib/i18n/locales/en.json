@@ -690,7 +690,8 @@
       "sampleRecipientsAlreadyAdded": "Sample recipients are already in the list",
       "settingsSaveError": "Failed to save settings: {{error}}",
       "settingsSaveSuccess": "Settings saved successfully!",
-      "templateNameRequired": "Please enter a template name"
+      "templateNameRequired": "Please enter a template name",
+      "historyExportSuccess": "Message history exported successfully"
     }
   }
 }

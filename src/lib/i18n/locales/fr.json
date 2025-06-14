@@ -694,7 +694,8 @@
       "sampleRecipientsAlreadyAdded": "Les destinataires d'exemple sont déjà dans la liste",
       "settingsSaveError": "Échec de la sauvegarde des paramètres: {{error}}",
       "settingsSaveSuccess": "Paramètres sauvegardés avec succès!",
-      "templateNameRequired": "Veuillez saisir un nom de modèle"
+      "templateNameRequired": "Veuillez saisir un nom de modèle",
+      "historyExportSuccess": "Historique des messages exporté avec succès"
     }
   }
 }

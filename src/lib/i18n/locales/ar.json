@@ -706,7 +706,8 @@
       "sampleRecipientsAlreadyAdded": "المستلمون النموذجيون موجودون بالفعل في القائمة",
       "settingsSaveError": "فشل في حفظ الإعدادات: {{error}}",
       "settingsSaveSuccess": "تم حفظ الإعدادات بنجاح!",
-      "templateNameRequired": "يرجى إدخال اسم القالب"
+      "templateNameRequired": "يرجى إدخال اسم القالب",
+      "historyExportSuccess": "تم تصدير تاريخ الرسائل بنجاح"
     }
   }
 }

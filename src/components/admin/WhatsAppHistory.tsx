@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Search, Filter, Download, MessageSquare, Calendar, User } from "lucide-react";
 import { toast } from "react-toastify";
+import { useI18n } from "@/lib/i18n/client";
 
 interface WhatsAppMessage {
   id: string;
@@ -70,6 +71,7 @@ const mockMessages: WhatsAppMessage[] = [
 ];
 
 export default function WhatsAppHistory() {
+  const { t } = useI18n();
   const [messages, setMessages] = useState<WhatsAppMessage[]>(mockMessages);
   const [filteredMessages, setFilteredMessages] = useState<WhatsAppMessage[]>(mockMessages);
   const [searchQuery, setSearchQuery] = useState("");
@@ -140,7 +142,7 @@ export default function WhatsAppHistory() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast.success("Message history exported successfully");
+    toast.success(t('toast.whatsapp.historyExportSuccess'));
   };
 
   const getStatusColor = (status: WhatsAppMessage['status']) => {
