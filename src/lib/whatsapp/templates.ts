@@ -1,4 +1,4 @@
-import { whatsappClient } from './client';
+import { getWhatsAppClient } from './client';
 
 export const messageTemplates = {
   // Verification code template
@@ -86,6 +86,7 @@ export const messageTemplates = {
 // Template management functions
 export async function ensureTemplatesExist() {
   try {
+    const whatsappClient = getWhatsAppClient();
     const existingTemplates = await whatsappClient.getMessageTemplates();
     const existingNames = existingTemplates.map(t => t.name);
     

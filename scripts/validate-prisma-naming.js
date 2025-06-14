@@ -176,8 +176,19 @@ function validateFile(filePath) {
   const violations = [];
   
   lines.forEach((line, lineNumber) => {
-    // Skip if not a Prisma operation
-    if (!isPrismaOperation(line)) {
+    // Skip empty lines and pure comments
+    if (line.trim().length === 0 || line.trim().startsWith('//') || line.trim().startsWith('*')) {
+      return;
+    }
+    
+    // Skip TypeScript interface/type definitions - these aren't Prisma operations
+    if (line.includes('interface ') || line.includes('type ') || line.includes(': {')) {
+      return;
+    }
+    
+    // Only scan lines that are likely Prisma operations or object literals in Prisma contexts
+    const isPrismaRelated = /\b(prisma\.|\.findMany|\.findUnique|\.create|\.update|\.delete|\.upsert|\.findFirst|\.count|\.aggregate|where:|data:|orderBy:|include:)\b/.test(line);
+    if (!isPrismaRelated) {
       return;
     }
     

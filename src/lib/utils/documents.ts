@@ -240,7 +240,7 @@ export const getDocumentsByCategory = async (
   try {
     const documents = await prisma.documents.findMany({
       where,
-      orderBy: { created_at: 'desc' },
+      orderBy: { createdAt: 'desc' },
       take: limit,
       skip: offset,
       include: {
@@ -345,7 +345,7 @@ export const getDocumentsByCategory = async (
 export const incrementViewCount = async (documentId: string): Promise<void> => {
   await prisma.documents.update({
     where: { id: documentId },
-    data: { view_count: { increment: 1 } },
+    data: { viewCount: { increment: 1 } },
   });
 };
 
@@ -355,7 +355,7 @@ export const incrementViewCount = async (documentId: string): Promise<void> => {
 export const incrementDownloadCount = async (documentId: string): Promise<void> => {
   await prisma.documents.update({
     where: { id: documentId },
-    data: { download_count: { increment: 1 } },
+    data: { downloadCount: { increment: 1 } },
   });
 };
 
