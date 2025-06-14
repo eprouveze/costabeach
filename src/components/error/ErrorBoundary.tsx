@@ -2,11 +2,13 @@
 
 import React, { Component, ErrorInfo, ReactNode } from "react";
 import { toast } from "react-toastify";
+import { useI18n } from "@/lib/i18n/client";
 
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  translate?: (key: string) => string;
 }
 
 interface State {
@@ -26,7 +28,10 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error("ErrorBoundary caught an error:", error, errorInfo);
-    toast.error("An unexpected error occurred");
+    const errorMessage = this.props.translate ? 
+      this.props.translate("toast.auth.unexpectedError") : 
+      "An unexpected error occurred";
+    toast.error(errorMessage);
     
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
@@ -65,4 +70,19 @@ export class ErrorBoundary extends Component<Props, State> {
 
     return this.props.children;
   }
+}
+
+// Wrapper component that provides translation to the class component
+export function ErrorBoundaryWithI18n({ children, fallback, onError }: Omit<Props, 'translate'>) {
+  const { t } = useI18n();
+  
+  return (
+    <ErrorBoundary
+      translate={t}
+      fallback={fallback}
+      onError={onError}
+    >
+      {children}
+    </ErrorBoundary>
+  );
 } 

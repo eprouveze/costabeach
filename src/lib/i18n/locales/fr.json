@@ -630,6 +630,7 @@
       "emergencyAlertSentSuccess": "Alerte d'urgence envoyée avec succès!",
       "failedJobsQueuedForRetry": "Tâches échouées mises en file d'attente pour nouvel essai",
       "operationError": "Échec de l'opération: {{action}} - {{error}}",
+      "permissionsFetchError": "Échec de la récupération des permissions",
       "translationStatusFetchError": "Erreur lors de la récupération du statut de traduction"
     },
     "auth": {
@@ -640,7 +641,10 @@
       "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
       "passwordUpdateSuccess": "Mot de passe mis à jour avec succès",
       "permissionDenied": "Vous n'avez pas l'autorisation d'accéder à cette page",
+      "profileAlreadyComplete": "Votre profil est déjà complet",
       "profileIncompleteWarning": "Impossible de récupérer le profil utilisateur complet, redirection vers la page d'accueil",
+      "profileUpdateSuccess": "Profil mis à jour avec succès!",
+      "registrationSuccess": "Inscription réussie! Veuillez vérifier votre email pour confirmer votre compte.",
       "resetLinkSent": "Lien de réinitialisation envoyé à votre email",
       "signInError": "Une erreur est survenue lors de la connexion. Veuillez réessayer",
       "signInFailed": "Échec de la connexion. Veuillez réessayer",
@@ -650,7 +654,9 @@
     "documents": {
       "fileRequired": "Veuillez sélectionner un fichier à téléverser",
       "titleRequired": "Veuillez saisir un titre pour le document",
-      "translationRequestError": "Erreur lors de la demande de traduction",
+      "previewLoadError": "Échec du chargement de l'aperçu du document",
+      "translationRequested": "Traduction demandée. Cela peut prendre quelques minutes.",
+      "translationRequestError": "Échec de la demande de traduction",
       "translationRequestFailed": "Demande de traduction échouée",
       "translationRequestSuccess": "Traduction demandée avec succès",
       "uploadError": "Erreur lors du téléversement du document",

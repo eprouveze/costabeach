@@ -50,7 +50,7 @@ export default function RegisterForm() {
         return;
       }
       
-      toast.success('Registration successful! Please check your email to confirm your account.');
+      toast.success(t('toast.auth.registrationSuccess'));
       router.push('/auth/verify');
     } catch (error: any) {
       setErrorMessage(error.message || 'An error occurred during registration');

@@ -6,6 +6,7 @@ import { useDocuments } from "@/lib/hooks/useDocuments";
 import { X, Download, Languages, Loader } from "lucide-react";
 import { api } from "@/lib/trpc";
 import { toast } from "react-toastify";
+import { useI18n } from "@/lib/i18n/client";
 
 interface DocumentPreviewProps {
   document: Document;
@@ -20,6 +21,8 @@ export const DocumentPreview = ({
   onRequestTranslation,
   className = "",
 }: DocumentPreviewProps) => {
+  const { t } = useI18n();
+  const { downloadDocument } = useDocuments();
   const [isLoading, setIsLoading] = useState(true);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [previewType, setPreviewType] = useState<string | null>(null);
@@ -90,7 +93,7 @@ export const DocumentPreview = ({
       }
     } catch (error) {
       console.error('Error loading preview:', error);
-      toast.error('Failed to load document preview');
+      toast.error(t('toast.documents.previewLoadError'));
     } finally {
       setIsLoading(false);
     }
@@ -124,10 +127,10 @@ export const DocumentPreview = ({
           throw new Error('Failed to request translation');
         }
         
-        toast.info("Translation requested. This may take a few minutes.");
+        toast.info(t('toast.documents.translationRequested'));
       } catch (error) {
         console.error('Error requesting translation:', error);
-        toast.error('Failed to request translation');
+        toast.error(t('toast.documents.translationRequestError'));
         setIsTranslationInProgress(false);
       }
     }

@@ -41,7 +41,7 @@ export default function ProfileCompletionForm() {
       const { isComplete } = await checkProfileCompletion(userId);
       if (isComplete) {
         // Profile is already complete, redirect to owner dashboard
-        toast.success('Your profile is already complete');
+        toast.success(t('toast.auth.profileAlreadyComplete'));
         router.push('/owner-dashboard');
       }
     } catch (error: any) {
@@ -77,7 +77,7 @@ export default function ProfileCompletionForm() {
         return;
       }
       
-      toast.success('Profile updated successfully!');
+      toast.success(t('toast.auth.profileUpdateSuccess'));
       
       // Get the current locale from the URL
       const path = window.location.pathname;

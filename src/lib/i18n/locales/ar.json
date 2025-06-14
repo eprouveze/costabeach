@@ -639,6 +639,7 @@
       "emergencyAlertSentSuccess": "تم إرسال تنبيه الطوارئ بنجاح!",
       "failedJobsQueuedForRetry": "المهام الفاشلة في قائمة انتظار إعادة المحاولة",
       "operationError": "فشل في {{action}}: {{error}}",
+      "permissionsFetchError": "فشل في جلب الصلاحيات",
       "translationStatusFetchError": "فشل في جلب حالة الترجمة"
     },
     "auth": {
@@ -649,7 +650,10 @@
       "passwordTooShort": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل",
       "passwordUpdateSuccess": "تم تحديث كلمة المرور بنجاح",
       "permissionDenied": "ليس لديك صلاحية للوصول إلى هذه الصفحة",
+      "profileAlreadyComplete": "ملفك الشخصي مكتمل بالفعل",
       "profileIncompleteWarning": "لم يتمكن من جلب الملف الشخصي الكامل، جاري التوجيه إلى الصفحة الرئيسية",
+      "profileUpdateSuccess": "تم تحديث الملف الشخصي بنجاح!",
+      "registrationSuccess": "تم التسجيل بنجاح! يرجى التحقق من بريدك الإلكتروني لتأكيد حسابك.",
       "resetLinkSent": "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني",
       "signInError": "حدث خطأ أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى",
       "signInFailed": "فشل في تسجيل الدخول. يرجى المحاولة مرة أخرى",
@@ -659,7 +663,9 @@
     "documents": {
       "fileRequired": "يرجى تحديد ملف للتحميل",
       "titleRequired": "يرجى إدخال عنوان للمستند",
-      "translationRequestError": "خطأ في طلب الترجمة",
+      "previewLoadError": "فشل في تحميل معاينة المستند",
+      "translationRequested": "تم طلب الترجمة. قد يستغرق هذا بضع دقائق.",
+      "translationRequestError": "فشل في طلب الترجمة",
       "translationRequestFailed": "فشل طلب الترجمة",
       "translationRequestSuccess": "تم طلب الترجمة بنجاح",
       "uploadError": "خطأ في تحميل المستند",

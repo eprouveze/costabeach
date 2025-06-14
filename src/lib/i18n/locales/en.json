@@ -627,6 +627,7 @@
       "emergencyAlertSentSuccess": "Emergency alert sent successfully!",
       "failedJobsQueuedForRetry": "Failed jobs queued for retry",
       "operationError": "Failed to {{action}}: {{error}}",
+      "permissionsFetchError": "Failed to fetch permissions",
       "translationStatusFetchError": "Failed to fetch translation status"
     },
     "auth": {
@@ -637,7 +638,10 @@
       "passwordTooShort": "Password must be at least 8 characters long",
       "passwordUpdateSuccess": "Password updated successfully",
       "permissionDenied": "You do not have permission to access this page",
+      "profileAlreadyComplete": "Your profile is already complete",
       "profileIncompleteWarning": "Could not fetch complete user profile, redirecting to home page",
+      "profileUpdateSuccess": "Profile updated successfully!",
+      "registrationSuccess": "Registration successful! Please check your email to confirm your account.",
       "resetLinkSent": "Password reset link sent to your email",
       "signInError": "An error occurred during sign in. Please try again",
       "signInFailed": "Failed to sign in. Please try again",
@@ -647,7 +651,9 @@
     "documents": {
       "fileRequired": "Please select a file to upload",
       "titleRequired": "Please enter a title for the document",
-      "translationRequestError": "Error requesting translation",
+      "previewLoadError": "Failed to load document preview",
+      "translationRequested": "Translation requested. This may take a few minutes.",
+      "translationRequestError": "Failed to request translation",
       "translationRequestFailed": "Translation request failed",
       "translationRequestSuccess": "Translation requested successfully",
       "uploadError": "Error uploading document",

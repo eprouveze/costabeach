@@ -43,7 +43,7 @@ export default function AdminDashboardPage() {
 
         // Check if user is authenticated
         if (session.status === 'unauthenticated' || !session.data?.user?.id) {
-          toast.error("You must be logged in to access this page");
+          toast.error(t('toast.auth.loginRequired'));
           router.push(`/${locale}/owner-login`);
           return;
         }
@@ -59,7 +59,7 @@ export default function AdminDashboardPage() {
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching permissions:", error);
-        toast.error("Failed to fetch permissions");
+        toast.error(t('toast.admin.permissionsFetchError'));
         router.push(`/${locale}/`);
       }
     };
