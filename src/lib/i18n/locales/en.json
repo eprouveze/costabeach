@@ -261,6 +261,7 @@
     "size": "Size",
     "type": "Type",
     "download": "Download",
+    "downloading": "Downloading...",
     "upload": "Upload",
     "delete": "Delete",
     "edit": "Edit",

@@ -147,6 +147,7 @@
     "size": "Taille",
     "type": "Type",
     "download": "Télécharger",
+    "downloading": "Téléchargement...",
     "upload": "Téléverser",
     "delete": "Supprimer",
     "edit": "Modifier",

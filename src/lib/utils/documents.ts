@@ -363,10 +363,20 @@ export const incrementViewCount = async (documentId: string): Promise<void> => {
  * Increment download count for a document
  */
 export const incrementDownloadCount = async (documentId: string): Promise<void> => {
-  await prisma.documents.update({
-    where: { id: documentId },
-    data: { downloadCount: { increment: 1 } },
-  });
+  try {
+    await prisma.documents.update({
+      where: { id: documentId },
+      data: { downloadCount: { increment: 1 } },
+    });
+  } catch (error: any) {
+    // Log connection pool errors but don't fail the request
+    if (error.code === 'P2024') {
+      console.warn(`Download count increment failed for document ${documentId}: Connection pool timeout`);
+      return; // Gracefully handle connection pool timeouts
+    }
+    console.error('Error incrementing download count:', error);
+    // Don't throw for download count errors - this is non-critical functionality
+  }
 };
 
 /**

@@ -41,11 +41,15 @@ export default function DocumentViewerPage() {
 
   // Track if view count has been incremented for this document
   const [viewCountIncremented, setViewCountIncremented] = useState(false);
+  // Track if download URL has been fetched to prevent repeated calls
+  const [downloadUrlFetched, setDownloadUrlFetched] = useState(false);
+  // Track download button state to prevent spam clicking
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // Get document preview URL
   useEffect(() => {
     const fetchDocumentUrl = async () => {
-      if (!documentDetails) return;
+      if (!documentDetails || downloadUrlFetched) return;
       
       try {
         setIsLoading(true);
@@ -59,6 +63,7 @@ export default function DocumentViewerPage() {
         } else {
           toast.error(t("documents.errorLoadingDocument"));
         }
+        setDownloadUrlFetched(true);
       } catch (error) {
         console.error("Error fetching document:", error);
         toast.error(t("documents.errorLoadingDocument"));
@@ -67,10 +72,10 @@ export default function DocumentViewerPage() {
       }
     };
 
-    if (documentDetails) {
+    if (documentDetails && !downloadUrlFetched) {
       fetchDocumentUrl();
     }
-  }, [documentDetails, documentId, t, getDownloadUrl]);
+  }, [documentDetails, documentId, downloadUrlFetched, t]);
 
   // Increment view count only once per document view
   useEffect(() => {
@@ -84,9 +89,10 @@ export default function DocumentViewerPage() {
   }, [documentDetails, documentId, viewCountIncremented, incrementViewCount]);
 
   const handleDownload = async () => {
-    if (!documentDetails) return;
+    if (!documentDetails || isDownloading) return;
     
     try {
+      setIsDownloading(true);
       const result = await getDownloadUrl.mutateAsync({ documentId });
       
       if (result.downloadUrl) {
@@ -98,6 +104,8 @@ export default function DocumentViewerPage() {
     } catch (error) {
       console.error("Error downloading document:", error);
       toast.error(t("documents.errorDownloadingDocument"));
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -182,10 +190,15 @@ export default function DocumentViewerPage() {
                   <p className="text-gray-500 mb-4">{t("documents.previewNotAvailable")}</p>
                   <button
                     onClick={handleDownload}
-                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    disabled={isDownloading}
+                    className={`inline-flex items-center px-4 py-2 text-white rounded-md transition-colors ${
+                      isDownloading 
+                        ? 'bg-gray-400 cursor-not-allowed' 
+                        : 'bg-blue-600 hover:bg-blue-700'
+                    }`}
                   >
-                    <Download className="h-4 w-4 mr-2" />
-                    {t("documents.download")}
+                    <Download className={`h-4 w-4 mr-2 ${isDownloading ? 'animate-spin' : ''}`} />
+                    {isDownloading ? t("documents.downloading") : t("documents.download")}
                   </button>
                 </div>
               )}
@@ -246,10 +259,15 @@ export default function DocumentViewerPage() {
                 <div className="pt-4">
                   <button
                     onClick={handleDownload}
-                    className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    disabled={isDownloading}
+                    className={`w-full flex items-center justify-center px-4 py-2 text-white rounded-md transition-colors ${
+                      isDownloading 
+                        ? 'bg-gray-400 cursor-not-allowed' 
+                        : 'bg-blue-600 hover:bg-blue-700'
+                    }`}
                   >
-                    <Download className="h-4 w-4 mr-2" />
-                    {t("documents.download")}
+                    <Download className={`h-4 w-4 mr-2 ${isDownloading ? 'animate-spin' : ''}`} />
+                    {isDownloading ? t("documents.downloading") : t("documents.download")}
                   </button>
                 </div>
               </div>
