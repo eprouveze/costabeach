@@ -31,9 +31,10 @@ const languageToName = {
  */
 export const getCachedTranslation = (
   originalText: string,
+  sourceLanguage: Language,
   targetLanguage: Language
 ): string | null => {
-  const cacheKey = `${originalText.substring(0, 100)}_${targetLanguage}` as TranslationCacheKey;
+  const cacheKey = `${originalText.substring(0, 100)}_${sourceLanguage}->${targetLanguage}` as TranslationCacheKey;
   const cachedItem = translationCache[cacheKey];
   
   if (cachedItem && Date.now() - cachedItem.timestamp < CACHE_EXPIRATION) {
@@ -48,11 +49,12 @@ export const getCachedTranslation = (
  */
 export const cacheTranslation = (
   originalText: string,
+  sourceLanguage: Language,
   targetLanguage: Language,
   translatedText: string,
   documentId?: string
 ): void => {
-  const cacheKey = `${originalText.substring(0, 100)}_${targetLanguage}` as TranslationCacheKey;
+  const cacheKey = `${originalText.substring(0, 100)}_${sourceLanguage}->${targetLanguage}` as TranslationCacheKey;
   
   translationCache[cacheKey] = {
     translatedText,
@@ -118,7 +120,7 @@ export const translateText = async (
   }
 ): Promise<string> => {
   // Check cache first
-  const cachedTranslation = getCachedTranslation(text, targetLanguage);
+  const cachedTranslation = getCachedTranslation(text, sourceLanguage, targetLanguage);
   if (cachedTranslation) {
     return cachedTranslation;
   }
@@ -162,7 +164,7 @@ export const translateText = async (
     const translatedText = data.content[0].text.trim();
     
     // Cache the result
-    cacheTranslation(text, targetLanguage, translatedText);
+    cacheTranslation(text, sourceLanguage, targetLanguage, translatedText);
     
     return translatedText;
   } catch (error) {
@@ -211,6 +213,7 @@ export const createTranslatedDocument = async (
       const content = await response.text();
       
       // Translate the content
+      // TODO: Implement saving translated content to new file
       const translatedContent = await translateText(
         content,
         originalDocument.language as unknown as Language,
@@ -220,6 +223,7 @@ export const createTranslatedDocument = async (
       // Create a new document with the translated content
       // This would need to save the translated content to a new file
       // For now, we'll just create a placeholder document
+      // Note: translatedContent is not used yet - needs file saving implementation
       
       const translatedDocument = await createDocument(
         `${originalDocument.title} (${targetLanguage})`,

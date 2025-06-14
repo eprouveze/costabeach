@@ -2,10 +2,13 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-async function checkPermissions() {
+checkPermissions().catch((err) => {
+  console.error(err);
+  process.exitCode = 1;
+});
   try {
     const user = await prisma.user.findUnique({
-      where: { id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479' },
+      where: { id: process.argv[2] || process.env.USER_ID },
       select: {
         id: true,
         email: true,
@@ -24,4 +27,7 @@ async function checkPermissions() {
   }
 }
 
-checkPermissions();
+checkPermissions().catch((err) => {
+  console.error(err);
+  process.exitCode = 1;
+});

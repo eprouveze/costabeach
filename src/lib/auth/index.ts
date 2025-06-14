@@ -166,7 +166,7 @@ export const authOptions: NextAuthOptions = {
               name: true, 
               role: true, 
               isAdmin: true,
-              permissions: true 
+              permissions: true
             }
           });
           
@@ -189,7 +189,7 @@ export const authOptions: NextAuthOptions = {
           // Fallback to adapter user data
           session.user.id = user.id;
           session.user.role = user.role as UserRole;
-          session.user.isAdmin = user.isAdmin as boolean;
+          session.user.isAdmin = !!user.isAdmin;
         }
       }
       return session;

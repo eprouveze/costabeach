@@ -54,7 +54,7 @@ export default function AdminDashboardPage() {
     };
 
     fetchPermissions();
-  }, [session, router, locale]);
+  }, [session.status, session.data?.user?.id, router, locale]);
   
   const canManageDocuments = checkPermission(
     userPermissions,
