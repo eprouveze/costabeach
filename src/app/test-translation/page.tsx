@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { EnhancedDocumentCard } from "@/src/components/EnhancedDocumentCard";
+import { EnhancedDocumentCard } from "@/components/EnhancedDocumentCard";
 import { DocumentCategory, Language, TranslationQuality, TranslationStatus } from "@/lib/types";
 
 // Mock data for testing

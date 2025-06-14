@@ -181,13 +181,13 @@ export const EnhancedDocumentCard = ({
   const getTranslationQualityIcon = (quality?: TranslationQuality) => {
     switch (quality) {
       case TranslationQuality.ORIGINAL:
-        return <Shield className="h-3 w-3 text-blue-600" title="Original Document" />;
+        return <span title="Original Document"><Shield className="h-3 w-3 text-blue-600" /></span>;
       case TranslationQuality.HUMAN:
-        return <CheckCircle className="h-3 w-3 text-green-600" title="Human Translation" />;
+        return <span title="Human Translation"><CheckCircle className="h-3 w-3 text-green-600" /></span>;
       case TranslationQuality.MACHINE:
-        return <Zap className="h-3 w-3 text-yellow-600" title="Machine Translation" />;
+        return <span title="Machine Translation"><Zap className="h-3 w-3 text-yellow-600" /></span>;
       case TranslationQuality.HYBRID:
-        return <Languages className="h-3 w-3 text-purple-600" title="Hybrid Translation" />;
+        return <span title="Hybrid Translation"><Languages className="h-3 w-3 text-purple-600" /></span>;
       default:
         return null;
     }

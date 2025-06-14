@@ -218,10 +218,10 @@ model DocumentTranslationJob {
   
   document        documents         @relation(fields: [documentId], references: [id], onDelete: Cascade)
   
-  @@unique([documentId, targetLanguage], map: "document_translation_jobs_document_id_target_language_key")
-  @@index([documentId], map: "document_translation_jobs_document_id_idx")
-  @@index([status], map: "document_translation_jobs_status_idx")
-  @@index([targetLanguage], map: "document_translation_jobs_target_language_idx")
+  @@unique([documentId, targetLanguage])
+  @@index([documentId])
+  @@index([status])
+  @@index([targetLanguage])
   @@map("document_translation_jobs")
 }
 

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { translationWorker } from '@/lib/services/translationWorker';
 import { TranslationQueueService } from '@/lib/services/translationQueueService';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth';
+import { authOptions } from '@/lib/auth/index';
 
 export async function GET(request: NextRequest) {
   try {

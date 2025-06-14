@@ -99,7 +99,7 @@ export class TranslationService {
     const updatedTranslation = await this.prisma.document_translations.update({
       where: { id: translationId },
       data: {
-        status: 'in_progress',
+        status: TranslationStatus.processing,
         service_used: service,
         started_at: new Date(),
         progress: 10, // Started processing
@@ -270,10 +270,10 @@ export class TranslationService {
       costData
     ] = await Promise.all([
       this.prisma.document_translations.count(),
-      this.prisma.document_translations.count({ where: { status: 'pending' } }),
-      this.prisma.document_translations.count({ where: { status: 'in_progress' } }),
-      this.prisma.document_translations.count({ where: { status: 'completed' } }),
-      this.prisma.document_translations.count({ where: { status: 'failed' } }),
+      this.prisma.document_translations.count({ where: { status: TranslationStatus.pending } }),
+      this.prisma.document_translations.count({ where: { status: TranslationStatus.processing } }),
+      this.prisma.document_translations.count({ where: { status: TranslationStatus.completed } }),
+      this.prisma.document_translations.count({ where: { status: TranslationStatus.failed } }),
       this.prisma.document_translations.aggregate({
         _sum: { actual_cost_cents: true },
         _avg: { actual_cost_cents: true },
@@ -344,7 +344,7 @@ export class TranslationService {
 
     const cancelledTranslation = await this.prisma.document_translations.update({
       where: { id: translationId },
-      data: { status: 'cancelled' }
+      data: { status: TranslationStatus.failed }
     });
 
     return cancelledTranslation;
@@ -356,7 +356,7 @@ export class TranslationService {
   async getTranslationQueue() {
     const queue = await this.prisma.document_translations.findMany({
       where: {
-        status: { in: ['pending', 'in_progress'] }
+        status: { in: [TranslationStatus.pending, TranslationStatus.processing] }
       },
       orderBy: { created_at: 'asc' }
     });
