@@ -652,14 +652,19 @@
       "unexpectedError": "Une erreur inattendue s'est produite. Veuillez réessayer"
     },
     "documents": {
+      "deleteError": "Erreur lors de la suppression du document: {{error}}",
+      "deleteSuccess": "Document supprimé avec succès",
+      "downloadError": "Erreur lors du téléchargement du document: {{error}}",
+      "fetchError": "Erreur lors de la récupération des documents: {{error}}",
       "fileRequired": "Veuillez sélectionner un fichier à téléverser",
       "titleRequired": "Veuillez saisir un titre pour le document",
+      "previewError": "Échec de l'aperçu du document",
       "previewLoadError": "Échec du chargement de l'aperçu du document",
       "translationRequested": "Traduction demandée. Cela peut prendre quelques minutes.",
       "translationRequestError": "Échec de la demande de traduction",
       "translationRequestFailed": "Demande de traduction échouée",
       "translationRequestSuccess": "Traduction demandée avec succès",
-      "uploadError": "Erreur lors du téléversement du document",
+      "uploadError": "Erreur lors du téléversement du document: {{error}}",
       "uploadSuccess": "Document téléversé avec succès"
     },
     "general": {
@@ -676,6 +681,13 @@
       "inAppNotificationsEnabled": "Notifications in-app activées",
       "languageChanged": "Langue changée vers {{language}}",
       "lightModeEnabled": "Mode clair activé"
+    },
+    "speech": {
+      "microphoneAccessRequired": "L'accès au microphone est requis pour utiliser l'enregistrement vocal.",
+      "recordingNotSupported": "L'enregistrement n'est pas pris en charge dans ce navigateur.",
+      "recordingFailed": "L'enregistrement a échoué. Veuillez réessayer.",
+      "transcriptionFailed": "La transcription a échoué.",
+      "transcriptionError": "Une erreur s'est produite lors de la transcription."
     },
     "whatsapp": {
       "broadcastAllFailed": "Tous les messages ont échoué à l'envoi",

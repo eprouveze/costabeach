@@ -48,6 +48,9 @@ export class TranslationQueueService {
    * Process pending translation jobs
    */
   static async processPendingJobs(batchSize: number = 5): Promise<void> {
+    // First, mark any jobs stuck in PROCESSING for >30 minutes as failed so they are visible in UI
+    await this.cleanupStalledProcessingJobs();
+
     const pendingJobs = await prisma.document_translations.findMany({
       where: {
         status: TranslationStatus.PENDING
@@ -352,5 +355,34 @@ export class TranslationQueueService {
     ]);
 
     return { pending, processing, completed, failed, total };
+  }
+
+  /**
+   * Detect jobs that have been PROCESSING for too long (e.g., worker crashed)
+   * and mark them as FAILED with an explanatory message so they are not stuck
+   * forever in the UI.
+   */
+  private static async cleanupStalledProcessingJobs(maxMinutes = 30): Promise<void> {
+    const threshold = new Date(Date.now() - maxMinutes * 60 * 1000);
+
+    const stalledJobs = await prisma.document_translations.findMany({
+      where: {
+        status: TranslationStatus.PROCESSING,
+        started_at: { lt: threshold },
+      },
+    });
+
+    if (!stalledJobs.length) return;
+
+    for (const job of stalledJobs) {
+      await prisma.document_translations.update({
+        where: { id: job.id },
+        data: {
+          status: TranslationStatus.FAILED,
+          error_message: 'Stalled: exceeded processing time limit',
+        },
+      });
+      console.warn(`Marked stalled translation job as failed: ${job.id}`);
+    }
   }
 }

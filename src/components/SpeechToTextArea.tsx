@@ -13,6 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
+import { useI18n } from "@/lib/i18n/client";
 
 const CHAT_INPUT_HEIGHT = "40px";
 
@@ -47,6 +48,7 @@ export const SpeechToTextArea = forwardRef<
     },
     ref,
   ) => {
+    const { t } = useI18n();
     const [isRecording, setIsRecording] = useState(false);
     const [waveformActive, setWaveformActive] = useState(false);
     const [heights, setHeights] = useState<number[]>(new Array(20).fill(10));
@@ -71,7 +73,7 @@ export const SpeechToTextArea = forwardRef<
           setMediaStream(stream);
         } catch (error) {
           console.error("Microphone access denied:", error);
-          toast.error("Microphone access is required to use voice recording.");
+          toast.error(t('toast.speech.microphoneAccessRequired'));
           return;
         }
       }
@@ -95,7 +97,7 @@ export const SpeechToTextArea = forwardRef<
 
       if (!mimeType) {
         console.error("No supported MIME type found for MediaRecorder.");
-        toast.error("Recording is not supported in this browser.");
+        toast.error(t('toast.speech.recordingNotSupported'));
         setIsRecording(false);
         setWaveformActive(false);
         return;
@@ -141,7 +143,7 @@ export const SpeechToTextArea = forwardRef<
 
         if (audioBlob.size === 0) {
           console.error("Audio Blob is empty.");
-          toast.error("Recording failed. Please try again.");
+          toast.error(t('toast.speech.recordingFailed'));
           return;
         }
 
@@ -179,7 +181,7 @@ export const SpeechToTextArea = forwardRef<
         });
 
         if (!response.ok) {
-          toast.error("Transcription failed.");
+          toast.error(t('toast.speech.transcriptionFailed'));
           return null;
         }
 
@@ -187,7 +189,7 @@ export const SpeechToTextArea = forwardRef<
         return data.text.trim();
       } catch (error) {
         console.error("Transcription error:", error);
-        toast.error("An error occurred during transcription.");
+        toast.error(t('toast.speech.transcriptionError'));
         return null;
       } finally {
         setIsTranscribing(false);

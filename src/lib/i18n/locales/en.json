@@ -649,14 +649,19 @@
       "unexpectedError": "An unexpected error occurred. Please try again"
     },
     "documents": {
+      "deleteError": "Error deleting document: {{error}}",
+      "deleteSuccess": "Document deleted successfully",
+      "downloadError": "Error downloading document: {{error}}",
+      "fetchError": "Error fetching documents: {{error}}",
       "fileRequired": "Please select a file to upload",
       "titleRequired": "Please enter a title for the document",
+      "previewError": "Failed to preview document",
       "previewLoadError": "Failed to load document preview",
       "translationRequested": "Translation requested. This may take a few minutes.",
       "translationRequestError": "Failed to request translation",
       "translationRequestFailed": "Translation request failed",
       "translationRequestSuccess": "Translation requested successfully",
-      "uploadError": "Error uploading document",
+      "uploadError": "Error uploading document: {{error}}",
       "uploadSuccess": "Document uploaded successfully"
     },
     "general": {
@@ -673,6 +678,13 @@
       "inAppNotificationsEnabled": "In-app notifications enabled",
       "languageChanged": "Language changed to {{language}}",
       "lightModeEnabled": "Light mode enabled"
+    },
+    "speech": {
+      "microphoneAccessRequired": "Microphone access is required to use voice recording.",
+      "recordingNotSupported": "Recording is not supported in this browser.",
+      "recordingFailed": "Recording failed. Please try again.",
+      "transcriptionFailed": "Transcription failed.",
+      "transcriptionError": "An error occurred during transcription."
     },
     "whatsapp": {
       "broadcastAllFailed": "All messages failed to send",

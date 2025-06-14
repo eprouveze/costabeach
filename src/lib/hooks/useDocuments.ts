@@ -6,7 +6,12 @@ import { api } from "@/lib/trpc";
 import { DocumentCategory, Language } from "@/lib/types";
 import { useRouter } from "next/navigation";
 
-export const useDocuments = () => {
+interface UseDocumentsOptions {
+  t?: (key: string, params?: Record<string, any>) => string;
+}
+
+export const useDocuments = (options: UseDocumentsOptions = {}) => {
+  const { t } = options;
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +43,7 @@ export const useDocuments = () => {
     
     // Handle errors outside the query options
     if (query.error) {
-      toast.error(`Error fetching documents: ${query.error.message}`);
+      toast.error(t ? t('toast.documents.fetchError', { error: query.error.message }) : `Error fetching documents: ${query.error.message}`);
     }
     
     return query;
@@ -64,7 +69,7 @@ export const useDocuments = () => {
       return result;
     } catch (error) {
       console.error("Error fetching documents:", error);
-      toast.error(`Error fetching documents: ${error instanceof Error ? error.message : "Unknown error"}`);
+      toast.error(t ? t('toast.documents.fetchError', { error: error instanceof Error ? error.message : t('common.unknownError') || "Unknown error" }) : `Error fetching documents: ${error instanceof Error ? error.message : "Unknown error"}`);
       return [];
     } finally {
       setIsLoading(false);
@@ -81,7 +86,7 @@ export const useDocuments = () => {
     parentDocumentId?: string
   ) => {
     if (!file) {
-      toast.error("Please select a file to upload");
+      toast.error(t ? t('toast.documents.fileRequired') : "Please select a file to upload");
       return null;
     }
     
@@ -147,11 +152,11 @@ export const useDocuments = () => {
       // Invalidate queries to refresh document lists
       utils.documents.getDocumentsByCategory.invalidate({ category });
       
-      toast.success("Document uploaded successfully");
+      toast.success(t ? t('toast.documents.uploadSuccess') : "Document uploaded successfully");
       return document;
     } catch (error) {
       console.error("Error uploading document:", error);
-      toast.error(`Error uploading document: ${error instanceof Error ? error.message : "Unknown error"}`);
+      toast.error(t ? t('toast.documents.uploadError', { error: error instanceof Error ? error.message : t('common.unknownError') || "Unknown error" }) : `Error uploading document: ${error instanceof Error ? error.message : "Unknown error"}`);
       return null;
     } finally {
       setIsUploading(false);
@@ -179,7 +184,7 @@ export const useDocuments = () => {
       return true;
     } catch (error) {
       console.error("Error downloading document:", error);
-      toast.error(`Error downloading document: ${error instanceof Error ? error.message : "Unknown error"}`);
+      toast.error(t ? t('toast.documents.downloadError', { error: error instanceof Error ? error.message : t('common.unknownError') || "Unknown error" }) : `Error downloading document: ${error instanceof Error ? error.message : "Unknown error"}`);
       return false;
     }
   };
@@ -192,11 +197,11 @@ export const useDocuments = () => {
       // Invalidate queries to refresh document lists
       utils.documents.getDocumentsByCategory.invalidate({ category });
       
-      toast.success("Document deleted successfully");
+      toast.success(t ? t('toast.documents.deleteSuccess') : "Document deleted successfully");
       return true;
     } catch (error) {
       console.error("Error deleting document:", error);
-      toast.error(`Error deleting document: ${error instanceof Error ? error.message : "Unknown error"}`);
+      toast.error(t ? t('toast.documents.deleteError', { error: error instanceof Error ? error.message : t('common.unknownError') || "Unknown error" }) : `Error deleting document: ${error instanceof Error ? error.message : "Unknown error"}`);
       return false;
     }
   };
@@ -214,7 +219,7 @@ export const useDocuments = () => {
       return data.previewUrl;
     } catch (error) {
       console.error("Error previewing document:", error);
-      toast.error("Failed to preview document");
+      toast.error(t ? t('toast.documents.previewError') : "Failed to preview document");
       return null;
     } finally {
       setIsLoading(false);

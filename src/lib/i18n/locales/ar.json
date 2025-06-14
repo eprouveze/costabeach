@@ -661,14 +661,19 @@
       "unexpectedError": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى"
     },
     "documents": {
+      "deleteError": "خطأ في حذف المستند: {{error}}",
+      "deleteSuccess": "تم حذف المستند بنجاح",
+      "downloadError": "خطأ في تنزيل المستند: {{error}}",
+      "fetchError": "خطأ في جلب المستندات: {{error}}",
       "fileRequired": "يرجى تحديد ملف للتحميل",
       "titleRequired": "يرجى إدخال عنوان للمستند",
+      "previewError": "فشل في معاينة المستند",
       "previewLoadError": "فشل في تحميل معاينة المستند",
       "translationRequested": "تم طلب الترجمة. قد يستغرق هذا بضع دقائق.",
       "translationRequestError": "فشل في طلب الترجمة",
       "translationRequestFailed": "فشل طلب الترجمة",
       "translationRequestSuccess": "تم طلب الترجمة بنجاح",
-      "uploadError": "خطأ في تحميل المستند",
+      "uploadError": "خطأ في تحميل المستند: {{error}}",
       "uploadSuccess": "تم تحميل المستند بنجاح"
     },
     "general": {
@@ -685,6 +690,13 @@
       "inAppNotificationsEnabled": "تم تفعيل إشعارات التطبيق",
       "languageChanged": "تم تغيير اللغة إلى {{language}}",
       "lightModeEnabled": "تم تفعيل الوضع الفاتح"
+    },
+    "speech": {
+      "microphoneAccessRequired": "مطلوب الوصول إلى الميكروفون لاستخدام التسجيل الصوتي.",
+      "recordingNotSupported": "التسجيل غير مدعوم في هذا المتصفح.",
+      "recordingFailed": "فشل التسجيل. يرجى المحاولة مرة أخرى.",
+      "transcriptionFailed": "فشلت الكتابة الصوتية.",
+      "transcriptionError": "حدث خطأ أثناء الكتابة الصوتية."
     },
     "whatsapp": {
       "broadcastAllFailed": "فشل إرسال جميع الرسائل",

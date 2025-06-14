@@ -60,10 +60,10 @@ function TestCard({ title, endpoint, description }: {
               const response = await fetch(endpoint);
               const data = await response.json();
               console.log('API Response:', data);
-              alert('Check console for response data');
+              console.log('✅ Success: Check the response data above');
             } catch (err) {
               console.error('Error calling API:', err);
-              alert('Error calling API. Check console for details.');
+              console.error('❌ Error: Check the error details above');
             }
           }}
           className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition"
