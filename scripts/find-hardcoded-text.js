@@ -38,28 +38,26 @@ function log(message, color = 'reset') {
 
 // Patterns to ignore (these are likely not user-facing text)
 const IGNORE_PATTERNS = [
-  /^[a-z_][a-zA-Z0-9_]*$/, // Variable names
-  /^[A-Z_][A-Z0-9_]*$/, // Constants
-  /^\d+$/, // Numbers only
-  /^[\w-]+\.[\w-]+$/, // File extensions or domains
+  /^[a-z_][a-zA-Z0-9_]*$/, // Variable names like userId, isLoading
+  /^[A-Z_][A-Z0-9_]*$/, // Constants like API_URL, MAX_SIZE
+  /^\d+(\.\d+)?$/, // Numbers only (including decimals)
+  /^[\w-]+\.[\w-]+(\.\w+)*$/, // File extensions, domains, or API paths
   /^#[0-9a-fA-F]{3,6}$/, // Hex colors
   /^rgb\(/, // RGB colors
   /^rgba\(/, // RGBA colors
-  /^\$$/, // Single character
-  /^[a-z]+:[a-z]+$/, // Namespace patterns
-  /^[a-z-]+$/, // CSS class patterns (single words with dashes)
+  /^hsl\(/, // HSL colors
+  /^[\w-]+$/, // CSS classes, IDs, single words without spaces
   /^\.\//, // Relative paths
-  /^\//, // Absolute paths
+  /^\//, // Absolute paths and routes
   /^https?:\/\//, // URLs
   /^mailto:/, // Email links
   /^tel:/, // Phone links
   /^data:/, // Data URLs
   /^\w+\/\w+$/, // MIME types
-  /console\.(log|warn|error|debug)/, // Console statements
-  /^[\w-]+$/, // Single words (might be IDs, class names, etc.)
+  /^[a-z]+:[a-z-]+$/, // Namespace patterns like aria:label
+  /^(use|on|is|has|should|can|will)[A-Z]/, // Hook/handler patterns
   /^\w+\s*\(/, // Function calls
-  /useState|useEffect|useCallback|useMemo/, // React hooks
-  /className|onClick|onChange|onSubmit/, // React props
+  /^[\w-]+(\.[\w-]+)+$/, // Dot notation like object.property.method
 ];
 
 // Common technical terms that are usually not translated
@@ -70,45 +68,71 @@ const TECHNICAL_TERMS = new Set([
   'database', 'table', 'column', 'index', 'query', 'migration',
   'component', 'props', 'state', 'hook', 'context', 'provider',
   'router', 'route', 'middleware', 'server', 'client', 'dev', 'prod',
-  'build', 'deploy', 'test', 'debug', 'config', 'env', 'var'
+  'build', 'deploy', 'test', 'debug', 'config', 'env', 'var',
+  'id', 'uuid', 'guid', 'hash', 'auth', 'login', 'logout', 'signin', 'signup',
+  'px', 'rem', 'em', 'vh', 'vw', 'auto', 'none', 'hidden', 'visible',
+  'flex', 'grid', 'block', 'inline', 'absolute', 'relative', 'fixed'
 ]);
 
 function shouldIgnoreString(str, context) {
   // Ignore empty or very short strings
-  if (str.length < 3) return true;
+  if (str.length < 2) return true;
   
-  // Priority: Check for toast/alert patterns first (these should NOT be ignored)
+  // Ignore strings that are already translated (using t() function)
+  if (context.includes('t(')) return true;
+  
+  // Check for user-facing message patterns (these should NEVER be ignored)
   const isToastMessage = context.includes('toast.') || 
                         context.includes('alert(') ||
                         context.includes('confirm(') ||
                         context.includes('prompt(');
   
-  // If it's a toast/alert message and contains spaces, it's likely user-facing
-  if (isToastMessage && str.includes(' ')) {
-    return false; // Don't ignore these!
-  }
+  const isPlaceholder = context.includes('placeholder') && context.includes('=');
+  const isTitle = context.includes('title') && context.includes('=');
+  const isAltText = context.includes('alt') && context.includes('=');
+  const isAriaLabel = context.includes('aria-label') && context.includes('=');
+  const isButtonText = context.includes('<button') || context.includes('Button');
+  const isHeading = context.match(/<h[1-6][^>]*>/);
+  const isJSXContent = context.match(/>\s*["'][^"']*["']\s*</);
   
-  // Ignore strings that match common patterns (but not if they're toast messages)
-  if (!isToastMessage) {
-    for (const pattern of IGNORE_PATTERNS) {
-      if (pattern.test(str)) return true;
+  // If it's a user-facing message, don't ignore it
+  if (isToastMessage || isPlaceholder || isTitle || isAltText || isAriaLabel || isButtonText || isHeading || isJSXContent) {
+    // But still ignore if it's clearly technical
+    if (TECHNICAL_TERMS.has(str.toLowerCase()) && str.length < 10) {
+      return true;
     }
+    return false;
   }
-  
-  // Ignore technical terms (unless they're in toast messages)
-  if (!isToastMessage && TECHNICAL_TERMS.has(str.toLowerCase())) return true;
-  
-  // Ignore strings that are already inside t() function calls
-  if (context.includes('t(')) return true;
-  
-  // Ignore strings in console statements (unless they're user-facing error messages)
-  if (context.includes('console.') && !isToastMessage) return true;
   
   // Ignore strings in comments
   if (context.includes('//') || context.includes('/*')) return true;
   
-  // Ignore strings that look like JSX attributes (unless they're toast messages)
-  if (!isToastMessage && context.match(/\\w+\\s*=\\s*["']/) && context.includes('=')) return true;
+  // Ignore strings in console statements
+  if (context.includes('console.')) return true;
+  
+  // Ignore strings in import/require statements
+  if (context.includes('import') || context.includes('require(')) return true;
+  
+  // Ignore strings that match technical patterns
+  for (const pattern of IGNORE_PATTERNS) {
+    if (pattern.test(str)) return true;
+  }
+  
+  // Ignore single technical terms
+  if (TECHNICAL_TERMS.has(str.toLowerCase())) return true;
+  
+  // Ignore JSX prop values that are clearly technical
+  if (context.match(/\\w+\\s*=\\s*["']/) && context.includes('=')) {
+    // Check if it's a technical prop like className, onClick, etc.
+    const propMatch = context.match(/(\\w+)\\s*=\\s*["'][^"']*["']/);
+    if (propMatch) {
+      const propName = propMatch[1];
+      const technicalProps = ['className', 'id', 'key', 'ref', 'style', 'onClick', 'onChange', 'onSubmit', 'onFocus', 'onBlur', 'type', 'name', 'value', 'href', 'src', 'width', 'height'];
+      if (technicalProps.includes(propName)) {
+        return true;
+      }
+    }
+  }
   
   return false;
 }
@@ -118,15 +142,18 @@ function extractStringsFromFile(filePath) {
     const content = fs.readFileSync(filePath, 'utf8');
     const findings = [];
     
-    // Find all string literals
+    // Find all string literals AND JSX element content
     const stringPattern = /(['"])((?:(?!\\1)[^\\\\]|\\\\.)*)\\1/g;
+    const jsxContentPattern = />([^<>{}]+)</g;
     let match;
     
+    // First, find quoted string literals
     while ((match = stringPattern.exec(content)) !== null) {
       const fullMatch = match[0];
       const quote = match[1];
       const str = match[2];
       const startIndex = match.index;
+      
       
       // Get context around the string (50 chars before and after)
       const contextStart = Math.max(0, startIndex - 50);
@@ -137,6 +164,7 @@ function extractStringsFromFile(filePath) {
       if (context.includes('toast.') && process.env.DEBUG_HARDCODED) {
         console.log(`DEBUG: Found toast-related string: "${str}" in context: ${context.substring(0, 100)}`);
       }
+      
       
       // Skip if this string should be ignored
       if (shouldIgnoreString(str, context)) {
@@ -170,7 +198,23 @@ function extractStringsFromFile(filePath) {
       const isToastMessage = context.includes('toast.');
       const isAlertMessage = context.includes('alert(') || context.includes('confirm(') || context.includes('prompt(');
       const isErrorMessage = context.includes('.error') || context.includes('.success') || context.includes('.warning') || context.includes('.info');
-      const isUserFacing = hasSpaces || (hasUppercase && str.length > 5) || isToastMessage || isAlertMessage || isErrorMessage;
+      const isPlaceholder = context.includes('placeholder') && context.includes('=');
+      const isTitle = context.includes('title') && context.includes('=');
+      const isAltText = context.includes('alt') && context.includes('=');
+      const isAriaLabel = context.includes('aria-label') && context.includes('=');
+      const isButtonText = context.includes('<button') || context.includes('Button');
+      const isHeading = context.match(/<h[1-6][^>]*>/);
+      const isJSXContent = context.match(/>\s*["'][^"']*["']\s*</);
+      const isOptionValue = context.includes('<option') || context.includes('option');
+      const isLabel = context.includes('<label') || context.includes('label');
+      
+      // More sophisticated detection of user-facing text
+      const isUserFacing = 
+        isToastMessage || isAlertMessage || isErrorMessage || 
+        isPlaceholder || isTitle || isAltText || isAriaLabel || 
+        isButtonText || isHeading || isJSXContent || isOptionValue || isLabel ||
+        (hasSpaces && hasUppercase) || // Multi-word text with capitals (likely UI text)
+        (str.length > 8 && hasUppercase && /[a-z]/.test(str)); // Longer mixed case strings
       
       if (isUserFacing) {
         // Determine the type of message for better reporting
@@ -178,6 +222,12 @@ function extractStringsFromFile(filePath) {
         if (isToastMessage) messageType = 'toast';
         else if (isAlertMessage) messageType = 'alert';
         else if (isErrorMessage) messageType = 'notification';
+        else if (isPlaceholder) messageType = 'placeholder';
+        else if (isTitle || isAltText || isAriaLabel) messageType = 'attribute';
+        else if (isButtonText) messageType = 'button';
+        else if (isHeading) messageType = 'heading';
+        else if (isJSXContent) messageType = 'content';
+        else if (isOptionValue || isLabel) messageType = 'form';
         
         findings.push({
           string: str,
@@ -185,6 +235,52 @@ function extractStringsFromFile(filePath) {
           lineContent: lineContent.trim(),
           context: context.trim(),
           type: messageType
+        });
+      }
+    }
+    
+    // Now, find JSX element content (text between tags)
+    let jsxMatch;
+    while ((jsxMatch = jsxContentPattern.exec(content)) !== null) {
+      const fullMatch = jsxMatch[0];
+      const str = jsxMatch[1].trim();
+      const startIndex = jsxMatch.index;
+      
+      // Skip if empty or just whitespace
+      if (str.length < 2 || /^\\s*$/.test(str)) continue;
+      
+      // Get context around the JSX content
+      const contextStart = Math.max(0, startIndex - 50);
+      const contextEnd = Math.min(content.length, startIndex + fullMatch.length + 50);
+      const context = content.substring(contextStart, contextEnd);
+      
+      
+      // Skip if this string should be ignored
+      if (shouldIgnoreString(str, context)) {
+        continue;
+      }
+      
+      // Get line number
+      const linesBeforeMatch = content.substring(0, startIndex).split('\\n');
+      const lineNumber = linesBeforeMatch.length;
+      const lineContent = content.split('\\n')[lineNumber - 1];
+      
+      // Check if this looks like user-facing JSX content
+      const hasSpaces = str.includes(' ');
+      const hasUppercase = /[A-Z]/.test(str);
+      const isJSXContent = true; // by definition
+      
+      // More sophisticated detection of user-facing text
+      const isUserFacing = 
+        isJSXContent && (hasSpaces || (hasUppercase && str.length > 4));
+      
+      if (isUserFacing) {
+        findings.push({
+          string: str,
+          line: lineNumber,
+          lineContent: lineContent.trim(),
+          context: context.trim(),
+          type: 'content'
         });
       }
     }
@@ -240,7 +336,37 @@ function displayResults(results) {
   log('\\n📊 Analysis Results:', 'bold');
   log(`Files scanned: ${totalFiles}`, 'cyan');
   log(`Files with potential issues: ${filesWithIssues}`, 'cyan');
-  log(`Total hardcoded strings found: ${allFindings.reduce((sum, f) => sum + f.findings.length, 0)}`, 'cyan');
+  
+  const totalFindings = allFindings.reduce((sum, f) => sum + f.findings.length, 0);
+  log(`Total hardcoded strings found: ${totalFindings}`, 'cyan');
+  
+  // Count by type
+  if (totalFindings > 0) {
+    const typeCount = {};
+    for (const fileResult of allFindings) {
+      for (const finding of fileResult.findings) {
+        typeCount[finding.type] = (typeCount[finding.type] || 0) + 1;
+      }
+    }
+    
+    log('\\nBreakdown by type:', 'cyan');
+    for (const [type, count] of Object.entries(typeCount).sort((a, b) => b[1] - a[1])) {
+      const typeEmojis = {
+        'toast': '🍞',
+        'alert': '⚠️',
+        'notification': '🔔',
+        'placeholder': '📝',
+        'attribute': '🏷️',
+        'button': '🔘',
+        'heading': '📰',
+        'content': '📄',
+        'form': '📋',
+        'text': '💬'
+      };
+      const emoji = typeEmojis[type] || '📝';
+      log(`  ${emoji} ${type}: ${count}`, 'cyan');
+    }
+  }
   
   if (allFindings.length === 0) {
     log('\\n✅ No hardcoded text found!', 'green');
@@ -253,7 +379,19 @@ function displayResults(results) {
     log(`\\n📄 ${fileResult.file}:`, 'magenta');
     
     for (const finding of fileResult.findings) {
-      const typeEmoji = finding.type === 'toast' ? '🍞' : finding.type === 'alert' ? '⚠️ ' : finding.type === 'notification' ? '🔔' : '📝';
+      const typeEmojis = {
+        'toast': '🍞',
+        'alert': '⚠️',
+        'notification': '🔔',
+        'placeholder': '📝',
+        'attribute': '🏷️',
+        'button': '🔘',
+        'heading': '📰',
+        'content': '📄',
+        'form': '📋',
+        'text': '💬'
+      };
+      const typeEmoji = typeEmojis[finding.type] || '📝';
       log(`  Line ${finding.line} [${typeEmoji} ${finding.type}]: "${finding.string}"`, 'yellow');
       log(`    Context: ${finding.lineContent}`, 'cyan');
     }
