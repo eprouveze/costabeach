@@ -65,22 +65,32 @@ export default function TranslationManagementPage() {
   const [showCompletedTranslations, setShowCompletedTranslations] = useState(false);
 
   const fetchStatus = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch('/api/translations/worker');
-      if (response.ok) {
-        const data = await response.json();
-        setStats(data.queue);
-        setHealth(data.worker);
-        setConfig(data.config);
-      } else {
-        throw new Error('Failed to fetch status');
+    const MAX_RETRIES = 3;
+    let attempt = 0;
+    while (attempt < MAX_RETRIES) {
+      try {
+        if (attempt === 0) setLoading(true);
+        const response = await fetch('/api/translations/worker');
+        if (response.ok) {
+          const data = await response.json();
+          setStats(data.queue);
+          setHealth(data.worker);
+          setConfig(data.config);
+          return; // success
+        }
+        throw new Error(`Request failed: ${response.status}`);
+      } catch (err) {
+        attempt += 1;
+        if (attempt >= MAX_RETRIES) {
+          console.error('Error fetching status:', err);
+          toast.error(t('toast.admin.translationStatusFetchError'));
+        } else {
+          // brief delay before retry
+          await new Promise((res) => setTimeout(res, 1000 * attempt));
+        }
+      } finally {
+        if (attempt === 0) setLoading(false);
       }
-    } catch (error) {
-      console.error('Error fetching status:', error);
-      toast.error(t('toast.admin.translationStatusFetchError'));
-    } finally {
-      setLoading(false);
     }
   };
 

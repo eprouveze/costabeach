@@ -766,3 +766,5 @@ Note: Some tests are still failing due to type errors and outdated test implemen
 + Cleanup: translation queue now auto-fails jobs stuck in PROCESSING >30 min.
 
 + Fix Anthropic schema: use top-level `system` field instead of system role message.
+
++ Admin translations page: added 3-retry logic with backoff to avoid uncaught `Failed to fetch` error.
