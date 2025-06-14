@@ -66,7 +66,7 @@ export const cacheTranslation = (
 /**
  * Build Claude-styled chat messages for translation.
  */
-const createTranslationMessages = (
+const createTranslationPayload = (
   text: string,
   sourceLanguage: Language,
   targetLanguage: Language,
@@ -74,7 +74,7 @@ const createTranslationMessages = (
     formality?: 'default' | 'more' | 'less';
     context?: string;
   },
-): { role: 'system' | 'user'; content: string }[] => {
+): { system: string; messages: { role: 'user' | 'assistant'; content: string }[] } => {
   const sourceLang = languageToName[sourceLanguage];
   const targetLang = languageToName[targetLanguage];
 
@@ -93,12 +93,13 @@ const createTranslationMessages = (
 
   const userInstruction = `${contextBlock}Translate the following text from ${sourceLang} to ${targetLang}.`;
 
-  // Claude works fine with multiple user messages.
-  return [
-    { role: 'system', content: systemPrompt },
-    { role: 'user', content: userInstruction },
-    { role: 'user', content: text },
-  ];
+  return {
+    system: systemPrompt,
+    messages: [
+      { role: 'user', content: userInstruction },
+      { role: 'user', content: text },
+    ],
+  };
 };
 
 /**
@@ -172,11 +173,17 @@ export const translateText = async (
       apiKeyPrefix: apiKey.substring(0, 10) + '...'
     });
     
-    const messages = createTranslationMessages(text, sourceLanguage, targetLanguage, options);
+    const { system: systemPrompt, messages } = createTranslationPayload(
+      text,
+      sourceLanguage,
+      targetLanguage,
+      options,
+    );
     
     const requestBody = {
       model: "claude-3-5-sonnet-20241022", // Using stable model version
       max_tokens: 4000,
+      system: systemPrompt,
       messages,
     };
     
