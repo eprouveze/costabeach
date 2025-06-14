@@ -39,18 +39,24 @@ class WhatsAppClient {
       this.accessToken = process.env.WHATSAPP_ACCESS_TOKEN || '';
       this.webhookSecret = process.env.WHATSAPP_WEBHOOK_SECRET || '';
     } else {
-      throw new Error('Environment variables not available');
-    }
-    
-    if (!this.phoneNumberId || !this.accessToken) {
-      throw new Error('Missing required WhatsApp credentials in environment variables');
+      // During build time, set empty values to prevent errors
+      this.phoneNumberId = '';
+      this.accessToken = '';
+      this.webhookSecret = '';
     }
     
     this.baseUrl = `https://graph.facebook.com/v18.0`;
     
-    console.log('📱 WhatsApp client initialized with:');
-    console.log(`   Phone Number ID: ${this.phoneNumberId}`);
-    console.log(`   Access Token: ${this.accessToken.substring(0, 10)}...`);
+    // Only log and validate in runtime, not during build
+    if (typeof window !== 'undefined' || process.env.NODE_ENV !== 'production') {
+      if (!this.phoneNumberId || !this.accessToken) {
+        console.warn('⚠️ WhatsApp credentials not configured - WhatsApp features will be disabled');
+      } else {
+        console.log('📱 WhatsApp client initialized with:');
+        console.log(`   Phone Number ID: ${this.phoneNumberId}`);
+        console.log(`   Access Token: ${this.accessToken.substring(0, 10)}...`);
+      }
+    }
   }
 
   async initialize(): Promise<void> {
@@ -72,6 +78,11 @@ class WhatsAppClient {
   }
 
   async sendMessage(message: WhatsAppMessage): Promise<string> {
+    // Check if credentials are available at runtime
+    if (!this.phoneNumberId || !this.accessToken) {
+      throw new Error('WhatsApp credentials not configured');
+    }
+    
     try {
       let messageData: any;
       
