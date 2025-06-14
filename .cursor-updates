@@ -770,3 +770,5 @@ Note: Some tests are still failing due to type errors and outdated test implemen
 + Admin translations page: added 3-retry logic with backoff to avoid uncaught `Failed to fetch` error.
 
 ## Fixed build errors by removing duplicate downloadDocument declaration in DocumentPreview and clearing unused ts-expect-error in pdf utils (2025-06-14)
+
+## Added bundle analyzer support: installed @next/bundle-analyzer, added analyze script, wrapped Next.js config for optional bundle analysis.
