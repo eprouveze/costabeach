@@ -18,6 +18,7 @@ import {
 import { DocumentPreview } from "./organisms/DocumentPreview";
 import { api } from "@/lib/trpc";
 import { toast } from "react-toastify";
+import { useI18n } from "@/lib/i18n/client";
 
 interface DocumentCardProps {
   document: Document;
@@ -34,6 +35,7 @@ export const DocumentCard = ({
   onView,
   onDownload: externalDownloadHandler
 }: DocumentCardProps) => {
+  const { t } = useI18n();
   const [isDeleting, setIsDeleting] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
@@ -50,7 +52,7 @@ export const DocumentCard = ({
   };
   
   const handleDelete = async () => {
-    if (window.confirm("Are you sure you want to delete this document?")) {
+    if (window.confirm(t("documents.confirmDelete"))) {
       setIsDeleting(true);
       const success = await deleteDocument(document.id, document.category as DocumentCategory);
       if (success && onDelete) {
@@ -118,11 +120,15 @@ export const DocumentCard = ({
   const getCategoryLabel = (category: DocumentCategory) => {
     switch (category) {
       case DocumentCategory.COMITE_DE_SUIVI:
-        return "Comité de Suivi";
+        return t("documents.categories.comiteDeSuivi");
       case DocumentCategory.SOCIETE_DE_GESTION:
-        return "Société de Gestion";
+        return t("documents.categories.societeDeGestion");
       case DocumentCategory.LEGAL:
-        return "Legal";
+        return t("documents.categories.legal");
+      case DocumentCategory.FINANCE:
+        return t("documents.categories.finance");
+      case DocumentCategory.GENERAL:
+        return t("documents.categories.general");
       default:
         return category;
     }
@@ -131,11 +137,11 @@ export const DocumentCard = ({
   const getLanguageLabel = (language: Language) => {
     switch (language) {
       case Language.ENGLISH:
-        return "English";
+        return t("languages.english");
       case Language.FRENCH:
-        return "French";
+        return t("languages.french");
       case Language.ARABIC:
-        return "Arabic";
+        return t("languages.arabic");
       default:
         return language;
     }
@@ -194,40 +200,40 @@ export const DocumentCard = ({
         </div>
         
         {showActions && (
-          <div className="bg-gray-50 px-4 py-3 flex justify-end">
+          <div className="bg-gray-50 px-4 py-3 flex flex-wrap justify-end gap-2">
             <button
               onClick={handlePreview}
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mr-4 flex items-center text-sm"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center text-sm whitespace-nowrap"
             >
               <Eye className="h-4 w-4 mr-1" />
-              Preview
+              {t("documents.preview")}
             </button>
             
             <button
               onClick={handleDownload}
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mr-4 flex items-center text-sm"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center text-sm whitespace-nowrap"
             >
               <Download className="h-4 w-4 mr-1" />
-              Download
+              {t("documents.download")}
             </button>
             
             <button
               onClick={() => handleRequestTranslation(document.id)}
               disabled={isTranslating}
-              className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 mr-4 flex items-center text-sm disabled:opacity-50"
+              className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 flex items-center text-sm disabled:opacity-50 whitespace-nowrap"
             >
               <Languages className="h-4 w-4 mr-1" />
-              {isTranslating ? "Requesting..." : "Translate"}
+              {isTranslating ? t("documents.requesting") : t("documents.translate")}
             </button>
             
             {onDelete && (
               <button
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 flex items-center text-sm disabled:opacity-50"
+                className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 flex items-center text-sm disabled:opacity-50 whitespace-nowrap"
               >
                 <Trash2 className="h-4 w-4 mr-1" />
-                {isDeleting ? "Deleting..." : "Delete"}
+                {isDeleting ? t("documents.deleting") : t("common.delete")}
               </button>
             )}
           </div>

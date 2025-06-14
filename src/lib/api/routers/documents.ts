@@ -266,6 +266,93 @@ export const documentsRouter = router({
         });
       }
     }),
+
+  // Get all documents for admin view (including private)
+  getAllDocuments: protectedProcedure
+    .input(
+      z.object({
+        includePrivate: z.boolean().default(false),
+        limit: z.number().min(1).max(1000).default(100),
+        offset: z.number().min(0).default(0),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { includePrivate, limit, offset } = input;
+      const userId = ctx.user?.id;
+      
+      // Get user permissions to check if they can view private documents
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { permissions: true, isAdmin: true }
+      });
+      
+      // Only admins or users with MANAGE_DOCUMENTS permission can see private documents
+      const canViewPrivate = user?.isAdmin || 
+        (user?.permissions && user.permissions.includes('manageDocuments'));
+      
+      if (includePrivate && !canViewPrivate) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You don't have permission to view private documents",
+        });
+      }
+      
+      try {
+        const whereClause: any = {};
+        
+        // If not including private, only show public documents
+        if (!includePrivate) {
+          whereClause.isPublic = true;
+        }
+        
+        const documents = await prisma.documents.findMany({
+          where: whereClause,
+          orderBy: { createdAt: 'desc' },
+          take: limit,
+          skip: offset,
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        });
+        
+        // Convert to the expected Document type format
+        return documents.map(doc => ({
+          id: doc.id,
+          title: doc.title,
+          description: doc.description,
+          filePath: doc.filePath,
+          fileSize: Number(doc.fileSize),
+          fileType: doc.fileType,
+          category: doc.category,
+          language: doc.language,
+          createdAt: doc.createdAt,
+          updatedAt: doc.updatedAt,
+          translatedDocument: null,
+          translatedDocumentId: null,
+          isTranslated: doc.isTranslation || false,
+          isPublished: doc.isPublic || false,
+          authorId: doc.createdBy || '',
+          viewCount: doc.viewCount || 0,
+          downloadCount: doc.downloadCount || 0,
+          author: doc.user ? { 
+            id: doc.user.id, 
+            name: doc.user.name || doc.user.email || 'Unknown' 
+          } : { id: doc.createdBy || '', name: 'Unknown' }
+        }));
+      } catch (error) {
+        console.error("Error fetching all documents:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch documents",
+        });
+      }
+    }),
   
   // Get a signed URL for downloading a document
   getDownloadUrl: publicProcedure

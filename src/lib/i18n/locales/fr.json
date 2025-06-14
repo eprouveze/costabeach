@@ -38,7 +38,16 @@
     "information": "Informations",
     "searchResults": "Résultats de recherche",
     "resultsFound": "résultats trouvés",
-    "user": "Utilisateur"
+    "user": "Utilisateur",
+    "noResults": "Aucun résultat",
+    "retry": "Réessayer",
+    "retryFailed": "Nouvel échec",
+    "retrySuccessful": "Réussi",
+    "retrying": "Nouvelle tentative...",
+    "saving": "Enregistrement...",
+    "unknown": "Inconnu",
+    "unknownError": "Erreur inconnue",
+    "close": "Fermer"
   },
   "navigation": {
     "home": "Accueil",
@@ -57,7 +66,10 @@
     "messages": "Messages",
     "payments": "Paiements",
     "categories": "Catégories",
-    "signOut": "Déconnexion"
+    "signOut": "Déconnexion",
+    "notifications": "Notifications",
+    "polls": "Sondages",
+    "profile": "Profil"
   },
   "auth": {
     "email": "Email",
@@ -121,7 +133,9 @@
       "signIn": "Se connecter",
       "bySigningUp": "En vous inscrivant, vous acceptez notre",
       "privacyPolicy": "Politique de confidentialité"
-    }
+    },
+    "signOutSuccess": "Déconnexion réussie",
+    "signingOut": "Déconnexion en cours..."
   },
   "documents": {
     "title": "Documents",
@@ -189,7 +203,28 @@
     "errorDownloadingDocument": "Erreur lors du téléchargement du document",
     "unableToPreview": "Impossible de prévisualiser le document",
     "previewNotAvailable": "L'aperçu n'est pas disponible pour ce type de document",
-    "downloadInstead": "Télécharger à la place"
+    "downloadInstead": "Télécharger à la place",
+    "actions": "Actions",
+    "browseDocuments": "Parcourir les documents",
+    "descriptionPlaceholder": "Entrez une description...",
+    "documentDetails": "Détails du document",
+    "documentName": "Nom du document",
+    "documentNotFound": "Document introuvable",
+    "documentNotFoundDescription": "Le document que vous recherchez n'existe pas ou a été supprimé.",
+    "editDocument": "Modifier le document",
+    "errorDownloading": "Erreur lors du téléchargement",
+    "errorLoading": "Erreur lors du chargement",
+    "errorViewing": "Erreur lors de la visualisation",
+    "fileType": "Type de fichier",
+    "noDownloadUrl": "URL de téléchargement indisponible",
+    "titlePlaceholder": "Entrez un titre...",
+    "unknownError": "Erreur inconnue",
+    "updateError": "Erreur lors de la mise à jour",
+    "uploadedBy": "Téléversé par",
+    "views": "vues",
+    "requesting": "Demande en cours...",
+    "translate": "Traduire",
+    "deleting": "Suppression..."
   },
   "admin": {
     "dashboard": "Tableau de bord",
@@ -221,7 +256,10 @@
       "admin": "Administrateur",
       "contentEditor": "Éditeur de contenu",
       "user": "Utilisateur"
-    }
+    },
+    "approveRegistration": "Approuver l'inscription",
+    "approvedRegistrations": "Inscriptions approuvées",
+    "rejectedRegistrations": "Inscriptions rejetées"
   },
   "landing": {
     "heroTitle": "Portail de l'Association des Propriétaires de Costa Beach 3",
@@ -428,5 +466,26 @@
     "logout": "Déconnexion",
     "loggingOut": "Déconnexion en cours...",
     "imageUpdated": "Image de profil mise à jour"
+  },
+  "languages": {
+    "french": "Français",
+    "english": "Anglais",
+    "arabic": "Arabe"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "description": "Gérez vos préférences et paramètres de compte",
+    "appearance": "Apparence",
+    "appearanceDescription": "Personnalisez l'apparence de l'interface",
+    "darkMode": "Mode sombre",
+    "darkModeDescription": "Activer le thème sombre pour l'interface",
+    "language": "Langue",
+    "languageDescription": "Choisissez votre langue préférée",
+    "notifications": "Notifications",
+    "notificationsDescription": "Gérez vos préférences de notification",
+    "emailNotifications": "Notifications par email",
+    "emailNotificationsDescription": "Recevoir des notifications par email",
+    "inAppNotifications": "Notifications dans l'application",
+    "inAppNotificationsDescription": "Afficher les notifications dans l'application"
   }
 } 
