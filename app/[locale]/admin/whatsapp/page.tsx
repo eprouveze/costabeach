@@ -39,7 +39,7 @@ export default function AdminWhatsAppPage() {
 
         // Check if user is authenticated
         if (session.status === 'unauthenticated' || !session.data?.user?.id) {
-          toast.error("You must be logged in to access this page");
+          toast.error(t("auth.loginRequired"));
           router.push("/owner-login");
           return;
         }
@@ -57,7 +57,7 @@ export default function AdminWhatsAppPage() {
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching permissions:", error);
-        toast.error("Failed to fetch permissions");
+        toast.error(t("admin.errors.permissionsFetchFailed"));
         setIsLoading(false);
         // Don't redirect on error, just show the error state
       }
@@ -78,9 +78,9 @@ export default function AdminWhatsAppPage() {
         console.error("WhatsApp connection failed:", error);
         setConnectionStatus('disconnected');
         if (error instanceof Error && error.message.includes('Missing required WhatsApp credentials')) {
-          toast.warning("WhatsApp credentials not configured for client-side access. Server-side functionality available.");
+          toast.warning(t("admin.whatsapp.credentialsNotConfigured"));
         } else {
-          toast.error("WhatsApp connection failed. Check your credentials.");
+          toast.error(t("admin.whatsapp.connectionFailed"));
         }
       }
     };

@@ -65,7 +65,7 @@ const canManageUsers =
   // Redirect if no permissions
   useEffect(() => {
     if (status === 'authenticated' && !canManageUsers && userPermissions.length > 0) {
-      toast.error("You don't have permission to access this page");
+      toast.error(t("common.accessDenied"));
       router.push('/admin');
     }
   }, [canManageUsers, userPermissions, status, router]);
@@ -82,11 +82,11 @@ const canManageUsers =
           const data = await response.json();
           setUsers(data.users || []);
         } else {
-          toast.error("Failed to fetch users");
+          toast.error(t("admin.users.errors.fetchFailed"));
         }
       } catch (error) {
         console.error("Error fetching users:", error);
-        toast.error("Error loading users");
+        toast.error(t("admin.users.errors.loadingError"));
       } finally {
         setLoading(false);
       }
@@ -114,13 +114,13 @@ const matchesSearch =
   const handleUpdateUser = async (userId: string, updates: Partial<User>) => {
     // Prevent self-modification of admin status
     if (userId === session?.user?.id && ('isAdmin' in updates || 'role' in updates)) {
-      toast.error("You cannot modify your own admin privileges");
+      toast.error(t("admin.users.errors.cannotModifySelf"));
       return;
     }
 
     // Only admins can modify admin status
     if (('isAdmin' in updates || (updates.role === 'admin')) && !(session?.user as any)?.isAdmin) {
-      toast.error("Only administrators can manage admin privileges");
+      toast.error(t("admin.users.errors.onlyAdminsCanManageAdmin"));
       return;
     }
 
@@ -136,15 +136,15 @@ const matchesSearch =
         setUsers(users.map(user => 
           user.id === userId ? { ...user, ...updatedUser } : user
         ));
-        toast.success("User updated successfully");
+        toast.success(t("admin.users.messages.userUpdated"));
         setShowEditModal(false);
       } else {
         const errorData = await response.json();
-        toast.error(errorData.message || "Failed to update user");
+        toast.error(errorData.message || t("admin.users.errors.updateFailed"));
       }
     } catch (error) {
       console.error("Error updating user:", error);
-      toast.error("Error updating user");
+      toast.error(t("admin.users.errors.updateError"));
     }
   };
 
@@ -159,13 +159,13 @@ const matchesSearch =
       });
 
       if (response.ok) {
-        toast.success("Password reset email sent");
+        toast.success(t("admin.users.messages.passwordResetSent"));
       } else {
-        toast.error("Failed to send password reset");
+        toast.error(t("admin.users.errors.passwordResetFailed"));
       }
     } catch (error) {
       console.error("Error sending password reset:", error);
-      toast.error("Error sending password reset");
+      toast.error(t("admin.users.errors.passwordResetError"));
     }
   };
 
@@ -176,7 +176,7 @@ const matchesSearch =
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600 dark:text-gray-400">Loading users...</p>
+            <p className="text-gray-600 dark:text-gray-400">{t("common.loading")}...</p>
           </div>
         </div>
       </div>
@@ -206,7 +206,7 @@ const matchesSearch =
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search users by name or email..."
+                  placeholder={t("admin.users.searchPlaceholder")}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
@@ -219,10 +219,10 @@ const matchesSearch =
                 onChange={(e) => setFilterRole(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
               >
-                <option value="">All Roles</option>
-                <option value="admin">Admin</option>
-                <option value="contentEditor">Content Editor</option>
-                <option value="user">User</option>
+                <option value="">{t("admin.users.allRoles")}</option>
+                <option value="admin">{t("admin.users.adminRole")}</option>
+                <option value="contentEditor">{t("admin.users.contentEditorRole")}</option>
+                <option value="user">{t("admin.users.userRole")}</option>
               </select>
             </div>
           </div>
@@ -235,19 +235,19 @@ const matchesSearch =
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    User
+                    {t("admin.users.tableHeaders.user")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Role
+                    {t("admin.users.tableHeaders.role")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Status
+                    {t("admin.users.tableHeaders.status")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Registered
+                    {t("admin.users.tableHeaders.registered")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Actions
+                    {t("admin.users.tableHeaders.actions")}
                   </th>
                 </tr>
               </thead>
@@ -277,11 +277,11 @@ const matchesSearch =
                           ? 'bg-yellow-100 text-yellow-800'
                           : 'bg-gray-100 text-gray-800'
                       }`}>
-                        {user.isAdmin ? 'Admin' : user.role === 'contentEditor' ? 'Content Editor' : 'User'}
+                        {user.isAdmin ? t("admin.users.adminRole") : user.role === 'contentEditor' ? t("admin.users.contentEditorRole") : t("admin.users.userRole")}
                       </span>
                       {user.isVerifiedOwner && (
                         <span className="ml-2 inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                          Owner
+                          {t("admin.users.ownerBadge")}
                         </span>
                       )}
                     </td>
@@ -291,7 +291,7 @@ const matchesSearch =
                           ? 'bg-green-100 text-green-800'
                           : 'bg-red-100 text-red-800'
                       }`}>
-                        {user.isActive ? 'Active' : 'Inactive'}
+                        {user.isActive ? t("admin.users.status.active") : t("admin.users.status.inactive")}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
@@ -302,21 +302,21 @@ const matchesSearch =
                         <button
                           onClick={() => handleEditUser(user)}
                           className="text-indigo-600 hover:text-indigo-900"
-                          title="Edit user"
+                          title={t("admin.users.actions.edit")}
                         >
                           <Edit className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleToggleUserStatus(user.id, !user.isActive)}
                           className={`${user.isActive ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'}`}
-                          title={user.isActive ? 'Deactivate user' : 'Activate user'}
+                          title={user.isActive ? t("admin.users.actions.deactivate") : t("admin.users.actions.activate")}
                         >
                           {user.isActive ? <UserX className="h-4 w-4" /> : <UserCheck className="h-4 w-4" />}
                         </button>
                         <button
                           onClick={() => handleSendPasswordReset(user.id)}
                           className="text-blue-600 hover:text-blue-900"
-                          title="Send password reset"
+                          title={t("admin.users.actions.sendPasswordReset")}
                         >
                           <Mail className="h-4 w-4" />
                         </button>
@@ -331,9 +331,9 @@ const matchesSearch =
           {filteredUsers.length === 0 && !loading && (
             <div className="text-center py-12">
               <Users className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No users found</h3>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">{t("admin.users.noUsersFound")}</h3>
               <p className="mt-1 text-sm text-gray-500">
-                {searchTerm || filterRole ? 'Try adjusting your search or filter.' : 'No users have been registered yet.'}
+                {searchTerm || filterRole ? t("admin.users.adjustFilters") : t("admin.users.noUsersRegistered")}
               </p>
             </div>
           )}
@@ -345,19 +345,19 @@ const matchesSearch =
             <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white max-h-screen overflow-y-auto">
               <div className="mt-3">
                 <h3 className="text-lg font-medium text-gray-900 mb-4">
-                  Edit User: {selectedUser.name || selectedUser.email}
+                  {t("admin.users.editUser")}: {selectedUser.name || selectedUser.email}
                 </h3>
                 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Role</label>
+                    <label className="block text-sm font-medium text-gray-700">{t("admin.users.fields.role")}</label>
                     <select
                       value={selectedUser.isAdmin ? 'admin' : selectedUser.role}
                       onChange={(e) => {
                         const value = e.target.value;
                         // Only allow admin role changes if current user is admin
                         if (value === 'admin' && !(session?.user as any)?.isAdmin) {
-                          toast.error("Only admins can grant admin privileges");
+                          toast.error(t("admin.users.errors.onlyAdminsCanGrantAdmin"));
                           return;
                         }
                         setSelectedUser({
@@ -368,15 +368,15 @@ const matchesSearch =
                       }}
                       className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     >
-                      <option value="user">User</option>
-                      <option value="contentEditor">Content Editor</option>
+                      <option value="user">{t("admin.users.userRole")}</option>
+                      <option value="contentEditor">{t("admin.users.contentEditorRole")}</option>
                       {(session?.user as any)?.isAdmin && (
-                        <option value="admin">Admin</option>
+                        <option value="admin">{t("admin.users.adminRole")}</option>
                       )}
                     </select>
                     {!(session?.user as any)?.isAdmin && (
                       <p className="mt-1 text-xs text-gray-500">
-                        Only administrators can manage admin roles
+                        {t("admin.users.adminOnlyRoles")}
                       </p>
                     )}
                   </div>
@@ -393,7 +393,7 @@ const matchesSearch =
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
                     <label htmlFor="isVerifiedOwner" className="ml-2 text-sm text-gray-700">
-                      Verified Owner
+                      {t("admin.users.fields.verifiedOwner")}
                     </label>
                   </div>
 
@@ -409,22 +409,22 @@ const matchesSearch =
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
                     <label htmlFor="isActive" className="ml-2 text-sm text-gray-700">
-                      Active Account
+                      {t("admin.users.fields.activeAccount")}
                     </label>
                   </div>
 
                   {/* Permissions Section */}
                   <div className="pt-4 border-t border-gray-200">
-                    <h4 className="text-sm font-medium text-gray-900 mb-3">Permissions</h4>
+                    <h4 className="text-sm font-medium text-gray-900 mb-3">{t("admin.users.permissions.title")}</h4>
                     {selectedUser.isAdmin ? (
                       <p className="text-sm text-gray-500 py-4">
-                        Administrators have all permissions by default
+                        {t("admin.users.permissions.adminHasAll")}
                       </p>
                     ) : (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* User Management */}
                         <div>
-                          <h5 className="text-xs font-medium text-gray-700 uppercase tracking-wide mb-2">User Management</h5>
+                          <h5 className="text-xs font-medium text-gray-700 uppercase tracking-wide mb-2">{t("admin.users.permissions.userManagement")}</h5>
                           <div className="space-y-2">
                             {[Permission.MANAGE_USERS, Permission.VIEW_USERS, Permission.APPROVE_REGISTRATIONS].map((permission) => (
                               <div key={permission} className="flex items-center">
@@ -444,9 +444,9 @@ const matchesSearch =
                                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                                 />
                                 <label htmlFor={permission} className="ml-2 text-sm text-gray-700">
-                                  {permission === Permission.MANAGE_USERS && "Manage Users"}
-                                  {permission === Permission.VIEW_USERS && "View Users"}
-                                  {permission === Permission.APPROVE_REGISTRATIONS && "Approve Registrations"}
+                                  {permission === Permission.MANAGE_USERS && t("admin.users.permissions.manageUsers")}
+                                  {permission === Permission.VIEW_USERS && t("admin.users.permissions.viewUsers")}
+                                  {permission === Permission.APPROVE_REGISTRATIONS && t("admin.users.permissions.approveRegistrations")}
                                 </label>
                               </div>
                             ))}
@@ -455,7 +455,7 @@ const matchesSearch =
 
                         {/* Document Management */}
                         <div>
-                          <h5 className="text-xs font-medium text-gray-700 uppercase tracking-wide mb-2">Document Management</h5>
+                          <h5 className="text-xs font-medium text-gray-700 uppercase tracking-wide mb-2">{t("admin.users.permissions.documentManagement")}</h5>
                           <div className="space-y-2">
                             {[Permission.MANAGE_DOCUMENTS, Permission.VIEW_DOCUMENTS, Permission.MANAGE_COMITE_DOCUMENTS, Permission.MANAGE_SOCIETE_DOCUMENTS, Permission.MANAGE_LEGAL_DOCUMENTS, Permission.MANAGE_FINANCE_DOCUMENTS, Permission.MANAGE_GENERAL_DOCUMENTS].map((permission) => (
                               <div key={permission} className="flex items-center">
@@ -475,13 +475,13 @@ const matchesSearch =
                                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                                 />
                                 <label htmlFor={permission} className="ml-2 text-sm text-gray-700">
-                                  {permission === Permission.MANAGE_DOCUMENTS && "All Documents"}
-                                  {permission === Permission.VIEW_DOCUMENTS && "View Documents"}
-                                  {permission === Permission.MANAGE_COMITE_DOCUMENTS && "Comité Documents"}
-                                  {permission === Permission.MANAGE_SOCIETE_DOCUMENTS && "Société Documents"}
-                                  {permission === Permission.MANAGE_LEGAL_DOCUMENTS && "Legal Documents"}
-                                  {permission === Permission.MANAGE_FINANCE_DOCUMENTS && "Finance Documents"}
-                                  {permission === Permission.MANAGE_GENERAL_DOCUMENTS && "General Documents"}
+                                  {permission === Permission.MANAGE_DOCUMENTS && t("admin.users.permissions.allDocuments")}
+                                  {permission === Permission.VIEW_DOCUMENTS && t("admin.users.permissions.viewDocuments")}
+                                  {permission === Permission.MANAGE_COMITE_DOCUMENTS && t("admin.users.permissions.comiteDocuments")}
+                                  {permission === Permission.MANAGE_SOCIETE_DOCUMENTS && t("admin.users.permissions.societeDocuments")}
+                                  {permission === Permission.MANAGE_LEGAL_DOCUMENTS && t("admin.users.permissions.legalDocuments")}
+                                  {permission === Permission.MANAGE_FINANCE_DOCUMENTS && t("admin.users.permissions.financeDocuments")}
+                                  {permission === Permission.MANAGE_GENERAL_DOCUMENTS && t("admin.users.permissions.generalDocuments")}
                                 </label>
                               </div>
                             ))}
@@ -490,7 +490,7 @@ const matchesSearch =
 
                         {/* System Administration */}
                         <div>
-                          <h5 className="text-xs font-medium text-gray-700 uppercase tracking-wide mb-2">System Administration</h5>
+                          <h5 className="text-xs font-medium text-gray-700 uppercase tracking-wide mb-2">{t("admin.users.permissions.systemAdministration")}</h5>
                           <div className="space-y-2">
                             {[Permission.MANAGE_SETTINGS, Permission.VIEW_AUDIT_LOGS, Permission.MANAGE_NOTIFICATIONS].map((permission) => (
                               <div key={permission} className="flex items-center">
@@ -510,9 +510,9 @@ const matchesSearch =
                                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                                 />
                                 <label htmlFor={permission} className="ml-2 text-sm text-gray-700">
-                                  {permission === Permission.MANAGE_SETTINGS && "System Settings"}
-                                  {permission === Permission.VIEW_AUDIT_LOGS && "Audit Logs"}
-                                  {permission === Permission.MANAGE_NOTIFICATIONS && "Notifications"}
+                                  {permission === Permission.MANAGE_SETTINGS && t("admin.users.permissions.systemSettings")}
+                                  {permission === Permission.VIEW_AUDIT_LOGS && t("admin.users.permissions.auditLogs")}
+                                  {permission === Permission.MANAGE_NOTIFICATIONS && t("admin.users.permissions.notifications")}
                                 </label>
                               </div>
                             ))}
@@ -521,7 +521,7 @@ const matchesSearch =
 
                         {/* WhatsApp Management */}
                         <div>
-                          <h5 className="text-xs font-medium text-gray-700 uppercase tracking-wide mb-2">WhatsApp Management</h5>
+                          <h5 className="text-xs font-medium text-gray-700 uppercase tracking-wide mb-2">{t("admin.users.permissions.whatsappManagement")}</h5>
                           <div className="space-y-2">
                             {[Permission.MANAGE_WHATSAPP, Permission.SEND_WHATSAPP_MESSAGES].map((permission) => (
                               <div key={permission} className="flex items-center">
@@ -541,8 +541,8 @@ const matchesSearch =
                                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                                 />
                                 <label htmlFor={permission} className="ml-2 text-sm text-gray-700">
-                                  {permission === Permission.MANAGE_WHATSAPP && "Manage WhatsApp"}
-                                  {permission === Permission.SEND_WHATSAPP_MESSAGES && "Send Messages"}
+                                  {permission === Permission.MANAGE_WHATSAPP && t("admin.users.permissions.manageWhatsapp")}
+                                  {permission === Permission.SEND_WHATSAPP_MESSAGES && t("admin.users.permissions.sendMessages")}
                                 </label>
                               </div>
                             ))}
@@ -558,7 +558,7 @@ const matchesSearch =
                     onClick={() => setShowEditModal(false)}
                     className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
                   >
-                    Cancel
+                    {t("common.cancel")}
                   </button>
                   <button
                     onClick={() => handleUpdateUser(selectedUser.id, {
@@ -570,7 +570,7 @@ const matchesSearch =
                     })}
                     className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
                   >
-                    Save Changes
+                    {t("common.saveChanges")}
                   </button>
                 </div>
               </div>

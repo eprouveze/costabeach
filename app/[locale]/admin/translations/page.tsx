@@ -15,6 +15,7 @@ import {
   ExternalLink
 } from "lucide-react";
 import { toast } from "react-toastify";
+import { useI18n } from "@/lib/i18n/client";
 
 interface TranslationStats {
   pending: number;
@@ -54,6 +55,7 @@ interface TranslationConfig {
 }
 
 export default function TranslationManagementPage() {
+  const { t } = useI18n();
   const [stats, setStats] = useState<TranslationStats | null>(null);
   const [health, setHealth] = useState<WorkerHealth | null>(null);
   const [config, setConfig] = useState<TranslationConfig | null>(null);
@@ -143,17 +145,17 @@ export default function TranslationManagementPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Translation Management
+            {t('admin.translationManagement')}
           </h1>
           <p className="text-gray-600 dark:text-gray-300">
-            Monitor and control the document translation system
+            {t('admin.translationDescription')}
           </p>
         </div>
 
         {/* Action Buttons */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-            Quick Actions
+            {t('admin.quickActions')}
           </h2>
           <div className="flex flex-wrap gap-4">
             <button
@@ -166,7 +168,7 @@ export default function TranslationManagementPage() {
               ) : (
                 <Play className="h-4 w-4" />
               )}
-              Process Pending Jobs
+              {t('admin.processPendingJobs')}
             </button>
 
             <button
@@ -179,7 +181,7 @@ export default function TranslationManagementPage() {
               ) : (
                 <Play className="h-4 w-4" />
               )}
-              Start Worker
+              {t('admin.startWorker')}
             </button>
 
             <button
@@ -192,7 +194,7 @@ export default function TranslationManagementPage() {
               ) : (
                 <Square className="h-4 w-4" />
               )}
-              Stop Worker
+              {t('admin.stopWorker')}
             </button>
 
             <button
@@ -205,7 +207,7 @@ export default function TranslationManagementPage() {
               ) : (
                 <RotateCcw className="h-4 w-4" />
               )}
-              Retry Failed Jobs
+              {t('admin.retryFailedJobs')}
             </button>
 
             <button
@@ -218,7 +220,7 @@ export default function TranslationManagementPage() {
               ) : (
                 <Zap className="h-4 w-4" />
               )}
-              Recover Stalled
+              {t('admin.recoverStalled')}
             </button>
 
             <button
@@ -231,7 +233,7 @@ export default function TranslationManagementPage() {
               ) : (
                 <AlertCircle className="h-4 w-4" />
               )}
-              Cleanup Orphaned
+              {t('admin.cleanupOrphaned')}
             </button>
 
             <button
@@ -244,7 +246,7 @@ export default function TranslationManagementPage() {
               ) : (
                 <RefreshCw className="h-4 w-4" />
               )}
-              Refresh Status
+              {t('admin.refreshStatus')}
             </button>
 
             <button
@@ -252,26 +254,26 @@ export default function TranslationManagementPage() {
               className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
             >
               <CheckCircle className="h-4 w-4" />
-              {showCompletedTranslations ? 'Hide' : 'View'} Completed Translations
+              {showCompletedTranslations ? t('admin.hideCompletedTranslations') : t('admin.viewCompletedTranslations')}
             </button>
           </div>
         </div>
 
-        {/* Status Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-          {/* Configuration Status - Compact */}
+        {/* System Status Overview */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          {/* Configuration Status */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-              <Settings className="h-4 w-4" />
-              Configuration
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <Settings className="h-5 w-5" />
+              {t('admin.configuration')}
             </h2>
             
             {config ? (
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${config.available ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  <span className="text-sm font-medium">
-                    {config.available ? 'Ready' : 'Not Configured'}
+                  <div className={`w-3 h-3 rounded-full ${config.available ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                  <span className="text-base font-medium text-gray-900 dark:text-white">
+                    {config.available ? t('admin.ready') : t('admin.notConfigured')}
                   </span>
                 </div>
                 
@@ -305,84 +307,71 @@ export default function TranslationManagementPage() {
                 </div>
               </div>
             ) : (
-              <div className="text-gray-500 text-sm">Loading...</div>
+              <div className="text-gray-500 text-sm">{t('common.loading')}</div>
             )}
           </div>
-          {/* Worker Health */}
+
+          {/* Worker Status */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
               <Zap className="h-5 w-5" />
-              Worker Status
+              {t('admin.workerStatus')}
             </h2>
             
             {health ? (
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
                   <div className={`w-3 h-3 rounded-full ${health.isRunning ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  <span className="font-medium">
-                    {health.isRunning ? 'Running' : 'Stopped'}
+                  <span className="text-base font-medium text-gray-900 dark:text-white">
+                    {health.isRunning ? t('admin.running') : t('admin.stopped')}
                   </span>
                 </div>
                 
-                <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
+                <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
                   <div>Last Check: {new Date(health.lastCheck).toLocaleString()}</div>
-                  <div>Processed Count: {health.processedCount}</div>
+                  <div>Processed: {health.processedCount}</div>
                   {health.startedAt && (
-                    <div>Started At: {new Date(health.startedAt).toLocaleString()}</div>
+                    <div>Started: {new Date(health.startedAt).toLocaleString()}</div>
                   )}
                 </div>
               </div>
             ) : (
-              <div className="text-gray-500">Loading...</div>
+              <div className="text-gray-500 text-sm">{t('common.loading')}</div>
             )}
           </div>
 
-          {/* Queue Statistics */}
-          <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          {/* Queue Summary */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
               <Clock className="h-5 w-5" />
-              Queue Statistics
+              {t('admin.queueSummary')}
             </h2>
             
             {stats ? (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-white dark:bg-yellow-500/20 border-2 border-yellow-300 dark:border-yellow-500/50 rounded-lg">
-                  <div className="text-2xl font-bold text-black dark:text-yellow-100">
-                    {stats.pending}
-                  </div>
-                  <div className="text-sm font-medium text-black dark:text-yellow-200">Pending</div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-base text-gray-600 dark:text-gray-400">{t('admin.totalJobs')}</span>
+                  <span className="text-lg font-semibold text-gray-900 dark:text-white">{stats.total}</span>
                 </div>
-                
-                <div className="text-center p-4 bg-white dark:bg-blue-500/20 border-2 border-blue-300 dark:border-blue-500/50 rounded-lg">
-                  <div className="text-2xl font-bold text-black dark:text-blue-100">
-                    {stats.processing}
-                  </div>
-                  <div className="text-sm font-medium text-black dark:text-blue-200">Processing</div>
+                <div className="flex justify-between items-center">
+                  <span className="text-base text-amber-600 dark:text-amber-400">{t('admin.pending')}</span>
+                  <span className="text-lg font-semibold text-amber-600 dark:text-amber-400">{stats.pending}</span>
                 </div>
-                
-                <div className="text-center p-4 bg-white dark:bg-green-500/20 border-2 border-green-300 dark:border-green-500/50 rounded-lg">
-                  <div className="text-2xl font-bold text-black dark:text-green-100">
-                    {stats.completed}
-                  </div>
-                  <div className="text-sm font-medium text-black dark:text-green-200">Completed</div>
+                <div className="flex justify-between items-center">
+                  <span className="text-base text-blue-600 dark:text-blue-400">{t('admin.processing')}</span>
+                  <span className="text-lg font-semibold text-blue-600 dark:text-blue-400">{stats.processing}</span>
                 </div>
-                
-                <div className="text-center p-4 bg-white dark:bg-red-500/20 border-2 border-red-300 dark:border-red-500/50 rounded-lg">
-                  <div className="text-2xl font-bold text-black dark:text-red-100">
-                    {stats.failed}
-                  </div>
-                  <div className="text-sm font-medium text-black dark:text-red-200">Failed</div>
+                <div className="flex justify-between items-center">
+                  <span className="text-base text-green-600 dark:text-green-400">{t('admin.completed')}</span>
+                  <span className="text-lg font-semibold text-green-600 dark:text-green-400">{stats.completed}</span>
                 </div>
-                
-                <div className="lg:col-span-2 text-center p-4 bg-white dark:bg-gray-500/20 border-2 border-gray-300 dark:border-gray-500/50 rounded-lg">
-                  <div className="text-2xl font-bold text-black dark:text-gray-100">
-                    {stats.total}
-                  </div>
-                  <div className="text-sm font-medium text-black dark:text-gray-200">Total Jobs</div>
+                <div className="flex justify-between items-center">
+                  <span className="text-base text-red-600 dark:text-red-400">{t('admin.failed')}</span>
+                  <span className="text-lg font-semibold text-red-600 dark:text-red-400">{stats.failed}</span>
                 </div>
               </div>
             ) : (
-              <div className="text-gray-500">Loading...</div>
+              <div className="text-gray-500 text-sm">{t('common.loading')}</div>
             )}
           </div>
         </div>
@@ -392,12 +381,12 @@ export default function TranslationManagementPage() {
           <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-green-500" />
-              Completed Translations (Recent 20)
+              {t('admin.completedTranslationsRecent')}
             </h2>
             
             {completedTranslations.length === 0 ? (
               <div className="text-gray-500 text-center py-8">
-                No completed translations found
+                {t('admin.noCompletedTranslationsFound')}
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -405,16 +394,16 @@ export default function TranslationManagementPage() {
                   <thead className="bg-gray-50 dark:bg-gray-700">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Document
+                        {t('admin.document')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Translation
+                        {t('admin.translation')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Completed
+                        {t('admin.completed')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Actions
+                        {t('admin.actions')}
                       </th>
                     </tr>
                   </thead>
@@ -423,7 +412,7 @@ export default function TranslationManagementPage() {
                       <tr key={translation.id}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                           <div>
-                            <div className="font-medium">{translation.documents?.title || 'Unknown Document'}</div>
+                            <div className="font-medium">{translation.documents?.title || t('admin.unknownDocument')}</div>
                             <div className="text-gray-500 text-xs">{translation.documents?.category}</div>
                           </div>
                         </td>
@@ -444,7 +433,7 @@ export default function TranslationManagementPage() {
                             href={`/fr/admin/documents`} 
                             className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                           >
-                            View in Documents
+                            {t('admin.viewInDocuments')}
                           </a>
                         </td>
                       </tr>
@@ -460,16 +449,16 @@ export default function TranslationManagementPage() {
         <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
           <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-200 mb-2 flex items-center gap-2">
             <AlertCircle className="h-5 w-5" />
-            How Translation Works
+            {t('admin.howTranslationWorks')}
           </h3>
           <div className="text-blue-800 dark:text-blue-300 text-sm space-y-2">
-            <p>• When documents are uploaded, translation jobs are automatically created for all supported languages</p>
-            <p>• The translation worker processes these jobs in the background</p>
-            <p>• Use "Process Pending Jobs" to manually trigger processing of waiting translations</p>
-            <p>• Failed jobs can be retried, and stalled jobs can be recovered</p>
-            <p>• Use "Cleanup Orphaned" to remove translation jobs for deleted documents</p>
-            <p>• Completed translations appear as separate documents in the Documents page</p>
-            <p>• The page auto-refreshes every 10 seconds to show current status</p>
+            <p>{t('admin.translationInstructions.autoCreated')}</p>
+            <p>{t('admin.translationInstructions.backgroundProcessing')}</p>
+            <p>{t('admin.translationInstructions.manualProcessing')}</p>
+            <p>{t('admin.translationInstructions.retryFailed')}</p>
+            <p>{t('admin.translationInstructions.cleanupOrphaned')}</p>
+            <p>{t('admin.translationInstructions.completedDocuments')}</p>
+            <p>{t('admin.translationInstructions.autoRefresh')}</p>
           </div>
         </div>
       </main>

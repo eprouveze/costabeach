@@ -101,7 +101,7 @@ export default function AdminSettingsPage() {
   // Redirect if no permissions
   useEffect(() => {
     if (status === 'authenticated' && !canManageSettings && userPermissions.length > 0) {
-      toast.error("You don't have permission to access this page");
+      toast.error(t("common.accessDenied"));
       router.push('/admin');
     }
   }, [canManageSettings, userPermissions, status, router]);
@@ -120,7 +120,7 @@ export default function AdminSettingsPage() {
         }
       } catch (error) {
         console.error("Error fetching settings:", error);
-        toast.error("Error loading settings");
+        toast.error(t("admin.settings.loadError"));
       } finally {
         setLoading(false);
       }
@@ -139,13 +139,13 @@ export default function AdminSettingsPage() {
       });
 
       if (response.ok) {
-        toast.success("Settings saved successfully");
+        toast.success(t("admin.settings.saveSuccess"));
       } else {
-        toast.error("Failed to save settings");
+        toast.error(t("admin.settings.saveError"));
       }
     } catch (error) {
       console.error("Error saving settings:", error);
-      toast.error("Error saving settings");
+      toast.error(t("admin.settings.saveError"));
     } finally {
       setSaving(false);
     }
@@ -164,7 +164,7 @@ export default function AdminSettingsPage() {
           allowedLanguages: currentLanguages.filter(l => l !== lang)
         }));
       } else {
-        toast.error("At least one language must be enabled");
+        toast.error(t("admin.settings.atLeastOneLanguage"));
       }
     } else {
       setSettings(prev => ({
@@ -181,7 +181,7 @@ export default function AdminSettingsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading settings...</p>
+            <p className="text-gray-600">{t("admin.settings.loading")}...</p>
           </div>
         </div>
       </div>
@@ -193,12 +193,12 @@ export default function AdminSettingsPage() {
   }
 
   const tabs = [
-    { id: 'general', label: 'General', icon: Settings },
-    { id: 'users', label: 'User Management', icon: Users },
-    { id: 'documents', label: 'Documents', icon: FileText },
-    { id: 'notifications', label: 'Notifications', icon: Bell },
-    { id: 'security', label: 'Security', icon: Shield },
-    { id: 'system', label: 'System', icon: Database }
+    { id: 'general', label: t("admin.settings.tabs.general"), icon: Settings },
+    { id: 'users', label: t("admin.settings.tabs.users"), icon: Users },
+    { id: 'documents', label: t("admin.settings.tabs.documents"), icon: FileText },
+    { id: 'notifications', label: t("admin.settings.tabs.notifications"), icon: Bell },
+    { id: 'security', label: t("admin.settings.tabs.security"), icon: Shield },
+    { id: 'system', label: t("admin.settings.tabs.system"), icon: Database }
   ];
 
   return (
@@ -241,10 +241,10 @@ export default function AdminSettingsPage() {
             {activeTab === 'general' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Site Information</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">{t("admin.settings.siteInformation")}</h3>
                   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">Site Name</label>
+                      <label className="block text-sm font-medium text-gray-700">{t("admin.settings.siteName")}</label>
                       <input
                         type="text"
                         value={settings.siteName}
@@ -253,7 +253,7 @@ export default function AdminSettingsPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">Contact Email</label>
+                      <label className="block text-sm font-medium text-gray-700">{t("admin.settings.contactEmail")}</label>
                       <input
                         type="email"
                         value={settings.contactEmail}
@@ -263,7 +263,7 @@ export default function AdminSettingsPage() {
                     </div>
                   </div>
                   <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-700">Site Description</label>
+                    <label className="block text-sm font-medium text-gray-700">{t("admin.settings.siteDescription")}</label>
                     <textarea
                       value={settings.siteDescription}
                       onChange={(e) => handleInputChange('siteDescription', e.target.value)}
@@ -272,7 +272,7 @@ export default function AdminSettingsPage() {
                     />
                   </div>
                   <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-700">Support Phone</label>
+                    <label className="block text-sm font-medium text-gray-700">{t("admin.settings.supportPhone")}</label>
                     <input
                       type="tel"
                       value={settings.supportPhone}
@@ -283,26 +283,26 @@ export default function AdminSettingsPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Language Settings</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">{t("admin.settings.languageSettings")}</h3>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Default Language</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t("admin.settings.defaultLanguage")}</label>
                     <select
                       value={settings.defaultLanguage}
                       onChange={(e) => handleInputChange('defaultLanguage', e.target.value)}
                       className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     >
-                      <option value="fr">French</option>
-                      <option value="en">English</option>
-                      <option value="ar">Arabic</option>
+                      <option value="fr">{t("languages.french")}</option>
+                      <option value="en">{t("languages.english")}</option>
+                      <option value="ar">{t("languages.arabic")}</option>
                     </select>
                   </div>
                   <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Enabled Languages</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t("admin.settings.enabledLanguages")}</label>
                     <div className="space-y-2">
                       {[
-                        { code: 'fr', name: 'French' },
-                        { code: 'en', name: 'English' },
-                        { code: 'ar', name: 'Arabic' }
+                        { code: 'fr', name: t("languages.french") },
+                        { code: 'en', name: t("languages.english") },
+                        { code: 'ar', name: t("languages.arabic") }
                       ].map((lang) => (
                         <label key={lang.code} className="flex items-center">
                           <input
@@ -323,7 +323,7 @@ export default function AdminSettingsPage() {
             {activeTab === 'users' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">User Registration</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">{t("admin.settings.userRegistration")}</h3>
                   <div className="space-y-4">
                     <label className="flex items-center">
                       <input
@@ -332,7 +332,7 @@ export default function AdminSettingsPage() {
                         onChange={(e) => handleInputChange('registrationEnabled', e.target.checked)}
                         className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                       />
-                      <span className="ml-2 text-sm text-gray-700">Enable new user registration</span>
+                      <span className="ml-2 text-sm text-gray-700">{t("admin.settings.enableRegistration")}</span>
                     </label>
                     <label className="flex items-center">
                       <input
@@ -341,7 +341,7 @@ export default function AdminSettingsPage() {
                         onChange={(e) => handleInputChange('requireEmailVerification', e.target.checked)}
                         className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                       />
-                      <span className="ml-2 text-sm text-gray-700">Require email verification</span>
+                      <span className="ml-2 text-sm text-gray-700">{t("admin.settings.requireEmailVerification")}</span>
                     </label>
                     <label className="flex items-center">
                       <input
@@ -350,15 +350,15 @@ export default function AdminSettingsPage() {
                         onChange={(e) => handleInputChange('allowGuestAccess', e.target.checked)}
                         className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                       />
-                      <span className="ml-2 text-sm text-gray-700">Allow guest access to public documents</span>
+                      <span className="ml-2 text-sm text-gray-700">{t("admin.settings.allowGuestAccess")}</span>
                     </label>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Session Management</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">{t("admin.settings.sessionManagement")}</h3>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Session Timeout (minutes)</label>
+                    <label className="block text-sm font-medium text-gray-700">{t("admin.settings.sessionTimeout")}</label>
                     <input
                       type="number"
                       min="5"
@@ -367,7 +367,7 @@ export default function AdminSettingsPage() {
                       onChange={(e) => handleInputChange('sessionTimeoutMinutes', parseInt(e.target.value))}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <p className="mt-1 text-sm text-gray-500">Users will be automatically logged out after this period of inactivity</p>
+                    <p className="mt-1 text-sm text-gray-500">{t("admin.settings.sessionTimeoutDescription")}</p>
                   </div>
                 </div>
               </div>
@@ -376,9 +376,9 @@ export default function AdminSettingsPage() {
             {activeTab === 'documents' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">File Upload Settings</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">{t("admin.settings.fileUploadSettings")}</h3>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Maximum File Size (MB)</label>
+                    <label className="block text-sm font-medium text-gray-700">{t("admin.settings.maxFileSize")}</label>
                     <input
                       type="number"
                       min="1"
@@ -391,9 +391,9 @@ export default function AdminSettingsPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Document Retention</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">{t("admin.settings.documentRetention")}</h3>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Document Retention Period (days)</label>
+                    <label className="block text-sm font-medium text-gray-700">{t("admin.settings.retentionPeriod")}</label>
                     <input
                       type="number"
                       min="30"
@@ -402,12 +402,12 @@ export default function AdminSettingsPage() {
                       onChange={(e) => handleInputChange('documentRetentionDays', parseInt(e.target.value))}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <p className="mt-1 text-sm text-gray-500">Documents will be automatically archived after this period</p>
+                    <p className="mt-1 text-sm text-gray-500">{t("admin.settings.retentionDescription")}</p>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Content Moderation</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">{t("admin.settings.contentModeration")}</h3>
                   <label className="flex items-center">
                     <input
                       type="checkbox"
@@ -415,7 +415,7 @@ export default function AdminSettingsPage() {
                       onChange={(e) => handleInputChange('moderateComments', e.target.checked)}
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
-                    <span className="ml-2 text-sm text-gray-700">Moderate comments before publishing</span>
+                    <span className="ml-2 text-sm text-gray-700">{t("admin.settings.moderateComments")}</span>
                   </label>
                 </div>
               </div>
@@ -424,7 +424,7 @@ export default function AdminSettingsPage() {
             {activeTab === 'notifications' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Email Notifications</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">{t("admin.settings.emailNotifications")}</h3>
                   <label className="flex items-center">
                     <input
                       type="checkbox"
@@ -432,12 +432,12 @@ export default function AdminSettingsPage() {
                       onChange={(e) => handleInputChange('emailNotificationsEnabled', e.target.checked)}
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
-                    <span className="ml-2 text-sm text-gray-700">Enable email notifications</span>
+                    <span className="ml-2 text-sm text-gray-700">{t("admin.settings.enableEmailNotifications")}</span>
                   </label>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">WhatsApp Notifications</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">{t("admin.settings.whatsappNotifications")}</h3>
                   <label className="flex items-center">
                     <input
                       type="checkbox"
@@ -445,7 +445,7 @@ export default function AdminSettingsPage() {
                       onChange={(e) => handleInputChange('whatsappNotificationsEnabled', e.target.checked)}
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
-                    <span className="ml-2 text-sm text-gray-700">Enable WhatsApp notifications</span>
+                    <span className="ml-2 text-sm text-gray-700">{t("admin.settings.enableWhatsappNotifications")}</span>
                   </label>
                 </div>
               </div>
@@ -454,7 +454,7 @@ export default function AdminSettingsPage() {
             {activeTab === 'security' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Audit Logging</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">{t("admin.settings.auditLogging")}</h3>
                   <label className="flex items-center">
                     <input
                       type="checkbox"
@@ -462,7 +462,7 @@ export default function AdminSettingsPage() {
                       onChange={(e) => handleInputChange('enableAuditLogs', e.target.checked)}
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
-                    <span className="ml-2 text-sm text-gray-700">Enable audit logging for sensitive actions</span>
+                    <span className="ml-2 text-sm text-gray-700">{t("admin.settings.enableAuditLogging")}</span>
                   </label>
                 </div>
               </div>
@@ -471,7 +471,7 @@ export default function AdminSettingsPage() {
             {activeTab === 'system' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Maintenance Mode</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">{t("admin.settings.maintenanceMode")}</h3>
                   <label className="flex items-center">
                     <input
                       type="checkbox"
@@ -479,9 +479,9 @@ export default function AdminSettingsPage() {
                       onChange={(e) => handleInputChange('maintenanceMode', e.target.checked)}
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
-                    <span className="ml-2 text-sm text-gray-700">Enable maintenance mode</span>
+                    <span className="ml-2 text-sm text-gray-700">{t("admin.settings.enableMaintenanceMode")}</span>
                   </label>
-                  <p className="mt-1 text-sm text-gray-500">When enabled, only administrators can access the site</p>
+                  <p className="mt-1 text-sm text-gray-500">{t("admin.settings.maintenanceModeDescription")}</p>
                 </div>
               </div>
             )}
@@ -496,7 +496,7 @@ export default function AdminSettingsPage() {
                 className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
               >
                 <Save className="h-4 w-4 mr-2" />
-                {saving ? 'Saving...' : 'Save Settings'}
+                {saving ? t("common.saving") : t("admin.settings.saveSettings")}
               </button>
             </div>
           </div>

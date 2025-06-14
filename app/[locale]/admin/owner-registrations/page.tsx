@@ -3,6 +3,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { Check, X, AlertCircle } from "lucide-react";
+import { useI18n } from "@/lib/i18n/client";
 import { Header } from "@/components/organisms/Header";
 
 type OwnerRegistration = {
@@ -18,6 +19,7 @@ type OwnerRegistration = {
 };
 
 export default function OwnerRegistrationsPage() {
+  const { t } = useI18n();
   const [registrations, setRegistrations] = React.useState<OwnerRegistration[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
@@ -31,7 +33,7 @@ export default function OwnerRegistrationsPage() {
       const data = await response.json();
       setRegistrations(data);
     } catch (error) {
-      toast.error("Failed to load registrations");
+      toast.error(t("admin.ownerRegistrations.loadError"));
     } finally {
       setIsLoading(false);
     }
@@ -56,7 +58,7 @@ export default function OwnerRegistrationsPage() {
 
       if (!response.ok) throw new Error(`Failed to ${action} registration`);
       
-      toast.success(`Registration ${action}d successfully`);
+      toast.success(action === 'approve' ? t("admin.ownerRegistrations.approveSuccess") : t("admin.ownerRegistrations.rejectSuccess"));
       setSelectedId(null);
       setNotesById(prev => {
         const newState = { ...prev };
@@ -65,7 +67,7 @@ export default function OwnerRegistrationsPage() {
       });
       fetchRegistrations();
     } catch (error) {
-      toast.error(`Failed to ${action} registration`);
+      toast.error(action === 'approve' ? t("admin.ownerRegistrations.approveError") : t("admin.ownerRegistrations.rejectError"));
     }
   };
 
@@ -87,19 +89,19 @@ export default function OwnerRegistrationsPage() {
       <Header />
       <div className="p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-2xl font-bold mb-8">Owner Registration Requests</h1>
+        <h1 className="text-2xl font-bold mb-8">{t("admin.ownerRegistrations.title")}</h1>
         
         <div className="bg-white dark:bg-neutral-800 rounded-lg shadow overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-neutral-900">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Building</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Apartment</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("admin.ownerRegistrations.tableHeaders.name")}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("admin.ownerRegistrations.tableHeaders.email")}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("admin.ownerRegistrations.tableHeaders.building")}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("admin.ownerRegistrations.tableHeaders.apartment")}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("admin.ownerRegistrations.tableHeaders.status")}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("admin.ownerRegistrations.tableHeaders.date")}</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t("admin.ownerRegistrations.tableHeaders.actions")}</th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-neutral-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -115,7 +117,7 @@ export default function OwnerRegistrationsPage() {
                       ${registration.status === 'approved' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : ''}
                       ${registration.status === 'rejected' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : ''}
                     `}>
-                      {registration.status.charAt(0).toUpperCase() + registration.status.slice(1)}
+                      {t(`admin.ownerRegistrations.status.${registration.status}`)}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
@@ -128,7 +130,7 @@ export default function OwnerRegistrationsPage() {
                           <>
                             <textarea
                               className="block w-48 rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm"
-                              placeholder="Add notes (optional)"
+                              placeholder={t("admin.ownerRegistrations.addNotesPlaceholder")}
                               value={notesById[registration.id] ?? ""}
                               onChange={(e) =>
                                 setNotesById((m) => ({ ...m, [registration.id]: e.target.value }))
@@ -165,7 +167,7 @@ export default function OwnerRegistrationsPage() {
                             onClick={() => setSelectedId(registration.id)}
                             className="inline-flex items-center px-3 py-1 border border-transparent rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                           >
-                            Review
+                            {t("admin.ownerRegistrations.review")}
                           </button>
                         )}
                       </div>

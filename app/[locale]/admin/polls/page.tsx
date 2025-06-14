@@ -300,7 +300,7 @@ export default function AdminPollsPage() {
               <BarChart3 className="h-6 w-6 text-blue-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Polls</p>
+              <p className="text-sm font-medium text-gray-600">{t("admin.polls.stats.totalPolls")}</p>
               <p className="text-2xl font-bold text-gray-900">{polls.length}</p>
             </div>
           </div>
@@ -312,7 +312,7 @@ export default function AdminPollsPage() {
               <Calendar className="h-6 w-6 text-green-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Active</p>
+              <p className="text-sm font-medium text-gray-600">{t("admin.polls.stats.active")}</p>
               <p className="text-2xl font-bold text-gray-900">
                 {polls.filter(poll => poll.status === 'active').length}
               </p>
@@ -326,7 +326,7 @@ export default function AdminPollsPage() {
               <Settings className="h-6 w-6 text-yellow-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Draft</p>
+              <p className="text-sm font-medium text-gray-600">{t("admin.polls.stats.draft")}</p>
               <p className="text-2xl font-bold text-gray-900">
                 {polls.filter(poll => poll.status === 'draft').length}
               </p>
@@ -340,7 +340,7 @@ export default function AdminPollsPage() {
               <Users className="h-6 w-6 text-red-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Closed</p>
+              <p className="text-sm font-medium text-gray-600">{t("admin.polls.stats.closed")}</p>
               <p className="text-2xl font-bold text-gray-900">
                 {polls.filter(poll => poll.status === 'closed').length}
               </p>
@@ -378,7 +378,7 @@ export default function AdminPollsPage() {
         <div className="p-6">
           {/* Admin Controls for each poll */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-4">{t("polls.adminActions") || "Admin Actions"}</h3>
+            <h3 className="text-lg font-semibold mb-4">{t("admin.polls.adminActions")}</h3>
             
             {polls.length > 0 && (
               <div className="space-y-4">
@@ -387,8 +387,8 @@ export default function AdminPollsPage() {
                     <div className="flex-1">
                       <h4 className="font-medium">{poll.question}</h4>
                       <p className="text-sm text-gray-600">
-                        Status: <span className="capitalize">{poll.status}</span> | 
-                        Votes: {poll._count?.votes || 0}
+                        {t("admin.polls.status")}: <span className="capitalize">{poll.status}</span> | 
+                        {t("admin.polls.votes")}: {poll._count?.votes || 0}
                       </p>
                     </div>
                     
@@ -398,7 +398,7 @@ export default function AdminPollsPage() {
                           onClick={() => handleUpdatePollStatus(poll.id, 'active')}
                           className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700"
                         >
-                          Activate
+                          {t("admin.polls.actions.activate")}
                         </button>
                       )}
                       
@@ -407,7 +407,7 @@ export default function AdminPollsPage() {
                           onClick={() => handleUpdatePollStatus(poll.id, 'closed')}
                           className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
                         >
-                          Close
+                          {t("admin.polls.actions.close")}
                         </button>
                       )}
                       
