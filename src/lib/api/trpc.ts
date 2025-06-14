@@ -30,7 +30,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   const user = await getCurrentUser();
 
   return {
-    user,
+    user: user as any, // Cast to avoid NextAuth type conflicts
     headers: opts.headers,
     db: db,
   };

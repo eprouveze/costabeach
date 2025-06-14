@@ -9,12 +9,7 @@ import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 import { Resend } from "resend";
 import { headers } from "next/headers";
-
-export enum UserRole {
-  user = "user",
-  admin = "admin",
-  contentEditor = "contentEditor",
-}
+import { UserRole } from "@/lib/types";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`

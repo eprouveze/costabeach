@@ -61,13 +61,19 @@ export interface Document {
   author?: { id: string; name?: string | null };
 }
 
+export enum UserRole {
+  user = "user",
+  admin = "admin",
+  contentEditor = "contentEditor",
+}
+
 export interface User {
   id: string;
   name?: string | null;
   email?: string | null;
   emailVerified?: Date | null;
   image?: string | null;
-  role: 'user' | 'admin' | 'contentEditor';
+  role: UserRole;
   isAdmin: boolean;
   buildingNumber?: string | null;
   apartmentNumber?: string | null;

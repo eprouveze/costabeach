@@ -220,14 +220,14 @@ export default function DocumentViewerPage() {
                 <div className="pt-4 border-t border-gray-100">
                   <p className="text-sm text-gray-500 mb-2">{t("documents.category")}</p>
                   <div className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                    {getCategoryName(documentDetails.category)}
+                    {getCategoryName(documentDetails.category as DocumentCategory)}
                   </div>
                 </div>
                 
                 <div>
                   <p className="text-sm text-gray-500 mb-2">{t("documents.language")}</p>
                   <div className="inline-block px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
-                    {getLanguageName(documentDetails.language)}
+                    {getLanguageName(documentDetails.language as Language)}
                   </div>
                 </div>
                 
