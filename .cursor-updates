@@ -754,3 +754,5 @@ Note: Some tests are still failing due to type errors and outdated test implemen
 + Ignore pdf-parse test fixture via IgnorePlugin and mark pdf-parse external; switched to dynamic import in pdf utils to avoid ENOENT build error.
 
 + Wrap SignInPage in Suspense boundary to satisfy Next 15 requirement for useSearchParams.
+
++ Embed Unicode font (Noto Sans Arabic) dynamically in pdf utils to support Arabic characters during PDF generation.
