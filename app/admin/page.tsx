@@ -10,6 +10,7 @@ import { checkPermission } from "@/lib/utils/permissions";
 import { Permission } from "@/lib/types";
 import { toast } from "react-toastify";
 import { Header } from "@/components/organisms/Header";
+import { api } from "@/lib/trpc/react";
 
 export default function AdminDashboardPage() {
   const { t } = useI18n();
@@ -21,6 +22,16 @@ export default function AdminDashboardPage() {
   
   // Get current locale from pathname
   const locale = pathname?.split('/')[1] || 'fr';
+  
+  // Fetch dashboard statistics using tRPC
+  const { 
+    data: dashboardStats, 
+    isLoading: statsLoading,
+    isError: statsError 
+  } = api.admin.getDashboardStats.useQuery(undefined, {
+    enabled: session.status === 'authenticated',
+    retry: 1,
+  });
   
   useEffect(() => {
     const fetchPermissions = async () => {
@@ -110,7 +121,15 @@ export default function AdminDashboardPage() {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("admin.totalUsers") || "Total Users"}</p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white">--</p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {statsLoading ? (
+                    <span className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded w-8 h-5 inline-block"></span>
+                  ) : statsError ? (
+                    "--"
+                  ) : (
+                    dashboardStats?.totalUsers?.toLocaleString() || "0"
+                  )}
+                </p>
               </div>
             </div>
           </div>
@@ -122,7 +141,15 @@ export default function AdminDashboardPage() {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("admin.totalDocuments") || "Documents"}</p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white">--</p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {statsLoading ? (
+                    <span className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded w-8 h-5 inline-block"></span>
+                  ) : statsError ? (
+                    "--"
+                  ) : (
+                    dashboardStats?.totalDocuments?.toLocaleString() || "0"
+                  )}
+                </p>
               </div>
             </div>
           </div>
@@ -134,7 +161,15 @@ export default function AdminDashboardPage() {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("admin.messagesSent") || "Messages Sent"}</p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white">--</p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {statsLoading ? (
+                    <span className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded w-8 h-5 inline-block"></span>
+                  ) : statsError ? (
+                    "--"
+                  ) : (
+                    dashboardStats?.messagesSent?.toLocaleString() || "0"
+                  )}
+                </p>
               </div>
             </div>
           </div>
@@ -146,7 +181,15 @@ export default function AdminDashboardPage() {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("admin.activeSessions") || "Active Sessions"}</p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white">--</p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {statsLoading ? (
+                    <span className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded w-8 h-5 inline-block"></span>
+                  ) : statsError ? (
+                    "--"
+                  ) : (
+                    dashboardStats?.activeSessions?.toLocaleString() || "0"
+                  )}
+                </p>
               </div>
             </div>
           </div>

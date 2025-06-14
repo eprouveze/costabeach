@@ -317,6 +317,11 @@
     "polls": {
       "title": "Gestion des sondages",
       "description": "Créer, gérer et surveiller les sondages de la communauté",
+      "adminTitle": "Gestion des sondages",
+      "adminDescription": "Créer, gérer et surveiller les sondages de la communauté",
+      "adminActions": "Actions",
+      "viewPublic": "Voir public",
+      "create": "Créer un sondage",
       "createPoll": "Créer un sondage",
       "activePoll": "Sondage actif",
       "closedPoll": "Sondage fermé",
@@ -324,7 +329,9 @@
       "totalPolls": "Total des sondages",
       "activePolls": "Sondages actifs",
       "completedPolls": "Sondages terminés",
-      "totalVotes": "Total des votes"
+      "totalVotes": "Total des votes",
+      "noPolls": "Aucun sondage trouvé",
+      "noPollsMessage": "Vous n'avez créé aucun sondage pour le moment."
     },
     "users": {
       "title": "Gestion des utilisateurs",
