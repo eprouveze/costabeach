@@ -621,5 +621,58 @@
     "notifications": "Notifications",
     "notificationsDescription": "Gérez vos préférences de notification",
     "title": "Paramètres"
+  },
+  "toast": {
+    "admin": {
+      "alertMessageRequired": "Veuillez saisir un message d'alerte",
+      "alertTitleRequired": "Veuillez saisir un titre d'alerte",
+      "completedTranslationsFetchError": "Erreur lors de la récupération des traductions terminées",
+      "documentDeleteError": "Erreur lors de la suppression du document",
+      "documentDeleteSuccess": "Document supprimé avec succès",
+      "emergencyAlertSendError": "Échec de l'envoi de l'alerte: {{error}}",
+      "emergencyAlertSendFailed": "Échec de l'envoi de l'alerte d'urgence. Veuillez réessayer.",
+      "emergencyAlertSentSuccess": "Alerte d'urgence envoyée avec succès!",
+      "failedJobsQueuedForRetry": "Tâches échouées mises en file d'attente pour nouvel essai",
+      "operationError": "Échec de l'opération: {{action}} - {{error}}",
+      "translationStatusFetchError": "Erreur lors de la récupération du statut de traduction"
+    },
+    "auth": {
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
+      "passwordUpdateSuccess": "Mot de passe mis à jour avec succès",
+      "permissionDenied": "Vous n'avez pas l'autorisation d'accéder à cette page",
+      "resetLinkSent": "Lien de réinitialisation envoyé à votre email",
+      "signOutSuccess": "Vous avez été déconnecté avec succès"
+    },
+    "documents": {
+      "translationRequestError": "",
+      "translationRequestFailed": "",
+      "translationRequestSuccess": ""
+    },
+    "general": {
+      "errorOccurred": "Une erreur s'est produite",
+      "failed": "Échec",
+      "loading": "Chargement...",
+      "success": "Succès"
+    },
+    "settings": {
+      "darkModeEnabled": "Mode sombre activé",
+      "emailNotificationsDisabled": "Notifications par email désactivées",
+      "emailNotificationsEnabled": "Notifications par email activées",
+      "inAppNotificationsDisabled": "Notifications in-app désactivées",
+      "inAppNotificationsEnabled": "Notifications in-app activées",
+      "languageChanged": "Langue changée vers {{language}}",
+      "lightModeEnabled": "Mode clair activé"
+    },
+    "whatsapp": {
+      "documentUrlRequired": "Veuillez fournir l'URL du document et le nom du fichier",
+      "imageUrlRequired": "Veuillez fournir l'URL de l'image",
+      "messageRequired": "Veuillez saisir un message",
+      "messageSendError": "Échec de l'envoi du message: {{error}}",
+      "messageSentSuccess": "Message envoyé avec succès! ID: {{messageId}}",
+      "phoneNumberInvalidFormat": "Le numéro de téléphone doit être au format international (+1234567890)",
+      "phoneNumberRequired": "Veuillez saisir un numéro de téléphone",
+      "templateNameRequired": "Veuillez saisir un nom de modèle"
+    }
   }
 }

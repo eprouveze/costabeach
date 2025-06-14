@@ -78,7 +78,7 @@ export default function TranslationManagementPage() {
       }
     } catch (error) {
       console.error('Error fetching status:', error);
-      toast.error('Failed to fetch translation status');
+      toast.error(t('toast.admin.translationStatusFetchError'));
     } finally {
       setLoading(false);
     }
@@ -95,7 +95,7 @@ export default function TranslationManagementPage() {
       }
     } catch (error) {
       console.error('Error fetching completed translations:', error);
-      toast.error('Failed to fetch completed translations');
+      toast.error(t('toast.admin.completedTranslationsFetchError'));
     }
   };
 
@@ -110,7 +110,16 @@ export default function TranslationManagementPage() {
 
       if (response.ok) {
         const data = await response.json();
-        toast.success(data.message);
+        // Show translated message based on action type
+        let translatedMessage;
+        switch (action) {
+          case 'retry_failed':
+            translatedMessage = t('toast.admin.failedJobsQueuedForRetry');
+            break;
+          default:
+            translatedMessage = data.message; // Fallback to server message
+        }
+        toast.success(translatedMessage);
         // Refresh status after action
         setTimeout(fetchStatus, 1000);
       } else {
@@ -119,7 +128,7 @@ export default function TranslationManagementPage() {
       }
     } catch (error) {
       console.error(`Error performing ${action}:`, error);
-      toast.error(`Failed to ${action}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error(t('toast.admin.operationError', { action, error: error instanceof Error ? error.message : 'Unknown error' }));
     } finally {
       setActionLoading(null);
     }

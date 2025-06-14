@@ -5,8 +5,10 @@ import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { signOut } from '@/lib/supabase/auth';
 import { toast } from 'react-toastify';
+import { useI18n } from '@/lib/i18n/client';
 
 export default function SignOutPage() {
+  const { t } = useI18n();
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
@@ -19,10 +21,11 @@ export default function SignOutPage() {
           toast.error(error.message);
           console.error('Sign out error:', error);
         } else {
-          toast.success('You have been signed out successfully');
+          toast.success(t('toast.auth.signOutSuccess'));
         }
       } catch (error) {
         console.error('Sign out error:', error);
+        toast.error(t('toast.general.errorOccurred'));
       } finally {
         // Redirect to home page after sign out
         setTimeout(() => {

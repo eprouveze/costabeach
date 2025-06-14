@@ -15,22 +15,22 @@ export default function SettingsPage() {
   // Mock function to handle language change
   const handleLanguageChange = (language: string) => {
     // In a real implementation, this would change the application's locale
-    toast.success(`Language changed to ${language}`);
+    toast.success(t('toast.settings.languageChanged', { language }));
   };
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
-    toast.success(darkMode ? "Light mode enabled" : "Dark mode enabled");
+    toast.success(darkMode ? t('toast.settings.lightModeEnabled') : t('toast.settings.darkModeEnabled'));
   };
 
   const toggleNotifications = () => {
     setNotifications(!notifications);
-    toast.success(notifications ? "In-app notifications disabled" : "In-app notifications enabled");
+    toast.success(notifications ? t('toast.settings.inAppNotificationsDisabled') : t('toast.settings.inAppNotificationsEnabled'));
   };
 
   const toggleEmailNotifications = () => {
     setEmailNotifications(!emailNotifications);
-    toast.success(emailNotifications ? "Email notifications disabled" : "Email notifications enabled");
+    toast.success(emailNotifications ? t('toast.settings.emailNotificationsDisabled') : t('toast.settings.emailNotificationsEnabled'));
   };
 
   return (

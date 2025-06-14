@@ -6,8 +6,10 @@ import Link from 'next/link';
 import { ArrowLeft, Lock, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import { updatePassword } from '@/lib/supabase/auth';
 import { toast } from 'react-toastify';
+import { useI18n } from '@/lib/i18n/client';
 
 export default function UpdatePasswordPage() {
+  const { t } = useI18n();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -21,13 +23,13 @@ export default function UpdatePasswordPage() {
     setErrorMessage('');
 
     if (password !== confirmPassword) {
-      setErrorMessage('Passwords do not match');
+      setErrorMessage(t('toast.auth.passwordMismatch'));
       setIsLoading(false);
       return;
     }
 
     if (password.length < 8) {
-      setErrorMessage('Password must be at least 8 characters long');
+      setErrorMessage(t('toast.auth.passwordTooShort'));
       setIsLoading(false);
       return;
     }
@@ -42,15 +44,15 @@ export default function UpdatePasswordPage() {
       }
       
       setIsSuccess(true);
-      toast.success('Password updated successfully');
+      toast.success(t('toast.auth.passwordUpdateSuccess'));
       
       // Redirect to dashboard after a short delay
       setTimeout(() => {
         router.push('/dashboard');
       }, 2000);
     } catch (error: any) {
-      setErrorMessage(error.message || 'An error occurred');
-      toast.error(error.message || 'An error occurred');
+      setErrorMessage(error.message || t('toast.general.errorOccurred'));
+      toast.error(error.message || t('toast.general.errorOccurred'));
     } finally {
       setIsLoading(false);
     }

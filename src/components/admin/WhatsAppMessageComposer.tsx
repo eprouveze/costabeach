@@ -4,10 +4,12 @@ import React, { useState } from "react";
 import { Send, Phone, FileText, Image, MessageSquare } from "lucide-react";
 import { toast } from "react-toastify";
 import { getWhatsAppClient } from "@/lib/whatsapp/client";
+import { useI18n } from "@/lib/i18n/client";
 
 type MessageType = 'text' | 'template' | 'document' | 'image';
 
 export default function WhatsAppMessageComposer() {
+  const { t } = useI18n();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [messageType, setMessageType] = useState<MessageType>('text');
   const [messageText, setMessageText] = useState("");
@@ -20,14 +22,14 @@ export default function WhatsAppMessageComposer() {
 
   const handleSendMessage = async () => {
     if (!phoneNumber.trim()) {
-      toast.error("Please enter a phone number");
+      toast.error(t('toast.whatsapp.phoneNumberRequired'));
       return;
     }
 
     // Validate phone number format
     const cleanPhone = phoneNumber.replace(/\s+/g, '');
     if (!cleanPhone.startsWith('+') || cleanPhone.length < 10) {
-      toast.error("Phone number must be in international format (+1234567890)");
+      toast.error(t('toast.whatsapp.phoneNumberInvalidFormat'));
       return;
     }
 
@@ -40,7 +42,7 @@ export default function WhatsAppMessageComposer() {
       switch (messageType) {
         case 'text':
           if (!messageText.trim()) {
-            toast.error("Please enter a message");
+            toast.error(t('toast.whatsapp.messageRequired'));
             return;
           }
           messageId = await whatsappClient.sendTextMessage(cleanPhone, messageText);
@@ -48,7 +50,7 @@ export default function WhatsAppMessageComposer() {
 
         case 'template':
           if (!templateName.trim()) {
-            toast.error("Please enter a template name");
+            toast.error(t('toast.whatsapp.templateNameRequired'));
             return;
           }
           messageId = await whatsappClient.sendTemplateMessage(cleanPhone, templateName);
@@ -56,7 +58,7 @@ export default function WhatsAppMessageComposer() {
 
         case 'document':
           if (!documentUrl.trim() || !documentFilename.trim()) {
-            toast.error("Please provide document URL and filename");
+            toast.error(t('toast.whatsapp.documentUrlRequired'));
             return;
           }
           messageId = await whatsappClient.sendDocumentMessage(
@@ -69,7 +71,7 @@ export default function WhatsAppMessageComposer() {
 
         case 'image':
           if (!imageUrl.trim()) {
-            toast.error("Please provide image URL");
+            toast.error(t('toast.whatsapp.imageUrlRequired'));
             return;
           }
           messageId = await whatsappClient.sendImageMessage(
@@ -83,7 +85,7 @@ export default function WhatsAppMessageComposer() {
           throw new Error("Invalid message type");
       }
 
-      toast.success(`Message sent successfully! ID: ${messageId}`);
+      toast.success(t('toast.whatsapp.messageSentSuccess', { messageId }));
       
       // Clear form
       setMessageText("");
@@ -95,7 +97,7 @@ export default function WhatsAppMessageComposer() {
       
     } catch (error: any) {
       console.error("Failed to send message:", error);
-      toast.error(`Failed to send message: ${error.message}`);
+      toast.error(t('toast.whatsapp.messageSendError', { error: error.message }));
     } finally {
       setIsSending(false);
     }

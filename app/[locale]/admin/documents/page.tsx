@@ -44,7 +44,7 @@ export default function AdminDocumentsPage() {
   
   const deleteDocument = api.documents.deleteDocument.useMutation({
     onSuccess: () => {
-      toast.success("Document deleted successfully");
+      toast.success(t('toast.admin.documentDeleteSuccess'));
       // Invalidate and refetch the documents list
       utils.documents.getAllDocuments.invalidate();
       refetch();
@@ -53,13 +53,13 @@ export default function AdminDocumentsPage() {
       // Don't duplicate "Failed to delete document" if it's already in the error message
       const message = error.message.includes('Failed to delete document') 
         ? error.message 
-        : `Failed to delete document: ${error.message}`;
+        : t('toast.admin.documentDeleteError');
       toast.error(message);
     }
   });
 
   const handleDeleteDocument = async (documentId: string) => {
-    if (window.confirm("Are you sure you want to delete this document? This action cannot be undone.")) {
+    if (window.confirm(t('documents.confirmDelete'))) {
       try {
         deleteDocument.mutate({ documentId });
       } catch (error) {

@@ -80,10 +80,10 @@ export default function AdminLogsPage() {
   // Redirect if no permissions
   useEffect(() => {
     if (status === 'authenticated' && !canViewLogs && userPermissions.length > 0) {
-      toast.error("You don't have permission to access this page");
+      toast.error(t('toast.auth.permissionDenied'));
       router.push('/admin');
     }
-  }, [canViewLogs, userPermissions, status, router]);
+  }, [canViewLogs, userPermissions, status, router, t]);
 
   // Fetch logs
   useEffect(() => {
@@ -139,7 +139,7 @@ export default function AdminLogsPage() {
         setFilteredLogs(mockLogs);
       } catch (error) {
         console.error("Error fetching logs:", error);
-        toast.error("Error loading audit logs");
+        toast.error(t('toast.general.errorOccurred'));
       } finally {
         setLoading(false);
       }

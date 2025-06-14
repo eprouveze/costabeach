@@ -630,5 +630,58 @@
     "notifications": "الإشعارات",
     "notificationsDescription": "إدارة إعدادات الإشعارات",
     "title": "الإعدادات"
+  },
+  "toast": {
+    "admin": {
+      "alertMessageRequired": "يرجى إدخال رسالة التنبيه",
+      "alertTitleRequired": "يرجى إدخال عنوان التنبيه",
+      "completedTranslationsFetchError": "فشل في جلب الترجمات المكتملة",
+      "documentDeleteError": "خطأ في حذف المستند",
+      "documentDeleteSuccess": "تم حذف المستند بنجاح",
+      "emergencyAlertSendError": "فشل في إرسال التنبيه: {{error}}",
+      "emergencyAlertSendFailed": "فشل في إرسال تنبيه الطوارئ. يرجى المحاولة مرة أخرى.",
+      "emergencyAlertSentSuccess": "تم إرسال تنبيه الطوارئ بنجاح!",
+      "failedJobsQueuedForRetry": "المهام الفاشلة في قائمة انتظار إعادة المحاولة",
+      "operationError": "فشل في {{action}}: {{error}}",
+      "translationStatusFetchError": "فشل في جلب حالة الترجمة"
+    },
+    "auth": {
+      "passwordMismatch": "كلمات المرور غير متطابقة",
+      "passwordTooShort": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل",
+      "passwordUpdateSuccess": "تم تحديث كلمة المرور بنجاح",
+      "permissionDenied": "ليس لديك صلاحية للوصول إلى هذه الصفحة",
+      "resetLinkSent": "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني",
+      "signOutSuccess": "تم تسجيل خروجك بنجاح"
+    },
+    "documents": {
+      "translationRequestError": "",
+      "translationRequestFailed": "",
+      "translationRequestSuccess": ""
+    },
+    "general": {
+      "errorOccurred": "حدث خطأ",
+      "failed": "فشل",
+      "loading": "جاري التحميل...",
+      "success": "نجح"
+    },
+    "settings": {
+      "darkModeEnabled": "تم تفعيل الوضع المظلم",
+      "emailNotificationsDisabled": "تم تعطيل إشعارات البريد الإلكتروني",
+      "emailNotificationsEnabled": "تم تفعيل إشعارات البريد الإلكتروني",
+      "inAppNotificationsDisabled": "تم تعطيل إشعارات التطبيق",
+      "inAppNotificationsEnabled": "تم تفعيل إشعارات التطبيق",
+      "languageChanged": "تم تغيير اللغة إلى {{language}}",
+      "lightModeEnabled": "تم تفعيل الوضع الفاتح"
+    },
+    "whatsapp": {
+      "documentUrlRequired": "يرجى تقديم رابط المستند واسم الملف",
+      "imageUrlRequired": "يرجى تقديم رابط الصورة",
+      "messageRequired": "يرجى إدخال رسالة",
+      "messageSendError": "فشل في إرسال الرسالة: {{error}}",
+      "messageSentSuccess": "تم إرسال الرسالة بنجاح! المعرف: {{messageId}}",
+      "phoneNumberInvalidFormat": "يجب أن يكون رقم الهاتف بالتنسيق الدولي (+1234567890)",
+      "phoneNumberRequired": "يرجى إدخال رقم الهاتف",
+      "templateNameRequired": "يرجى إدخال اسم القالب"
+    }
   }
 }

@@ -618,5 +618,58 @@
     "notifications": "Notifications",
     "notificationsDescription": "Manage your notification preferences",
     "title": "Settings"
+  },
+  "toast": {
+    "admin": {
+      "alertMessageRequired": "Please enter an alert message",
+      "alertTitleRequired": "Please enter an alert title",
+      "completedTranslationsFetchError": "Failed to fetch completed translations",
+      "documentDeleteError": "Error deleting document",
+      "documentDeleteSuccess": "Document deleted successfully",
+      "emergencyAlertSendError": "Failed to send alert: {{error}}",
+      "emergencyAlertSendFailed": "Failed to send emergency alert. Please try again.",
+      "emergencyAlertSentSuccess": "Emergency alert sent successfully!",
+      "failedJobsQueuedForRetry": "Failed jobs queued for retry",
+      "operationError": "Failed to {{action}}: {{error}}",
+      "translationStatusFetchError": "Failed to fetch translation status"
+    },
+    "auth": {
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 8 characters long",
+      "passwordUpdateSuccess": "Password updated successfully",
+      "permissionDenied": "You do not have permission to access this page",
+      "resetLinkSent": "Password reset link sent to your email",
+      "signOutSuccess": "You have been signed out successfully"
+    },
+    "documents": {
+      "translationRequestError": "",
+      "translationRequestFailed": "",
+      "translationRequestSuccess": ""
+    },
+    "general": {
+      "errorOccurred": "An error occurred",
+      "failed": "Failed",
+      "loading": "Loading...",
+      "success": "Success"
+    },
+    "settings": {
+      "darkModeEnabled": "Dark mode enabled",
+      "emailNotificationsDisabled": "Email notifications disabled",
+      "emailNotificationsEnabled": "Email notifications enabled",
+      "inAppNotificationsDisabled": "In-app notifications disabled",
+      "inAppNotificationsEnabled": "In-app notifications enabled",
+      "languageChanged": "Language changed to {{language}}",
+      "lightModeEnabled": "Light mode enabled"
+    },
+    "whatsapp": {
+      "documentUrlRequired": "Please provide document URL and filename",
+      "imageUrlRequired": "Please provide image URL",
+      "messageRequired": "Please enter a message",
+      "messageSendError": "Failed to send message: {{error}}",
+      "messageSentSuccess": "Message sent successfully! ID: {{messageId}}",
+      "phoneNumberInvalidFormat": "Phone number must be in international format (+1234567890)",
+      "phoneNumberRequired": "Please enter a phone number",
+      "templateNameRequired": "Please enter a template name"
+    }
   }
 }

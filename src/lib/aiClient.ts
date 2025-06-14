@@ -76,14 +76,35 @@ export const AI_MODELS = {
 
 export type AIModel = keyof typeof AI_MODELS;
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy client singletons – only instantiate when an API key is actually present.
+let openaiSingleton: OpenAI | null = null;
+let perplexitySingleton: OpenAI | null = null;
 
-const perplexity = new OpenAI({
-  apiKey: process.env.PERPLEXITY_API_KEY,
-  baseURL: "https://api.perplexity.ai",
-});
+function getOpenAIClientInstance(): OpenAI {
+  if (!openaiSingleton) {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new Error(
+        "OPENAI_API_KEY environment variable is missing. Please set it before using OpenAI models."
+      );
+    }
+    openaiSingleton = new OpenAI({ apiKey });
+  }
+  return openaiSingleton;
+}
+
+function getPerplexityClientInstance(): OpenAI {
+  if (!perplexitySingleton) {
+    const apiKey = process.env.PERPLEXITY_API_KEY;
+    if (!apiKey) {
+      throw new Error(
+        "PERPLEXITY_API_KEY environment variable is missing. Please set it before using Perplexity models."
+      );
+    }
+    perplexitySingleton = new OpenAI({ apiKey, baseURL: "https://api.perplexity.ai" });
+  }
+  return perplexitySingleton;
+}
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
@@ -91,10 +112,10 @@ function getClientForModel(model: AIModel): AIClientResponse {
   const modelId = AI_MODELS[model];
 
   if (modelId.includes("sonar")) {
-    return { client: perplexity, type: "openai" };
+    return { client: getPerplexityClientInstance(), type: "openai" };
   }
 
-  return { client: openai, type: "openai" };
+  return { client: getOpenAIClientInstance(), type: "openai" };
 }
 
 /**

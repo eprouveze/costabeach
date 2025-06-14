@@ -58,10 +58,10 @@ export default function AdminReportsPage() {
   // Redirect if no permissions
   useEffect(() => {
     if (status === 'authenticated' && !canViewReports && userPermissions.length > 0) {
-      toast.error("You don't have permission to access this page");
+      toast.error(t('toast.auth.permissionDenied'));
       router.push('/admin');
     }
-  }, [canViewReports, userPermissions, status, router]);
+  }, [canViewReports, userPermissions, status, router, t]);
 
   useEffect(() => {
     if (canViewReports || status === 'loading') {
@@ -127,12 +127,12 @@ export default function AdminReportsPage() {
 
   const generateReport = async (reportId: string) => {
     try {
-      toast.info("Generating report...");
+      toast.info(t('toast.general.loading'));
       // Simulate report generation
       await new Promise(resolve => setTimeout(resolve, 2000));
-      toast.success("Report generated successfully! Check your downloads folder.");
+      toast.success(t('toast.general.success'));
     } catch (error) {
-      toast.error("Failed to generate report");
+      toast.error(t('toast.general.failed'));
     }
   };
 

@@ -82,17 +82,17 @@ export const DocumentCard = ({
         targetLanguage: userPreferredLanguage,
       }, {
         onSuccess: () => {
-          toast.success(`Translation to ${getLanguageLabel(userPreferredLanguage)} requested successfully`);
+          toast.success(t('toast.documents.translationRequestSuccess', { language: getLanguageLabel(userPreferredLanguage) }));
           // Invalidate queries to refresh document list
           utils.documents.getDocumentsByCategory.invalidate();
         },
         onError: (error) => {
-          toast.error(`Translation request failed: ${error.message}`);
+          toast.error(t('toast.documents.translationRequestError', { error: error.message }));
         }
       });
     } catch (error) {
       console.error("Translation request error:", error);
-      toast.error("Failed to request translation. Please try again later.");
+      toast.error(t('toast.documents.translationRequestFailed'));
     } finally {
       setIsTranslating(false);
     }

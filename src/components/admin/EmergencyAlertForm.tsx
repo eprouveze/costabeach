@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { AlertTriangle, Send, Clock, Shield, Zap, CloudRain, Wrench, Megaphone } from "lucide-react";
 import { toast } from "react-toastify";
 import { whatsappNotificationService } from "@/lib/services/whatsappNotificationService";
+import { useI18n } from "@/lib/i18n/client";
 
 type AlertSeverity = 'low' | 'medium' | 'high' | 'critical';
 type AlertType = 'maintenance' | 'security' | 'weather' | 'utilities' | 'other';
@@ -16,6 +17,7 @@ interface EmergencyAlert {
 }
 
 export default function EmergencyAlertForm() {
+  const { t } = useI18n();
   const [alert, setAlert] = useState<EmergencyAlert>({
     title: '',
     message: '',
@@ -41,12 +43,12 @@ export default function EmergencyAlertForm() {
 
   const handleSendAlert = async () => {
     if (!alert.title.trim()) {
-      toast.error("Please enter an alert title");
+      toast.error(t('toast.admin.alertTitleRequired'));
       return;
     }
 
     if (!alert.message.trim()) {
-      toast.error("Please enter an alert message");
+      toast.error(t('toast.admin.alertMessageRequired'));
       return;
     }
 
@@ -61,7 +63,7 @@ export default function EmergencyAlertForm() {
       });
 
       if (success) {
-        toast.success("Emergency alert sent successfully!");
+        toast.success(t('toast.admin.emergencyAlertSentSuccess'));
         
         // Reset form
         setAlert({
@@ -71,11 +73,11 @@ export default function EmergencyAlertForm() {
           alertType: 'other'
         });
       } else {
-        toast.error("Failed to send emergency alert. Please try again.");
+        toast.error(t('toast.admin.emergencyAlertSendFailed'));
       }
     } catch (error: any) {
       console.error("Failed to send emergency alert:", error);
-      toast.error(`Failed to send alert: ${error.message}`);
+      toast.error(t('toast.admin.emergencyAlertSendError', { error: error.message }));
     } finally {
       setIsSending(false);
     }

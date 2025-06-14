@@ -4,6 +4,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from 'react-toastify';
+import { useI18n } from "@/lib/i18n/client";
 
 interface AuthWrapperProps {
   children: React.ReactNode;
@@ -16,6 +17,7 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
   const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
+  const { t } = useI18n();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -47,7 +49,7 @@ export function AuthWrapper({ children, requireAuth = false, allowedRoles = [] }
         const userRole = (session.user as any)?.role || 'user';
         
         if (!allowedRoles.includes(userRole)) {
-          toast.error('You do not have permission to access this page');
+          toast.error(t('toast.auth.permissionDenied'));
           
           // Get the current locale from the URL
           const pathParts = pathname?.split('/') || [];

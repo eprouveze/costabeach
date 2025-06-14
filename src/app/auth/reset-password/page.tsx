@@ -5,8 +5,10 @@ import Link from 'next/link';
 import { ArrowLeft, Mail, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import { resetPassword } from '@/lib/supabase/auth';
 import { toast } from 'react-toastify';
+import { useI18n } from '@/lib/i18n/client';
 
 export default function ResetPasswordPage() {
+  const { t } = useI18n();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -27,10 +29,10 @@ export default function ResetPasswordPage() {
       }
       
       setIsSuccess(true);
-      toast.success('Password reset link sent to your email');
+      toast.success(t('toast.auth.resetLinkSent'));
     } catch (error: any) {
-      setErrorMessage(error.message || 'An error occurred');
-      toast.error(error.message || 'An error occurred');
+      setErrorMessage(error.message || t('toast.general.errorOccurred'));
+      toast.error(error.message || t('toast.general.errorOccurred'));
     } finally {
       setIsLoading(false);
     }

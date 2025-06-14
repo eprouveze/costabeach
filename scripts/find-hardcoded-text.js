@@ -77,25 +77,38 @@ function shouldIgnoreString(str, context) {
   // Ignore empty or very short strings
   if (str.length < 3) return true;
   
-  // Ignore strings that match common patterns
-  for (const pattern of IGNORE_PATTERNS) {
-    if (pattern.test(str)) return true;
+  // Priority: Check for toast/alert patterns first (these should NOT be ignored)
+  const isToastMessage = context.includes('toast.') || 
+                        context.includes('alert(') ||
+                        context.includes('confirm(') ||
+                        context.includes('prompt(');
+  
+  // If it's a toast/alert message and contains spaces, it's likely user-facing
+  if (isToastMessage && str.includes(' ')) {
+    return false; // Don't ignore these!
   }
   
-  // Ignore technical terms
-  if (TECHNICAL_TERMS.has(str.toLowerCase())) return true;
+  // Ignore strings that match common patterns (but not if they're toast messages)
+  if (!isToastMessage) {
+    for (const pattern of IGNORE_PATTERNS) {
+      if (pattern.test(str)) return true;
+    }
+  }
+  
+  // Ignore technical terms (unless they're in toast messages)
+  if (!isToastMessage && TECHNICAL_TERMS.has(str.toLowerCase())) return true;
   
   // Ignore strings that are already inside t() function calls
   if (context.includes('t(')) return true;
   
-  // Ignore strings in console statements
-  if (context.includes('console.')) return true;
+  // Ignore strings in console statements (unless they're user-facing error messages)
+  if (context.includes('console.') && !isToastMessage) return true;
   
   // Ignore strings in comments
   if (context.includes('//') || context.includes('/*')) return true;
   
-  // Ignore strings that look like JSX attributes
-  if (context.match(/\\w+\\s*=\\s*["']/) && context.includes('=')) return true;
+  // Ignore strings that look like JSX attributes (unless they're toast messages)
+  if (!isToastMessage && context.match(/\\w+\\s*=\\s*["']/) && context.includes('=')) return true;
   
   return false;
 }
@@ -120,8 +133,19 @@ function extractStringsFromFile(filePath) {
       const contextEnd = Math.min(content.length, startIndex + fullMatch.length + 50);
       const context = content.substring(contextStart, contextEnd);
       
+      // Debug: log all toast-related strings found
+      if (context.includes('toast.') && process.env.DEBUG_HARDCODED) {
+        console.log(`DEBUG: Found toast-related string: "${str}" in context: ${context.substring(0, 100)}`);
+      }
+      
       // Skip if this string should be ignored
-      if (shouldIgnoreString(str, context)) continue;
+      if (shouldIgnoreString(str, context)) {
+        // Debug: log some skipped toast messages
+        if (context.includes('toast.') && process.env.DEBUG_HARDCODED) {
+          console.log(`DEBUG: Skipped toast message: "${str}" in context: ${context.substring(0, 100)}`);
+        }
+        continue;
+      }
       
       // Skip if string contains only whitespace
       if (str.trim().length === 0) continue;
@@ -143,14 +167,24 @@ function extractStringsFromFile(filePath) {
       // Check if this looks like user-facing text
       const hasSpaces = str.includes(' ');
       const hasUppercase = /[A-Z]/.test(str);
-      const isUserFacing = hasSpaces || (hasUppercase && str.length > 5);
+      const isToastMessage = context.includes('toast.');
+      const isAlertMessage = context.includes('alert(') || context.includes('confirm(') || context.includes('prompt(');
+      const isErrorMessage = context.includes('.error') || context.includes('.success') || context.includes('.warning') || context.includes('.info');
+      const isUserFacing = hasSpaces || (hasUppercase && str.length > 5) || isToastMessage || isAlertMessage || isErrorMessage;
       
       if (isUserFacing) {
+        // Determine the type of message for better reporting
+        let messageType = 'text';
+        if (isToastMessage) messageType = 'toast';
+        else if (isAlertMessage) messageType = 'alert';
+        else if (isErrorMessage) messageType = 'notification';
+        
         findings.push({
           string: str,
           line: lineNumber,
           lineContent: lineContent.trim(),
-          context: context.trim()
+          context: context.trim(),
+          type: messageType
         });
       }
     }
@@ -219,7 +253,8 @@ function displayResults(results) {
     log(`\\n📄 ${fileResult.file}:`, 'magenta');
     
     for (const finding of fileResult.findings) {
-      log(`  Line ${finding.line}: "${finding.string}"`, 'yellow');
+      const typeEmoji = finding.type === 'toast' ? '🍞' : finding.type === 'alert' ? '⚠️ ' : finding.type === 'notification' ? '🔔' : '📝';
+      log(`  Line ${finding.line} [${typeEmoji} ${finding.type}]: "${finding.string}"`, 'yellow');
       log(`    Context: ${finding.lineContent}`, 'cyan');
     }
   }

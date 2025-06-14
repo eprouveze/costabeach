@@ -741,3 +741,8 @@ Note: Some tests are still failing due to type errors and outdated test implemen
 
 ### Previous Changes
 - Created FlowButton component using 21st.dev MCP tools with three animated variants (default, gradient, wave), smooth hover effects, floating particles, and comprehensive Storybook documentation.
+
+- Added translation worker fix.
++ Fix: Use correct 'x-api-key' header instead of 'Authorization: Bearer' for Anthropic API in translations.ts
+
++ Refactor aiClient.ts to lazily instantiate OpenAI/Perplexity clients when env vars are present, preventing build failures when keys are missing.
