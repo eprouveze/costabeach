@@ -151,20 +151,24 @@ export class TranslationQueueService {
         stack: (error as Error).stack
       });
       
-      // Determine if this is a configuration error that should not be retried
-      const isConfigError = errorMessage.includes('API key') || 
-                           errorMessage.includes('not configured') ||
-                           errorMessage.includes('placeholder value') ||
-                           errorMessage.includes('Authentication failed');
+      // Categorise well-known non-retryable errors
+      const isConfigError = errorMessage.includes('API key') ||
+        errorMessage.includes('not configured') ||
+        errorMessage.includes('placeholder value') ||
+        errorMessage.includes('Authentication failed');
+
+      const isUntranslatable = errorMessage === 'EMPTY_PDF_TEXT' || errorMessage === 'MODEL_REFUSAL';
       
       // Update job with error
       await prisma.document_translations.update({
         where: { id: jobId },
         data: {
           status: TranslationStatus.FAILED,
-          error_message: isConfigError ? 
-            `Configuration Error: ${errorMessage}` : 
-            errorMessage
+          error_message: isConfigError
+            ? `Configuration Error: ${errorMessage}`
+            : isUntranslatable
+              ? `Untranslatable: ${errorMessage}`
+              : errorMessage,
         }
       });
       

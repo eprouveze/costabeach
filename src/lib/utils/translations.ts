@@ -64,47 +64,41 @@ export const cacheTranslation = (
 };
 
 /**
- * Create translation prompt for Claude
+ * Build Claude-styled chat messages for translation.
  */
-const createTranslationPrompt = (
+const createTranslationMessages = (
   text: string,
   sourceLanguage: Language,
   targetLanguage: Language,
   options?: {
     formality?: 'default' | 'more' | 'less';
     context?: string;
-  }
-): string => {
+  },
+): { role: 'system' | 'user'; content: string }[] => {
   const sourceLang = languageToName[sourceLanguage];
   const targetLang = languageToName[targetLanguage];
-  
+
   let formalityInstruction = '';
   if (options?.formality === 'more') {
     formalityInstruction = ' Use formal, professional tone.';
   } else if (options?.formality === 'less') {
     formalityInstruction = ' Use casual, informal tone.';
   }
-  
-  const contextInstruction = options?.context 
-    ? `\n\nContext: ${options.context}\n\n`
-    : '\n\n';
-  
-  return `You are a professional translator specializing in residential community management and building administration documents. Translate the following text from ${sourceLang} to ${targetLang}.
 
-IMPORTANT GUIDELINES:
-- Maintain the original meaning and intent precisely
-- Preserve formatting, structure, and any special characters (including HTML tags, markdown, bullet points)
-- Keep proper nouns, building names, and personal names unchanged
-- For community management terms, use standard Moroccan real estate and property management terminology
-- Translate financial terms using Moroccan Dirham (MAD) conventions and local business practices
-- For legal/regulatory content, ensure compliance with Moroccan property law and regulations
-- Use Moroccan Arabic dialect and cultural references when translating to Arabic
-- For French translations, use Moroccan French conventions and terminology
-- Ensure cultural appropriateness for Moroccan residents and property owners${formalityInstruction}
-- Return ONLY the translated text, no explanations or additional content
+  const contextBlock = options?.context
+    ? `Context: ${options.context}\n\n`
+    : '';
 
-CONTEXT: This is for a residential building management system in Morocco, serving property owners and residents. Documents may include budgets, maintenance notices, community rules, legal documents, and administrative communications.${contextInstruction}Text to translate:
-${text}`;
+  const systemPrompt = `You are a professional translator specializing in residential community management and building administration documents.${formalityInstruction}\n\nIMPORTANT GUIDELINES:\n- Maintain the original meaning and intent precisely\n- Preserve formatting, structure, and any special characters (including HTML tags, markdown, bullet points)\n- Keep proper nouns, building names, and personal names unchanged\n- For community management terms, use standard Moroccan real estate and property management terminology\n- Translate financial terms using Moroccan Dirham (MAD) conventions and local business practices\n- For legal/regulatory content, ensure compliance with Moroccan property law and regulations\n- Use Moroccan Arabic dialect and cultural references when translating to Arabic\n- For French translations, use Moroccan French conventions and terminology\n- Ensure cultural appropriateness for Moroccan residents and property owners\n- Respond ONLY with the translated text, no explanations or extra content`;
+
+  const userInstruction = `${contextBlock}Translate the following text from ${sourceLang} to ${targetLang}.`;
+
+  // Claude works fine with multiple user messages.
+  return [
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: userInstruction },
+    { role: 'user', content: text },
+  ];
 };
 
 /**
@@ -178,17 +172,12 @@ export const translateText = async (
       apiKeyPrefix: apiKey.substring(0, 10) + '...'
     });
     
-    const prompt = createTranslationPrompt(text, sourceLanguage, targetLanguage, options);
+    const messages = createTranslationMessages(text, sourceLanguage, targetLanguage, options);
     
     const requestBody = {
       model: "claude-3-5-sonnet-20241022", // Using stable model version
       max_tokens: 4000,
-      messages: [
-        {
-          role: "user",
-          content: prompt
-        }
-      ]
+      messages,
     };
     
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -230,14 +219,19 @@ export const translateText = async (
     
     const translatedText = data.content[0].text.trim();
     
+    // Detect common refusal phrases *before* caching
+    if (/^(i'?m\s+sorry|sorry,\s+i\s+can)/i.test(translatedText)) {
+      throw new Error('MODEL_REFUSAL');
+    }
+
     console.log('Translation successful:', {
       sourceLanguage,
       targetLanguage,
       originalLength: text.length,
-      translatedLength: translatedText.length
+      translatedLength: translatedText.length,
     });
-    
-    // Cache the result
+
+    // Cache the successful result
     cacheTranslation(text, sourceLanguage, targetLanguage, translatedText);
     
     return translatedText;
@@ -291,6 +285,11 @@ export const createTranslatedDocument = async (
 
       // 2. Extract text & split into pages
       const pdfText = await extractPdfText(pdfBuffer);
+
+      if (!pdfText.trim()) {
+        throw new Error('EMPTY_PDF_TEXT');
+      }
+
       const pages = pdfText.split(/\f/).filter(Boolean);
 
       // Fallback when no form-feed page markers found

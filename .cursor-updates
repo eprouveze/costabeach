@@ -760,3 +760,5 @@ Note: Some tests are still failing due to type errors and outdated test implemen
 + Add GitHub raw fallback for Unicode font download to avoid 404.
 
 + Register fontkit in PDF utils and add @pdf-lib/fontkit dependency to enable embedding custom fonts (fixes `registerFontkit` error).
+
++ Refactor translation prompt into system+user messages; detect model refusals and empty PDFs; queue service now marks jobs as Untranslatable.
