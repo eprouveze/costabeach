@@ -27,26 +27,33 @@ export const Header = ({ className = "" }: HeaderProps) => {
   const isAuthenticated = !!session;
   const isLoading = status === "loading";
 
-  // Fetch user permissions when authenticated
+  // Fetch user permissions when authenticated (enhancement only)
   useEffect(() => {
     const fetchPermissions = async () => {
-      if (session?.user?.id) {
+      if (session?.user?.id && status === 'authenticated') {
         try {
           const response = await fetch(`/api/users/${session.user.id}/permissions`);
           if (response.ok) {
             const userData = await response.json();
             setUserPermissions(userData.permissions || []);
           }
+          // Silently fail if API is not available - admin status comes from session
         } catch (error) {
-          console.error("Error fetching user permissions:", error);
+          // Permissions API failure is not critical for navigation
+          // Admin status is determined from session data
         }
       } else {
         setUserPermissions([]);
       }
     };
 
-    fetchPermissions();
-  }, [session]);
+    // Only fetch permissions when session is fully loaded
+    if (status === 'authenticated') {
+      fetchPermissions();
+    } else if (status === 'unauthenticated') {
+      setUserPermissions([]);
+    }
+  }, [session?.user?.id, status]);
 
   // Close mobile menu when navigating
   useEffect(() => {
@@ -54,9 +61,10 @@ export const Header = ({ className = "" }: HeaderProps) => {
   }, [pathname]);
 
   // Check if user has admin privileges
+  // Use session data as primary source for admin status
+  const isAdmin = (session?.user as any)?.isAdmin === true;
   const canManageDocuments = checkPermission(userPermissions, Permission.MANAGE_DOCUMENTS);
   const canManageComiteDocuments = checkPermission(userPermissions, Permission.MANAGE_COMITE_DOCUMENTS);
-  const isAdmin = (session?.user as any)?.isAdmin === true;
   const hasAdminAccess = isAdmin || canManageDocuments || canManageComiteDocuments;
 
   const navItems = [

@@ -19,11 +19,11 @@ const CACHE_EXPIRATION = 24 * 60 * 60 * 1000;
 // In-memory cache for translations
 const translationCache: TranslationCache = {};
 
-// DeepL language code mapping
-const languageToDeeplCode = {
-  [Language.ENGLISH]: 'EN',
-  [Language.FRENCH]: 'FR',
-  [Language.ARABIC]: 'AR',
+// Language name mapping for Claude
+const languageToName = {
+  [Language.ENGLISH]: 'English',
+  [Language.FRENCH]: 'French',
+  [Language.ARABIC]: 'Arabic',
 };
 
 /**
@@ -62,7 +62,51 @@ export const cacheTranslation = (
 };
 
 /**
- * Translate text using DeepL API
+ * Create translation prompt for Claude
+ */
+const createTranslationPrompt = (
+  text: string,
+  sourceLanguage: Language,
+  targetLanguage: Language,
+  options?: {
+    formality?: 'default' | 'more' | 'less';
+    context?: string;
+  }
+): string => {
+  const sourceLang = languageToName[sourceLanguage];
+  const targetLang = languageToName[targetLanguage];
+  
+  let formalityInstruction = '';
+  if (options?.formality === 'more') {
+    formalityInstruction = ' Use formal, professional tone.';
+  } else if (options?.formality === 'less') {
+    formalityInstruction = ' Use casual, informal tone.';
+  }
+  
+  const contextInstruction = options?.context 
+    ? `\n\nContext: ${options.context}\n\n`
+    : '\n\n';
+  
+  return `You are a professional translator specializing in residential community management and building administration documents. Translate the following text from ${sourceLang} to ${targetLang}.
+
+IMPORTANT GUIDELINES:
+- Maintain the original meaning and intent precisely
+- Preserve formatting, structure, and any special characters (including HTML tags, markdown, bullet points)
+- Keep proper nouns, building names, and personal names unchanged
+- For community management terms, use standard Moroccan real estate and property management terminology
+- Translate financial terms using Moroccan Dirham (MAD) conventions and local business practices
+- For legal/regulatory content, ensure compliance with Moroccan property law and regulations
+- Use Moroccan Arabic dialect and cultural references when translating to Arabic
+- For French translations, use Moroccan French conventions and terminology
+- Ensure cultural appropriateness for Moroccan residents and property owners${formalityInstruction}
+- Return ONLY the translated text, no explanations or additional content
+
+CONTEXT: This is for a residential building management system in Morocco, serving property owners and residents. Documents may include budgets, maintenance notices, community rules, legal documents, and administrative communications.${contextInstruction}Text to translate:
+${text}`;
+};
+
+/**
+ * Translate text using Claude Sonnet 4 API
  */
 export const translateText = async (
   text: string,
@@ -80,43 +124,42 @@ export const translateText = async (
   }
   
   try {
-    // Use DeepL API for translation
-    const apiKey = process.env.DEEPL_API_KEY;
+    // Use Claude API for translation
+    const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
-      throw new Error('DeepL API key is not configured');
+      throw new Error('Anthropic API key is not configured');
     }
     
-    const sourceCode = languageToDeeplCode[sourceLanguage];
-    const targetCode = languageToDeeplCode[targetLanguage];
+    const prompt = createTranslationPrompt(text, sourceLanguage, targetLanguage, options);
     
-    const requestBody: any = {
-      text: [text],
-      source_lang: sourceCode,
-      target_lang: targetCode,
-      formality: options?.formality || 'default',
+    const requestBody = {
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 4000,
+      messages: [
+        {
+          role: "user",
+          content: prompt
+        }
+      ]
     };
     
-    // Add context if provided
-    if (options?.context) {
-      requestBody.context = options.context;
-    }
-    
-    const response = await fetch('https://api-free.deepl.com/v2/translate', {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'Authorization': `DeepL-Auth-Key ${apiKey}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
+        'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify(requestBody),
     });
     
     if (!response.ok) {
       const errorData = await response.text();
-      throw new Error(`DeepL API error: ${response.status} ${errorData}`);
+      throw new Error(`Claude API error: ${response.status} ${errorData}`);
     }
     
     const data = await response.json();
-    const translatedText = data.translations[0].text;
+    const translatedText = data.content[0].text.trim();
     
     // Cache the result
     cacheTranslation(text, targetLanguage, translatedText);

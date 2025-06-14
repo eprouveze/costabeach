@@ -156,9 +156,41 @@ export const authOptions: NextAuthOptions = {
       console.log('🔍 [SESSION] Session object:', session.user ? { email: session.user.email } : 'No session user');
       
       if (user && session.user) {
-        session.user.id = user.id;
-        session.user.role = user.role as UserRole;
-        session.user.isAdmin = user.isAdmin as boolean;
+        // Fetch complete user data from database to ensure we have all fields
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: { 
+              id: true, 
+              email: true, 
+              name: true, 
+              role: true, 
+              isAdmin: true,
+              permissions: true 
+            }
+          });
+          
+          if (dbUser) {
+            session.user.id = dbUser.id;
+            session.user.name = dbUser.name;
+            session.user.email = dbUser.email;
+            session.user.role = dbUser.role as UserRole;
+            session.user.isAdmin = dbUser.isAdmin || false;
+            
+            console.log('🔍 [SESSION] Enhanced session with DB data:', {
+              id: session.user.id,
+              email: session.user.email,
+              isAdmin: session.user.isAdmin,
+              role: session.user.role
+            });
+          }
+        } catch (error) {
+          console.error('❌ [SESSION] Error fetching user data:', error);
+          // Fallback to adapter user data
+          session.user.id = user.id;
+          session.user.role = user.role as UserRole;
+          session.user.isAdmin = user.isAdmin as boolean;
+        }
       }
       return session;
     },

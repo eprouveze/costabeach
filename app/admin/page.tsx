@@ -70,6 +70,11 @@ export default function AdminDashboardPage() {
     canManageDocuments || 
     canManageComiteDocuments || 
     (session.data?.user?.isAdmin === true);
+
+  const canManageTranslations = 
+    canManageDocuments || 
+    canManageComiteDocuments || 
+    (session.data?.user?.isAdmin === true);
   
   if (isLoading || session.status === 'loading') {
     return (
@@ -92,7 +97,7 @@ export default function AdminDashboardPage() {
             {t("admin.dashboard")}
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Manage your community portal and communication tools
+            {t("admin.dashboardSubtitle") || "Manage your community portal and communication tools"}
           </p>
         </div>
         
@@ -104,7 +109,7 @@ export default function AdminDashboardPage() {
                 <Users className="h-5 w-5 text-blue-600 dark:text-blue-300" />
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Users</p>
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("admin.totalUsers") || "Total Users"}</p>
                 <p className="text-lg font-semibold text-gray-900 dark:text-white">--</p>
               </div>
             </div>
@@ -116,7 +121,7 @@ export default function AdminDashboardPage() {
                 <FileText className="h-5 w-5 text-green-600 dark:text-green-300" />
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Documents</p>
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("admin.totalDocuments") || "Documents"}</p>
                 <p className="text-lg font-semibold text-gray-900 dark:text-white">--</p>
               </div>
             </div>
@@ -128,7 +133,7 @@ export default function AdminDashboardPage() {
                 <MessageSquare className="h-5 w-5 text-yellow-600 dark:text-yellow-300" />
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Messages Sent</p>
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("admin.messagesSent") || "Messages Sent"}</p>
                 <p className="text-lg font-semibold text-gray-900 dark:text-white">--</p>
               </div>
             </div>
@@ -140,7 +145,7 @@ export default function AdminDashboardPage() {
                 <Shield className="h-5 w-5 text-purple-600 dark:text-purple-300" />
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Active Sessions</p>
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("admin.activeSessions") || "Active Sessions"}</p>
                 <p className="text-lg font-semibold text-gray-900 dark:text-white">--</p>
               </div>
             </div>
@@ -192,7 +197,7 @@ export default function AdminDashboardPage() {
           )}
 
           {/* Translation Management Card */}
-          {(canManageDocuments || canManageComiteDocuments) && (
+          {canManageTranslations && (
             <Link
               href={`/${locale}/admin/translations`}
               className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600"
@@ -203,10 +208,10 @@ export default function AdminDashboardPage() {
                 </div>
                 <div className="ml-4">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                    Translation Management
+                    {t("admin.translationManagement") || "Translation Management"}
                   </h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Manage translation jobs and cleanup orphaned translations
+                    {t("admin.translationManagementDescription") || "Monitor and control document translation system"}
                   </p>
                 </div>
               </div>
@@ -225,15 +230,55 @@ export default function AdminDashboardPage() {
                 </div>
                 <div className="ml-4">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                    WhatsApp Management
+                    {t("admin.whatsappManagement") || "WhatsApp Management"}
                   </h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Send messages and manage WhatsApp communications
+                    {t("admin.whatsappDescription") || "Send messages and manage WhatsApp communications"}
                   </p>
                 </div>
               </div>
             </Link>
           )}
+          
+          {/* Owner Registrations Card */}
+          <Link
+            href={`/${locale}/admin/owner-registrations`}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600"
+          >
+            <div className="flex items-start">
+              <div className="flex-shrink-0 bg-purple-100 dark:bg-purple-900 rounded-lg p-3">
+                <ClipboardList className="h-6 w-6 text-purple-600 dark:text-purple-300" />
+              </div>
+              <div className="ml-4">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                  {t("admin.ownerRegistrations") || "Owner Registrations"}
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {t("admin.ownerRegistrationsDescription") || "Review and approve owner registration requests"}
+                </p>
+              </div>
+            </div>
+          </Link>
+
+          {/* Polls Management Card */}
+          <Link
+            href={`/${locale}/admin/polls`}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-yellow-300 dark:hover:border-yellow-600"
+          >
+            <div className="flex items-start">
+              <div className="flex-shrink-0 bg-yellow-100 dark:bg-yellow-900 rounded-lg p-3">
+                <ClipboardList className="h-6 w-6 text-yellow-600 dark:text-yellow-300" />
+              </div>
+              <div className="ml-4">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                  {t("admin.pollsManagement") || "Polls Management"}
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {t("admin.pollsManagementDescription") || "Create and manage community polls"}
+                </p>
+              </div>
+            </div>
+          </Link>
           
           {/* Emergency Alerts Card */}
           <Link
@@ -246,10 +291,10 @@ export default function AdminDashboardPage() {
               </div>
               <div className="ml-4">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                  Emergency Alerts
+                  {t("admin.emergencyAlerts") || "Emergency Alerts"}
                 </h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Send urgent notifications to residents
+                  {t("admin.emergencyAlertsDescription") || "Send urgent notifications to residents"}
                 </p>
               </div>
             </div>
@@ -306,10 +351,10 @@ export default function AdminDashboardPage() {
               </div>
               <div className="ml-4">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                  System Settings
+                  {t("admin.systemSettings") || "System Settings"}
                 </h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Configure application settings and preferences
+                  {t("admin.systemSettingsDescription") || "Configure application settings and preferences"}
                 </p>
               </div>
             </div>

@@ -23,7 +23,7 @@ export default function RootLayout({
   
   return (
     <html lang={locale} dir={dir}>
-      <body className="font-sans">
+      <body className="font-sans" suppressHydrationWarning={true}>
         <ClientLayout>
           {children}
         </ClientLayout>

@@ -9,23 +9,15 @@ export async function GET(
 ) {
   try {
     const { userId } = await params;
-    console.log('Permissions API called for user:', userId);
-    
     // Get the current session
     const session = await getServerSession(authOptions);
-    console.log('Session in permissions API:', { 
-      hasSession: !!session, 
-      userId: session?.user?.id 
-    });
     
     if (!session?.user?.id) {
-      console.log('No session or user ID in permissions API');
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       );
     }
-    console.log('Fetching permissions for userId:', userId);
     
     // Only allow users to access their own permissions, or admins to access any user's permissions
     if (session.user.id !== userId && !session.user.isAdmin) {
@@ -36,7 +28,6 @@ export async function GET(
     }
 
     // Get user from database
-    console.log('Querying database for user:', userId);
     const user = await db.user.findUnique({
       where: { id: userId },
       select: {
@@ -49,14 +40,7 @@ export async function GET(
       }
     });
 
-    console.log('Database query result:', { 
-      found: !!user, 
-      userId: user?.id,
-      permissions: user?.permissions 
-    });
-
     if (!user) {
-      console.log('User not found in database');
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
@@ -78,8 +62,6 @@ export async function GET(
       role: user.role || 'user'
     };
 
-    console.log('Returning permissions data:', result);
-    
     // Return user data with permissions
     return NextResponse.json(result);
 
