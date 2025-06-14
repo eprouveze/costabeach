@@ -181,8 +181,8 @@ function validateFile(filePath) {
       return;
     }
     
-    // Skip TypeScript interface/type definitions - these aren't Prisma operations
-    if (line.includes('interface ') || line.includes('type ') || line.includes(': {')) {
+    // Skip interface/type declarations only
+    if (/^\s*(interface|type)\s+/.test(line)) {
       return;
     }
     

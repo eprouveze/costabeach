@@ -206,7 +206,7 @@ export const getDocumentsByCategory = async (
   }
   
   const where: any = { 
-    is_public: true 
+    isPublic: true 
   };
   
   // Add category condition, if the category is in uppercase, try lowercase and both with and without camelCase

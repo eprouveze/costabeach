@@ -83,6 +83,49 @@ export const messageTemplates = {
   },
 };
 
+// Helper function to get template body with proper placeholders
+function getTemplateBodyWithPlaceholders(templateKey: string, template: any, lang: string): string {
+  switch (templateKey) {
+    case 'verification_code':
+      return template.getMessage('{{code}}', lang);
+    
+    case 'weekly_digest':
+      return template.getMessage({
+        newDocuments: '{{newDocs}}',
+        newPolls: '{{newPolls}}',
+        weekRange: '{{weekRange}}',
+      }, lang);
+    
+    case 'document_notification':
+      return template.getMessage({
+        documentTitle: '{{docTitle}}',
+        category: '{{category}}',
+      }, lang);
+    
+    case 'poll_notification':
+      return template.getMessage({
+        question: '{{question}}',
+        endDate: '{{endDate}}',
+      }, lang);
+    
+    case 'qa_welcome':
+      return template.getMessage(lang);
+    
+    default:
+      // Fallback with comprehensive placeholders
+      return template.getMessage({
+        code: '{{code}}',
+        newDocuments: '{{newDocs}}',
+        newPolls: '{{newPolls}}',
+        weekRange: '{{weekRange}}',
+        documentTitle: '{{docTitle}}',
+        category: '{{category}}',
+        question: '{{question}}',
+        endDate: '{{endDate}}',
+      }, lang);
+  }
+}
+
 // Template management functions
 export async function ensureTemplatesExist() {
   try {
@@ -104,7 +147,7 @@ export async function ensureTemplatesExist() {
             components: [
               {
                 type: 'BODY',
-                text: template.getMessage({}, lang),
+                text: getTemplateBodyWithPlaceholders(templateKey, template, lang),
               },
             ],
           });

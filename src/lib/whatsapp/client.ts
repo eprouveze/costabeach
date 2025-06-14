@@ -280,6 +280,35 @@ class WhatsAppClient {
       return [];
     }
   }
+
+  // Create message template
+  async createMessageTemplate(template: {
+    name: string;
+    category: string;
+    language: string;
+    components: Array<{
+      type: string;
+      text?: string;
+    }>;
+  }): Promise<any> {
+    try {
+      const response = await axios.post(
+        `https://graph.facebook.com/v18.0/${process.env.WHATSAPP_BUSINESS_ACCOUNT_ID}/message_templates`,
+        template,
+        {
+          headers: {
+            'Authorization': `Bearer ${this.accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error: any) {
+      console.error('Failed to create message template:', error);
+      throw new Error(`Failed to create WhatsApp template: ${error.response?.data?.error?.message || error.message}`);
+    }
+  }
 }
 
 // Export factory function instead of instance
