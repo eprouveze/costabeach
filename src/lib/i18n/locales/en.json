@@ -377,6 +377,11 @@
     "polls": {
       "title": "Poll Management",
       "description": "Create, manage, and monitor community polls",
+      "adminTitle": "Poll Management",
+      "adminDescription": "Create, manage, and monitor community polls",
+      "adminActions": "Actions",
+      "viewPublic": "View Public",
+      "create": "Create Poll",
       "createPoll": "Create Poll",
       "activePoll": "Active Poll",
       "closedPoll": "Closed Poll",
@@ -384,7 +389,9 @@
       "totalPolls": "Total Polls",
       "activePolls": "Active Polls",
       "completedPolls": "Completed Polls",
-      "totalVotes": "Total Votes"
+      "totalVotes": "Total Votes",
+      "noPolls": "No polls found",
+      "noPollsMessage": "You haven't created any polls yet."
     },
     "users": {
       "title": "User Management",
