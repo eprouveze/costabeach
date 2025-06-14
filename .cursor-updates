@@ -774,3 +774,7 @@ Note: Some tests are still failing due to type errors and outdated test implemen
 ## Added bundle analyzer support: installed @next/bundle-analyzer, added analyze script, wrapped Next.js config for optional bundle analysis.
 
 ## Fixed devDependency version for @next/bundle-analyzer to 15.3.3 to resolve deployment install error.
+
+## Excluded tmp directory from version control (2025-06-14)
+
+Added `tmp/` to `.gitignore` to prevent large unused images and temp files from being committed.

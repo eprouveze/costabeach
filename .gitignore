@@ -47,3 +47,5 @@ next-env.d.ts
 
 *storybook.log
 public/images/2024/06/*.mov
+
+tmp/
