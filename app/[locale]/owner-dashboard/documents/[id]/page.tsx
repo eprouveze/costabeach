@@ -39,15 +39,16 @@ export default function DocumentViewerPage() {
     { enabled: !!documentId }
   );
 
-  // Get document preview URL and increment view count
+  // Track if view count has been incremented for this document
+  const [viewCountIncremented, setViewCountIncremented] = useState(false);
+
+  // Get document preview URL
   useEffect(() => {
     const fetchDocumentUrl = async () => {
       if (!documentDetails) return;
       
       try {
         setIsLoading(true);
-        // Increment view count
-        await incrementViewCount.mutateAsync({ documentId });
         
         // For preview, we'll use the download URL for now
         // In a real implementation, you might want to create a separate preview endpoint
@@ -69,7 +70,18 @@ export default function DocumentViewerPage() {
     if (documentDetails) {
       fetchDocumentUrl();
     }
-  }, [documentDetails, documentId, t, incrementViewCount, getDownloadUrl]);
+  }, [documentDetails, documentId, t, getDownloadUrl]);
+
+  // Increment view count only once per document view
+  useEffect(() => {
+    if (documentDetails && !viewCountIncremented) {
+      incrementViewCount.mutateAsync({ documentId }).catch((error) => {
+        // Silently handle view count errors - this is non-critical
+        console.warn('Failed to increment view count:', error);
+      });
+      setViewCountIncremented(true);
+    }
+  }, [documentDetails, documentId, viewCountIncremented, incrementViewCount]);
 
   const handleDownload = async () => {
     if (!documentDetails) return;

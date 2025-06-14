@@ -340,13 +340,23 @@ export const getDocumentsByCategory = async (
 };
 
 /**
- * Increment view count for a document
+ * Increment view count for a document with connection pool safety
  */
 export const incrementViewCount = async (documentId: string): Promise<void> => {
-  await prisma.documents.update({
-    where: { id: documentId },
-    data: { viewCount: { increment: 1 } },
-  });
+  try {
+    await prisma.documents.update({
+      where: { id: documentId },
+      data: { viewCount: { increment: 1 } },
+    });
+  } catch (error: any) {
+    // Log connection pool errors but don't fail the request
+    if (error.code === 'P2024') {
+      console.warn(`View count increment failed for document ${documentId}: Connection pool timeout`);
+      return; // Gracefully handle connection pool timeouts
+    }
+    console.error('Error incrementing view count:', error);
+    // Don't throw for view count errors - this is non-critical functionality
+  }
 };
 
 /**
