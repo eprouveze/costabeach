@@ -100,6 +100,12 @@ export class TranslationQueueService {
     }
 
     try {
+      // Check API configuration before starting
+      const apiKey = process.env.ANTHROPIC_API_KEY;
+      if (!apiKey || apiKey === 'sk-ant-your-anthropic-api-key' || apiKey.includes('your-anthropic-api-key')) {
+        throw new Error('Translation service not configured: Please set a valid ANTHROPIC_API_KEY environment variable');
+      }
+
       // Mark job as processing
       await prisma.document_translations.update({
         where: { id: jobId },
@@ -108,6 +114,8 @@ export class TranslationQueueService {
           started_at: new Date()
         }
       });
+
+      console.log(`Processing translation job: ${jobId} (${job.document_id} -> ${job.target_language})`);
 
       // Check if content is extractable for translation
       const isExtractable = await this.isContentExtractable(document.fileType);
@@ -135,16 +143,41 @@ export class TranslationQueueService {
       console.log(`Translation job completed: ${jobId}`);
 
     } catch (error) {
-      console.error(`Translation job failed: ${jobId}`, error);
+      const errorMessage = (error as Error).message;
+      console.error(`Translation job failed: ${jobId}`, {
+        error: errorMessage,
+        documentId: job.document_id,
+        targetLanguage: job.target_language,
+        stack: (error as Error).stack
+      });
+      
+      // Determine if this is a configuration error that should not be retried
+      const isConfigError = errorMessage.includes('API key') || 
+                           errorMessage.includes('not configured') ||
+                           errorMessage.includes('placeholder value') ||
+                           errorMessage.includes('Authentication failed');
       
       // Update job with error
       await prisma.document_translations.update({
         where: { id: jobId },
         data: {
           status: TranslationStatus.FAILED,
-          error_message: (error as Error).message
+          error_message: isConfigError ? 
+            `Configuration Error: ${errorMessage}` : 
+            errorMessage
         }
       });
+      
+      // Log configuration errors separately for easier debugging
+      if (isConfigError) {
+        console.error('TRANSLATION CONFIGURATION ERROR:', {
+          error: errorMessage,
+          suggestion: 'Please update the ANTHROPIC_API_KEY in your .env.local file with a valid API key from https://console.anthropic.com/',
+          currentKey: process.env.ANTHROPIC_API_KEY ? 
+            (process.env.ANTHROPIC_API_KEY.substring(0, 10) + '...') : 
+            'undefined'
+        });
+      }
     }
   }
 

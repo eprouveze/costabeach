@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { translationWorker } from '@/lib/services/translationWorker';
 import { TranslationQueueService } from '@/lib/services/translationQueueService';
+import { getTranslationServiceStatus } from '@/lib/utils/translationStatus';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth/index';
 
@@ -15,10 +16,20 @@ export async function GET(request: NextRequest) {
     // Get worker health status
     const health = await translationWorker.healthCheck();
     const stats = await TranslationQueueService.getTranslationStats();
+    const configStatus = getTranslationServiceStatus();
+    
+    // Enhanced config with additional checks
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const config = {
+      ...configStatus,
+      apiKeyPresent: !!apiKey,
+      apiKeyValid: !!(apiKey && apiKey.startsWith('sk-ant-') && !apiKey.includes('your-anthropic-api-key'))
+    };
 
     return NextResponse.json({
       worker: health,
       queue: stats,
+      config: config,
       timestamp: new Date().toISOString()
     });
   } catch (error) {

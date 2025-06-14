@@ -10,7 +10,9 @@ import {
   AlertCircle,
   CheckCircle,
   Clock,
-  Zap
+  Zap,
+  Settings,
+  ExternalLink
 } from "lucide-react";
 import { toast } from "react-toastify";
 
@@ -43,9 +45,18 @@ interface CompletedTranslation {
   };
 }
 
+interface TranslationConfig {
+  available: boolean;
+  reason?: string;
+  suggestion?: string;
+  apiKeyPresent: boolean;
+  apiKeyValid: boolean;
+}
+
 export default function TranslationManagementPage() {
   const [stats, setStats] = useState<TranslationStats | null>(null);
   const [health, setHealth] = useState<WorkerHealth | null>(null);
+  const [config, setConfig] = useState<TranslationConfig | null>(null);
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [completedTranslations, setCompletedTranslations] = useState<CompletedTranslation[]>([]);
@@ -59,6 +70,7 @@ export default function TranslationManagementPage() {
         const data = await response.json();
         setStats(data.queue);
         setHealth(data.worker);
+        setConfig(data.config);
       } else {
         throw new Error('Failed to fetch status');
       }
@@ -243,6 +255,69 @@ export default function TranslationManagementPage() {
               {showCompletedTranslations ? 'Hide' : 'View'} Completed Translations
             </button>
           </div>
+        </div>
+
+        {/* Configuration Status */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <Settings className="h-5 w-5" />
+            Configuration Status
+          </h2>
+          
+          {config ? (
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className={`w-3 h-3 rounded-full ${config.available ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                <span className="font-medium">
+                  {config.available ? 'Translation Service Ready' : 'Translation Service Not Configured'}
+                </span>
+              </div>
+              
+              {!config.available && (
+                <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
+                    <div className="text-sm">
+                      <p className="font-medium text-yellow-800 dark:text-yellow-200 mb-2">
+                        {config.reason}
+                      </p>
+                      <p className="text-yellow-700 dark:text-yellow-300 mb-3">
+                        {config.suggestion}
+                      </p>
+                      <div className="space-y-2 text-yellow-700 dark:text-yellow-300">
+                        <p className="font-medium">Setup Instructions:</p>
+                        <ol className="list-decimal list-inside space-y-1 ml-4">
+                          <li>Visit <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer" className="underline hover:text-yellow-600 dark:hover:text-yellow-200 inline-flex items-center gap-1">
+                            Anthropic Console <ExternalLink className="h-3 w-3" />
+                          </a></li>
+                          <li>Sign up or log in to get an API key</li>
+                          <li>Add the key to your .env.local file: <code className="bg-yellow-200 dark:bg-yellow-800 px-1 rounded">ANTHROPIC_API_KEY=sk-ant-your-key</code></li>
+                          <li>Restart your development server</li>
+                        </ol>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                <div className="flex justify-between">
+                  <span>API Key Present:</span>
+                  <span className={config.apiKeyPresent ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
+                    {config.apiKeyPresent ? '✓' : '✗'}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>API Key Valid Format:</span>
+                  <span className={config.apiKeyValid ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
+                    {config.apiKeyValid ? '✓' : '✗'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="text-gray-500">Loading...</div>
+          )}
         </div>
 
         {/* Status Cards */}

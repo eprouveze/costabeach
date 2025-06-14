@@ -128,14 +128,35 @@ export const translateText = async (
   try {
     // Use Claude API for translation
     const apiKey = process.env.ANTHROPIC_API_KEY;
+    
+    // Enhanced API key validation
     if (!apiKey) {
-      throw new Error('Anthropic API key is not configured');
+      console.error('Translation failed: ANTHROPIC_API_KEY environment variable is not set');
+      throw new Error('Anthropic API key is not configured. Please set ANTHROPIC_API_KEY environment variable.');
     }
+    
+    if (apiKey === 'sk-ant-your-anthropic-api-key' || apiKey.includes('your-anthropic-api-key')) {
+      console.error('Translation failed: ANTHROPIC_API_KEY is set to placeholder value');
+      throw new Error('Anthropic API key is set to placeholder value. Please update ANTHROPIC_API_KEY with a valid API key.');
+    }
+    
+    if (!apiKey.startsWith('sk-ant-')) {
+      console.error('Translation failed: Invalid ANTHROPIC_API_KEY format');
+      throw new Error('Invalid Anthropic API key format. API key should start with "sk-ant-".');
+    }
+    
+    console.log('Translation request:', {
+      sourceLanguage,
+      targetLanguage,
+      textLength: text.length,
+      apiKeyPresent: !!apiKey,
+      apiKeyPrefix: apiKey.substring(0, 10) + '...'
+    });
     
     const prompt = createTranslationPrompt(text, sourceLanguage, targetLanguage, options);
     
     const requestBody = {
-      model: "claude-sonnet-4-20250514",
+      model: "claude-3-5-sonnet-20241022", // Using stable model version
       max_tokens: 4000,
       messages: [
         {
@@ -156,19 +177,54 @@ export const translateText = async (
     });
     
     if (!response.ok) {
-      const errorData = await response.text();
-      throw new Error(`Claude API error: ${response.status} ${errorData}`);
+      const errorText = await response.text();
+      console.error('Claude API error response:', {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries()),
+        body: errorText
+      });
+      
+      if (response.status === 401) {
+        throw new Error(`Authentication failed: Invalid API key. Please check your ANTHROPIC_API_KEY. Status: ${response.status}`);
+      } else if (response.status === 403) {
+        throw new Error(`Access forbidden: Check API key permissions. Status: ${response.status}`);
+      } else if (response.status === 429) {
+        throw new Error(`Rate limit exceeded: Too many requests. Status: ${response.status}`);
+      } else {
+        throw new Error(`Claude API error: ${response.status} ${response.statusText} - ${errorText}`);
+      }
     }
     
     const data = await response.json();
+    
+    if (!data.content || !data.content[0] || !data.content[0].text) {
+      console.error('Invalid Claude API response structure:', data);
+      throw new Error('Invalid response structure from Claude API');
+    }
+    
     const translatedText = data.content[0].text.trim();
+    
+    console.log('Translation successful:', {
+      sourceLanguage,
+      targetLanguage,
+      originalLength: text.length,
+      translatedLength: translatedText.length
+    });
     
     // Cache the result
     cacheTranslation(text, sourceLanguage, targetLanguage, translatedText);
     
     return translatedText;
   } catch (error) {
-    console.error('Translation error:', error);
+    console.error('Translation error details:', {
+      error: error,
+      message: (error as Error).message,
+      stack: (error as Error).stack,
+      sourceLanguage,
+      targetLanguage,
+      textPreview: text.substring(0, 100) + '...'
+    });
     throw new Error(`Failed to translate text: ${(error as Error).message}`);
   }
 };
