@@ -634,6 +634,7 @@
       "accessDenied": "Access denied. Please make sure you have an approved account",
       "checkEmailForLink": "Check your email for the login link!",
       "googleSignInFailed": "Failed to sign in with Google",
+      "loginRequired": "",
       "passwordMismatch": "Passwords do not match",
       "passwordTooShort": "Password must be at least 8 characters long",
       "passwordUpdateSuccess": "Password updated successfully",
@@ -654,9 +655,9 @@
       "downloadError": "Error downloading document: {{error}}",
       "fetchError": "Error fetching documents: {{error}}",
       "fileRequired": "Please select a file to upload",
-      "titleRequired": "Please enter a title for the document",
       "previewError": "Failed to preview document",
       "previewLoadError": "Failed to load document preview",
+      "titleRequired": "Please enter a title for the document",
       "translationRequested": "Translation requested. This may take a few minutes.",
       "translationRequestError": "Failed to request translation",
       "translationRequestFailed": "Translation request failed",
@@ -681,10 +682,10 @@
     },
     "speech": {
       "microphoneAccessRequired": "Microphone access is required to use voice recording.",
-      "recordingNotSupported": "Recording is not supported in this browser.",
       "recordingFailed": "Recording failed. Please try again.",
-      "transcriptionFailed": "Transcription failed.",
-      "transcriptionError": "An error occurred during transcription."
+      "recordingNotSupported": "Recording is not supported in this browser.",
+      "transcriptionError": "An error occurred during transcription.",
+      "transcriptionFailed": "Transcription failed."
     },
     "whatsapp": {
       "broadcastAllFailed": "All messages failed to send",
@@ -693,6 +694,7 @@
       "connectionFailed": "Connection failed: {{error}}",
       "connectionSuccessful": "WhatsApp connection successful!",
       "documentUrlRequired": "Please provide document URL and filename",
+      "historyExportSuccess": "Message history exported successfully",
       "imageUrlRequired": "Please provide image URL",
       "messageRequired": "Please enter a message",
       "messageSendError": "Failed to send message: {{error}}",
@@ -708,8 +710,7 @@
       "sampleRecipientsAlreadyAdded": "Sample recipients are already in the list",
       "settingsSaveError": "Failed to save settings: {{error}}",
       "settingsSaveSuccess": "Settings saved successfully!",
-      "templateNameRequired": "Please enter a template name",
-      "historyExportSuccess": "Message history exported successfully"
+      "templateNameRequired": "Please enter a template name"
     }
   }
 }

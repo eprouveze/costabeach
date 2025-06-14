@@ -646,6 +646,7 @@
       "accessDenied": "تم رفض الوصول. تأكد من أن لديك حساب معتمد",
       "checkEmailForLink": "تحقق من بريدك الإلكتروني للحصول على رابط تسجيل الدخول!",
       "googleSignInFailed": "فشل في تسجيل الدخول باستخدام Google",
+      "loginRequired": "",
       "passwordMismatch": "كلمات المرور غير متطابقة",
       "passwordTooShort": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل",
       "passwordUpdateSuccess": "تم تحديث كلمة المرور بنجاح",
@@ -666,9 +667,9 @@
       "downloadError": "خطأ في تنزيل المستند: {{error}}",
       "fetchError": "خطأ في جلب المستندات: {{error}}",
       "fileRequired": "يرجى تحديد ملف للتحميل",
-      "titleRequired": "يرجى إدخال عنوان للمستند",
       "previewError": "فشل في معاينة المستند",
       "previewLoadError": "فشل في تحميل معاينة المستند",
+      "titleRequired": "يرجى إدخال عنوان للمستند",
       "translationRequested": "تم طلب الترجمة. قد يستغرق هذا بضع دقائق.",
       "translationRequestError": "فشل في طلب الترجمة",
       "translationRequestFailed": "فشل طلب الترجمة",
@@ -693,10 +694,10 @@
     },
     "speech": {
       "microphoneAccessRequired": "مطلوب الوصول إلى الميكروفون لاستخدام التسجيل الصوتي.",
-      "recordingNotSupported": "التسجيل غير مدعوم في هذا المتصفح.",
       "recordingFailed": "فشل التسجيل. يرجى المحاولة مرة أخرى.",
-      "transcriptionFailed": "فشلت الكتابة الصوتية.",
-      "transcriptionError": "حدث خطأ أثناء الكتابة الصوتية."
+      "recordingNotSupported": "التسجيل غير مدعوم في هذا المتصفح.",
+      "transcriptionError": "حدث خطأ أثناء الكتابة الصوتية.",
+      "transcriptionFailed": "فشلت الكتابة الصوتية."
     },
     "whatsapp": {
       "broadcastAllFailed": "فشل إرسال جميع الرسائل",
@@ -705,6 +706,7 @@
       "connectionFailed": "فشل في الاتصال: {{error}}",
       "connectionSuccessful": "تم الاتصال بواتساب بنجاح!",
       "documentUrlRequired": "يرجى تقديم رابط المستند واسم الملف",
+      "historyExportSuccess": "تم تصدير تاريخ الرسائل بنجاح",
       "imageUrlRequired": "يرجى تقديم رابط الصورة",
       "messageRequired": "يرجى إدخال رسالة",
       "messageSendError": "فشل في إرسال الرسالة: {{error}}",
@@ -724,8 +726,7 @@
       "sampleRecipientsAlreadyAdded": "المستلمون النموذجيون موجودون بالفعل في القائمة",
       "settingsSaveError": "فشل في حفظ الإعدادات: {{error}}",
       "settingsSaveSuccess": "تم حفظ الإعدادات بنجاح!",
-      "templateNameRequired": "يرجى إدخال اسم القالب",
-      "historyExportSuccess": "تم تصدير تاريخ الرسائل بنجاح"
+      "templateNameRequired": "يرجى إدخال اسم القالب"
     }
   }
 }

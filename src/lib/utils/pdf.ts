@@ -47,7 +47,6 @@ export async function generatePdfFromPages(pages: string[]): Promise<Uint8Array>
   // Register fontkit so we can embed custom TTF fonts (required for Arabic/Unicode)
   try {
     const { default: fontkit } = await import('@pdf-lib/fontkit');
-    // @ts-expect-error – pdf-lib's type defs don't include registerFontkit yet
     pdfDoc.registerFontkit(fontkit);
   } catch (err) {
     console.error('Failed to load @pdf-lib/fontkit – unicode font embedding will fail', err);

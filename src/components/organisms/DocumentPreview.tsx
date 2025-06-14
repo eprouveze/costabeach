@@ -22,14 +22,13 @@ export const DocumentPreview = ({
   className = "",
 }: DocumentPreviewProps) => {
   const { t } = useI18n();
-  const { downloadDocument } = useDocuments();
+  const { downloadDocument, previewDocument } = useDocuments();
   const [isLoading, setIsLoading] = useState(true);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [previewType, setPreviewType] = useState<string | null>(null);
   const [previewContent, setPreviewContent] = useState<string | null>(null);
   const [isTranslationRequested, setIsTranslationRequested] = useState(false);
   const [isTranslationInProgress, setIsTranslationInProgress] = useState(false);
-  const { previewDocument, downloadDocument } = useDocuments();
   
   const translationStatus = api.translations.getTranslationStatus.useQuery(
     { 

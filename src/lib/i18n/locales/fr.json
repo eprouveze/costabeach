@@ -637,6 +637,7 @@
       "accessDenied": "Accès refusé. Assurez-vous d'avoir un compte approuvé",
       "checkEmailForLink": "Vérifiez votre email pour le lien de connexion!",
       "googleSignInFailed": "Échec de la connexion avec Google",
+      "loginRequired": "",
       "passwordMismatch": "Les mots de passe ne correspondent pas",
       "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
       "passwordUpdateSuccess": "Mot de passe mis à jour avec succès",
@@ -657,9 +658,9 @@
       "downloadError": "Erreur lors du téléchargement du document: {{error}}",
       "fetchError": "Erreur lors de la récupération des documents: {{error}}",
       "fileRequired": "Veuillez sélectionner un fichier à téléverser",
-      "titleRequired": "Veuillez saisir un titre pour le document",
       "previewError": "Échec de l'aperçu du document",
       "previewLoadError": "Échec du chargement de l'aperçu du document",
+      "titleRequired": "Veuillez saisir un titre pour le document",
       "translationRequested": "Traduction demandée. Cela peut prendre quelques minutes.",
       "translationRequestError": "Échec de la demande de traduction",
       "translationRequestFailed": "Demande de traduction échouée",
@@ -684,10 +685,10 @@
     },
     "speech": {
       "microphoneAccessRequired": "L'accès au microphone est requis pour utiliser l'enregistrement vocal.",
-      "recordingNotSupported": "L'enregistrement n'est pas pris en charge dans ce navigateur.",
       "recordingFailed": "L'enregistrement a échoué. Veuillez réessayer.",
-      "transcriptionFailed": "La transcription a échoué.",
-      "transcriptionError": "Une erreur s'est produite lors de la transcription."
+      "recordingNotSupported": "L'enregistrement n'est pas pris en charge dans ce navigateur.",
+      "transcriptionError": "Une erreur s'est produite lors de la transcription.",
+      "transcriptionFailed": "La transcription a échoué."
     },
     "whatsapp": {
       "broadcastAllFailed": "Tous les messages ont échoué à l'envoi",
@@ -696,6 +697,7 @@
       "connectionFailed": "Échec de la connexion: {{error}}",
       "connectionSuccessful": "Connexion WhatsApp réussie!",
       "documentUrlRequired": "Veuillez fournir l'URL du document et le nom du fichier",
+      "historyExportSuccess": "Historique des messages exporté avec succès",
       "imageUrlRequired": "Veuillez fournir l'URL de l'image",
       "messageRequired": "Veuillez saisir un message",
       "messageSendError": "Échec de l'envoi du message: {{error}}",
@@ -712,8 +714,7 @@
       "sampleRecipientsAlreadyAdded": "Les destinataires d'exemple sont déjà dans la liste",
       "settingsSaveError": "Échec de la sauvegarde des paramètres: {{error}}",
       "settingsSaveSuccess": "Paramètres sauvegardés avec succès!",
-      "templateNameRequired": "Veuillez saisir un nom de modèle",
-      "historyExportSuccess": "Historique des messages exporté avec succès"
+      "templateNameRequired": "Veuillez saisir un nom de modèle"
     }
   }
 }
