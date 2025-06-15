@@ -262,7 +262,7 @@ export const DocumentCard = ({
   if (viewMode === 'list') {
     return (
       <>
-        <div className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow duration-300">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-300">
           <div className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center flex-1 min-w-0">
@@ -350,7 +350,7 @@ export const DocumentCard = ({
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-shadow duration-300">
         <div className="p-4">
           <div className="flex items-start">
             <div className="mr-4 flex-shrink-0">
@@ -420,7 +420,7 @@ export const DocumentCard = ({
         </div>
         
         {showActions && (
-          <div className="bg-gray-50 px-4 py-3 flex flex-wrap justify-end gap-2">
+          <div className="bg-gray-50 dark:bg-gray-700 px-4 py-3 flex flex-wrap justify-end gap-2">
             {canPreview() && (
               <button
                 onClick={handlePreview}

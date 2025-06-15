@@ -191,12 +191,12 @@ if (filter.status !== 'all') {
     return (
       <AuthWrapper requireAuth={true}>
         <OwnerDashboardTemplate>
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded">
             <p className="font-bold">{t("common.error") || "Error"}</p>
             <p>{error}</p>
             <button 
               onClick={loadPolls}
-              className="mt-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-800 rounded transition-colors"
+              className="mt-2 px-4 py-2 bg-red-100 dark:bg-red-800 hover:bg-red-200 dark:hover:bg-red-700 text-red-800 dark:text-red-200 rounded transition-colors"
             >
               {t("common.retry") || "Retry"}
             </button>
@@ -213,10 +213,10 @@ if (filter.status !== 'all') {
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
               {t("polls.title") || "Community Polls"}
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-300">
               {t("polls.description") || "Participate in community decisions and voice your opinion"}
             </p>
           </div>
@@ -235,47 +235,47 @@ if (filter.status !== 'all') {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="flex items-center">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <BarChart3 className="h-6 w-6 text-blue-600" />
+            <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+              <BarChart3 className="h-6 w-6 text-blue-600 dark:text-blue-400" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">{t("polls.stats.totalPolls") || "Total Polls"}</p>
-              <p className="text-2xl font-bold text-gray-900">{polls.length}</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-300">{t("polls.stats.totalPolls") || "Total Polls"}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{polls.length}</p>
             </div>
           </div>
         </div>
         
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="flex items-center">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <Calendar className="h-6 w-6 text-green-600" />
+            <div className="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
+              <Calendar className="h-6 w-6 text-green-600 dark:text-green-400" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">{t("polls.stats.active") || "Active Polls"}</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-300">{t("polls.stats.active") || "Active Polls"}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {polls.filter(poll => poll.status === 'active').length}
               </p>
             </div>
           </div>
         </div>
         
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="flex items-center">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <Users className="h-6 w-6 text-purple-600" />
+            <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
+              <Users className="h-6 w-6 text-purple-600 dark:text-purple-400" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">{t("polls.stats.yourVotes") || "Your Votes"}</p>
-              <p className="text-2xl font-bold text-gray-900">{userVotes.length}</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-300">{t("polls.stats.yourVotes") || "Your Votes"}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{userVotes.length}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Polls List */}
-      <div className="bg-white rounded-lg shadow-sm border">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
         <div className="p-6">
           <PollsList
             polls={polls}

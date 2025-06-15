@@ -882,6 +882,9 @@
     "saving": "",
     "title": "الإعدادات"
   },
+  "theme": {
+    "toggle": ""
+  },
   "toast": {
     "admin": {
       "alertMessageRequired": "يرجى إدخال رسالة التنبيه",

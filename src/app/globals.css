@@ -19,13 +19,6 @@ body {
   display: flex;
   width: 100%;
   flex-direction: column;
-  background: linear-gradient(to bottom right, rgb(239 246 255), rgb(254 242 242));
-  color: rgb(15 23 42);
-}
-
-body.dark {
-  background: linear-gradient(to bottom right, rgb(15 23 42), rgb(30 41 59));
-  color: rgb(248 250 252);
 }
 
 #__next {
@@ -84,7 +77,8 @@ body.dark {
 
 .modal-content {
   position: relative;
-  background: #1f2937;
+  background: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
   border-radius: 0.5rem;
   padding: 1rem;
   outline: none;

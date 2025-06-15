@@ -858,6 +858,9 @@
     "saving": "",
     "title": "Settings"
   },
+  "theme": {
+    "toggle": ""
+  },
   "toast": {
     "admin": {
       "alertMessageRequired": "Please enter an alert message",

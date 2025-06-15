@@ -236,10 +236,10 @@ export function DashboardContent() {
   // If information section is active
   if (typeParam === "information") {
     return (
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-2xl font-bold mb-4">{t("common.information")}</h2>
-        <p className="mb-4">{t("landing.aboutDescription1")}</p>
-        <p>{t("landing.aboutDescription2")}</p>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{t("common.information")}</h2>
+        <p className="text-gray-700 dark:text-gray-300 mb-4">{t("landing.aboutDescription1")}</p>
+        <p className="text-gray-700 dark:text-gray-300">{t("landing.aboutDescription2")}</p>
       </div>
     );
   }
@@ -256,12 +256,12 @@ export function DashboardContent() {
   // If error
   if (isError) {
     return (
-      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded" data-testid="error-message">
+      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded" data-testid="error-message">
         <p className="font-bold">{t("common.error") || "Error"}</p>
         <p>{error?.message || t("documents.unknownError") || "Unknown error"}</p>
         <button 
           onClick={handleManualRetry}
-          className="mt-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-800 rounded transition-colors"
+          className="mt-2 px-4 py-2 bg-red-100 dark:bg-red-800 hover:bg-red-200 dark:hover:bg-red-700 text-red-800 dark:text-red-200 rounded transition-colors"
           disabled={isManuallyFetching}
         >
           {isManuallyFetching 
@@ -275,9 +275,9 @@ export function DashboardContent() {
   // If no documents
   if (!documents || documents.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow p-6 text-center" data-testid="empty-state">
-        <h2 className="text-xl font-medium mb-2">{t("documents.noDocuments") || "No Documents"}</h2>
-        <p className="text-gray-500">{t("documents.noDocumentsInCategory") || "There are no documents in this category."}</p>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6 text-center" data-testid="empty-state">
+        <h2 className="text-xl font-medium text-gray-900 dark:text-white mb-2">{t("documents.noDocuments") || "No Documents"}</h2>
+        <p className="text-gray-500 dark:text-gray-400">{t("documents.noDocumentsInCategory") || "There are no documents in this category."}</p>
       </div>
     );
   }
@@ -285,7 +285,7 @@ export function DashboardContent() {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
           {categoryParam 
             ? t(`documents.categories.${categoryParam.toLowerCase()}`) || categoryParam
             : t("documents.title") || "Documents"}

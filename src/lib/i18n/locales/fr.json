@@ -864,6 +864,9 @@
     "saving": "",
     "title": "Paramètres"
   },
+  "theme": {
+    "toggle": ""
+  },
   "toast": {
     "admin": {
       "alertMessageRequired": "Veuillez saisir un message d'alerte",
