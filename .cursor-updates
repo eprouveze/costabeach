@@ -792,3 +792,12 @@ Moved 980 unused images to `tmp/unused-images/` (ignored by Git) and staged dele
 ## Added owner-register pages for all locales (fr, en, ar) to fix 404 errors on Vercel deployment
 
 ## Added internationalized privacy pages for all locales with Moroccan law compliance and Google OAuth setup instructions
+
+## 2024-12-19
+
+### Added Google Sign-in to Login Pages
+- Fixed inconsistency where Google sign-in was available on signup pages but not login pages
+- Updated French login page (`/fr/owner-login`) to redirect to proper auth signin page (`/fr/auth/signin`) for consistency with English and Arabic versions
+- All login pages now use the `LoginForm` component which includes the `SocialLoginButtons` component with Google OAuth
+- Fixed TypeScript build error by excluding `browser-tools-mcp` directory from compilation
+- Google OAuth is fully configured with proper environment variables and NextAuth provider setup
