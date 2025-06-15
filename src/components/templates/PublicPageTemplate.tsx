@@ -11,7 +11,7 @@ interface PublicPageTemplateProps {
 
 export default function PublicPageTemplate({ children }: PublicPageTemplateProps) {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
       <ToastContainer position="top-right" />
       <Header />
       

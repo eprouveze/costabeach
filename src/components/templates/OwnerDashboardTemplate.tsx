@@ -77,13 +77,13 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       {/* Global Header */}
       <Header />
       
       <div className="flex flex-1">
         {/* Sidebar */}
-        <aside className="w-64 bg-white border-r border-gray-200 fixed top-16 bottom-0 left-0 overflow-y-auto z-10">
+        <aside className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 fixed top-16 bottom-0 left-0 overflow-y-auto z-10">
           <div className="p-4">
             <form onSubmit={handleSearch} className="mb-6">
               <div className="relative">
@@ -92,9 +92,9 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
                   placeholder={t("documents.searchPlaceholder")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
-                <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400 dark:text-gray-500" />
                 <button type="submit" className="sr-only">Search</button>
               </div>
             </form>
@@ -105,8 +105,8 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
                 href={`/${locale}/owner-dashboard`}
                 className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
                   pathname === `/${locale}/owner-dashboard` && isAllCategoryActive() && !searchParams?.toString()
-                    ? "text-blue-600 bg-blue-50"
-                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
+                    ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
+                    : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700"
                 }`}
               >
                 <Home className="w-5 h-5" />
@@ -118,8 +118,8 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
                 href={`/${locale}/owner-dashboard?type=information`}
                 className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
                   isInformationActive()
-                    ? "text-blue-600 bg-blue-50"
-                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
+                    ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
+                    : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700"
                 }`}
               >
                 <Info className="w-5 h-5" />
@@ -131,8 +131,8 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
                 href={`/${locale}/polls`}
                 className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
                   pathname?.startsWith(`/${locale}/polls`)
-                    ? "text-blue-600 bg-blue-50"
-                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
+                    ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
+                    : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700"
                 }`}
               >
                 <FileQuestion className="w-5 h-5" />
@@ -141,7 +141,7 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
 
               {/* Document Categories */}
               <div className="pt-4 pb-2">
-                <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <h3 className="px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   {t("documents.categories.title")}
                 </h3>
               </div>
@@ -159,8 +159,8 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
                     href={href}
                     className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
                       isActive
-                        ? "text-blue-600 bg-blue-50"
-                        : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
+                        ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
+                        : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700"
                     }`}
                   >
                     <Icon className="w-5 h-5" />
@@ -171,7 +171,7 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
 
               {/* User section */}
               <div className="pt-4 pb-2">
-                <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <h3 className="px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   {t("common.user")}
                 </h3>
               </div>
@@ -180,8 +180,8 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
                 href={`/${locale}/owner-dashboard/profile`}
                 className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
                   pathname === `/${locale}/owner-dashboard/profile`
-                    ? "text-blue-600 bg-blue-50"
-                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
+                    ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
+                    : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700"
                 }`}
               >
                 <User className="w-5 h-5" />
@@ -192,8 +192,8 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
                 href={`/${locale}/owner-dashboard/settings`}
                 className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
                   pathname === `/${locale}/owner-dashboard/settings`
-                    ? "text-blue-600 bg-blue-50"
-                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
+                    ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
+                    : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700"
                 }`}
               >
                 <Settings className="w-5 h-5" />
@@ -203,7 +203,7 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
               <button
                 onClick={handleSignOut}
                 disabled={isSigningOut}
-                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <LogOut className="w-5 h-5" />
                 {isSigningOut ? t("auth.signingOut") : t("auth.signOut")}
@@ -213,7 +213,7 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 ml-64 pt-16 pb-10 min-h-screen">
+        <main className="flex-1 ml-64 pt-16 pb-10 min-h-screen bg-gray-50 dark:bg-gray-900">
           {/* Content */}
           <div className="p-6 max-w-5xl mx-auto">
             {children}
