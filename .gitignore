@@ -49,3 +49,6 @@ next-env.d.ts
 public/images/2024/06/*.mov
 
 tmp/
+
+# MCP tools
+browser-tools-mcp/
