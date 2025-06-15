@@ -52,3 +52,6 @@ tmp/
 
 # MCP tools
 browser-tools-mcp/
+
+# Log files
+docs/logs/
