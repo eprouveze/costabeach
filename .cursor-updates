@@ -788,3 +788,5 @@ Moved 980 unused images to `tmp/unused-images/` (ignored by Git) and staged dele
 ## Force Node.js runtime for NextAuth route to fix 404 on Vercel (2025-06-15)
 
 ## Fixed API routes returning 404 on Vercel by removing conflicting root-level api/ and src/pages/ directories, updated Supabase client initialization to handle missing environment variables gracefully, and identified that NEXTAUTH_URL must be set in .env file for Vercel deployments
+
+## Added owner-register pages for all locales (fr, en, ar) to fix 404 errors on Vercel deployment

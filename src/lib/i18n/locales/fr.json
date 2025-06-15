@@ -742,6 +742,63 @@
     "notificationsDescription": "Gérez vos préférences de notification",
     "title": "Paramètres"
   },
+  "privacy": {
+    "title": "Politique de Confidentialité",
+    "lastUpdated": "Dernière mise à jour",
+    "sections": {
+      "introduction": {
+        "title": "Introduction",
+        "content": "Costa Beach 3 s'engage à protéger votre vie privée et vos données personnelles conformément à la loi marocaine n°09-08 relative à la protection des personnes physiques à l'égard du traitement des données à caractère personnel."
+      },
+      "dataCollection": {
+        "title": "Collecte des Données",
+        "content": "Nous collectons les informations que vous nous fournissez directement, telles que lors de la création d'un compte, l'enregistrement d'une propriété, ou lorsque vous nous contactez pour obtenir de l'aide.",
+        "types": {
+          "title": "Types de données collectées :",
+          "personal": "Informations personnelles (nom, prénom, adresse email)",
+          "property": "Informations sur la propriété",
+          "communication": "Historique des communications",
+          "usage": "Données d'utilisation de la plateforme"
+        }
+      },
+      "dataUsage": {
+        "title": "Utilisation des Données",
+        "content": "Nous utilisons les informations collectées pour fournir, maintenir et améliorer nos services, traiter les transactions et communiquer avec vous.",
+        "purposes": {
+          "title": "Finalités du traitement :",
+          "service": "Fourniture des services de gestion immobilière",
+          "communication": "Communication avec les propriétaires",
+          "legal": "Respect des obligations légales",
+          "improvement": "Amélioration de nos services"
+        }
+      },
+      "dataSharing": {
+        "title": "Partage des Données",
+        "content": "Nous ne vendons, n'échangeons ou ne transférons pas vos informations personnelles à des tiers sans votre consentement, sauf dans les cas décrits dans cette politique."
+      },
+      "dataRights": {
+        "title": "Vos Droits",
+        "content": "Conformément à la loi marocaine, vous disposez des droits suivants :",
+        "rights": {
+          "access": "Droit d'accès à vos données personnelles",
+          "rectification": "Droit de rectification des données inexactes",
+          "deletion": "Droit à l'effacement de vos données",
+          "portability": "Droit à la portabilité des données",
+          "objection": "Droit d'opposition au traitement"
+        }
+      },
+      "dataSecurity": {
+        "title": "Sécurité des Données",
+        "content": "Nous mettons en œuvre des mesures de sécurité appropriées pour protéger vos données personnelles contre l'accès non autorisé, la modification, la divulgation ou la destruction."
+      },
+      "contact": {
+        "title": "Nous Contacter",
+        "content": "Si vous avez des questions concernant cette Politique de Confidentialité, veuillez nous contacter à",
+        "email": "info@costabeach.ma",
+        "address": "Costa Beach 3, Casablanca, Maroc"
+      }
+    }
+  },
   "toast": {
     "admin": {
       "alertMessageRequired": "Veuillez saisir un message d'alerte",

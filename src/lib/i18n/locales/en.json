@@ -736,6 +736,63 @@
     "notificationsDescription": "Manage your notification preferences",
     "title": "Settings"
   },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated",
+    "sections": {
+      "introduction": {
+        "title": "Introduction",
+        "content": "Costa Beach 3 is committed to protecting your privacy and personal data in accordance with Moroccan Law No. 09-08 relating to the protection of individuals with regard to the processing of personal data."
+      },
+      "dataCollection": {
+        "title": "Data Collection",
+        "content": "We collect information you provide directly to us, such as when you create an account, register a property, or contact us for support.",
+        "types": {
+          "title": "Types of data collected:",
+          "personal": "Personal information (name, surname, email address)",
+          "property": "Property information",
+          "communication": "Communication history",
+          "usage": "Platform usage data"
+        }
+      },
+      "dataUsage": {
+        "title": "Data Usage",
+        "content": "We use the information we collect to provide, maintain, and improve our services, process transactions, and communicate with you.",
+        "purposes": {
+          "title": "Processing purposes:",
+          "service": "Provision of property management services",
+          "communication": "Communication with property owners",
+          "legal": "Compliance with legal obligations",
+          "improvement": "Improvement of our services"
+        }
+      },
+      "dataSharing": {
+        "title": "Data Sharing",
+        "content": "We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy."
+      },
+      "dataRights": {
+        "title": "Your Rights",
+        "content": "In accordance with Moroccan law, you have the following rights:",
+        "rights": {
+          "access": "Right of access to your personal data",
+          "rectification": "Right to rectification of inaccurate data",
+          "deletion": "Right to erasure of your data",
+          "portability": "Right to data portability",
+          "objection": "Right to object to processing"
+        }
+      },
+      "dataSecurity": {
+        "title": "Data Security",
+        "content": "We implement appropriate security measures to protect your personal data against unauthorized access, modification, disclosure, or destruction."
+      },
+      "contact": {
+        "title": "Contact Us",
+        "content": "If you have any questions about this Privacy Policy, please contact us at",
+        "email": "info@costabeach.ma",
+        "address": "Costa Beach 3, Casablanca, Morocco"
+      }
+    }
+  },
   "toast": {
     "admin": {
       "alertMessageRequired": "Please enter an alert message",
