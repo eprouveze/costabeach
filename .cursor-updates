@@ -782,3 +782,5 @@ Added `tmp/` to `.gitignore` to prevent large unused images and temp files from 
 ## Removed unused images from repository (2025-06-14)
 
 Moved 980 unused images to `tmp/unused-images/` (ignored by Git) and staged deletions from `public/images`.
+
+## Added trustHost option to NextAuth config to fix Vercel 404/JSON parse error (2025-06-15)

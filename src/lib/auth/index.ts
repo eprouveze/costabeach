@@ -51,9 +51,22 @@ declare module "next-auth" {
   }
 }
 
+// Ensure NEXTAUTH_URL is always set to avoid "Invalid URL" errors during build or in environments
+// where this variable is not provided (e.g. Storybook, local CI).
+if (!process.env.NEXTAUTH_URL || process.env.NEXTAUTH_URL.trim() === "") {
+  const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000";
+  process.env.NEXTAUTH_URL = vercelUrl;
+}
+
 // Using standard PrismaAdapter with proper NextAuth model naming conventions
 
-export const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions & { trustHost: boolean } = {
+  // When deploying on platforms like Vercel that sit behind a proxy we need to explicitly
+  // tell NextAuth that it can trust the incoming host header. Otherwise certain API
+  // routes (e.g. /api/auth/session) may return an HTML error page that the client tries
+  // to parse as JSON, leading to the "Unexpected token '<'" error.
+  trustHost: !!process.env.NEXTAUTH_URL,
+
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
