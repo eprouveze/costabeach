@@ -394,10 +394,8 @@
   },
   "contact": {
     "contactInfo": {
-      "address": "Costa Beach 3, Casablanca, Maroc",
+      "address": "Costa Beach 3, Bouznika, Province de Benslimane, Maroc",
       "email": "info@costabeach.ma",
-      "hours": "Heures d'ouverture: Lundi-Vendredi, 9h00 - 17h00",
-      "phone": "+212 522 123 456",
       "title": "Informations de contact"
     },
     "department": "Département",
@@ -524,8 +522,8 @@
     "aboutCommunity": {
       "lifestyle": {
         "item1": "Événements et rassemblements communautaires",
-        "item2": "Activités de plage et sports nautiques",
-        "item3": "Cours de fitness et programmes de bien-être",
+        "item2": "Accès aux plages de Bouznika pour la natation et détente",
+        "item3": "Piscines extérieures et espaces de loisirs",
         "item4": "Environnement familial",
         "title": "Mode de vie et activités"
       },
@@ -538,33 +536,33 @@
       },
       "title": "Points forts de la communauté"
     },
-    "aboutDescription1": "Costa Beach 3 est une communauté résidentielle de premier plan située à Casablanca, au Maroc. Notre portail HOA offre aux propriétaires un accès facile aux informations et documents importants.",
+    "aboutDescription1": "Costa Beach 3 est une résidence moderne en bord de mer située à Bouznika, entre Casablanca et Rabat. Cette communauté balnéaire d'exception offre un cadre de vie privilégié face à l'océan Atlantique avec des appartements contemporains et des équipements haut de gamme.",
     "aboutDescription2": "En tant que propriétaire, vous aurez accès aux procès-verbaux des réunions, aux rapports financiers, aux calendriers d'entretien et à d'autres informations importantes sur la communauté via ce portail sécurisé.",
     "aboutFeatures": {
       "amenities": {
-        "description": "Piscines, centre de fitness, jardins et espaces de loisirs pour tous les résidents.",
-        "title": "Équipements premium"
+        "description": "Piscines extérieures multiples, aires de jeux pour enfants, jardins paysagers et espaces de bronzage.",
+        "title": "Équipements Premium"
       },
       "architecture": {
-        "description": "Design contemporain avec des agencements spacieux et des finitions haut de gamme dans toute la propriété.",
-        "title": "Architecture Moderne"
+        "description": "Appartements contemporains avec chambres spacieuses, cuisines équipées, balcons privés et terrasses avec vue sur l'océan.",
+        "title": "Appartements Modernes"
       },
       "beachfront": {
-        "description": "Accès direct à une plage privée immaculée avec une vue imprenable sur l'océan Atlantique.",
-        "title": "Accès Direct à la Plage"
+        "description": "À distance de marche des plages de sable fin de Bouznika, réputées pour leur propreté et leurs vagues douces.",
+        "title": "Accès à la Plage"
       },
       "location": {
-        "description": "Idéalement situé avec un accès facile aux commerces, restaurants et options de divertissement.",
+        "description": "Situation privilégiée à Bouznika, entre Casablanca et Rabat, offrant un accès facile aux deux grandes métropoles du Royaume.",
         "title": "Emplacement privilégié"
       },
       "title": "Caractéristiques de la Propriété"
     },
     "aboutHistory": {
-      "paragraph1": "Costa Beach 3 a été créée en 2010 en tant que communauté résidentielle haut de gamme, conçue pour offrir aux résidents une expérience de vie luxueuse en bord de mer tout en maintenant un fort sentiment de communauté.",
-      "paragraph2": "Au fil des ans, notre communauté s'est développée et a évolué, avec des améliorations continues des équipements et des services pour assurer la meilleure qualité de vie à nos résidents.",
-      "title": "L'histoire de notre communauté"
+      "paragraph1": "Costa Beach est un complexe résidentiel moderne et recherché situé à Bouznika, une ville côtière entre Casablanca et Rabat sur la côte atlantique du Maroc. Le développement est populaire parmi les visiteurs marocains et internationaux pour son mélange de confort, de sécurité et de proximité avec la mer, ce qui le rend idéal pour les escapades familiales, les longues vacances ou les week-ends.",
+      "paragraph2": "Costa Beach 3 est l'une des phases les plus récentes de ce développement, offrant des équipements améliorés et un environnement tranquille et familial. Le complexe est conçu avec la détente et la commodité à l'esprit, offrant aux résidents et aux invités une expérience de type resort à quelques pas des plages de sable renommées de Bouznika.",
+      "title": "Aperçu de Costa Beach et Costa Beach 3"
     },
-    "aboutSubtitle": "Une communauté de premier plan en bord de mer à Casablanca, Maroc",
+    "aboutSubtitle": "Une résidence moderne en bord de mer à Bouznika, entre Casablanca et Rabat",
     "aboutTitle": "À propos de Costa Beach 3",
     "contactCTA": "Nous Contacter",
     "features": {
@@ -706,7 +704,7 @@
     "lastUpdated": "Dernière mise à jour",
     "sections": {
       "contact": {
-        "address": "Costa Beach 3, Casablanca, Maroc",
+        "address": "Costa Beach 3, Bouznika, Province de Benslimane, Maroc",
         "content": "Si vous avez des questions concernant cette Politique de Confidentialité, veuillez nous contacter à",
         "email": "info@costabeach.ma",
         "title": "Nous Contacter"

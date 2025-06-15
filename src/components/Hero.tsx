@@ -23,11 +23,12 @@ export default function Hero({ className = "" }: HeroProps) {
       {/* Hero Background Image */}
       <div className="absolute inset-0 w-full h-full">
         <Image
-          src="/images/hero-banner.jpeg"
+          src="/images/costa-beach-aerial-pool.jpg"
           alt="Costa Beach 3"
           fill
           priority
           className="object-cover"
+          style={{ objectPosition: 'center 20%' }}
           sizes="100vw"
         />
         <div className={`absolute inset-0 ${locale === 'ar' ? 'bg-gradient-to-l' : 'bg-gradient-to-r'} from-blue-900/80 to-transparent`} />

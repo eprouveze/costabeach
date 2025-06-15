@@ -57,8 +57,8 @@ export const Footer = ({ className = "" }: FooterProps) => {
             <h3 className="text-xl font-bold mb-4">{t("landing.footer.contact")}</h3>
             <address className="not-italic text-gray-400">
               <p>Costa Beach 3</p>
-              <p>Casablanca, Morocco</p>
-              <p>Email: info@costabeach.ma</p>
+              <p>{t("contact.contactInfo.address")}</p>
+              <p>Email: {t("contact.contactInfo.email")}</p>
             </address>
           </div>
         </div>

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 export default async function PrivacyPage() {
-  const { t } = await useTranslation();
+  const { t, locale } = await useTranslation();
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -17,7 +17,7 @@ export default async function PrivacyPage() {
           
           <div className="prose prose-lg max-w-none">
             <p className="text-gray-600 mb-6">
-              {t('privacy.lastUpdated')}: {new Date().toLocaleDateString()}
+              {t('privacy.lastUpdated')}: {new Date().toLocaleDateString(locale)}
             </p>
 
             <section className="mb-8">

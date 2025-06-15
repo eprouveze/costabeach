@@ -233,16 +233,6 @@ export default function ContactPage() {
               </div>
               
               <div className="flex items-start">
-                <Phone className={`w-6 h-6 text-blue-600 mt-1 ${iconMarginClass}`} />
-                <div>
-                  <p className="font-medium text-lg">{labels.phone}</p>
-                  <RTLText className="text-gray-600 dark:text-gray-300">
-                    {t("contact.contactInfo.phone")}
-                  </RTLText>
-                </div>
-              </div>
-              
-              <div className="flex items-start">
                 <Mail className={`w-6 h-6 text-blue-600 mt-1 ${iconMarginClass}`} />
                 <div>
                   <p className="font-medium text-lg">{labels.email}</p>
@@ -252,21 +242,12 @@ export default function ContactPage() {
                 </div>
               </div>
               
-              <div className="flex items-start">
-                <Clock className={`w-6 h-6 text-blue-600 mt-1 ${iconMarginClass}`} />
-                <div>
-                  <p className="font-medium text-lg">{labels.hours}</p>
-                  <RTLText className="text-gray-600 dark:text-gray-300">
-                    {t("contact.contactInfo.hours")}
-                  </RTLText>
-                </div>
-              </div>
             </RTLWrapper>
             
             <div className="mt-8">
               <div className="aspect-w-16 aspect-h-9">
                 <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3323.846981346114!2d-7.6982423!3d33.5731426!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda7d319f41e5d2b%3A0x76a7661e7e9a25af!2sCasablanca%2C%20Morocco!5e0!3m2!1sen!2sus!4v1651234567890!5m2!1sen!2sus" 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3302.4!2d-7.1617!3d33.7867!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda76b871f50c5c1%3A0x8f8c1e2d3a4b5c6d!2sCosta%20Beach%203%2C%20Bouznika%2C%20Morocco!5e0!3m2!1sen!2sus!4v1651234567890!5m2!1sen!2sus" 
                   width="100%" 
                   height="250" 
                   style={{ border: 0 }} 

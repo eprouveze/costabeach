@@ -37,8 +37,8 @@ export default function AboutSection({ className = "" }: AboutSectionProps) {
         <div className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16 ${locale === 'ar' ? 'lg:grid-flow-col-reverse' : ''}`}>
           <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl">
             <Image
-              src="/images/hero-banner.jpeg"
-              alt="Costa Beach 3 Building"
+              src="/images/costa-beach-pool-main.jpg"
+              alt="Costa Beach 3 Pool"
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
@@ -54,12 +54,6 @@ export default function AboutSection({ className = "" }: AboutSectionProps) {
             <RTLText className="text-gray-600 mb-6">
               {t("landing.aboutHistory.paragraph2")}
             </RTLText>
-            <Link
-              href="#"
-              className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition duration-300"
-            >
-              {t("landing.learnMoreCTA")}
-            </Link>
           </div>
         </div>
 
