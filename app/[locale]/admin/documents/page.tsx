@@ -270,11 +270,7 @@ export default function AdminDocumentsPage() {
             {filteredDocuments.map((document) => (
               <DocumentCard
                 key={document.id}
-                document={{
-                  ...document,
-                  category: document.category as DocumentCategory,
-                  language: document.language as Language
-                }}
+                document={document}
                 onDelete={handleDeleteDocument}
                 showActions={true}
               />

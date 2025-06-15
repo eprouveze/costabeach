@@ -71,6 +71,7 @@ export interface Document {
   translatedDocumentId?: string | null;
   translatedDocument?: Document | null;
   translations?: Document[];
+  availableLanguages?: Language[];
   isTranslated: boolean;
   isPublished: boolean;
   viewCount: number;

@@ -6,6 +6,7 @@ import { DocumentCard } from "../DocumentCard";
 import { useDocuments } from "@/lib/hooks/useDocuments";
 import { Search, Filter, Loader } from "lucide-react";
 import { useRTL } from "@/lib/hooks/useRTL";
+import { useI18n } from "@/lib/i18n/client";
 
 interface DocumentListProps {
   category?: DocumentCategory;
@@ -15,6 +16,7 @@ interface DocumentListProps {
   showFilters?: boolean;
   showActions?: boolean;
   limit?: number;
+  viewMode?: 'tiles' | 'list';
   onView?: (document: Document) => void;
   onDownload?: (document: Document) => void;
 }
@@ -27,6 +29,7 @@ export const DocumentList = ({
   showFilters = true,
   showActions = true,
   limit,
+  viewMode = 'tiles',
   onView,
   onDownload
 }: DocumentListProps) => {
@@ -38,6 +41,7 @@ export const DocumentList = ({
   const [selectedLanguage, setSelectedLanguage] = useState<Language | undefined>(language);
   const { getDocuments } = useDocuments();
   const { isRTL } = useRTL();
+  const { t } = useI18n();
 
   // Fetch documents on mount if not provided
   useEffect(() => {
@@ -115,7 +119,7 @@ export const DocumentList = ({
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search documents..."
+                  placeholder={t("documents.searchPlaceholder") || "Search documents..."}
                   className="w-full px-4 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
@@ -135,10 +139,10 @@ export const DocumentList = ({
                 onChange={(e) => setSelectedCategory(e.target.value as DocumentCategory || undefined)}
                 className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">All Categories</option>
+                <option value="">{t("documents.allCategories") || "All Categories"}</option>
                 {Object.values(DocumentCategory).map((cat) => (
                   <option key={cat} value={cat}>
-                    {cat}
+                    {t(`documents.categories.${cat.toLowerCase()}`) || cat}
                   </option>
                 ))}
               </select>
@@ -148,10 +152,10 @@ export const DocumentList = ({
                 onChange={(e) => setSelectedLanguage(e.target.value as Language || undefined)}
                 className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">All Languages</option>
+                <option value="">{t("documents.allLanguages") || "All Languages"}</option>
                 {Object.values(Language).map((lang) => (
                   <option key={lang} value={lang}>
-                    {lang}
+                    {t(`languages.${lang.toLowerCase()}`) || lang}
                   </option>
                 ))}
               </select>
@@ -166,21 +170,52 @@ export const DocumentList = ({
           <Loader className="w-8 h-8 animate-spin text-blue-600" />
         </div>
       ) : filteredDocuments.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredDocuments.map((doc) => (
-            <DocumentCard
-              key={doc.id}
-              document={doc}
-              showActions={showActions}
-              onDelete={handleDocumentDelete}
-              onView={onView}
-              onDownload={onDownload}
-            />
-          ))}
-        </div>
+        viewMode === 'tiles' ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredDocuments.map((doc) => (
+              <DocumentCard
+                key={doc.id}
+                document={doc}
+                showActions={showActions}
+                onDelete={handleDocumentDelete}
+                onView={onView}
+                onDownload={onDownload}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+            {/* Table Header */}
+            <div className="bg-gray-50 dark:bg-gray-800 px-6 py-3 border-b border-gray-200 dark:border-gray-700">
+              <div className="grid grid-cols-12 gap-4 text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <div className="col-span-5">{t("documents.documentName") || "Document"}</div>
+                <div className="col-span-2">{t("documents.category") || "Category"}</div>
+                <div className="col-span-2">{t("documents.languages") || "Languages"}</div>
+                <div className="col-span-1">{t("documents.size") || "Size"}</div>
+                <div className="col-span-1">{t("documents.viewCount") || "Views"}</div>
+                <div className="col-span-1 text-right">{t("documents.actions") || "Actions"}</div>
+              </div>
+            </div>
+            
+            {/* Table Body */}
+            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+              {filteredDocuments.map((doc) => (
+                <DocumentCard
+                  key={doc.id}
+                  document={doc}
+                  showActions={showActions}
+                  viewMode="table"
+                  onDelete={handleDocumentDelete}
+                  onView={onView}
+                  onDownload={onDownload}
+                />
+              ))}
+            </div>
+          </div>
+        )
       ) : (
         <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <p className="text-gray-500 dark:text-gray-400">No documents found</p>
+          <p className="text-gray-500 dark:text-gray-400">{t("documents.noDocumentsFound") || "No documents found"}</p>
         </div>
       )}
     </div>

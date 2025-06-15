@@ -54,19 +54,24 @@ export default function DocumentViewerPage() {
       try {
         setIsLoading(true);
         
-        // For preview, we'll use the download URL for now
-        // In a real implementation, you might want to create a separate preview endpoint
-        const result = await getDownloadUrl.mutateAsync({ documentId });
+        // Use the preview API endpoint
+        const response = await fetch(`/api/documents/${documentId}/preview`);
         
-        if (result.downloadUrl) {
-          setDocumentUrl(result.downloadUrl);
+        if (response.ok) {
+          const result = await response.json();
+          if (result.previewUrl) {
+            setDocumentUrl(result.previewUrl);
+          } else {
+            console.log("No preview URL in response");
+          }
         } else {
-          toast.error(t("documents.errorLoadingDocument"));
+          const errorData = await response.json();
+          console.log("Preview not available:", errorData.error);
+          // Don't show error toast for files that can't be previewed
         }
         setDownloadUrlFetched(true);
       } catch (error) {
-        console.error("Error fetching document:", error);
-        toast.error(t("documents.errorLoadingDocument"));
+        console.error("Error fetching document preview:", error);
       } finally {
         setIsLoading(false);
       }
@@ -75,7 +80,7 @@ export default function DocumentViewerPage() {
     if (documentDetails && !downloadUrlFetched) {
       fetchDocumentUrl();
     }
-  }, [documentDetails, documentId, downloadUrlFetched, t]);
+  }, [documentDetails, documentId, downloadUrlFetched]);
 
   // Increment view count only once per document view
   useEffect(() => {

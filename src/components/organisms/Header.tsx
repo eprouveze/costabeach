@@ -79,11 +79,6 @@ export const Header = ({ className = "" }: HeaderProps) => {
       href: isAuthenticated ? `/${locale}/owner-dashboard` : `/${locale}/owner-login`, 
       icon: User 
     },
-    ...(isAuthenticated ? [{ 
-      label: t("navigation.polls") || "Polls", 
-      href: `/${locale}/polls`, 
-      icon: FileText 
-    }] : []),
     ...(hasAdminAccess ? [{ 
       label: t("navigation.admin") || "Admin", 
       href: `/${locale}/admin`, 

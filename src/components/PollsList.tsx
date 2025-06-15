@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { PollCard } from './PollCard';
+import { useI18n } from '@/lib/i18n/client';
 
 interface Poll {
   id: string;
@@ -65,6 +66,7 @@ export function PollsList({
   filter = { status: 'all', search: '' },
   onFilterChange,
 }: PollsListProps) {
+  const { t } = useI18n();
   const [statistics, setStatistics] = React.useState<Record<string, PollStatistics>>({});
   const [loadingStats, setLoadingStats] = React.useState<Set<string>>(new Set());
 
@@ -154,7 +156,7 @@ export function PollsList({
             {/* Status Filter */}
             <div className="flex-1">
               <label htmlFor="status-filter" className="block text-sm font-medium text-gray-700 mb-1">
-                Status
+                {t("polls.status") || "Status"}
               </label>
               <select
                 id="status-filter"
@@ -162,24 +164,24 @@ export function PollsList({
                 onChange={(e) => onFilterChange({ ...filter, status: e.target.value })}
                 className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="all">All Polls</option>
-                <option value="active">Active</option>
-                <option value="closed">Closed</option>
-                <option value="draft">Draft</option>
+                <option value="all">{t("polls.allPolls") || "All Polls"}</option>
+                <option value="active">{t("polls.activePolls") || "Active"}</option>
+                <option value="closed">{t("polls.closedPolls") || "Closed"}</option>
+                <option value="draft">{t("polls.draftPolls") || "Draft"}</option>
               </select>
             </div>
 
             {/* Search Filter */}
             <div className="flex-2">
               <label htmlFor="search-filter" className="block text-sm font-medium text-gray-700 mb-1">
-                Search
+                {t("common.search") || "Search"}
               </label>
               <input
                 id="search-filter"
                 type="text"
                 value={filter.search || ''}
                 onChange={(e) => onFilterChange({ ...filter, search: e.target.value })}
-                placeholder="Search polls and options..."
+                placeholder={t("polls.searchPolls") || "Search polls and options..."}
                 className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -191,7 +193,7 @@ export function PollsList({
       {filteredPolls.length === 0 ? (
         <div className="text-center py-12">
           <div className="text-gray-400 text-lg mb-2">📊</div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No Polls Found</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">{t("polls.noPollsFound") || "No Polls Found"}</h3>
           <p className="text-gray-600">{emptyMessage}</p>
         </div>
       ) : (

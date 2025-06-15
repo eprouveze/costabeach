@@ -216,15 +216,8 @@ export const DocumentPreview = ({
   };
 
   const shouldShowTranslationButton = () => {
-    // Only show the translation button if:
-    // 1. No translation is in progress
-    // 2. The document is not already translated
-    // 3. The document is not a translation itself
-    return (
-      !isTranslationInProgress && 
-      !document.translatedDocumentId && // Check if this document is not already a translation
-      document.language !== Language.ENGLISH // Use the Language enum instead of string literal
-    );
+    // Translation is automated - never show translation button
+    return false;
   };
 
   const getTranslationButtonText = () => {
@@ -244,40 +237,30 @@ export const DocumentPreview = ({
   };
 
   return (
-    <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 ${className}`}>
-      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-5xl h-[80vh] flex flex-col">
+    <div 
+      className={`fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-200 ${className}`}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-5xl h-[85vh] flex flex-col animate-in zoom-in-95 duration-200 border border-gray-200 dark:border-gray-700">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b dark:border-gray-700">
-          <h2 className="text-xl font-semibold truncate">{document.title}</h2>
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-t-xl">
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+              <Download className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            </div>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white truncate">{document.title}</h2>
+          </div>
           <div className="flex items-center space-x-2">
-            {shouldShowTranslationButton() && (
-              <button
-                onClick={handleRequestTranslation}
-                disabled={isTranslationInProgress}
-                className={`flex items-center px-3 py-1.5 text-sm rounded-md transition-colors ${
-                  isTranslationInProgress
-                    ? "bg-gray-200 text-gray-500 dark:bg-gray-700 cursor-not-allowed"
-                    : "bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-200"
-                }`}
-              >
-                {isTranslationInProgress ? (
-                  <Loader className="w-4 h-4 mr-2 animate-spin" />
-                ) : (
-                  <Languages className="w-4 h-4 mr-2" />
-                )}
-                {getTranslationButtonText()}
-              </button>
-            )}
             <button
               onClick={handleDownload}
-              className="flex items-center px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors"
+              className="px-6 py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center transition-colors shadow-sm"
             >
               <Download className="w-4 h-4 mr-2" />
-              Download
+              {t("documents.download")}
             </button>
             <button
               onClick={onClose}
-              className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors"
               aria-label="Close"
             >
               <X className="w-5 h-5" />
@@ -286,7 +269,7 @@ export const DocumentPreview = ({
         </div>
         
         {/* Preview content */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden rounded-b-xl">
           {renderPreview()}
         </div>
       </div>

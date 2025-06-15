@@ -181,15 +181,8 @@ export const DocumentPreview = ({
   };
   
   const shouldShowTranslationButton = () => {
-    // Don't show for documents already translated or with pending translations
-    if (document.isTranslated || translationStatus === "pending" || document.translatedDocumentId) {
-      return false;
-    }
-    
-    // Only show for supported languages
-    return document.language === Language.ENGLISH || 
-           document.language === Language.FRENCH || 
-           document.language === Language.ARABIC;
+    // Never show translation button - translation is automated
+    return false;
   };
   
   const getTranslationButtonText = () => {

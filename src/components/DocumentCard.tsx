@@ -24,6 +24,7 @@ interface DocumentCardProps {
   document: Document;
   onDelete?: (deletedId: string) => void;
   showActions?: boolean;
+  viewMode?: 'tiles' | 'list' | 'table';
   onView?: (document: Document) => void;
   onDownload?: (document: Document) => void;
 }
@@ -32,15 +33,13 @@ export const DocumentCard = ({
   document, 
   onDelete, 
   showActions = true,
+  viewMode = 'tiles',
   onView,
   onDownload: externalDownloadHandler
 }: DocumentCardProps) => {
   const { t } = useI18n();
   const [showPreview, setShowPreview] = useState(false);
-  const [isTranslating, setIsTranslating] = useState(false);
   const { downloadDocument } = useDocuments();
-  const requestTranslation = api.translations.requestDocumentTranslation.useMutation();
-  const utils = api.useContext();
   
   const handleDownload = async () => {
     if (externalDownloadHandler) {
@@ -58,45 +57,31 @@ export const DocumentCard = ({
   };
   
   const handlePreview = () => {
-    if (onView) {
-      onView(document);
-    } else {
-      setShowPreview(true);
-    }
+    // Always use modal preview instead of navigation
+    setShowPreview(true);
   };
   
   const handleClosePreview = () => {
     setShowPreview(false);
   };
-  
-  const handleRequestTranslation = async (documentId: string) => {
-    try {
-      setIsTranslating(true);
-      // Get the user's preferred language or use a default
-      const userPreferredLanguage = document.language === Language.ENGLISH 
-        ? Language.FRENCH 
-        : Language.ENGLISH;
-      
-      await requestTranslation.mutateAsync({
-        documentId,
-        targetLanguage: userPreferredLanguage,
-      }, {
-        onSuccess: () => {
-          toast.success(t('toast.documents.translationRequestSuccess', { language: getLanguageLabel(userPreferredLanguage) }));
-          // Invalidate queries to refresh document list
-          utils.documents.getDocumentsByCategory.invalidate();
-        },
-        onError: (error) => {
-          toast.error(t('toast.documents.translationRequestError', { error: error.message }));
-        }
-      });
-    } catch (error) {
-      console.error("Translation request error:", error);
-      toast.error(t('toast.documents.translationRequestFailed'));
-    } finally {
-      setIsTranslating(false);
-    }
+
+  // Check if the file type can be previewed
+  const canPreview = () => {
+    const previewableTypes = [
+      'application/pdf',
+      'image/jpeg',
+      'image/png', 
+      'image/gif',
+      'image/svg+xml',
+      'text/plain',
+      'text/html',
+      'application/json'
+    ];
+    
+    const fileType = document.fileType.toLowerCase();
+    return previewableTypes.some(type => fileType.includes(type));
   };
+  
   
   const getFileIcon = (fileType: string) => {
     if (fileType.includes("pdf")) {
@@ -141,7 +126,228 @@ export const DocumentCard = ({
         return language;
     }
   };
+
+  const getLanguageFlag = (language: Language) => {
+    switch (language) {
+      case Language.ENGLISH:
+        return "🇺🇸";
+      case Language.FRENCH:
+        return "🇫🇷";
+      case Language.ARABIC:
+        return "🇲🇦";
+      default:
+        return "🌐";
+    }
+  };
+
+  const handleLanguageClick = (language: Language, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    // Find the document in the requested language
+    if (language === document.language) {
+      // This is the original document
+      if (onView) onView(document);
+    } else if (document.translations) {
+      // Find the translation
+      const translation = document.translations.find(t => t.language === language);
+      if (translation && onView) {
+        onView(translation);
+      }
+    }
+  };
   
+  if (viewMode === 'table') {
+    return (
+      <>
+        <div className="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+          <div className="grid grid-cols-12 gap-4 items-center">
+            {/* Document Name & Icon */}
+            <div className="col-span-5 flex items-center min-w-0">
+              <div className="mr-3 flex-shrink-0">
+                {getFileIcon(document.fileType)}
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 
+                  className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 truncate cursor-pointer transition-colors"
+                  onClick={() => onView && onView(document)}
+                >
+                  {document.title}
+                </h3>
+                {document.description && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                    {document.description}
+                  </p>
+                )}
+              </div>
+            </div>
+            
+            {/* Category */}
+            <div className="col-span-2 text-sm text-gray-700 dark:text-gray-300">
+              {getCategoryLabel(document.category as DocumentCategory)}
+            </div>
+            
+            {/* Languages */}
+            <div className="col-span-2 flex items-center space-x-1">
+              {document.availableLanguages ? 
+                document.availableLanguages.map((lang: Language) => (
+                  <button
+                    key={lang}
+                    onClick={(e) => handleLanguageClick(lang, e)}
+                    className="text-lg hover:scale-110 transition-transform cursor-pointer"
+                    title={getLanguageLabel(lang)}
+                  >
+                    {getLanguageFlag(lang)}
+                  </button>
+                )) :
+                <span className="text-lg" title={getLanguageLabel(document.language as Language)}>
+                  {getLanguageFlag(document.language as Language)}
+                </span>
+              }
+            </div>
+            
+            {/* Size */}
+            <div className="col-span-1 text-sm text-gray-500 dark:text-gray-400">
+              {formatFileSize(document.fileSize)}
+            </div>
+            
+            {/* Views */}
+            <div className="col-span-1 text-sm text-gray-500 dark:text-gray-400">
+              {document.viewCount || 0}
+            </div>
+            
+            {/* Actions */}
+            <div className="col-span-1 flex justify-end space-x-1">
+              {canPreview() && (
+                <button
+                  onClick={handlePreview}
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 p-1 rounded transition-colors"
+                  title={t("documents.preview")}
+                >
+                  <Eye className="h-4 w-4" />
+                </button>
+              )}
+              
+              <button
+                onClick={handleDownload}
+                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 p-1 rounded transition-colors"
+                title={t("documents.download")}
+              >
+                <Download className="h-4 w-4" />
+              </button>
+              
+              {onDelete && (
+                <button
+                  onClick={handleDelete}
+                  className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 p-1 rounded transition-colors"
+                  title={t("common.delete")}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        {/* Document Preview Modal */}
+        {showPreview && (
+          <DocumentPreview
+            document={document}
+            onClose={handleClosePreview}
+          />
+        )}
+      </>
+    );
+  }
+
+  if (viewMode === 'list') {
+    return (
+      <>
+        <div className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow duration-300">
+          <div className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center flex-1 min-w-0">
+                <div className="mr-4 flex-shrink-0">
+                  {getFileIcon(document.fileType)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 
+                    className="text-lg font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 truncate cursor-pointer transition-colors"
+                    onClick={() => onView && onView(document)}
+                  >
+                    {document.title}
+                  </h3>
+                  {document.description && (
+                    <p className="text-sm text-gray-600 dark:text-gray-300 truncate">
+                      {document.description}
+                    </p>
+                  )}
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
+                <span className="bg-blue-100 dark:bg-blue-600 text-blue-800 dark:text-blue-100 px-2 py-1 rounded-full text-xs">
+                  {getCategoryLabel(document.category as DocumentCategory)}
+                </span>
+                <div className="flex items-center">
+                  <Calendar className="h-4 w-4 mr-1" />
+                  <span>{formatDate(document.createdAt)}</span>
+                </div>
+                <div className="flex items-center">
+                  <HardDrive className="h-4 w-4 mr-1" />
+                  <span>{formatFileSize(document.fileSize)}</span>
+                </div>
+                <div className="flex items-center">
+                  <Eye className="h-4 w-4 mr-1" />
+                  <span>{document.viewCount || 0}</span>
+                </div>
+              </div>
+              
+              {showActions && (
+                <div className="flex items-center space-x-2 ml-4">
+                  {canPreview() && (
+                    <button
+                      onClick={handlePreview}
+                      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center text-sm"
+                      title={t("documents.preview")}
+                    >
+                      <Eye className="h-4 w-4" />
+                    </button>
+                  )}
+                  
+                  <button
+                    onClick={handleDownload}
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center text-sm"
+                    title={t("documents.download")}
+                  >
+                    <Download className="h-4 w-4" />
+                  </button>
+                  
+                  {onDelete && (
+                    <button
+                      onClick={handleDelete}
+                      className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 flex items-center text-sm"
+                      title={t("common.delete")}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        {/* Document Preview Modal */}
+        {showPreview && (
+          <DocumentPreview
+            document={document}
+            onClose={handleClosePreview}
+          />
+        )}
+      </>
+    );
+  }
+
   return (
     <>
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -151,7 +357,10 @@ export const DocumentCard = ({
               {getFileIcon(document.fileType)}
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1 line-clamp-2">
+              <h3 
+                className="text-lg font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mb-1 line-clamp-2 cursor-pointer transition-colors"
+                onClick={() => onView && onView(document)}
+              >
                 {document.title}
               </h3>
               {document.description && (
@@ -165,8 +374,24 @@ export const DocumentCard = ({
                   <span>{formatDate(document.createdAt)}</span>
                 </div>
                 <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
-                  <Globe className="h-3 w-3 mr-1" />
-                  <span>{getLanguageLabel(document.language as Language)}</span>
+                  <Languages className="h-3 w-3 mr-1" />
+                  <div className="flex space-x-1">
+                    {document.availableLanguages ? 
+                      document.availableLanguages.map((lang: Language) => (
+                        <button
+                          key={lang}
+                          onClick={(e) => handleLanguageClick(lang, e)}
+                          className="hover:scale-110 transition-transform cursor-pointer"
+                          title={getLanguageLabel(lang)}
+                        >
+                          {getLanguageFlag(lang)}
+                        </button>
+                      )) :
+                      <span title={getLanguageLabel(document.language as Language)}>
+                        {getLanguageFlag(document.language as Language)}
+                      </span>
+                    }
+                  </div>
                 </div>
                 <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
                   <FileType className="h-3 w-3 mr-1" />
@@ -196,13 +421,15 @@ export const DocumentCard = ({
         
         {showActions && (
           <div className="bg-gray-50 px-4 py-3 flex flex-wrap justify-end gap-2">
-            <button
-              onClick={handlePreview}
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center text-sm whitespace-nowrap"
-            >
-              <Eye className="h-4 w-4 mr-1" />
-              {t("documents.preview")}
-            </button>
+            {canPreview() && (
+              <button
+                onClick={handlePreview}
+                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center text-sm whitespace-nowrap"
+              >
+                <Eye className="h-4 w-4 mr-1" />
+                {t("documents.preview")}
+              </button>
+            )}
             
             <button
               onClick={handleDownload}
@@ -210,15 +437,6 @@ export const DocumentCard = ({
             >
               <Download className="h-4 w-4 mr-1" />
               {t("documents.download")}
-            </button>
-            
-            <button
-              onClick={() => handleRequestTranslation(document.id)}
-              disabled={isTranslating}
-              className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 flex items-center text-sm disabled:opacity-50 whitespace-nowrap"
-            >
-              <Languages className="h-4 w-4 mr-1" />
-              {isTranslating ? t("documents.requesting") : t("documents.translate")}
             </button>
             
             {onDelete && (
@@ -236,16 +454,10 @@ export const DocumentCard = ({
       
       {/* Document Preview Modal */}
       {showPreview && (
-        <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="w-full max-w-4xl max-h-[90vh] flex flex-col">
-            <DocumentPreview
-              document={document}
-              onClose={handleClosePreview}
-              onRequestTranslation={handleRequestTranslation}
-              className="max-h-full"
-            />
-          </div>
-        </div>
+        <DocumentPreview
+          document={document}
+          onClose={handleClosePreview}
+        />
       )}
     </>
   );

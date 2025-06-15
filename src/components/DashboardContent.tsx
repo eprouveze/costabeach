@@ -9,6 +9,8 @@ import { DocumentCategory, Language } from "@/lib/types";
 import { formatDistanceToNow } from "date-fns";
 import { fr, ar, enUS } from "date-fns/locale";
 import { toast } from "react-toastify";
+import { Grid3X3, List, LayoutGrid } from "lucide-react";
+import { DocumentPreview } from "./organisms/DocumentPreview";
 
 interface Document {
   id: string;
@@ -18,6 +20,8 @@ interface Document {
   dateUploaded: string;
   fileSize: string;
 }
+
+type ViewMode = 'tiles' | 'list';
 
 export function DashboardContent() {
   const { t, locale } = useI18n();
@@ -29,6 +33,21 @@ export function DashboardContent() {
   const [viewingDocumentId, setViewingDocumentId] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
   const [isManuallyFetching, setIsManuallyFetching] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>('tiles');
+
+  // Load saved view mode from localStorage on mount
+  useEffect(() => {
+    const savedViewMode = localStorage.getItem('documents-view-mode') as ViewMode;
+    if (savedViewMode && (savedViewMode === 'tiles' || savedViewMode === 'list')) {
+      setViewMode(savedViewMode);
+    }
+  }, []);
+
+  // Save view mode to localStorage when it changes
+  const handleViewModeChange = useCallback((newViewMode: ViewMode) => {
+    setViewMode(newViewMode);
+    localStorage.setItem('documents-view-mode', newViewMode);
+  }, []);
   
   // Derive language directly from locale to avoid stale queries
   const derivedLanguage: Language =
@@ -36,30 +55,35 @@ export function DashboardContent() {
     locale === "ar" ? Language.ARABIC :
     Language.ENGLISH;
 
-  // Determine which category to fetch
-  let category: DocumentCategory;
-  switch (categoryParam) {
-    case "GENERAL":
-      category = DocumentCategory.GENERAL;
-      break;
-    case "COMITE_DE_SUIVI":
-      category = DocumentCategory.COMITE_DE_SUIVI;
-      break;
-    case "SOCIETE_DE_GESTION":
-      category = DocumentCategory.SOCIETE_DE_GESTION;
-      break;
-    case "FINANCE":
-      category = DocumentCategory.FINANCE;
-      break;
-    case "LEGAL":
-      category = DocumentCategory.LEGAL;
-      break;
-    default:
-      category = DocumentCategory.COMITE_DE_SUIVI;
+  // Determine whether to fetch all documents or specific category
+  const isAllDocuments = categoryParam === "ALL" || !categoryParam;
+  
+  // Determine which category to fetch (only when not fetching all)
+  let category: DocumentCategory | undefined;
+  if (!isAllDocuments) {
+    switch (categoryParam) {
+      case "GENERAL":
+        category = DocumentCategory.GENERAL;
+        break;
+      case "COMITE_DE_SUIVI":
+        category = DocumentCategory.COMITE_DE_SUIVI;
+        break;
+      case "SOCIETE_DE_GESTION":
+        category = DocumentCategory.SOCIETE_DE_GESTION;
+        break;
+      case "FINANCE":
+        category = DocumentCategory.FINANCE;
+        break;
+      case "LEGAL":
+        category = DocumentCategory.LEGAL;
+        break;
+      default:
+        category = DocumentCategory.COMITE_DE_SUIVI;
+    }
   }
 
-  // Log the category for debugging purposes
-  console.log(`Using document category: ${category} for param: ${categoryParam}`);
+  // Log for debugging purposes
+  console.log(`Fetching documents: ${isAllDocuments ? 'ALL' : category} for param: ${categoryParam}`);
 
   // Get download URL mutation with better error handling
   const getDownloadUrl = api.documents.getDownloadUrl.useMutation({
@@ -69,29 +93,56 @@ export function DashboardContent() {
     }
   });
 
-  // Fetch documents based on selected category with better caching and stale-while-revalidate
+  // Fetch all documents when category is ALL
   const { 
-    data: documents, 
-    isLoading, 
-    error, 
-    refetch,
-    isError
+    data: allDocuments, 
+    isLoading: isLoadingAll, 
+    error: errorAll, 
+    refetch: refetchAll,
+    isError: isErrorAll
+  } = api.documents.getAllDocuments.useQuery(
+    {
+      limit: 50 // Get more documents when showing all
+    }, 
+    {
+      enabled: isAllDocuments && (!typeParam || typeParam !== "information") && !isManuallyFetching,
+      retry: 2,
+      retryDelay: attempt => Math.min(1000 * (2 ** attempt), 5000),
+      staleTime: 1000 * 60 * 5,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+    }
+  );
+
+  // Fetch documents by category when specific category is selected
+  const { 
+    data: categoryDocuments, 
+    isLoading: isLoadingCategory, 
+    error: errorCategory, 
+    refetch: refetchCategory,
+    isError: isErrorCategory
   } = api.documents.getDocumentsByCategory.useQuery(
     {
-      category,
+      category: category!,
       language: derivedLanguage,
       searchQuery
     }, 
     {
-      // Only fetch if not viewing information and not manually fetching
-      enabled: (!typeParam || typeParam !== "information") && !isManuallyFetching,
-      retry: 2, // Reduce retries to prevent excessive API calls
-      retryDelay: attempt => Math.min(1000 * (2 ** attempt), 5000), // Exponential backoff with 5s cap
-      staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
-      refetchOnWindowFocus: false, // Don't refetch on window focus
-      refetchOnReconnect: true, // Refetch on reconnect
+      enabled: !isAllDocuments && (!typeParam || typeParam !== "information") && !isManuallyFetching,
+      retry: 2,
+      retryDelay: attempt => Math.min(1000 * (2 ** attempt), 5000),
+      staleTime: 1000 * 60 * 5,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
     }
   );
+
+  // Combine the results based on which query is active
+  const documents = isAllDocuments ? allDocuments : categoryDocuments;
+  const isLoading = isAllDocuments ? isLoadingAll : isLoadingCategory;
+  const error = isAllDocuments ? errorAll : errorCategory;
+  const refetch = isAllDocuments ? refetchAll : refetchCategory;
+  const isError = isAllDocuments ? isErrorAll : isErrorCategory;
   
   // Handle errors separately with an effect
   useEffect(() => {
@@ -138,28 +189,33 @@ export function DashboardContent() {
     else return (bytes / 1048576).toFixed(1) + ' MB';
   };
 
-  // Option 1: Change the formatting to include all required fields from the Document interface
-  const formattedDocuments = documents?.map(doc => ({
-    ...doc, // Keep all original properties
-    // Override or add specific properties needed for display
+  // Format documents for display (API now handles grouping)
+  const formattedDocuments = documents ? documents.map(doc => ({
+    ...doc,
     description: doc.description || "",
-    // Don't override fileSize with a string value
-    // Keep the numeric fileSize from the original document
-    // Add display properties with different names
     displayFileSize: formatFileSize(doc.fileSize),
     displayDate: formatDate(doc.createdAt)
-  })) || [];
+  })) : [];
 
   // Handle view document
   const handleViewDocument = useCallback((document: any) => {
     try {
-      const documentId = document.id;
-      window.open(`/${locale}/owner-dashboard/documents/${documentId}`, '_blank');
+      setViewingDocumentId(document.id);
     } catch (error: any) {
       console.error("Error viewing document:", error);
       toast.error(t("documents.errorViewing") || "Error viewing document");
     }
-  }, [locale, t]);
+  }, [t]);
+
+  // Handle close document preview
+  const handleClosePreview = useCallback(() => {
+    setViewingDocumentId(null);
+  }, []);
+
+  // Find the document being viewed
+  const viewingDocument = viewingDocumentId 
+    ? formattedDocuments.find(doc => doc.id === viewingDocumentId)
+    : null;
   
   // Handle download document
   const handleDownloadDocument = useCallback(async (document: any) => {
@@ -228,16 +284,54 @@ export function DashboardContent() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">
-        {categoryParam 
-          ? t(`documents.categories.${categoryParam.toLowerCase()}`) || categoryParam
-          : t("documents.title") || "Documents"}
-      </h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold">
+          {categoryParam 
+            ? t(`documents.categories.${categoryParam.toLowerCase()}`) || categoryParam
+            : t("documents.title") || "Documents"}
+        </h2>
+        
+        {/* View Mode Toggle */}
+        <div className="flex items-center space-x-1 bg-gray-200 dark:bg-gray-700 rounded-lg p-1">
+          <button
+            onClick={() => handleViewModeChange('tiles')}
+            className={`p-2 rounded transition-colors ${
+              viewMode === 'tiles'
+                ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100'
+            }`}
+            title={t("documents.tilesView") || "Tiles View"}
+          >
+            <LayoutGrid className="h-4 w-4" />
+          </button>
+          <button
+            onClick={() => handleViewModeChange('list')}
+            className={`p-2 rounded transition-colors ${
+              viewMode === 'list'
+                ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100'
+            }`}
+            title={t("documents.listView") || "List View"}
+          >
+            <List className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+      
       <DocumentList 
         initialDocuments={formattedDocuments} 
+        viewMode={viewMode}
         onView={handleViewDocument}
         onDownload={handleDownloadDocument}
       />
+      
+      {/* Document Preview Modal */}
+      {viewingDocument && (
+        <DocumentPreview
+          document={viewingDocument}
+          onClose={handleClosePreview}
+        />
+      )}
     </div>
   );
 } 

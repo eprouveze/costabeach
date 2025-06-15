@@ -423,8 +423,11 @@ export const documentsRouter = router({
         if (!includePrivate) {
           whereClause.isPublic = true;
         }
+
+        // Only get original documents (not translations) to group them properly
+        whereClause.isTranslation = false;
         
-        const documents = await prisma.documents.findMany({
+        const originalDocuments = await prisma.documents.findMany({
           where: whereClause,
           orderBy: { createdAt: 'desc' },
           take: limit,
@@ -437,28 +440,73 @@ export const documentsRouter = router({
                 email: true,
               },
             },
+            // Include all translations for this document
+            other_documents: {
+              where: {
+                isTranslation: true,
+              },
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                  },
+                },
+              },
+              orderBy: { createdAt: 'desc' },
+            },
           },
         });
         
-        // Convert to the expected Document type format
-        return documents.map(doc => ({
+        // Convert to the expected Document type format with grouped translations
+        return originalDocuments.map(doc => ({
           id: doc.id,
           title: doc.title,
           description: doc.description,
           filePath: doc.filePath,
           fileSize: Number(doc.fileSize),
           fileType: doc.fileType,
-          category: doc.category,
-          language: doc.language,
+          category: doc.category as DocumentCategory,
+          language: doc.language as Language,
           createdAt: doc.createdAt,
           updatedAt: doc.updatedAt,
-          translatedDocument: null,
-          translatedDocumentId: null,
-          isTranslated: doc.isTranslation || false,
+          originalDocumentId: doc.originalDocumentId,
+          isTranslation: false, // These are original documents
+          isTranslated: doc.other_documents.length > 0,
           isPublished: doc.isPublic || false,
           authorId: doc.createdBy || '',
           viewCount: doc.viewCount || 0,
           downloadCount: doc.downloadCount || 0,
+          // Add available languages including the original
+          availableLanguages: [
+            doc.language as Language,
+            ...doc.other_documents.map(t => t.language as Language)
+          ].filter((lang, index, arr) => arr.indexOf(lang) === index), // Remove duplicates
+          // Convert translation relationships to proper format
+          translations: doc.other_documents.map(t => ({
+            id: t.id,
+            title: t.title,
+            description: t.description,
+            filePath: t.filePath,
+            fileSize: Number(t.fileSize),
+            fileType: t.fileType,
+            category: t.category as DocumentCategory,
+            language: t.language as Language,
+            createdAt: t.createdAt,
+            updatedAt: t.updatedAt,
+            originalDocumentId: t.originalDocumentId,
+            isTranslation: true,
+            isTranslated: false,
+            isPublished: t.isPublic || false,
+            authorId: t.createdBy || '',
+            viewCount: t.viewCount || 0,
+            downloadCount: t.downloadCount || 0,
+            author: t.user ? { 
+              id: t.user.id, 
+              name: t.user.name || t.user.email || 'Unknown' 
+            } : { id: t.createdBy || '', name: 'Unknown' }
+          })),
           author: doc.user ? { 
             id: doc.user.id, 
             name: doc.user.name || doc.user.email || 'Unknown' 

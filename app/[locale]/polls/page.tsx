@@ -7,6 +7,10 @@ import { Plus, Calendar, Users, BarChart3 } from "lucide-react";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { checkPermission } from "@/lib/utils/permissions";
+import { Permission } from "@/lib/types";
+import { AuthWrapper } from "@/components/auth/AuthWrapper";
+import OwnerDashboardTemplate from "@/components/templates/OwnerDashboardTemplate";
 
 interface Poll {
   id: string;
@@ -51,6 +55,28 @@ export default function PollsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<{ status: 'all' | 'active' | 'closed' | 'draft', search: string }>({ status: 'all', search: '' });
+  const [userPermissions, setUserPermissions] = useState<Permission[]>([]);
+
+  // Fetch user permissions
+  useEffect(() => {
+    const fetchPermissions = async () => {
+      if (session?.user?.id) {
+        try {
+          const response = await fetch(`/api/users/${session.user.id}/permissions`);
+          if (response.ok) {
+            const data = await response.json();
+            setUserPermissions(data.permissions || []);
+          }
+        } catch (error) {
+          console.error("Error fetching user permissions:", error);
+        }
+      } else {
+        setUserPermissions([]);
+      }
+    };
+
+    fetchPermissions();
+  }, [session]);
 
   // Load polls
   useEffect(() => {
@@ -144,35 +170,45 @@ if (filter.status !== 'all') {
     setFilter(prev => ({ ...prev, ...newFilter }));
   };
 
+  // Check if user can create polls (admin or comité de suivi)
+  const isAdmin = (session?.user as any)?.isAdmin === true;
+  const canManageComite = checkPermission(userPermissions, Permission.MANAGE_COMITE_DOCUMENTS);
+  const canCreatePolls = isAdmin || canManageComite;
+
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
-      </div>
+      <AuthWrapper requireAuth={true}>
+        <OwnerDashboardTemplate>
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        </OwnerDashboardTemplate>
+      </AuthWrapper>
     );
   }
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-          <p className="font-bold">{t("common.error") || "Error"}</p>
-          <p>{error}</p>
-          <button 
-            onClick={loadPolls}
-            className="mt-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-800 rounded transition-colors"
-          >
-            {t("common.retry") || "Retry"}
-          </button>
-        </div>
-      </div>
+      <AuthWrapper requireAuth={true}>
+        <OwnerDashboardTemplate>
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+            <p className="font-bold">{t("common.error") || "Error"}</p>
+            <p>{error}</p>
+            <button 
+              onClick={loadPolls}
+              className="mt-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-800 rounded transition-colors"
+            >
+              {t("common.retry") || "Retry"}
+            </button>
+          </div>
+        </OwnerDashboardTemplate>
+      </AuthWrapper>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <AuthWrapper requireAuth={true}>
+      <OwnerDashboardTemplate>
       {/* Header */}
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -185,7 +221,7 @@ if (filter.status !== 'all') {
             </p>
           </div>
           
-          {session?.user && (
+          {session?.user && canCreatePolls && (
             <Link
               href={`/${locale}/polls/create`}
               className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
@@ -205,7 +241,7 @@ if (filter.status !== 'all') {
               <BarChart3 className="h-6 w-6 text-blue-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Polls</p>
+              <p className="text-sm font-medium text-gray-600">{t("polls.stats.totalPolls") || "Total Polls"}</p>
               <p className="text-2xl font-bold text-gray-900">{polls.length}</p>
             </div>
           </div>
@@ -217,7 +253,7 @@ if (filter.status !== 'all') {
               <Calendar className="h-6 w-6 text-green-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Active Polls</p>
+              <p className="text-sm font-medium text-gray-600">{t("polls.stats.active") || "Active Polls"}</p>
               <p className="text-2xl font-bold text-gray-900">
                 {polls.filter(poll => poll.status === 'active').length}
               </p>
@@ -231,7 +267,7 @@ if (filter.status !== 'all') {
               <Users className="h-6 w-6 text-purple-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Your Votes</p>
+              <p className="text-sm font-medium text-gray-600">{t("polls.stats.yourVotes") || "Your Votes"}</p>
               <p className="text-2xl font-bold text-gray-900">{userVotes.length}</p>
             </div>
           </div>
@@ -251,12 +287,16 @@ if (filter.status !== 'all') {
             onFilterChange={handleFilterChange as any}
             emptyMessage={
               session?.user 
-                ? (t("polls.noPolls") || "No polls available. Create the first one!")
+                ? (canCreatePolls 
+                    ? (t("polls.noPolls") || "No polls available. Create the first one!")
+                    : (t("polls.noPollsUser") || "No polls available at the moment.")
+                  )
                 : (t("polls.signInToVote") || "Sign in to participate in polls")
             }
           />
         </div>
       </div>
-    </div>
+      </OwnerDashboardTemplate>
+    </AuthWrapper>
   );
 }
