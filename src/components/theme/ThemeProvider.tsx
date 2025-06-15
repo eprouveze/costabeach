@@ -4,7 +4,13 @@ import { ThemeProvider as NextThemeProvider, ThemeProviderProps as NextThemeProv
 
 export function ThemeProvider({ children, ...props }: NextThemeProviderProps) {
   return (
-    <NextThemeProvider {...props}>
+    <NextThemeProvider 
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange={false}
+      {...props}
+    >
       {children}
     </NextThemeProvider>
   );

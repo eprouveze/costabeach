@@ -51,12 +51,18 @@ declare module "next-auth" {
   }
 }
 
-// Ensure NEXTAUTH_URL is always set to avoid "Invalid URL" errors during build or in environments
-// where this variable is not provided (e.g. Storybook, local CI).
-if (!process.env.NEXTAUTH_URL || process.env.NEXTAUTH_URL.trim() === "") {
+// Force localhost in development, regardless of what's set in env files
+if (process.env.NODE_ENV === "development") {
+  process.env.NEXTAUTH_URL = "http://localhost:3000";
+} else if (!process.env.NEXTAUTH_URL || process.env.NEXTAUTH_URL.trim() === "") {
   const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000";
   process.env.NEXTAUTH_URL = vercelUrl;
 }
+
+// Debug: Log the NEXTAUTH_URL being used
+console.log('🔍 [AUTH CONFIG] NEXTAUTH_URL:', process.env.NEXTAUTH_URL);
+console.log('🔍 [AUTH CONFIG] NODE_ENV:', process.env.NODE_ENV);
+console.log('🔍 [AUTH CONFIG] VERCEL_URL:', process.env.VERCEL_URL);
 
 // Using standard PrismaAdapter with proper NextAuth model naming conventions
 
@@ -66,6 +72,20 @@ export const authOptions: NextAuthOptions & { trustHost: boolean } = {
   // routes (e.g. /api/auth/session) may return an HTML error page that the client tries
   // to parse as JSON, leading to the "Unexpected token '<'" error.
   trustHost: !!process.env.NEXTAUTH_URL,
+  
+  // Enable debug logging
+  debug: process.env.NODE_ENV === "development",
+  logger: {
+    error(code, metadata) {
+      console.error('🔥 [NEXTAUTH ERROR]', code, metadata);
+    },
+    warn(code) {
+      console.warn('⚠️ [NEXTAUTH WARN]', code);
+    },
+    debug(code, metadata) {
+      console.log('🐛 [NEXTAUTH DEBUG]', code, metadata);
+    }
+  },
 
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -75,15 +95,20 @@ export const authOptions: NextAuthOptions & { trustHost: boolean } = {
     }),
     EmailProvider({
       server: {
-        host: process.env.SMTP_HOST,
-        port: Number(process.env.SMTP_PORT),
+        host: "localhost", // Dummy server config since we override with sendVerificationRequest
+        port: 587,
         auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASSWORD,
+          user: "dummy",
+          pass: "dummy",
         },
       },
       from: process.env.EMAIL_FROM,
-      sendVerificationRequest: async ({ identifier: email, url }) => {
+      sendVerificationRequest: async ({ identifier: email, url, provider }) => {
+        console.log('📧 [EMAIL] sendVerificationRequest called!');
+        console.log('📧 [EMAIL] Starting to send verification email to:', email);
+        console.log('📧 [EMAIL] URL:', url);
+        console.log('📧 [EMAIL] Provider:', provider);
+        
         // Get the current request's host
         const headersList = await headers();
         const host = headersList.get("host");
@@ -94,8 +119,13 @@ export const authOptions: NextAuthOptions & { trustHost: boolean } = {
         const urlObject = new URL(url);
         const newUrl = url.replace(urlObject.origin, currentOrigin);
 
+        console.log('📧 [EMAIL] Generated magic link URL:', newUrl);
+        console.log('📧 [EMAIL] Using Resend API key:', process.env.RESEND_API_KEY ? '✅ SET' : '❌ MISSING');
+        console.log('📧 [EMAIL] Using from address:', process.env.EMAIL_FROM);
+
         const resend = new Resend(process.env.RESEND_API_KEY);
         try {
+          console.log('📧 [EMAIL] Attempting to send email via Resend...');
           const result = await resend.emails.send({
             from: process.env.EMAIL_FROM || "Costa Beach <onboarding@resend.dev>",
             to: email,
@@ -112,8 +142,14 @@ export const authOptions: NextAuthOptions & { trustHost: boolean } = {
               </div>
             `,
           });
+          console.log('✅ [EMAIL] Email sent successfully! Result:', result);
         } catch (error) {
-          console.error('Failed to send email:', error);
+          console.error('❌ [EMAIL] Failed to send email:', error);
+          console.error('❌ [EMAIL] Error details:', {
+            message: error.message,
+            cause: error.cause,
+            stack: error.stack
+          });
           throw new Error('Failed to send verification email');
         }
       },

@@ -15,12 +15,7 @@ export default function ClientLayout({
 }) {
   return (
     <SessionProvider>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
+      <ThemeProvider>
         <TRPCReactProvider>
           <I18nProvider>
             {children}

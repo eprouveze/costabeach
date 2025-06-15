@@ -22,7 +22,7 @@ export default function RootLayout({
   const dir = locale === 'ar' ? 'rtl' : 'ltr';
   
   return (
-    <html lang={locale} dir={dir}>
+    <html lang={locale} dir={dir} suppressHydrationWarning>
       <body className="font-sans" suppressHydrationWarning={true}>
         <ClientLayout>
           {children}
