@@ -790,3 +790,5 @@ Moved 980 unused images to `tmp/unused-images/` (ignored by Git) and staged dele
 ## Fixed API routes returning 404 on Vercel by removing conflicting root-level api/ and src/pages/ directories, updated Supabase client initialization to handle missing environment variables gracefully, and identified that NEXTAUTH_URL must be set in .env file for Vercel deployments
 
 ## Added owner-register pages for all locales (fr, en, ar) to fix 404 errors on Vercel deployment
+
+## Added internationalized privacy pages for all locales with Moroccan law compliance and Google OAuth setup instructions
