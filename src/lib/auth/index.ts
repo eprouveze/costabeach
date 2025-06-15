@@ -23,7 +23,7 @@ const emailTranslations = {
     ignoreText: "Si vous n'avez pas demandé cette connexion, vous pouvez ignorer cet email en toute sécurité.",
     residenceName: "Costa Beach 3 - Résidence",
     portalName: "Portail des Copropriétaires",
-    location: "Rabat, Maroc",
+    location: "Témara, Maroc",
     copyright: "Tous droits réservés.",
     preheader: "Connexion sécurisée à votre espace Costa Beach 3 - Cliquez pour accéder à votre portail propriétaire"
   },
@@ -37,7 +37,7 @@ const emailTranslations = {
     ignoreText: "If you didn't request this login, you can safely ignore this email.",
     residenceName: "Costa Beach 3 - Residence",
     portalName: "Owner Portal",
-    location: "Rabat, Morocco",
+    location: "Témara, Morocco",
     copyright: "All rights reserved.",
     preheader: "Secure login to your Costa Beach 3 portal - Click to access your owner dashboard"
   },
@@ -51,7 +51,7 @@ const emailTranslations = {
     ignoreText: "إذا لم تطلب تسجيل الدخول هذا، يمكنك تجاهل هذا البريد الإلكتروني بأمان.",
     residenceName: "كوستا بيتش 3 - الإقامة",
     portalName: "بوابة المالكين",
-    location: "الرباط، المغرب",
+    location: "تمارة، المغرب",
     copyright: "جميع الحقوق محفوظة.",
     preheader: "تسجيل دخول آمن إلى بوابة كوستا بيتش 3 - انقر للوصول إلى لوحة تحكم المالك"
   }
@@ -176,7 +176,7 @@ export const authOptions: NextAuthOptions & { trustHost: boolean } = {
                 <div style="max-width: 600px; margin: 0 auto; background-color: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
                   <!-- Header with logo and brand -->
                   <div style="background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%); padding: 40px 30px; text-align: center;">
-                    <img src="https://costabeach.ma/images/cropped-IMG_0005.webp" alt="Costa Beach Logo" style="width: 80px; height: 80px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);">
+                    <img src="https://costabeach.ma/images/cropped-IMG_0005.webp" alt="Costa Beach Logo" style="width: 80px; height: 80px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); background-color: white; padding: 4px;">
                     <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 700; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">
                       Costa Beach 3
                     </h1>
@@ -216,7 +216,7 @@ export const authOptions: NextAuthOptions & { trustHost: boolean } = {
                   <!-- Footer -->
                   <div style="background-color: #f8fafc; padding: 30px; text-align: center; border-top: 1px solid #e2e8f0;">
                     <div style="margin-bottom: 16px;">
-                      <img src="https://costabeach.ma/images/cropped-IMG_0005.webp" alt="Costa Beach" style="width: 40px; height: 40px; border-radius: 4px;">
+                      <img src="https://costabeach.ma/images/cropped-IMG_0005.webp" alt="Costa Beach" style="width: 40px; height: 40px; border-radius: 4px; background-color: white; padding: 2px;">
                     </div>
                     <p style="color: #64748b; margin: 0 0 8px 0; font-size: 14px; font-weight: 600;">
                       ${t.residenceName}
