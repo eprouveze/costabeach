@@ -23,17 +23,12 @@ export default function NextAuthLoginForm() {
     setIsLoading(true);
     setErrorMessage('');
 
-    console.log('🔍 [FORM] Attempting to sign in with email:', email);
-    console.log('🔍 [FORM] Callback URL:', callbackUrl);
-
     try {
       const result = await signIn('email', {
         email,
         redirect: false,
         callbackUrl,
       });
-
-      console.log('🔍 [FORM] SignIn result:', result);
 
       if (result?.error) {
         setErrorMessage(result.error);

@@ -11,6 +11,62 @@ import { Resend } from "resend";
 import { headers } from "next/headers";
 import { UserRole } from "@/lib/types";
 
+// Email translations
+const emailTranslations = {
+  fr: {
+    subject: "Connexion à Costa Beach - Lien de connexion",
+    welcome: "Bienvenue !",
+    connectText: "Cliquez sur le bouton ci-dessous pour vous connecter à votre espace propriétaire Costa Beach 3 :",
+    connectButton: "🔐 Se connecter à Costa Beach",
+    securityNote: "🔒 Sécurité :",
+    securityText: "Ce lien de connexion expire dans 24 heures et ne peut être utilisé qu'une seule fois.",
+    ignoreText: "Si vous n'avez pas demandé cette connexion, vous pouvez ignorer cet email en toute sécurité.",
+    residenceName: "Costa Beach 3 - Résidence",
+    portalName: "Portail des Copropriétaires",
+    location: "Rabat, Maroc",
+    copyright: "Tous droits réservés.",
+    preheader: "Connexion sécurisée à votre espace Costa Beach 3 - Cliquez pour accéder à votre portail propriétaire"
+  },
+  en: {
+    subject: "Sign in to Costa Beach - Login Link",
+    welcome: "Welcome!",
+    connectText: "Click the button below to sign in to your Costa Beach 3 owner portal:",
+    connectButton: "🔐 Sign in to Costa Beach",
+    securityNote: "🔒 Security:",
+    securityText: "This login link expires in 24 hours and can only be used once.",
+    ignoreText: "If you didn't request this login, you can safely ignore this email.",
+    residenceName: "Costa Beach 3 - Residence",
+    portalName: "Owner Portal",
+    location: "Rabat, Morocco",
+    copyright: "All rights reserved.",
+    preheader: "Secure login to your Costa Beach 3 portal - Click to access your owner dashboard"
+  },
+  ar: {
+    subject: "تسجيل الدخول إلى كوستا بيتش - رابط الدخول",
+    welcome: "مرحبًا!",
+    connectText: "انقر على الزر أدناه لتسجيل الدخول إلى بوابة مالكي كوستا بيتش 3:",
+    connectButton: "🔐 تسجيل الدخول إلى كوستا بيتش",
+    securityNote: "🔒 الأمان:",
+    securityText: "رابط تسجيل الدخول هذا ينتهي خلال 24 ساعة ويمكن استخدامه مرة واحدة فقط.",
+    ignoreText: "إذا لم تطلب تسجيل الدخول هذا، يمكنك تجاهل هذا البريد الإلكتروني بأمان.",
+    residenceName: "كوستا بيتش 3 - الإقامة",
+    portalName: "بوابة المالكين",
+    location: "الرباط، المغرب",
+    copyright: "جميع الحقوق محفوظة.",
+    preheader: "تسجيل دخول آمن إلى بوابة كوستا بيتش 3 - انقر للوصول إلى لوحة تحكم المالك"
+  }
+};
+
+function getLocaleFromUrl(url: string): string {
+  if (url.includes("/ar/")) return "ar";
+  if (url.includes("/en/")) return "en";
+  return "fr"; // Default to French
+}
+
+function getEmailTranslations(locale: string = "fr") {
+  return emailTranslations[locale as keyof typeof emailTranslations] || emailTranslations.fr;
+}
+
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
@@ -59,10 +115,6 @@ if (process.env.NODE_ENV === "development") {
   process.env.NEXTAUTH_URL = vercelUrl;
 }
 
-// Debug: Log the NEXTAUTH_URL being used
-console.log('🔍 [AUTH CONFIG] NEXTAUTH_URL:', process.env.NEXTAUTH_URL);
-console.log('🔍 [AUTH CONFIG] NODE_ENV:', process.env.NODE_ENV);
-console.log('🔍 [AUTH CONFIG] VERCEL_URL:', process.env.VERCEL_URL);
 
 // Using standard PrismaAdapter with proper NextAuth model naming conventions
 
@@ -73,19 +125,6 @@ export const authOptions: NextAuthOptions & { trustHost: boolean } = {
   // to parse as JSON, leading to the "Unexpected token '<'" error.
   trustHost: !!process.env.NEXTAUTH_URL,
   
-  // Enable debug logging
-  debug: process.env.NODE_ENV === "development",
-  logger: {
-    error(code, metadata) {
-      console.error('🔥 [NEXTAUTH ERROR]', code, metadata);
-    },
-    warn(code) {
-      console.warn('⚠️ [NEXTAUTH WARN]', code);
-    },
-    debug(code, metadata) {
-      console.log('🐛 [NEXTAUTH DEBUG]', code, metadata);
-    }
-  },
 
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -103,12 +142,7 @@ export const authOptions: NextAuthOptions & { trustHost: boolean } = {
         },
       },
       from: process.env.EMAIL_FROM,
-      sendVerificationRequest: async ({ identifier: email, url, provider }) => {
-        console.log('📧 [EMAIL] sendVerificationRequest called!');
-        console.log('📧 [EMAIL] Starting to send verification email to:', email);
-        console.log('📧 [EMAIL] URL:', url);
-        console.log('📧 [EMAIL] Provider:', provider);
-        
+      sendVerificationRequest: async ({ identifier: email, url }) => {
         // Get the current request's host
         const headersList = await headers();
         const host = headersList.get("host");
@@ -119,37 +153,95 @@ export const authOptions: NextAuthOptions & { trustHost: boolean } = {
         const urlObject = new URL(url);
         const newUrl = url.replace(urlObject.origin, currentOrigin);
 
-        console.log('📧 [EMAIL] Generated magic link URL:', newUrl);
-        console.log('📧 [EMAIL] Using Resend API key:', process.env.RESEND_API_KEY ? '✅ SET' : '❌ MISSING');
-        console.log('📧 [EMAIL] Using from address:', process.env.EMAIL_FROM);
+        // Detect locale from the URL
+        const locale = getLocaleFromUrl(url);
+        const t = getEmailTranslations(locale);
+        const isRTL = locale === "ar";
 
         const resend = new Resend(process.env.RESEND_API_KEY);
         try {
-          console.log('📧 [EMAIL] Attempting to send email via Resend...');
           const result = await resend.emails.send({
-            from: process.env.EMAIL_FROM || "Costa Beach <onboarding@resend.dev>",
+            from: process.env.EMAIL_FROM || "Costa Beach <info@costabeach.ma>",
             to: email,
-            subject: "Sign in to Costa Beach",
+            subject: t.subject,
             html: `
-              <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
-                <h1 style="color: #2563eb; margin-bottom: 24px;">Welcome to Costa Beach</h1>
-                <p style="margin-bottom: 24px;">Click the link below to sign in to your account:</p>
-                <a href="${newUrl}" style="display: inline-block; padding: 12px 24px; background-color: #2563eb; color: white; text-decoration: none; border-radius: 6px;">Sign in to Costa Beach</a>
-                <p style="margin-top: 24px; color: #6b7280;">If you did not request this email, you can safely ignore it.</p>
-                <div style="margin-top: 48px; padding-top: 24px; border-top: 1px solid #e5e7eb; color: #6b7280;">
-                  <p style="font-size: 14px;">Costa Beach Owner Portal</p>
+              <!DOCTYPE html>
+              <html lang="${locale}" dir="${isRTL ? 'rtl' : 'ltr'}">
+              <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>${t.subject}</title>
+              </head>
+              <body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; direction: ${isRTL ? 'rtl' : 'ltr'};">
+                <div style="max-width: 600px; margin: 0 auto; background-color: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                  <!-- Header with logo and brand -->
+                  <div style="background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%); padding: 40px 30px; text-align: center;">
+                    <img src="https://costabeach.ma/images/cropped-IMG_0005.webp" alt="Costa Beach Logo" style="width: 80px; height: 80px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);">
+                    <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 700; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">
+                      Costa Beach 3
+                    </h1>
+                    <p style="color: rgba(255, 255, 255, 0.9); margin: 8px 0 0 0; font-size: 16px;">
+                      ${t.portalName}
+                    </p>
+                  </div>
+                  
+                  <!-- Main content -->
+                  <div style="padding: 40px 30px;">
+                    <h2 style="color: #1e293b; margin: 0 0 24px 0; font-size: 24px; font-weight: 600;">
+                      ${t.welcome}
+                    </h2>
+                    
+                    <p style="color: #475569; margin: 0 0 32px 0; font-size: 16px; line-height: 1.6;">
+                      ${t.connectText}
+                    </p>
+                    
+                    <!-- CTA Button -->
+                    <div style="text-align: center; margin: 40px 0;">
+                      <a href="${newUrl}" style="display: inline-block; background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%); color: white; text-decoration: none; padding: 16px 32px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4); transition: all 0.3s ease;">
+                        ${t.connectButton}
+                      </a>
+                    </div>
+                    
+                    <div style="background-color: #f1f5f9; border-left: 4px solid #0ea5e9; padding: 16px 20px; margin: 32px 0; border-radius: 0 6px 6px 0; ${isRTL ? 'border-left: none; border-right: 4px solid #0ea5e9;' : ''}">
+                      <p style="color: #475569; margin: 0; font-size: 14px; line-height: 1.5;">
+                        <strong>${t.securityNote}</strong> ${t.securityText}
+                      </p>
+                    </div>
+                    
+                    <p style="color: #64748b; margin: 32px 0 0 0; font-size: 14px; line-height: 1.5;">
+                      ${t.ignoreText}
+                    </p>
+                  </div>
+                  
+                  <!-- Footer -->
+                  <div style="background-color: #f8fafc; padding: 30px; text-align: center; border-top: 1px solid #e2e8f0;">
+                    <div style="margin-bottom: 16px;">
+                      <img src="https://costabeach.ma/images/cropped-IMG_0005.webp" alt="Costa Beach" style="width: 40px; height: 40px; border-radius: 4px;">
+                    </div>
+                    <p style="color: #64748b; margin: 0 0 8px 0; font-size: 14px; font-weight: 600;">
+                      ${t.residenceName}
+                    </p>
+                    <p style="color: #94a3b8; margin: 0; font-size: 12px;">
+                      ${t.portalName} | ${t.location}
+                    </p>
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+                      <p style="color: #94a3b8; margin: 0; font-size: 11px;">
+                        © ${new Date().getFullYear()} Costa Beach 3. ${t.copyright}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
+                
+                <!-- Email client compatibility -->
+                <div style="display: none; font-size: 1px; color: #f8fafc; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
+                  ${t.preheader}
+                </div>
+              </body>
+              </html>
             `,
           });
-          console.log('✅ [EMAIL] Email sent successfully! Result:', result);
         } catch (error) {
-          console.error('❌ [EMAIL] Failed to send email:', error);
-          console.error('❌ [EMAIL] Error details:', {
-            message: error.message,
-            cause: error.cause,
-            stack: error.stack
-          });
+          console.error('Failed to send email:', error);
           throw new Error('Failed to send verification email');
         }
       },
