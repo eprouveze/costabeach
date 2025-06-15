@@ -66,27 +66,25 @@ export default function RootLayout({
     <SessionProvider>
       <html lang="fr" className="h-full">
         <body className={`${inter.className} h-full`} suppressHydrationWarning={true}>
-          <ThemeProvider defaultTheme="system" enableSystem>
-            <ClientProvider>
-              <TRPCReactProvider>
-                <DirectionProvider>
-                  <div className="min-h-screen relative">
-                    <nav className="absolute top-0 right-0 left-0 z-50 p-4 flex justify-between items-center">
-                      <Link href="/" className="text-xl font-bold text-blue-600">
-                        Costa Beach
-                      </Link>
-                      <div className="flex items-center gap-4">
-                        <LanguageSwitcher />
-                        <AuthButton />
-                      </div>
-                    </nav>
-                    {children}
-                  </div>
-                  <ThemeAwareToast />
-                </DirectionProvider>
-              </TRPCReactProvider>
-            </ClientProvider>
-          </ThemeProvider>
+          <ClientProvider>
+            <TRPCReactProvider>
+              <DirectionProvider>
+                <div className="min-h-screen relative">
+                  <nav className="absolute top-0 right-0 left-0 z-50 p-4 flex justify-between items-center">
+                    <Link href="/" className="text-xl font-bold text-blue-600">
+                      Costa Beach
+                    </Link>
+                    <div className="flex items-center gap-4">
+                      <LanguageSwitcher />
+                      <AuthButton />
+                    </div>
+                  </nav>
+                  {children}
+                </div>
+                <ThemeAwareToast />
+              </DirectionProvider>
+            </TRPCReactProvider>
+          </ClientProvider>
         </body>
       </html>
     </SessionProvider>

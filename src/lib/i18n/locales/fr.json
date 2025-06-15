@@ -301,7 +301,7 @@
     "workerStatus": "Statut du travailleur"
   },
   "auth": {
-    "email": "Email",
+    "email": "",
     "loginRequired": "Connexion requise",
     "password": "Mot de passe",
     "signin": {
@@ -327,20 +327,6 @@
       "subtitle": "Connectez-vous à votre compte",
       "success": "Connexion réussie",
       "title": "Bienvenue"
-    },
-    "email": {
-      "subject": "Connexion à Costa Beach - Lien de connexion",
-      "welcome": "Bienvenue !",
-      "connectText": "Cliquez sur le bouton ci-dessous pour vous connecter à votre espace propriétaire Costa Beach 3 :",
-      "connectButton": "🔐 Se connecter à Costa Beach",
-      "securityNote": "🔒 Sécurité :",
-      "securityText": "Ce lien de connexion expire dans 24 heures et ne peut être utilisé qu'une seule fois.",
-      "ignoreText": "Si vous n'avez pas demandé cette connexion, vous pouvez ignorer cet email en toute sécurité.",
-      "residenceName": "Costa Beach 3 - Résidence",
-      "portalName": "Portail des Copropriétaires",
-      "location": "Témara, Maroc",
-      "copyright": "Tous droits réservés.",
-      "preheader": "Connexion sécurisée à votre espace Costa Beach 3 - Cliquez pour accéder à votre portail propriétaire"
     },
     "signIn": "Se connecter",
     "signingOut": "Déconnexion en cours...",
@@ -879,7 +865,7 @@
     "title": "Paramètres"
   },
   "theme": {
-    "toggle": ""
+    "toggle": "Changer le thème"
   },
   "toast": {
     "admin": {

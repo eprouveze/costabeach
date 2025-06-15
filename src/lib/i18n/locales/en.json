@@ -298,7 +298,7 @@
     "workerStatus": "Worker Status"
   },
   "auth": {
-    "email": "Email",
+    "email": "",
     "loginRequired": "Login Required",
     "password": "Password",
     "signin": {
@@ -324,20 +324,6 @@
       "subtitle": "Sign in to your account",
       "success": "Login Successful",
       "title": "Welcome Back"
-    },
-    "email": {
-      "subject": "Sign in to Costa Beach - Login Link",
-      "welcome": "Welcome!",
-      "connectText": "Click the button below to sign in to your Costa Beach 3 owner portal:",
-      "connectButton": "🔐 Sign in to Costa Beach",
-      "securityNote": "🔒 Security:",
-      "securityText": "This login link expires in 24 hours and can only be used once.",
-      "ignoreText": "If you didn't request this login, you can safely ignore this email.",
-      "residenceName": "Costa Beach 3 - Residence",
-      "portalName": "Owner Portal",
-      "location": "Témara, Morocco",
-      "copyright": "All rights reserved.",
-      "preheader": "Secure login to your Costa Beach 3 portal - Click to access your owner dashboard"
     },
     "signIn": "Sign In",
     "signingOut": "Signing out...",
@@ -873,7 +859,7 @@
     "title": "Settings"
   },
   "theme": {
-    "toggle": ""
+    "toggle": "Toggle theme"
   },
   "toast": {
     "admin": {

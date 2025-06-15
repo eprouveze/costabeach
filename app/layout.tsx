@@ -1,5 +1,5 @@
 import '../src/styles/globals.css';
-import ClientLayout from '@/components/ClientLayout';
+import ClientProvider from '@/components/ClientProvider';
 import { ReactNode } from 'react';
 
 export const metadata = {
@@ -24,9 +24,9 @@ export default function RootLayout({
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning>
       <body className="font-sans" suppressHydrationWarning={true}>
-        <ClientLayout>
+        <ClientProvider>
           {children}
-        </ClientLayout>
+        </ClientProvider>
       </body>
     </html>
   );
