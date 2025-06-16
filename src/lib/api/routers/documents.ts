@@ -424,6 +424,26 @@ export const documentsRouter = router({
           whereClause.isPublic = true;
         }
 
+        // Debug: Also check if there are translation documents that might be missing their original
+        const allDocumentsDebug = await prisma.documents.findMany({
+          where: {
+            ...whereClause,
+            isTranslation: { in: [true, false] }, // Get both originals and translations
+            title: { contains: 'pv ag costa beach', mode: 'insensitive' }
+          },
+          select: {
+            id: true,
+            title: true,
+            language: true,
+            isTranslation: true,
+            originalDocumentId: true
+          }
+        });
+        
+        if (allDocumentsDebug.length > 0) {
+          console.log('All "Pv Ag Costa Beach" documents in database:', allDocumentsDebug);
+        }
+        
         // Only get original documents (not translations) to group them properly
         whereClause.isTranslation = false;
         
@@ -460,7 +480,20 @@ export const documentsRouter = router({
         });
         
         // Convert to the expected Document type format with grouped translations
-        return originalDocuments.map(doc => ({
+        return originalDocuments.map(doc => {
+          // Debug logging for document language analysis
+          if (doc.title.toLowerCase().includes('pv ag costa beach')) {
+            console.log(`Document "${doc.title}":`, {
+              originalLanguage: doc.language,
+              translations: doc.other_documents.map(t => ({ id: t.id, title: t.title, language: t.language })),
+              availableLanguages: [
+                doc.language as Language,
+                ...doc.other_documents.map(t => t.language as Language)
+              ]
+            });
+          }
+          
+          return {
           id: doc.id,
           title: doc.title,
           description: doc.description,

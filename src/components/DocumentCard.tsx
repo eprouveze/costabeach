@@ -130,7 +130,7 @@ export const DocumentCard = ({
   const getLanguageFlag = (language: Language) => {
     switch (language) {
       case Language.ENGLISH:
-        return "🇺🇸";
+        return "🇬🇧";
       case Language.FRENCH:
         return "🇫🇷";
       case Language.ARABIC:
