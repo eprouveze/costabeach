@@ -21,14 +21,25 @@ interface HeaderProps {
 export const Header = ({ className = "" }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [userPermissions, setUserPermissions] = useState<Permission[]>([]);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const { t, locale } = useI18n();
   const router = useRouter();
   const { data: session, status } = useSession();
   const { theme, setTheme, resolvedTheme } = useTheme();
   
+  const handleThemeToggle = () => {
+    const newTheme = resolvedTheme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
+  };
+  
   const isAuthenticated = !!session;
   const isLoading = status === "loading";
+
+  // Handle hydration
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Fetch user permissions when authenticated (enhancement only)
   useEffect(() => {
@@ -148,11 +159,11 @@ export const Header = ({ className = "" }: HeaderProps) => {
             <div className="flex items-center space-x-2">
               <LanguageSwitcher variant="dropdown" />
               <button
-                onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                onClick={handleThemeToggle}
                 className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 aria-label={t("theme.toggle") || "Toggle theme"}
               >
-                {resolvedTheme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                {mounted && resolvedTheme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
               <button
                 onClick={handleAuthAction}
@@ -177,11 +188,11 @@ export const Header = ({ className = "" }: HeaderProps) => {
           <div className="md:hidden flex items-center space-x-2">
             <LanguageSwitcher variant="dropdown" />
             <button
-              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+              onClick={handleThemeToggle}
               className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               aria-label={t("theme.toggle") || "Toggle theme"}
             >
-              {resolvedTheme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              {mounted && resolvedTheme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
             <button
               className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"

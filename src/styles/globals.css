@@ -5,10 +5,7 @@
   --background-rgb: 255, 255, 255;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-rgb));
-}
+/* Removed fixed body styles to allow Tailwind dark mode to work */
 
 /* RTL Support */
 [dir="rtl"] {
