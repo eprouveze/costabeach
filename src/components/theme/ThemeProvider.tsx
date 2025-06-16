@@ -6,10 +6,9 @@ export function ThemeProvider({ children, ...props }: NextThemeProviderProps) {
   return (
     <NextThemeProvider 
       attribute="class"
-      defaultTheme="system"
-      enableSystem
+      defaultTheme="light"
+      enableSystem={false}
       disableTransitionOnChange={false}
-      suppressColorSchemeWarning
       storageKey="costa-beach-theme"
       {...props}
     >
