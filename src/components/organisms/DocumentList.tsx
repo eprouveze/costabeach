@@ -120,13 +120,13 @@ export const DocumentList = ({
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder={t("documents.searchPlaceholder") || "Search documents..."}
-                  className="w-full px-4 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
                   type="submit"
                   className="absolute inset-y-0 right-0 px-3 flex items-center"
                 >
-                  <Search className="w-5 h-5 text-gray-400" />
+                  <Search className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                 </button>
               </div>
             </form>
@@ -137,7 +137,7 @@ export const DocumentList = ({
               <select
                 value={selectedCategory || ""}
                 onChange={(e) => setSelectedCategory(e.target.value as DocumentCategory || undefined)}
-                className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">{t("documents.allCategories") || "All Categories"}</option>
                 {Object.values(DocumentCategory).map((cat) => (
@@ -150,7 +150,7 @@ export const DocumentList = ({
               <select
                 value={selectedLanguage || ""}
                 onChange={(e) => setSelectedLanguage(e.target.value as Language || undefined)}
-                className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">{t("documents.allLanguages") || "All Languages"}</option>
                 {Object.values(Language).map((lang) => (

@@ -29,17 +29,8 @@ export const Header = ({ className = "" }: HeaderProps) => {
   const { theme, setTheme, resolvedTheme } = useTheme();
   
   const handleThemeToggle = () => {
-    console.log('Theme toggle clicked. Current resolved theme:', resolvedTheme);
     const newTheme = resolvedTheme === "dark" ? "light" : "dark";
-    console.log('Setting theme to:', newTheme);
     setTheme(newTheme);
-    
-    // Debug: Check if dark class is applied to html
-    setTimeout(() => {
-      const htmlElement = document.documentElement;
-      console.log('HTML classes after theme change:', htmlElement.className);
-      console.log('Has dark class:', htmlElement.classList.contains('dark'));
-    }, 100);
   };
   
   const isAuthenticated = !!session;
@@ -48,10 +39,6 @@ export const Header = ({ className = "" }: HeaderProps) => {
   // Handle hydration
   useEffect(() => {
     setMounted(true);
-    // Debug: Check initial HTML classes
-    const htmlElement = document.documentElement;
-    console.log('Initial HTML classes:', htmlElement.className);
-    console.log('Initial has dark class:', htmlElement.classList.contains('dark'));
   }, []);
 
   // Fetch user permissions when authenticated (enhancement only)
