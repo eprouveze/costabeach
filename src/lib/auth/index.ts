@@ -23,7 +23,7 @@ const emailTranslations = {
     ignoreText: "Si vous n'avez pas demandé cette connexion, vous pouvez ignorer cet email en toute sécurité.",
     residenceName: "Costa Beach 3 - Résidence",
     portalName: "Portail des Copropriétaires",
-    location: "Témara, Maroc",
+    location: "Bouznika, Maroc",
     copyright: "Tous droits réservés.",
     preheader: "Connexion sécurisée à votre espace Costa Beach 3 - Cliquez pour accéder à votre portail propriétaire"
   },
@@ -37,7 +37,7 @@ const emailTranslations = {
     ignoreText: "If you didn't request this login, you can safely ignore this email.",
     residenceName: "Costa Beach 3 - Residence",
     portalName: "Owner Portal",
-    location: "Témara, Morocco",
+    location: "Bouznika, Morocco",
     copyright: "All rights reserved.",
     preheader: "Secure login to your Costa Beach 3 portal - Click to access your owner dashboard"
   },
@@ -51,7 +51,7 @@ const emailTranslations = {
     ignoreText: "إذا لم تطلب تسجيل الدخول هذا، يمكنك تجاهل هذا البريد الإلكتروني بأمان.",
     residenceName: "كوستا بيتش 3 - الإقامة",
     portalName: "بوابة المالكين",
-    location: "تمارة، المغرب",
+    location: "بوزنيقة، المغرب",
     copyright: "جميع الحقوق محفوظة.",
     preheader: "تسجيل دخول آمن إلى بوابة كوستا بيتش 3 - انقر للوصول إلى لوحة تحكم المالك"
   }
