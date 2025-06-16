@@ -60,7 +60,7 @@ export default function LanguageSwitcher({
             className={`px-3 py-1 text-sm rounded-md transition-colors ${
               locale === loc
                 ? "bg-primary text-white"
-                : "bg-gray-100 hover:bg-gray-200"
+                : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
             }`}
             aria-label={`Switch to ${localeNames[loc]}`}
           >
@@ -76,7 +76,7 @@ export default function LanguageSwitcher({
     <div className={`relative ${className}`} ref={dropdownRef}>
       <button
         onClick={toggleDropdown}
-        className="flex items-center space-x-1 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors"
+        className="flex items-center space-x-1 px-3 py-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
         aria-expanded={isOpen}
         aria-haspopup="true"
         aria-label={t("common.language")}
@@ -87,7 +87,7 @@ export default function LanguageSwitcher({
 
       {isOpen && (
         <div
-          className={`absolute z-20 mt-1 w-40 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${
+          className={`absolute z-20 mt-1 w-40 rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black dark:ring-gray-700 ring-opacity-5 focus:outline-none ${
             isRTL ? "right-0" : "left-0"
           }`}
           role="menu"
@@ -101,8 +101,8 @@ export default function LanguageSwitcher({
                 onClick={() => handleLanguageChange(loc)}
                 className={`block w-full text-left px-4 py-2 text-sm ${
                   locale === loc
-                    ? "bg-gray-100 text-primary"
-                    : "text-gray-700 hover:bg-gray-50"
+                    ? "bg-gray-100 dark:bg-gray-700 text-primary dark:text-blue-400"
+                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                 }`}
                 role="menuitem"
               >

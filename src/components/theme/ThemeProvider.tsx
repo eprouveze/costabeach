@@ -8,8 +8,9 @@ export function ThemeProvider({ children, ...props }: NextThemeProviderProps) {
       attribute="class"
       defaultTheme="system"
       enableSystem
-      disableTransitionOnChange
+      disableTransitionOnChange={false}
       suppressColorSchemeWarning
+      storageKey="costa-beach-theme"
       {...props}
     >
       {children}

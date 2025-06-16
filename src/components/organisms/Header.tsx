@@ -25,7 +25,7 @@ export const Header = ({ className = "" }: HeaderProps) => {
   const { t, locale } = useI18n();
   const router = useRouter();
   const { data: session, status } = useSession();
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   
   const isAuthenticated = !!session;
   const isLoading = status === "loading";
@@ -148,11 +148,11 @@ export const Header = ({ className = "" }: HeaderProps) => {
             <div className="flex items-center space-x-2">
               <LanguageSwitcher variant="dropdown" />
               <button
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
                 className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 aria-label={t("theme.toggle") || "Toggle theme"}
               >
-                {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                {resolvedTheme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
               <button
                 onClick={handleAuthAction}
@@ -177,11 +177,11 @@ export const Header = ({ className = "" }: HeaderProps) => {
           <div className="md:hidden flex items-center space-x-2">
             <LanguageSwitcher variant="dropdown" />
             <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
               className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               aria-label={t("theme.toggle") || "Toggle theme"}
             >
-              {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              {resolvedTheme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
             <button
               className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
