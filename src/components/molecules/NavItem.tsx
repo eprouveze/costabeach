@@ -24,8 +24,8 @@ export const NavItem: React.FC<NavItemProps> = ({
 }) => {
   const commonClassNames = `
     flex items-center gap-2 px-4 py-2 rounded-md transition-colors
-    hover:bg-gray-100
-    ${isActive ? 'bg-gray-100' : ''}
+    hover:bg-gray-100 dark:hover:bg-gray-800
+    ${isActive ? 'bg-gray-100 dark:bg-gray-800' : ''}
     ${className}
   `;
 
@@ -37,9 +37,9 @@ export const NavItem: React.FC<NavItemProps> = ({
       >
         <Icon 
           icon={icon}
-          className={`${isActive ? 'text-blue-600' : 'text-gray-600'}`}
+          className={`${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-300'}`}
         />
-        <span className={`${isActive ? 'text-blue-600 font-medium' : 'text-gray-700'}`}>
+        <span className={`${isActive ? 'text-blue-600 dark:text-blue-400 font-medium' : 'text-gray-700 dark:text-gray-300'}`}>
           {label}
         </span>
       </Link>
@@ -53,9 +53,9 @@ export const NavItem: React.FC<NavItemProps> = ({
     >
       <Icon 
         icon={icon}
-        className={`${isActive ? 'text-blue-600' : 'text-gray-600'}`}
+        className={`${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-300'}`}
       />
-      <span className={`${isActive ? 'text-blue-600 font-medium' : 'text-gray-700'}`}>
+      <span className={`${isActive ? 'text-blue-600 dark:text-blue-400 font-medium' : 'text-gray-700 dark:text-gray-300'}`}>
         {label}
       </span>
     </button>
