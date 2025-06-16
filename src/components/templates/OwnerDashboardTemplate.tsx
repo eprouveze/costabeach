@@ -213,7 +213,7 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 ml-64 pt-16 pb-10 min-h-screen bg-gray-50 dark:bg-gray-900">
+        <main className="flex-1 ml-64 pt-16 pb-10 min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
           {/* Content */}
           <div className="p-6 max-w-5xl mx-auto">
             {children}

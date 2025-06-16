@@ -184,7 +184,7 @@ export const DocumentList = ({
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
             {/* Table Header */}
             <div className="bg-gray-50 dark:bg-gray-800 px-6 py-3 border-b border-gray-200 dark:border-gray-700">
               <div className="grid grid-cols-12 gap-4 text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
