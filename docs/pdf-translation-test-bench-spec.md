@@ -124,6 +124,87 @@ test-results/
 - **Formatting Preservation**: Layout and structure retention
 - **RTL Support**: Arabic text rendering quality
 
+## Setup Instructions
+
+### 1. Prerequisites
+- Node.js >= 18
+- Git repository cloned locally
+- PDF documents to test (HOA documents work best)
+
+### 2. Install Dependencies
+```bash
+# Install required packages (already included in package.json)
+npm install
+```
+
+### 3. Configure API Keys
+Add the following to your `.env` file:
+```bash
+# Required for translation testing
+ANTHROPIC_API_KEY=sk-ant-your-anthropic-key
+OPENAI_API_KEY=sk-your-openai-key
+
+# Optional (can skip for initial testing)
+GOOGLE_GENERATIVE_AI_API_KEY=your-google-key
+```
+
+### 4. Test Setup
+```bash
+# Verify installation
+node test-translations-fixed.js --help
+
+# Test with sample PDF (should show extraction working, translation will fail without API keys)
+node test-translations-fixed.js path/to/your/document.pdf --source-lang fr --target-lang en
+```
+
+## How to Use
+
+### Basic Usage
+```bash
+# Test specific document with all providers
+node test-translations-fixed.js "your-document.pdf" --source-lang fr --target-lang en
+
+# Test only certain providers
+node test-translations-fixed.js "document.pdf" --providers current,openai
+
+# Limit text length for faster testing
+node test-translations-fixed.js "document.pdf" --max-chars 1000
+```
+
+### Common Commands
+```bash
+# Test French to English (most common)
+node test-translations-fixed.js "meeting-minutes.pdf" --source-lang fr --target-lang en
+
+# Test French to Arabic (for multilingual community)
+node test-translations-fixed.js "budget.pdf" --source-lang fr --target-lang ar
+
+# Compare current implementation vs OpenAI
+node test-translations-fixed.js "report.pdf" --providers current,openai
+
+# Full test with all providers (requires all API keys)
+node test-translations-fixed.js "document.pdf" --providers all
+```
+
+### Understanding Results
+After running a test, you'll find results in `./test-results-fixed/[test-id]/`:
+- `report.md` - Human-readable comparison report
+- `results.json` - Raw data and metrics
+- `translations/` - Individual translation files from each provider
+
+### Troubleshooting
+```bash
+# Debug PDF extraction issues
+node debug-pdf-extract.js
+
+# Test API providers without PDF
+node test-sample-text.js
+
+# Check if PDFs are text-based or scanned
+# - Text-based: High word count (>100 words for typical documents)
+# - Scanned: Low word count (<10 words) - requires OCR
+```
+
 ## Environment Requirements
 
 ### Required API Keys
