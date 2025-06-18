@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Users, ClipboardList, FileText, History, MessageSquare, AlertTriangle, Settings, Shield, Languages } from "lucide-react";
+import { Users, ClipboardList, FileText, History, MessageSquare, AlertTriangle, Settings, Shield, Languages, Info } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
 import { useSession } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
@@ -86,6 +86,11 @@ export default function AdminDashboardPage() {
     canManageDocuments || 
     canManageComiteDocuments || 
     (session.data?.user?.isAdmin === true);
+
+  const canManageInformation = checkPermission(
+    userPermissions,
+    Permission.MANAGE_INFORMATION
+  ) || (session.data?.user?.isAdmin === true);
   
   if (isLoading || session.status === 'loading') {
     return (
@@ -233,6 +238,28 @@ export default function AdminDashboardPage() {
                   </h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     {t("admin.documentManagementDescription") || "Upload and organize community documents"}
+                  </p>
+                </div>
+              </div>
+            </Link>
+          )}
+
+          {/* Information Management Card */}
+          {canManageInformation && (
+            <Link
+              href={`/${locale}/admin/information`}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600"
+            >
+              <div className="flex items-start">
+                <div className="flex-shrink-0 bg-blue-100 dark:bg-blue-900 rounded-lg p-3">
+                  <Info className="h-6 w-6 text-blue-600 dark:text-blue-300" />
+                </div>
+                <div className="ml-4">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                    {t("information.management") || "Information Management"}
+                  </h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {t("information.managementDescription") || "Create and manage information posts and announcements"}
                   </p>
                 </div>
               </div>

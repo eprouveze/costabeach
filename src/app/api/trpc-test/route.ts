@@ -1,17 +1,17 @@
 import { createCallerFactory } from "@/lib/api/trpc";
 import { appRouter } from "@/lib/api/root";
-import { getServerAuthSession } from "@/lib/auth/index";
+import { getCurrentUser } from "@/lib/auth/index";
 import { prisma } from "@/lib/db";
 
 export async function GET() {
   try {
     // Get the user
-    const user = await getServerAuthSession();
+    const user = await getCurrentUser();
     
     // Create a tRPC caller with the required context
     const createCaller = createCallerFactory(appRouter);
     const caller = createCaller({
-      user: user?.user ?? null,
+      user,
       headers: new Headers(),
       db: prisma,
     });

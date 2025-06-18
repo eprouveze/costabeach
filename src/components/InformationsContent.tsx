@@ -1,15 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { useI18n } from "@/lib/i18n/client";
 import { api } from "@/lib/trpc/react";
 import { Language } from "@/lib/types";
-import { Calendar, User, FileText } from "lucide-react";
+import { Calendar, User, FileText, Search } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { fr, ar, enUS } from "date-fns/locale";
 
 export function InformationsContent() {
   const { t, locale } = useI18n();
+  const [searchQuery, setSearchQuery] = useState("");
   
   // Derive language from locale
   const currentLanguage: Language =
@@ -49,6 +50,22 @@ export function InformationsContent() {
     };
   };
 
+  // Filter posts based on search query
+  const filteredPosts = useMemo(() => {
+    if (!searchQuery.trim()) return posts;
+    
+    const query = searchQuery.toLowerCase();
+    return posts.filter((post) => {
+      const localizedContent = getLocalizedContent(post);
+      return (
+        localizedContent.title.toLowerCase().includes(query) ||
+        localizedContent.content.toLowerCase().includes(query) ||
+        (localizedContent.excerpt && localizedContent.excerpt.toLowerCase().includes(query)) ||
+        (post.creator?.name && post.creator.name.toLowerCase().includes(query))
+      );
+    });
+  }, [posts, searchQuery, currentLanguage]);
+
   if (isLoading) {
     return (
       <div className="p-6">
@@ -61,9 +78,25 @@ export function InformationsContent() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-        {t("common.information")}
-      </h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-0">
+          {t("common.information")}
+        </h1>
+        
+        {/* Search Bar */}
+        <div className="relative max-w-sm">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            placeholder={t("documents.searchPlaceholder") || "Search information..."}
+          />
+        </div>
+      </div>
       
       {posts.length === 0 ? (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-8 text-center">
@@ -75,9 +108,19 @@ export function InformationsContent() {
             {t("information.noPostsDescription") || "Check back later for updates and announcements."}
           </p>
         </div>
+      ) : filteredPosts.length === 0 ? (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-8 text-center">
+          <Search className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+            {t("common.noResults") || "No results found"}
+          </h3>
+          <p className="text-gray-500 dark:text-gray-400">
+            Try adjusting your search terms to find what you're looking for.
+          </p>
+        </div>
       ) : (
         <div className="space-y-6">
-          {posts.map((post) => {
+          {filteredPosts.map((post) => {
             const localizedContent = getLocalizedContent(post);
             return (
               <article

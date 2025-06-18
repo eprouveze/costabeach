@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, Folder, Home, LogOut, Search, Settings, User, Info, Book, FileCheck, GavelIcon, FileQuestion, CreditCard } from "lucide-react";
+import { FileText, Home, LogOut, Search, Settings, User, Info, FileQuestion } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n/client";
@@ -9,12 +9,6 @@ import { useState, FormEvent } from "react";
 import { signOut } from "@/lib/supabase/auth";
 import { toast } from "react-toastify";
 
-interface CategoryItem {
-  id: string;
-  label: string;
-  icon: React.ComponentType<any>;
-}
-
 export default function OwnerDashboardTemplate({ children }: { children?: React.ReactNode }) {
   const pathname = usePathname();
   const { t, locale } = useI18n();
@@ -22,16 +16,6 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams?.get("search") || "");
   const [isSigningOut, setIsSigningOut] = useState(false);
-
-  // Categories based on the DocumentCategory enum
-  const categories: CategoryItem[] = [
-    { id: "ALL", label: t("documents.categories.all") || "All Documents", icon: Folder },
-    { id: "GENERAL", label: t("documents.categories.general"), icon: FileText },
-    { id: "COMITE_DE_SUIVI", label: t("documents.categories.comiteDeSuivi"), icon: Book },
-    { id: "SOCIETE_DE_GESTION", label: t("documents.categories.societeDeGestion"), icon: FileCheck },
-    { id: "FINANCE", label: t("documents.categories.finance") || "Documents Financiers", icon: CreditCard },
-    { id: "LEGAL", label: t("documents.categories.legal"), icon: GavelIcon },
-  ];
 
   const handleSearch = (e: FormEvent) => {
     e.preventDefault();
@@ -44,10 +28,6 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  // Check if a category is active
-  const isCategoryActive = (categoryId: string) => {
-    return searchParams?.get("category") === categoryId;
-  };
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
@@ -129,37 +109,18 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
                 {t("navigation.polls") || "Polls"}
               </Link>
 
-              {/* Document Categories */}
-              <div className="pt-4 pb-2">
-                <h3 className="px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {t("documents.categories.title")}
-                </h3>
-              </div>
-
-              {categories.map((category) => {
-                const Icon = category.icon;
-                const isActive = category.id === "ALL" 
-                  ? pathname === `/${locale}/owner-dashboard/documents`
-                  : (pathname === `/${locale}/owner-dashboard/documents` && isCategoryActive(category.id));
-                const href = category.id === "ALL" 
-                  ? `/${locale}/owner-dashboard/documents` 
-                  : `/${locale}/owner-dashboard/documents?category=${category.id}`;
-
-                return (
-                  <Link
-                    key={category.id}
-                    href={href}
-                    className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
-                      isActive
-                        ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
-                        : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700"
-                    }`}
-                  >
-                    <Icon className="w-5 h-5" />
-                    {category.label}
-                  </Link>
-                );
-              })}
+              {/* Documents section */}
+              <Link
+                href={`/${locale}/owner-dashboard/documents`}
+                className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
+                  pathname === `/${locale}/owner-dashboard/documents`
+                    ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
+                    : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700"
+                }`}
+              >
+                <FileText className="w-5 h-5" />
+                {t("common.documents") || "Documents"}
+              </Link>
 
               {/* User section */}
               <div className="pt-4 pb-2">

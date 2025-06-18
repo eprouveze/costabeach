@@ -2,7 +2,7 @@
 
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import OwnerDashboardPage from '@/app/owner-dashboard/page';
+import OwnerDashboardPage from '@/app/[locale]/owner-dashboard/page';
 import { I18nProvider } from '@/lib/i18n/client';
 import { SessionProvider } from 'next-auth/react';
 import MockTRPCProvider from '../../../.storybook/MockTRPCProvider';

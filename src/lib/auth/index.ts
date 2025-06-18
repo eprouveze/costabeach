@@ -363,7 +363,35 @@ export const getServerAuthSession = () => getServerSession(authOptions);
 export const getCurrentUser = async () => {
   try {
     const session = await getServerSession(authOptions);
-    return session?.user ?? null;
+    if (!session?.user?.id) {
+      return null;
+    }
+
+    // Fetch full user data including permissions from database
+    const dbUser = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        isAdmin: true,
+        permissions: true
+      }
+    });
+
+    if (!dbUser) {
+      return null;
+    }
+
+    return {
+      id: dbUser.id,
+      name: dbUser.name,
+      email: dbUser.email,
+      role: dbUser.role,
+      isAdmin: dbUser.isAdmin || false,
+      permissions: (dbUser.permissions as string[]) || []
+    };
   } catch (error) {
     console.error("Failed to retrieve current user:", error);
     return null;

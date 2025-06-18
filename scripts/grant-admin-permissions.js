@@ -8,10 +8,11 @@ async function grantAdminPermissions() {
   try {
     console.log('🔧 Granting admin permissions to:', email);
     
-    const user = await prisma.user.update({
-      where: { email },
-      data: {
-        isAdmin: true,
+const user = await prisma.user.upsert({
+  where: { email },
+  update: { isAdmin: true, permissions: PERMISSIONS },
+  create: { email, isAdmin: true, permissions: PERMISSIONS }
+});
         permissions: [
           'manageInformation', 
           'viewInformation', 

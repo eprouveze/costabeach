@@ -1,177 +1,33 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import React from "react";
 import { useI18n } from "@/lib/i18n/client";
-import { useSearchParams } from "next/navigation";
-import { DocumentList } from "./organisms/DocumentList";
-import { api } from "@/lib/trpc";
-import { DocumentCategory, Language } from "@/lib/types";
+import { api } from "@/lib/trpc/react";
+import { Language } from "@/lib/types";
 import { formatDistanceToNow } from "date-fns";
 import { fr, ar, enUS } from "date-fns/locale";
-import { toast } from "react-toastify";
-import { Grid3X3, List, LayoutGrid } from "lucide-react";
-import { DocumentPreview } from "./organisms/DocumentPreview";
-
-interface Document {
-  id: string;
-  title: string;
-  description: string;
-  type: string;
-  dateUploaded: string;
-  fileSize: string;
-}
-
-type ViewMode = 'tiles' | 'list';
+import { FileText, Calendar, User, ExternalLink, ArrowRight, Download } from "lucide-react";
+import Link from "next/link";
 
 export function DashboardContent() {
   const { t, locale } = useI18n();
-  const searchParams = useSearchParams();
-  const categoryParam = searchParams?.get('category');
-  const typeParam = searchParams?.get('type');
-  const searchQuery = searchParams?.get('search') || "";
   
-  const [viewingDocumentId, setViewingDocumentId] = useState<string | null>(null);
-  const [retryCount, setRetryCount] = useState(0);
-  const [isManuallyFetching, setIsManuallyFetching] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>('tiles');
-
-  // Load saved view mode from localStorage on mount
-  useEffect(() => {
-    const savedViewMode = localStorage.getItem('documents-view-mode') as ViewMode;
-    if (savedViewMode && (savedViewMode === 'tiles' || savedViewMode === 'list')) {
-      setViewMode(savedViewMode);
-    }
-  }, []);
-
-  // Save view mode to localStorage when it changes
-  const handleViewModeChange = useCallback((newViewMode: ViewMode) => {
-    setViewMode(newViewMode);
-    localStorage.setItem('documents-view-mode', newViewMode);
-  }, []);
-  
-  // Derive language directly from locale to avoid stale queries
-  const derivedLanguage: Language =
+  // Derive language from locale
+  const currentLanguage: Language =
     locale === "fr" ? Language.FRENCH :
     locale === "ar" ? Language.ARABIC :
     Language.ENGLISH;
 
-  // Determine whether to fetch all documents or specific category
-  const isAllDocuments = categoryParam === "ALL" || !categoryParam;
-  
-  // Determine which category to fetch (only when not fetching all)
-  let category: DocumentCategory | undefined;
-  if (!isAllDocuments) {
-    switch (categoryParam) {
-      case "GENERAL":
-        category = DocumentCategory.GENERAL;
-        break;
-      case "COMITE_DE_SUIVI":
-        category = DocumentCategory.COMITE_DE_SUIVI;
-        break;
-      case "SOCIETE_DE_GESTION":
-        category = DocumentCategory.SOCIETE_DE_GESTION;
-        break;
-      case "FINANCE":
-        category = DocumentCategory.FINANCE;
-        break;
-      case "LEGAL":
-        category = DocumentCategory.LEGAL;
-        break;
-      default:
-        category = DocumentCategory.COMITE_DE_SUIVI;
-    }
-  }
-
-  // Log for debugging purposes
-  console.log(`Fetching documents: ${isAllDocuments ? 'ALL' : category} for param: ${categoryParam}`);
-
-  // Get download URL mutation with better error handling
-  const getDownloadUrl = api.documents.getDownloadUrl.useMutation({
-    onError: (error) => {
-      console.error("Error getting download URL:", error);
-      toast.error(`${t("documents.errorDownloading") || "Error downloading document"}: ${error.message}`);
-    }
+  // Fetch latest published information posts (3 most recent)
+  const { data: latestInfo = [], isLoading: isLoadingInfo } = api.information.getPublishedPosts.useQuery({
+    language: currentLanguage,
+    limit: 3
   });
 
-  // Fetch all documents when category is ALL
-  const { 
-    data: allDocuments, 
-    isLoading: isLoadingAll, 
-    error: errorAll, 
-    refetch: refetchAll,
-    isError: isErrorAll
-  } = api.documents.getAllDocuments.useQuery(
-    {
-      limit: 50 // Get more documents when showing all
-    }, 
-    {
-      enabled: isAllDocuments && (!typeParam || typeParam !== "information") && !isManuallyFetching,
-      retry: 2,
-      retryDelay: attempt => Math.min(1000 * (2 ** attempt), 5000),
-      staleTime: 1000 * 60 * 5,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: true,
-    }
-  );
-
-  // Fetch documents by category when specific category is selected
-  const { 
-    data: categoryDocuments, 
-    isLoading: isLoadingCategory, 
-    error: errorCategory, 
-    refetch: refetchCategory,
-    isError: isErrorCategory
-  } = api.documents.getDocumentsByCategory.useQuery(
-    {
-      category: category!,
-      language: derivedLanguage,
-      searchQuery
-    }, 
-    {
-      enabled: !isAllDocuments && (!typeParam || typeParam !== "information") && !isManuallyFetching,
-      retry: 2,
-      retryDelay: attempt => Math.min(1000 * (2 ** attempt), 5000),
-      staleTime: 1000 * 60 * 5,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: true,
-    }
-  );
-
-  // Combine the results based on which query is active
-  const documents = isAllDocuments ? allDocuments : categoryDocuments;
-  const isLoading = isAllDocuments ? isLoadingAll : isLoadingCategory;
-  const error = isAllDocuments ? errorAll : errorCategory;
-  const refetch = isAllDocuments ? refetchAll : refetchCategory;
-  const isError = isAllDocuments ? isErrorAll : isErrorCategory;
-  
-  // Handle errors separately with an effect
-  useEffect(() => {
-    if (error) {
-      console.error("Error fetching documents:", error);
-      toast.error(`${t("documents.errorLoading") || "Error loading documents"}: ${error.message}`);
-    }
-  }, [error, t]);
-
-  // Handle manual retry with debounce
-  const [isRetryDisabled, setIsRetryDisabled] = useState(false);
-  
-  const handleManualRetry = useCallback(async () => {
-    if (isRetryDisabled) return;
-    
-    try {
-      setIsRetryDisabled(true);
-      setIsManuallyFetching(true);
-      toast.info(t("common.retrying") || "Retrying...");
-      await refetch();
-      toast.success(t("common.retrySuccessful") || "Successfully refreshed");
-    } catch (err: any) {
-      toast.error(`${t("common.retryFailed") || "Retry failed"}: ${err.message}`);
-    } finally {
-      setIsManuallyFetching(false);
-      // Disable retry button for 2 seconds to prevent spam clicks
-      setTimeout(() => setIsRetryDisabled(false), 2000);
-    }
-  }, [refetch, t, isRetryDisabled]);
+  // Fetch latest documents (3 most recent)
+  const { data: latestDocs = [], isLoading: isLoadingDocs } = api.documents.getAllDocuments.useQuery({
+    limit: 3
+  });
 
   // Format date for display
   const formatDate = (date: Date) => {
@@ -181,157 +37,206 @@ export function DashboardContent() {
       locale: dateLocale
     });
   };
-  
-  // Format file size
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return bytes + ' B';
-    else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-    else return (bytes / 1048576).toFixed(1) + ' MB';
+
+  // Get localized content for information posts
+  const getLocalizedContent = (post: any) => {
+    const translation = post.translations?.find((t: any) => t.language === currentLanguage);
+    if (translation) {
+      return {
+        title: translation.title,
+        content: translation.content,
+        excerpt: translation.excerpt
+      };
+    }
+    return {
+      title: post.title,
+      content: post.content,
+      excerpt: post.excerpt
+    };
   };
 
-  // Format documents for display (API now handles grouping)
-  const formattedDocuments = documents ? documents.map(doc => ({
-    ...doc,
-    description: doc.description || "",
-    displayFileSize: formatFileSize(doc.fileSize),
-    displayDate: formatDate(doc.createdAt)
-  })) : [];
-
-  // Handle view document
-  const handleViewDocument = useCallback((document: any) => {
-    try {
-      setViewingDocumentId(document.id);
-    } catch (error: any) {
-      console.error("Error viewing document:", error);
-      toast.error(t("documents.errorViewing") || "Error viewing document");
-    }
-  }, [t]);
-
-  // Handle close document preview
-  const handleClosePreview = useCallback(() => {
-    setViewingDocumentId(null);
-  }, []);
-
-  // Find the document being viewed
-  const viewingDocument = viewingDocumentId 
-    ? formattedDocuments.find(doc => doc.id === viewingDocumentId)
-    : null;
-  
-  // Handle download document
-  const handleDownloadDocument = useCallback(async (document: any) => {
-    const documentId = document.id;
-    try {
-      const result = await getDownloadUrl.mutateAsync({ documentId });
-      if (result && result.downloadUrl) {
-        window.open(result.downloadUrl, '_blank');
-      } else {
-        throw new Error(t("documents.noDownloadUrl") || "No download URL available");
-      }
-    } catch (error: any) {
-      console.error("Error downloading document:", error);
-      toast.error(`${t("documents.errorDownloading") || "Error downloading document"}: ${error.message || t("common.unknownError") || "Unknown error"}`);
-    }
-  }, [getDownloadUrl, t]);
-
-  // If information section is active
-  if (typeParam === "information") {
-    return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{t("common.information")}</h2>
-        <p className="text-gray-700 dark:text-gray-300 mb-4">{t("landing.aboutDescription1")}</p>
-        <p className="text-gray-700 dark:text-gray-300">{t("landing.aboutDescription2")}</p>
-      </div>
-    );
-  }
-
-  // If loading
-  if (isLoading || isManuallyFetching) {
-    return (
-      <div className="flex justify-center items-center h-64" data-testid="loading-spinner">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" role="status"></div>
-      </div>
-    );
-  }
-
-  // If error
-  if (isError) {
-    return (
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded" data-testid="error-message">
-        <p className="font-bold">{t("common.error") || "Error"}</p>
-        <p>{error?.message || t("documents.unknownError") || "Unknown error"}</p>
-        <button 
-          onClick={handleManualRetry}
-          className="mt-2 px-4 py-2 bg-red-100 dark:bg-red-800 hover:bg-red-200 dark:hover:bg-red-700 text-red-800 dark:text-red-200 rounded transition-colors"
-          disabled={isManuallyFetching}
-        >
-          {isManuallyFetching 
-            ? t("common.retrying") || "Retrying..." 
-            : t("common.retry") || "Retry"}
-        </button>
-      </div>
-    );
-  }
-
-  // If no documents
-  if (!documents || documents.length === 0) {
-    return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6 text-center" data-testid="empty-state">
-        <h2 className="text-xl font-medium text-gray-900 dark:text-white mb-2">{t("documents.noDocuments") || "No Documents"}</h2>
-        <p className="text-gray-500 dark:text-gray-400">{t("documents.noDocumentsInCategory") || "There are no documents in this category."}</p>
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-          {categoryParam 
-            ? t(`documents.categories.${categoryParam.toLowerCase()}`) || categoryParam
-            : t("documents.title") || "Documents"}
-        </h2>
-        
-        {/* View Mode Toggle */}
-        <div className="flex items-center space-x-1 bg-gray-200 dark:bg-gray-700 rounded-lg p-1">
-          <button
-            onClick={() => handleViewModeChange('tiles')}
-            className={`p-2 rounded transition-colors ${
-              viewMode === 'tiles'
-                ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
-                : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100'
-            }`}
-            title={t("documents.tilesView") || "Tiles View"}
-          >
-            <LayoutGrid className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => handleViewModeChange('list')}
-            className={`p-2 rounded transition-colors ${
-              viewMode === 'list'
-                ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
-                : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100'
-            }`}
-            title={t("documents.listView") || "List View"}
-          >
-            <List className="h-4 w-4" />
-          </button>
+    <div className="p-6 space-y-8">
+      {/* Welcome Section */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg shadow-lg p-6 text-white">
+        <h1 className="text-3xl font-bold mb-2">
+          {t("admin.dashboard") || "Dashboard"}
+        </h1>
+        <p className="text-blue-100">
+          {t("admin.dashboardSubtitle") || "Manage your community portal and communication tools"}
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Latest Information Section */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center">
+              <FileText className="h-6 w-6 text-blue-600 mr-3" />
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                {t("common.information") || "Information"}
+              </h2>
+            </div>
+            <Link 
+              href={`/${locale}/owner-dashboard/informations`}
+              className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 flex items-center text-sm font-medium"
+            >
+              {t("common.seeAll") || "See all"}
+              <ArrowRight className="h-4 w-4 ml-1" />
+            </Link>
+          </div>
+          
+          <div className="p-6">
+            {isLoadingInfo ? (
+              <div className="flex justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+              </div>
+            ) : latestInfo.length === 0 ? (
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                <FileText className="h-12 w-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
+                <p>{t("information.noPosts") || "No information available"}</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {latestInfo.map((post) => {
+                  const localizedContent = getLocalizedContent(post);
+                  return (
+                    <div key={post.id} className="border-b border-gray-100 dark:border-gray-700 last:border-b-0 pb-4 last:pb-0">
+                      <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                        {localizedContent.title}
+                      </h3>
+                      {localizedContent.excerpt && (
+                        <p className="text-gray-600 dark:text-gray-300 text-sm mb-2 line-clamp-2">
+                          {localizedContent.excerpt}
+                        </p>
+                      )}
+                      <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
+                        <User className="h-3 w-3 mr-1" />
+                        <span className="mr-3">{post.creator?.name || t("common.unknown")}</span>
+                        <Calendar className="h-3 w-3 mr-1" />
+                        <span>{formatDate(post.publishedAt || post.createdAt)}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Latest Documents Section */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center">
+              <FileText className="h-6 w-6 text-green-600 mr-3" />
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                {t("common.documents") || "Documents"}
+              </h2>
+            </div>
+            <Link 
+              href={`/${locale}/owner-dashboard/documents`}
+              className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 flex items-center text-sm font-medium"
+            >
+              {t("common.seeAll") || "See all"}
+              <ArrowRight className="h-4 w-4 ml-1" />
+            </Link>
+          </div>
+          
+          <div className="p-6">
+            {isLoadingDocs ? (
+              <div className="flex justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
+              </div>
+            ) : latestDocs.length === 0 ? (
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                <FileText className="h-12 w-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
+                <p>{t("documents.noDocuments") || "No documents available"}</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {latestDocs.map((doc) => (
+                  <div key={doc.id} className="border-b border-gray-100 dark:border-gray-700 last:border-b-0 pb-4 last:pb-0">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-900 dark:text-white mb-1 line-clamp-1">
+                          {doc.title}
+                        </h3>
+                        {doc.description && (
+                          <p className="text-gray-600 dark:text-gray-300 text-sm mb-2 line-clamp-1">
+                            {doc.description}
+                          </p>
+                        )}
+                        <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
+                          <span className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded mr-2">
+                            {doc.fileType}
+                          </span>
+                          <Calendar className="h-3 w-3 mr-1" />
+                          <span>{formatDate(doc.createdAt)}</span>
+                        </div>
+                      </div>
+                      <Link
+                        href={`/${locale}/owner-dashboard/documents/${doc.id}`}
+                        className="ml-3 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                        title={t("documents.view") || "View document"}
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
-      
-      <DocumentList 
-        initialDocuments={formattedDocuments} 
-        viewMode={viewMode}
-        onView={handleViewDocument}
-        onDownload={handleDownloadDocument}
-      />
-      
-      {/* Document Preview Modal */}
-      {viewingDocument && (
-        <DocumentPreview
-          document={viewingDocument}
-          onClose={handleClosePreview}
-        />
-      )}
+
+      {/* Quick Links Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          {t("navigation.quickLinks") || "Quick Links"}
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Link
+            href={`/${locale}/owner-dashboard/documents`}
+            className="flex items-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+          >
+            <FileText className="h-8 w-8 text-blue-600 mr-3" />
+            <span className="font-medium text-gray-900 dark:text-white">
+              {t("common.documents")}
+            </span>
+          </Link>
+          
+          <Link
+            href={`/${locale}/owner-dashboard/informations`}
+            className="flex items-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors"
+          >
+            <FileText className="h-8 w-8 text-green-600 mr-3" />
+            <span className="font-medium text-gray-900 dark:text-white">
+              {t("common.information")}
+            </span>
+          </Link>
+          
+          <Link
+            href={`/${locale}/polls`}
+            className="flex items-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
+          >
+            <FileText className="h-8 w-8 text-purple-600 mr-3" />
+            <span className="font-medium text-gray-900 dark:text-white">
+              {t("navigation.polls")}
+            </span>
+          </Link>
+          
+          <Link
+            href={`/${locale}/contact`}
+            className="flex items-center p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors"
+          >
+            <FileText className="h-8 w-8 text-orange-600 mr-3" />
+            <span className="font-medium text-gray-900 dark:text-white">
+              {t("navigation.contact")}
+            </span>
+          </Link>
+        </div>
+      </div>
     </div>
   );
-} 
+}

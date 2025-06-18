@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useI18n } from "@/lib/i18n/client";
 import { api } from "@/lib/trpc/react";
 import { InformationStatus, InformationPost } from "@/lib/types";
+import { Header } from "@/components/organisms/Header";
 import { 
   Plus, 
   Edit, 
@@ -121,7 +122,9 @@ export function AdminInformationPage() {
   }
 
   return (
-    <div className="p-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <Header />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -212,13 +215,13 @@ export function AdminInformationPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {getStatusBadge(post.status, post.isPublished)}
+                      {getStatusBadge(post.status as InformationStatus, post.isPublished)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <User className="w-4 h-4 text-gray-400 mr-2" />
                         <span className="text-sm text-gray-900 dark:text-white">
-                          {post.creator?.name || t("common.unknown") || "Unknown"}
+                          {(post as any).creator?.name || t("common.unknown") || "Unknown"}
                         </span>
                       </div>
                     </td>
@@ -234,13 +237,13 @@ export function AdminInformationPage() {
                       <div className="flex items-center">
                         <Globe className="w-4 h-4 text-gray-400 mr-2" />
                         <span className="text-sm text-gray-500 dark:text-gray-400">
-                          {post.translations?.length || 0} {t("information.languages") || "languages"}
+                          {(post as any).translations?.length || 0} {t("information.languages") || "languages"}
                         </span>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end space-x-2">
-                        {!post.isPublished && post.status === InformationStatus.DRAFT && (
+                        {!post.isPublished && post.status === 'draft' && (
                           <button
                             onClick={() => handlePublish(post.id)}
                             className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300"
@@ -250,7 +253,7 @@ export function AdminInformationPage() {
                           </button>
                         )}
                         <button
-                          onClick={() => setEditingPost(post)}
+                          onClick={() => setEditingPost(post as any)}
                           className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                           title={t("common.edit") || "Edit"}
                         >
@@ -289,6 +292,7 @@ export function AdminInformationPage() {
           }}
         />
       )}
+      </div>
     </div>
   );
 }

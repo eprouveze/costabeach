@@ -3,7 +3,7 @@ import { AdminInformationPage } from "@/components/admin/AdminInformationPage";
 
 export default function AdminInformationPageRoute() {
   return (
-    <AuthWrapper requireAuth={true} requiredPermissions={['viewInformation']}>
+    <AuthWrapper requireAuth={true}>
       <AdminInformationPage />
     </AuthWrapper>
   );

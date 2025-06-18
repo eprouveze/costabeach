@@ -181,9 +181,10 @@ export interface User {
 // Type for tRPC context user (matches NextAuth session user structure)
 export interface AppUser {
   id: string;
-  name?: string | null;
-  email?: string | null;
+  name: string | null;
+  email: string | null;
   image?: string | null;
-  role?: UserRole;
-  isAdmin?: boolean;
+  role: string | null;
+  isAdmin: boolean;
+  permissions: string[];
 }

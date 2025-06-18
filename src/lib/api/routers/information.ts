@@ -63,7 +63,7 @@ export const informationRouter = router({
       console.log('🔍 [INFO] User permissions:', ctx.user);
       
       // Check permissions - admin users have all permissions
-      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions, Permission.VIEW_INFORMATION)) {
+      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions as Permission[], Permission.VIEW_INFORMATION)) {
         console.log('❌ [INFO] Permission denied for VIEW_INFORMATION');
         throw new TRPCError({
           code: 'FORBIDDEN',
@@ -79,7 +79,7 @@ export const informationRouter = router({
         console.log('🔍 [INFO] Fetching posts with params:', { status, limit, offset });
         
         const posts = await ctx.db.information_posts.findMany({
-          where: status ? { status: status.valueOf() } : undefined,
+          where: status ? { status: status as any } : undefined,
           include: {
             creator: {
               select: {
@@ -102,7 +102,7 @@ export const informationRouter = router({
         console.error('❌ [INFO] Error fetching all posts:', error);
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
-          message: `Failed to fetch information posts: ${error.message}`
+          message: `Failed to fetch information posts: ${error instanceof Error ? error.message : 'Unknown error'}`
         });
       }
     }),
@@ -114,7 +114,7 @@ export const informationRouter = router({
     }))
     .query(async ({ ctx, input }) => {
       // Check permissions - admin users have all permissions
-      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions, Permission.VIEW_INFORMATION)) {
+      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions as Permission[], Permission.VIEW_INFORMATION)) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: 'You do not have permission to view information posts'
@@ -165,7 +165,7 @@ export const informationRouter = router({
     }))
     .mutation(async ({ ctx, input }) => {
       // Check permissions - admin users have all permissions
-      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions, Permission.MANAGE_INFORMATION)) {
+      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions as Permission[], Permission.MANAGE_INFORMATION)) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: 'You do not have permission to create information posts'
@@ -181,7 +181,7 @@ export const informationRouter = router({
             title,
             content,
             excerpt,
-            status: publishNow ? 'published' : status.valueOf(),
+            status: publishNow ? InformationStatus.PUBLISHED : status,
             isPublished: publishNow,
             publishedAt: publishNow ? new Date() : null,
             createdBy: userId
@@ -218,7 +218,7 @@ export const informationRouter = router({
     }))
     .mutation(async ({ ctx, input }) => {
       // Check permissions - admin users have all permissions
-      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions, Permission.MANAGE_INFORMATION)) {
+      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions as Permission[], Permission.MANAGE_INFORMATION)) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: 'You do not have permission to update information posts'
@@ -240,11 +240,8 @@ export const informationRouter = router({
           });
         }
 
-        // Convert enum values to strings for database
+        // Ensure status is properly typed
         const updateDataConverted = { ...updateData };
-        if (updateDataConverted.status) {
-          updateDataConverted.status = updateDataConverted.status.valueOf();
-        }
 
         const post = await ctx.db.information_posts.update({
           where: { id },
@@ -282,7 +279,7 @@ export const informationRouter = router({
     }))
     .mutation(async ({ ctx, input }) => {
       // Check permissions - admin users have all permissions
-      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions, Permission.MANAGE_INFORMATION)) {
+      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions as Permission[], Permission.MANAGE_INFORMATION)) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: 'You do not have permission to publish information posts'
@@ -293,7 +290,7 @@ export const informationRouter = router({
         const post = await ctx.db.information_posts.update({
           where: { id: input.id },
           data: {
-            status: 'published',
+            status: InformationStatus.PUBLISHED,
             isPublished: true,
             publishedAt: new Date(),
             updatedAt: new Date()
@@ -326,7 +323,7 @@ export const informationRouter = router({
     }))
     .mutation(async ({ ctx, input }) => {
       // Check permissions - admin users have all permissions
-      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions, Permission.MANAGE_INFORMATION)) {
+      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions as Permission[], Permission.MANAGE_INFORMATION)) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: 'You do not have permission to delete information posts'
@@ -373,7 +370,7 @@ export const informationRouter = router({
     }))
     .mutation(async ({ ctx, input }) => {
       // Check permissions - admin users have all permissions
-      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions, Permission.MANAGE_INFORMATION)) {
+      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions as Permission[], Permission.MANAGE_INFORMATION)) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: 'You do not have permission to add translations'
