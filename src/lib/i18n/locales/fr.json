@@ -28,7 +28,6 @@
     "documentActivityLogs": "Journaux d'activité des documents",
     "documentId": "ID du document",
     "documentManagement": "Gestion des documents",
-    "documentManagementDescription": "Téléverser et organiser les documents de la communauté",
     "documents": "",
     "emergencyAlert": {
       "alertMessage": "Message d'alerte *",
@@ -92,7 +91,6 @@
       "warningTitle": "Important :"
     },
     "emergencyAlerts": "Alertes d'urgence",
-    "emergencyAlertsDescription": "Envoyer des notifications urgentes aux résidents",
     "errors": {
       "permissionsFetchFailed": "Échec de la récupération des permissions"
     },
@@ -105,7 +103,6 @@
     "noLogsFound": "Aucun journal trouvé",
     "notConfigured": "Non configuré",
     "ownerRegistrations": "Inscriptions en attente",
-    "ownerRegistrationsDescription": "Examiner et approuver les demandes d'inscription des propriétaires",
     "pending": "En attente",
     "pendingRegistrations": "Inscriptions en attente",
     "polls": {
@@ -124,7 +121,6 @@
       "votes": "Votes"
     },
     "pollsManagement": "Gestion des sondages",
-    "pollsManagementDescription": "Créer et gérer les sondages de la communauté",
     "processing": "En traitement",
     "processPendingJobs": "Traiter les tâches en attente",
     "queueSummary": "Résumé de la file",
@@ -143,7 +139,6 @@
     "stopped": "Arrêté",
     "stopWorker": "Arrêter le travailleur",
     "systemSettings": "Paramètres système",
-    "systemSettingsDescription": "Configurer les paramètres et préférences de l'application",
     "timestamp": "Horodatage",
     "totalDocuments": "Total des documents",
     "totalJobs": "Total des tâches",
@@ -160,11 +155,9 @@
       "retryFailed": "• Les tâches échouées peuvent être relancées, et les tâches bloquées peuvent être récupérées"
     },
     "translationManagement": "Gestion des traductions",
-    "translationManagementDescription": "Surveiller et contrôler le système de traduction des documents",
     "unknownDocument": "Document inconnu",
     "user": "Utilisateur",
     "userManagement": "Gestion des utilisateurs",
-    "userManagementDescription": "Gérer les comptes d'utilisateur et les permissions",
     "users": "",
     "viewCompletedTranslations": "Voir les traductions terminées",
     "viewInDocuments": "Voir dans Documents",
@@ -197,7 +190,6 @@
         "status": "Statut"
       }
     },
-    "whatsappDescription": "Envoyer des messages et gérer les communications WhatsApp",
     "whatsappManagement": "Gestion WhatsApp",
     "workerStatus": "Statut du travailleur"
   },
@@ -286,18 +278,15 @@
     "noResults": "Aucun résultat",
     "previous": "Précédent",
     "retry": "Réessayer",
-    "retryFailed": "Nouvel échec",
-    "retrying": "Nouvelle tentative...",
-    "retrySuccessful": "Réussi",
     "save": "Enregistrer",
     "saveChanges": "Enregistrer les modifications",
     "saving": "Enregistrement...",
     "search": "Rechercher",
+    "seeAll": "",
     "settings": "Paramètres",
     "siteTitle": "Costa Beach 3",
     "success": "Succès",
     "unknown": "Inconnu",
-    "unknownError": "Erreur inconnue",
     "update": "Mettre à jour",
     "user": "Utilisateur",
     "yes": "Oui"
@@ -338,13 +327,11 @@
     "allLanguages": "Toutes les langues",
     "browseDocuments": "Parcourir les documents",
     "categories": {
-      "all": "Tous les documents",
       "comiteDeSuivi": "Comité de Suivi",
       "finance": "Documents Financiers",
       "general": "Général",
       "legal": "Documents Juridiques",
-      "societeDeGestion": "Société de Gestion",
-      "title": "Catégories de documents"
+      "societeDeGestion": "Société de Gestion"
     },
     "category": "Catégorie",
     "categoryField": "Catégorie *",
@@ -361,10 +348,7 @@
     "downloading": "Téléchargement...",
     "dragDropText": "Glissez-déposez votre fichier ici, ou cliquez pour parcourir",
     "editDocument": "Modifier le document",
-    "errorDownloading": "Erreur lors du téléchargement",
     "errorDownloadingDocument": "Erreur lors du téléchargement du document",
-    "errorLoading": "Erreur lors du chargement",
-    "errorViewing": "Erreur lors de la visualisation",
     "fileType": "Type de fichier",
     "language": "Langue",
     "languageField": "Langue *",
@@ -374,8 +358,6 @@
     "noDocuments": "Aucun document trouvé",
     "noDocumentsDescription": "Il n'y a actuellement aucun document disponible dans cette catégorie.",
     "noDocumentsFound": "Aucun document trouvé",
-    "noDocumentsInCategory": "Aucun document dans cette catégorie",
-    "noDownloadUrl": "URL de téléchargement indisponible",
     "noMatchingDocuments": "Aucun document correspondant trouvé",
     "noTranslations": "Aucune",
     "original": "Original",
@@ -396,7 +378,6 @@
     "titleRequired": "Titre *",
     "translation": "Traduction",
     "translations": "Traductions",
-    "unknownError": "Erreur inconnue",
     "unknownFileType": "Type inconnu",
     "updateError": "Erreur lors de la mise à jour",
     "updateSuccess": "Document mis à jour avec succès",
@@ -408,6 +389,7 @@
     "uploadFirst": "Téléversez votre premier document",
     "uploading": "Téléversement en cours...",
     "uploadProgress": "Téléversement : {{progress}}%",
+    "view": "",
     "viewOriginal": "Voir l'original",
     "views": "vues"
   },
@@ -463,8 +445,6 @@
       },
       "title": "Points forts de la communauté"
     },
-    "aboutDescription1": "Costa Beach 3 est une résidence moderne en bord de mer située à Bouznika, entre Casablanca et Rabat. Cette communauté balnéaire d'exception offre un cadre de vie privilégié face à l'océan Atlantique avec des appartements contemporains et des équipements haut de gamme.",
-    "aboutDescription2": "En tant que propriétaire, vous aurez accès aux procès-verbaux des réunions, aux rapports financiers, aux calendriers d'entretien et à d'autres informations importantes sur la communauté via ce portail sécurisé.",
     "aboutFeatures": {
       "amenities": {
         "description": "Piscines extérieures multiples, aires de jeux pour enfants, jardins paysagers et espaces de bronzage.",
@@ -539,6 +519,7 @@
     "ownerPortal": "Portail Propriétaire",
     "polls": "Sondages",
     "profile": "Profil",
+    "quickLinks": "",
     "settings": "Paramètres",
     "toggleMenu": "Basculer le menu"
   },
@@ -742,14 +723,12 @@
       "emergencyAlertSentSuccess": "Alerte d'urgence envoyée avec succès!",
       "failedJobsQueuedForRetry": "Tâches échouées mises en file d'attente pour nouvel essai",
       "operationError": "Échec de l'opération: {{action}} - {{error}}",
-      "permissionsFetchError": "Échec de la récupération des permissions",
       "translationStatusFetchError": "Erreur lors de la récupération du statut de traduction"
     },
     "auth": {
       "accessDenied": "Accès refusé. Assurez-vous d'avoir un compte approuvé",
       "checkEmailForLink": "Vérifiez votre email pour le lien de connexion!",
       "googleSignInFailed": "Échec de la connexion avec Google",
-      "loginRequired": "",
       "passwordMismatch": "Les mots de passe ne correspondent pas",
       "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
       "passwordUpdateSuccess": "Mot de passe mis à jour avec succès",

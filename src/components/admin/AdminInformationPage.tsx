@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { useI18n } from "@/lib/i18n/client";
 import { api } from "@/lib/trpc/react";
 import { InformationStatus, InformationPost } from "@/lib/types";
-import { Header } from "@/components/organisms/Header";
 import { 
   Plus, 
   Edit, 
@@ -122,9 +121,7 @@ export function AdminInformationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Header />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="space-y-6">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -292,7 +289,6 @@ export function AdminInformationPage() {
           }}
         />
       )}
-      </div>
     </div>
   );
 }

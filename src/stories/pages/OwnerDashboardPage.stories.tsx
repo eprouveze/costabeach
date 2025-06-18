@@ -2,7 +2,15 @@
 
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import OwnerDashboardPage from '@/app/[locale]/owner-dashboard/page';
+import { DashboardContent } from '@/components/DashboardContent';
+import OwnerDashboardTemplate from '@/components/templates/OwnerDashboardTemplate';
+
+// Create a mock component that represents the owner dashboard page
+const OwnerDashboardPageMock = () => (
+  <OwnerDashboardTemplate>
+    <DashboardContent />
+  </OwnerDashboardTemplate>
+);
 import { I18nProvider } from '@/lib/i18n/client';
 import { SessionProvider } from 'next-auth/react';
 import MockTRPCProvider from '../../../.storybook/MockTRPCProvider';
@@ -25,9 +33,9 @@ const withProviders = (Story: React.ComponentType) => (
   </I18nProvider>
 );
 
-const meta: Meta<typeof OwnerDashboardPage> = {
+const meta: Meta<typeof OwnerDashboardPageMock> = {
   title: 'Pages/OwnerDashboardPage',
-  component: OwnerDashboardPage,
+  component: OwnerDashboardPageMock,
   parameters: {
     layout: 'fullscreen',
   },
@@ -37,7 +45,7 @@ const meta: Meta<typeof OwnerDashboardPage> = {
 
 export default meta;
 
-type Story = StoryObj<typeof OwnerDashboardPage>;
+type Story = StoryObj<typeof OwnerDashboardPageMock>;
 
 export const Default: Story = {
   args: {},

@@ -28,7 +28,6 @@
     "documentActivityLogs": "Document Activity Logs",
     "documentId": "Document ID",
     "documentManagement": "Document Management",
-    "documentManagementDescription": "Upload and organize community documents",
     "documents": "",
     "emergencyAlert": {
       "alertMessage": "Alert Message *",
@@ -91,7 +90,6 @@
       "warningTitle": "Important:"
     },
     "emergencyAlerts": "Emergency Alerts",
-    "emergencyAlertsDescription": "Send urgent notifications to residents",
     "errors": {
       "permissionsFetchFailed": "Failed to fetch permissions"
     },
@@ -104,7 +102,6 @@
     "noLogsFound": "No logs found",
     "notConfigured": "Not Configured",
     "ownerRegistrations": "Pending Registrations",
-    "ownerRegistrationsDescription": "Review and approve owner registration requests",
     "pending": "Pending",
     "pendingRegistrations": "Pending Registrations",
     "polls": {
@@ -123,7 +120,6 @@
       "votes": "Votes"
     },
     "pollsManagement": "Poll Management",
-    "pollsManagementDescription": "Create and manage community polls",
     "processing": "Processing",
     "processPendingJobs": "Process Pending Jobs",
     "queueSummary": "Queue Summary",
@@ -142,7 +138,6 @@
     "stopped": "Stopped",
     "stopWorker": "Stop Worker",
     "systemSettings": "System Settings",
-    "systemSettingsDescription": "Configure application settings and preferences",
     "timestamp": "Timestamp",
     "totalDocuments": "Total Documents",
     "totalJobs": "Total Jobs",
@@ -159,11 +154,9 @@
       "retryFailed": "• Failed jobs can be retried, and stalled jobs can be recovered"
     },
     "translationManagement": "Translation Management",
-    "translationManagementDescription": "Monitor and control the document translation system",
     "unknownDocument": "Unknown Document",
     "user": "User",
     "userManagement": "User Management",
-    "userManagementDescription": "Manage user accounts and permissions",
     "users": "",
     "viewCompletedTranslations": "View Completed Translations",
     "viewInDocuments": "View in Documents",
@@ -194,7 +187,6 @@
         "status": "Status"
       }
     },
-    "whatsappDescription": "Send messages and manage WhatsApp communications",
     "whatsappManagement": "WhatsApp Management",
     "workerStatus": "Worker Status"
   },
@@ -283,19 +275,15 @@
     "noResults": "No Results",
     "previous": "Previous",
     "retry": "Retry",
-    "retryFailed": "Retry Failed",
-    "retrying": "Retrying...",
-    "retrySuccessful": "Retry Successful",
     "save": "Save",
     "saveChanges": "Save Changes",
     "saving": "Saving...",
     "search": "Search",
-    "settings": "Settings",
     "seeAll": "See all",
+    "settings": "Settings",
     "siteTitle": "Costa Beach 3",
     "success": "Success",
     "unknown": "Unknown",
-    "unknownError": "Unknown Error",
     "update": "Update",
     "user": "User",
     "yes": "Yes"
@@ -336,13 +324,11 @@
     "allLanguages": "All Languages",
     "browseDocuments": "Browse Documents",
     "categories": {
-      "all": "All Documents",
       "comiteDeSuivi": "Monitoring Committee",
       "finance": "Financial Documents",
       "general": "General",
       "legal": "Legal Documents",
-      "societeDeGestion": "Management Company",
-      "title": "Document Categories"
+      "societeDeGestion": "Management Company"
     },
     "category": "Category",
     "categoryField": "Category *",
@@ -359,10 +345,7 @@
     "downloading": "Downloading...",
     "dragDropText": "Drag and drop your file here, or click to browse",
     "editDocument": "Edit Document",
-    "errorDownloading": "Error Downloading",
     "errorDownloadingDocument": "Error downloading document",
-    "errorLoading": "Error Loading",
-    "errorViewing": "Error Viewing",
     "fileType": "File Type",
     "language": "Language",
     "languageField": "Language *",
@@ -372,8 +355,6 @@
     "noDocuments": "No documents found",
     "noDocumentsDescription": "There are currently no documents available in this category.",
     "noDocumentsFound": "No documents found",
-    "noDocumentsInCategory": "No documents in this category",
-    "noDownloadUrl": "Download URL unavailable",
     "noMatchingDocuments": "No matching documents found",
     "noTranslations": "None",
     "original": "Original",
@@ -393,7 +374,6 @@
     "titleRequired": "Title *",
     "translation": "Translation",
     "translations": "Translations",
-    "unknownError": "Unknown Error",
     "unknownFileType": "Unknown type",
     "updateError": "Update Error",
     "updateSuccess": "Document updated successfully",
@@ -405,6 +385,7 @@
     "uploadFirst": "Upload your first document",
     "uploading": "Uploading...",
     "uploadProgress": "Uploading: {{progress}}%",
+    "view": "",
     "viewOriginal": "View Original",
     "views": "views"
   },
@@ -460,8 +441,6 @@
       },
       "title": "Community Highlights"
     },
-    "aboutDescription1": "Costa Beach 3 is a modern beachfront residential community located in Bouznika, between Casablanca and Rabat. This exceptional coastal community offers a privileged living environment facing the Atlantic Ocean with contemporary apartments and premium amenities.",
-    "aboutDescription2": "As a homeowner, you'll have access to meeting minutes, financial reports, maintenance schedules, and other important community information through this secure portal.",
     "aboutFeatures": {
       "amenities": {
         "description": "Swimming pools, fitness center, gardens, and recreational areas for all residents.",
@@ -740,14 +719,12 @@
       "emergencyAlertSentSuccess": "Emergency alert sent successfully!",
       "failedJobsQueuedForRetry": "Failed jobs queued for retry",
       "operationError": "Failed to {{action}}: {{error}}",
-      "permissionsFetchError": "Failed to fetch permissions",
       "translationStatusFetchError": "Failed to fetch translation status"
     },
     "auth": {
       "accessDenied": "Access denied. Please make sure you have an approved account",
       "checkEmailForLink": "Check your email for the login link!",
       "googleSignInFailed": "Failed to sign in with Google",
-      "loginRequired": "",
       "passwordMismatch": "Passwords do not match",
       "passwordTooShort": "Password must be at least 8 characters long",
       "passwordUpdateSuccess": "Password updated successfully",

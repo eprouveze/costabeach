@@ -28,7 +28,6 @@
     "documentActivityLogs": "سجلات نشاط المستندات",
     "documentId": "معرف المستند",
     "documentManagement": "إدارة المستندات",
-    "documentManagementDescription": "رفع وتنظيم مستندات المجتمع",
     "documents": "",
     "emergencyAlert": {
       "alertMessage": "رسالة التنبيه *",
@@ -95,7 +94,6 @@
       "warningTitle": "مهم:"
     },
     "emergencyAlerts": "تنبيهات طارئة",
-    "emergencyAlertsDescription": "إرسال إشعارات عاجلة للمقيمين",
     "errors": {
       "permissionsFetchFailed": "فشل في جلب الصلاحيات"
     },
@@ -108,7 +106,6 @@
     "noLogsFound": "لم يتم العثور على سجلات",
     "notConfigured": "غير مكوّن",
     "ownerRegistrations": "التسجيلات المعلقة",
-    "ownerRegistrationsDescription": "مراجعة والموافقة على طلبات تسجيل الملاك",
     "pending": "معلق",
     "pendingRegistrations": "التسجيلات المعلقة",
     "polls": {
@@ -127,7 +124,6 @@
       "votes": "الأصوات"
     },
     "pollsManagement": "إدارة الاستطلاعات",
-    "pollsManagementDescription": "إنشاء وإدارة استطلاعات المجتمع",
     "processing": "قيد المعالجة",
     "processPendingJobs": "معالجة المهام المعلقة",
     "queueSummary": "ملخص القائمة",
@@ -146,7 +142,6 @@
     "stopped": "متوقف",
     "stopWorker": "إيقاف العامل",
     "systemSettings": "إعدادات النظام",
-    "systemSettingsDescription": "تكوين إعدادات وتفضيلات التطبيق",
     "timestamp": "الطابع الزمني",
     "totalDocuments": "إجمالي المستندات",
     "totalJobs": "إجمالي المهام",
@@ -163,11 +158,9 @@
       "retryFailed": "• يمكن إعادة محاولة المهام الفاشلة، ويمكن استرداد المهام المتوقفة"
     },
     "translationManagement": "إدارة الترجمات",
-    "translationManagementDescription": "مراقبة والتحكم في نظام ترجمة المستندات",
     "unknownDocument": "مستند غير معروف",
     "user": "المستخدم",
     "userManagement": "إدارة المستخدمين",
-    "userManagementDescription": "إدارة حسابات المستخدمين والصلاحيات",
     "users": "",
     "viewCompletedTranslations": "عرض الترجمات المكتملة",
     "viewInDocuments": "عرض في المستندات",
@@ -206,7 +199,6 @@
         "status": "الحالة"
       }
     },
-    "whatsappDescription": "إرسال الرسائل وإدارة اتصالات واتساب",
     "whatsappManagement": "إدارة واتساب",
     "workerStatus": "حالة العامل"
   },
@@ -295,18 +287,15 @@
     "noResults": "لم يتم العثور على نتائج",
     "previous": "السابق",
     "retry": "إعادة المحاولة",
-    "retryFailed": "فشلت إعادة المحاولة",
-    "retrying": "جاري إعادة المحاولة...",
-    "retrySuccessful": "نجحت إعادة المحاولة",
     "save": "حفظ",
     "saveChanges": "حفظ التغييرات",
     "saving": "جاري الحفظ...",
     "search": "بحث",
+    "seeAll": "",
     "settings": "الإعدادات",
     "siteTitle": "كوستا بيتش 3",
     "success": "نجاح",
     "unknown": "غير معروف",
-    "unknownError": "خطأ غير معروف",
     "update": "تحديث",
     "user": "المستخدم",
     "yes": "نعم"
@@ -347,13 +336,11 @@
     "allLanguages": "جميع اللغات",
     "browseDocuments": "تصفح المستندات",
     "categories": {
-      "all": "جميع المستندات",
       "comiteDeSuivi": "لجنة المتابعة",
       "finance": "المستندات المالية",
       "general": "المستندات العامة",
       "legal": "المستندات القانونية",
-      "societeDeGestion": "شركة الإدارة",
-      "title": "الفئات"
+      "societeDeGestion": "شركة الإدارة"
     },
     "category": "الفئة",
     "categoryField": "الفئة *",
@@ -370,10 +357,7 @@
     "downloading": "جاري التنزيل...",
     "dragDropText": "اسحب وأفلت ملفك هنا، أو انقر للتصفح",
     "editDocument": "تعديل المستند",
-    "errorDownloading": "خطأ في تنزيل المستند",
     "errorDownloadingDocument": "خطأ في تنزيل المستند",
-    "errorLoading": "خطأ في تحميل المستند",
-    "errorViewing": "خطأ في عرض المستند",
     "fileType": "نوع الملف",
     "language": "اللغة",
     "languageField": "اللغة *",
@@ -383,8 +367,6 @@
     "noDocuments": "لم يتم العثور على مستندات في هذه الفئة",
     "noDocumentsDescription": "لا توجد مستندات متاحة في هذه الفئة",
     "noDocumentsFound": "لم يتم العثور على مستندات",
-    "noDocumentsInCategory": "لا توجد مستندات في هذه الفئة",
-    "noDownloadUrl": "رابط التنزيل غير متاح",
     "noMatchingDocuments": "لا توجد مستندات مطابقة",
     "noTranslations": "لا يوجد",
     "original": "الأصلي",
@@ -408,7 +390,6 @@
     "titleRequired": "العنوان *",
     "translation": "ترجمة",
     "translations": "الترجمات",
-    "unknownError": "خطأ غير معروف",
     "unknownFileType": "نوع غير معروف",
     "updateError": "خطأ في التحديث",
     "updateSuccess": "تم التحديث بنجاح",
@@ -420,6 +401,7 @@
     "uploadFirst": "يرجى رفع ملف أولاً",
     "uploading": "جاري الرفع...",
     "uploadProgress": "جاري الرفع: {{progress}}%",
+    "view": "",
     "viewOriginal": "عرض النسخة الأصلية",
     "views": "المشاهدات"
   },
@@ -475,8 +457,6 @@
       },
       "title": "أبرز ميزات المجتمع"
     },
-    "aboutDescription1": "كوستا بيتش 3 هي مجتمع سكني متميز يقع في الدار البيضاء، المغرب. يوفر بوابة جمعية المالكين لدينا للمالكين سهولة الوصول إلى المعلومات والوثائق المهمة.",
-    "aboutDescription2": "بصفتك مالكًا، ستتمكن من الوصول إلى محاضر الاجتماعات والتقارير المالية وجداول الصيانة وغيرها من المعلومات المجتمعية المهمة من خلال هذه البوابة الآمنة.",
     "aboutFeatures": {
       "amenities": {
         "description": "حمامات سباحة ومركز للياقة البدنية وحدائق ومناطق ترفيهية لجميع المقيمين.",
@@ -551,6 +531,7 @@
     "ownerPortal": "بوابة المالك",
     "polls": "الاستطلاعات",
     "profile": "الملف الشخصي",
+    "quickLinks": "",
     "settings": "الإعدادات",
     "toggleMenu": "تبديل القائمة"
   },
@@ -754,14 +735,12 @@
       "emergencyAlertSentSuccess": "تم إرسال تنبيه الطوارئ بنجاح!",
       "failedJobsQueuedForRetry": "المهام الفاشلة في قائمة انتظار إعادة المحاولة",
       "operationError": "فشل في {{action}}: {{error}}",
-      "permissionsFetchError": "فشل في جلب الصلاحيات",
       "translationStatusFetchError": "فشل في جلب حالة الترجمة"
     },
     "auth": {
       "accessDenied": "تم رفض الوصول. تأكد من أن لديك حساب معتمد",
       "checkEmailForLink": "تحقق من بريدك الإلكتروني للحصول على رابط تسجيل الدخول!",
       "googleSignInFailed": "فشل في تسجيل الدخول باستخدام Google",
-      "loginRequired": "",
       "passwordMismatch": "كلمات المرور غير متطابقة",
       "passwordTooShort": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل",
       "passwordUpdateSuccess": "تم تحديث كلمة المرور بنجاح",
