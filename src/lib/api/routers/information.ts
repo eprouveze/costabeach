@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/lib/api/trpc";
+import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { InformationStatus, Language, Permission } from "@/lib/types";
 import { checkPermission } from "@/lib/utils/permissions";
 
-export const informationRouter = createTRPCRouter({
+export const informationRouter = router({
   // Get all published information posts for public viewing
   getPublishedPosts: publicProcedure
     .input(z.object({
@@ -59,19 +59,27 @@ export const informationRouter = createTRPCRouter({
       status: z.nativeEnum(InformationStatus).optional(),
     }))
     .query(async ({ ctx, input }) => {
-      // Check permissions
-      if (!checkPermission(ctx.session.user, Permission.VIEW_INFORMATION)) {
+      console.log('🔍 [INFO] getAllPosts called with user:', ctx.user?.email);
+      console.log('🔍 [INFO] User permissions:', ctx.user);
+      
+      // Check permissions - admin users have all permissions
+      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions, Permission.VIEW_INFORMATION)) {
+        console.log('❌ [INFO] Permission denied for VIEW_INFORMATION');
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: 'You do not have permission to view information posts'
         });
       }
+      
+      console.log('✅ [INFO] Permission check passed');
 
       const { limit, offset, status } = input;
       
       try {
+        console.log('🔍 [INFO] Fetching posts with params:', { status, limit, offset });
+        
         const posts = await ctx.db.information_posts.findMany({
-          where: status ? { status } : undefined,
+          where: status ? { status: status.valueOf() } : undefined,
           include: {
             creator: {
               select: {
@@ -88,12 +96,13 @@ export const informationRouter = createTRPCRouter({
           skip: offset
         });
 
+        console.log('✅ [INFO] Found posts:', posts.length);
         return posts;
       } catch (error) {
-        console.error('Error fetching all posts:', error);
+        console.error('❌ [INFO] Error fetching all posts:', error);
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to fetch information posts'
+          message: `Failed to fetch information posts: ${error.message}`
         });
       }
     }),
@@ -104,8 +113,8 @@ export const informationRouter = createTRPCRouter({
       id: z.string().uuid()
     }))
     .query(async ({ ctx, input }) => {
-      // Check permissions
-      if (!checkPermission(ctx.session.user, Permission.VIEW_INFORMATION)) {
+      // Check permissions - admin users have all permissions
+      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions, Permission.VIEW_INFORMATION)) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: 'You do not have permission to view information posts'
@@ -155,8 +164,8 @@ export const informationRouter = createTRPCRouter({
       publishNow: z.boolean().default(false)
     }))
     .mutation(async ({ ctx, input }) => {
-      // Check permissions
-      if (!checkPermission(ctx.session.user, Permission.MANAGE_INFORMATION)) {
+      // Check permissions - admin users have all permissions
+      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions, Permission.MANAGE_INFORMATION)) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: 'You do not have permission to create information posts'
@@ -164,7 +173,7 @@ export const informationRouter = createTRPCRouter({
       }
 
       const { title, content, excerpt, status, publishNow } = input;
-      const userId = ctx.session.user.id;
+      const userId = ctx.user.id;
 
       try {
         const post = await ctx.db.information_posts.create({
@@ -172,7 +181,7 @@ export const informationRouter = createTRPCRouter({
             title,
             content,
             excerpt,
-            status: publishNow ? 'published' : status,
+            status: publishNow ? 'published' : status.valueOf(),
             isPublished: publishNow,
             publishedAt: publishNow ? new Date() : null,
             createdBy: userId
@@ -208,8 +217,8 @@ export const informationRouter = createTRPCRouter({
       status: z.nativeEnum(InformationStatus).optional(),
     }))
     .mutation(async ({ ctx, input }) => {
-      // Check permissions
-      if (!checkPermission(ctx.session.user, Permission.MANAGE_INFORMATION)) {
+      // Check permissions - admin users have all permissions
+      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions, Permission.MANAGE_INFORMATION)) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: 'You do not have permission to update information posts'
@@ -231,10 +240,16 @@ export const informationRouter = createTRPCRouter({
           });
         }
 
+        // Convert enum values to strings for database
+        const updateDataConverted = { ...updateData };
+        if (updateDataConverted.status) {
+          updateDataConverted.status = updateDataConverted.status.valueOf();
+        }
+
         const post = await ctx.db.information_posts.update({
           where: { id },
           data: {
-            ...updateData,
+            ...updateDataConverted,
             updatedAt: new Date()
           },
           include: {
@@ -266,8 +281,8 @@ export const informationRouter = createTRPCRouter({
       id: z.string().uuid()
     }))
     .mutation(async ({ ctx, input }) => {
-      // Check permissions
-      if (!checkPermission(ctx.session.user, Permission.MANAGE_INFORMATION)) {
+      // Check permissions - admin users have all permissions
+      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions, Permission.MANAGE_INFORMATION)) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: 'You do not have permission to publish information posts'
@@ -310,8 +325,8 @@ export const informationRouter = createTRPCRouter({
       id: z.string().uuid()
     }))
     .mutation(async ({ ctx, input }) => {
-      // Check permissions
-      if (!checkPermission(ctx.session.user, Permission.MANAGE_INFORMATION)) {
+      // Check permissions - admin users have all permissions
+      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions, Permission.MANAGE_INFORMATION)) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: 'You do not have permission to delete information posts'
@@ -357,8 +372,8 @@ export const informationRouter = createTRPCRouter({
       excerpt: z.string().max(1000).optional()
     }))
     .mutation(async ({ ctx, input }) => {
-      // Check permissions
-      if (!checkPermission(ctx.session.user, Permission.MANAGE_INFORMATION)) {
+      // Check permissions - admin users have all permissions
+      if (!ctx.user.isAdmin && !checkPermission(ctx.user.permissions, Permission.MANAGE_INFORMATION)) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: 'You do not have permission to add translations'

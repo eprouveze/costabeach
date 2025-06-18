@@ -423,7 +423,7 @@ model system_settings {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model User {
-  id                String      @id @db.Uuid
+  id                String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name              String?
   email             String?     @unique
   emailVerified     DateTime?   @map("email_verified") @db.Timestamp(6)

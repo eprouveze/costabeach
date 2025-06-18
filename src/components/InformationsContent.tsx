@@ -107,12 +107,9 @@ export function InformationsContent() {
                 )}
                 
                 <div className="prose prose-gray dark:prose-invert max-w-none">
-                  <div 
-                    className="text-gray-700 dark:text-gray-300"
-                    dangerouslySetInnerHTML={{ 
-                      __html: localizedContent.content.replace(/\n/g, '<br />') 
-                    }}
-                  />
+                  <div className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                    {localizedContent.content}
+                  </div>
                 </div>
               </article>
             );

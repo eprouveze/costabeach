@@ -273,8 +273,201 @@ export function AdminInformationPage() {
         )}
       </div>
 
-      {/* Create/Edit Modal would go here */}
-      {/* TODO: Implement modal for creating/editing posts */}
+      {/* Create/Edit Modal */}
+      {(showCreateModal || editingPost) && (
+        <InformationPostModal
+          isOpen={showCreateModal || !!editingPost}
+          onClose={() => {
+            setShowCreateModal(false);
+            setEditingPost(null);
+          }}
+          post={editingPost}
+          onSuccess={() => {
+            refetch();
+            setShowCreateModal(false);
+            setEditingPost(null);
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+// Modal component for creating/editing information posts
+interface InformationPostModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  post?: InformationPost | null;
+  onSuccess: () => void;
+}
+
+function InformationPostModal({ isOpen, onClose, post, onSuccess }: InformationPostModalProps) {
+  const { t } = useI18n();
+  const [title, setTitle] = useState(post?.title || "");
+  const [content, setContent] = useState(post?.content || "");
+  const [excerpt, setExcerpt] = useState(post?.excerpt || "");
+  const [publishNow, setPublishNow] = useState(false);
+
+  const createPostMutation = api.information.createPost.useMutation({
+    onSuccess: () => {
+      toast.success(t("information.postCreated") || "Information post created successfully");
+      onSuccess();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    }
+  });
+
+  const updatePostMutation = api.information.updatePost.useMutation({
+    onSuccess: () => {
+      toast.success(t("information.postUpdated") || "Information post updated successfully");
+      onSuccess();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    }
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!title.trim() || !content.trim()) {
+      toast.error(t("information.fillRequiredFields") || "Please fill in all required fields");
+      return;
+    }
+
+    if (post) {
+      // Update existing post
+      updatePostMutation.mutate({
+        id: post.id,
+        title: title.trim(),
+        content: content.trim(),
+        excerpt: excerpt.trim() || undefined,
+      });
+    } else {
+      // Create new post
+      createPostMutation.mutate({
+        title: title.trim(),
+        content: content.trim(),
+        excerpt: excerpt.trim() || undefined,
+        publishNow,
+        status: publishNow ? InformationStatus.PUBLISHED : InformationStatus.DRAFT,
+      });
+    }
+  };
+
+  const isLoading = createPostMutation.isPending || updatePostMutation.isPending;
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            {post ? 
+              (t("information.editPost") || "Edit Information Post") : 
+              (t("information.createPost") || "Create Information Post")
+            }
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+          >
+            <span className="sr-only">Close</span>
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          <div>
+            <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              {t("information.title") || "Title"} *
+            </label>
+            <input
+              type="text"
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              placeholder={t("information.titlePlaceholder") || "Enter the post title"}
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              {t("information.excerpt") || "Excerpt"}
+            </label>
+            <textarea
+              id="excerpt"
+              value={excerpt}
+              onChange={(e) => setExcerpt(e.target.value)}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              placeholder={t("information.excerptPlaceholder") || "Brief summary for previews (optional)"}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              {t("information.content") || "Content"} *
+            </label>
+            <textarea
+              id="content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              rows={12}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              placeholder={t("information.contentPlaceholder") || "Write the full content of your information post..."}
+              required
+            />
+          </div>
+
+          {!post && (
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="publishNow"
+                checked={publishNow}
+                onChange={(e) => setPublishNow(e.target.checked)}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <label htmlFor="publishNow" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                {t("information.publishImmediately") || "Publish immediately"}
+              </label>
+            </div>
+          )}
+
+          <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {t("common.cancel") || "Cancel"}
+            </button>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? (
+                <div className="flex items-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                  {t("common.saving") || "Saving..."}
+                </div>
+              ) : (
+                post ? 
+                  (t("common.update") || "Update") : 
+                  (publishNow ? (t("information.publishPost") || "Publish Post") : (t("information.saveDraft") || "Save Draft"))
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
