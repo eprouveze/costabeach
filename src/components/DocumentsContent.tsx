@@ -5,9 +5,8 @@ import { useI18n } from "@/lib/i18n/client";
 import { api } from "@/lib/trpc/react";
 import { DocumentCategory, Document } from "@/lib/types";
 import { useSearchParams } from "next/navigation";
-import { DocumentCard } from "@/components/DocumentCard";
+import { DocumentList } from "@/components/organisms/DocumentList";
 import { 
-  FileText, 
   Search, 
   X,
   ChevronDown,
@@ -15,7 +14,7 @@ import {
   List
 } from "lucide-react";
 
-type ViewMode = 'tiles' | 'list' | 'table';
+type ViewMode = 'tiles' | 'list';
 
 export function DocumentsContent() {
   const { t, locale } = useI18n();
@@ -27,7 +26,7 @@ export function DocumentsContent() {
     categoryParam as DocumentCategory || null
   );
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>('table');
+  const [viewMode, setViewMode] = useState<ViewMode>('tiles');
 
   // Fetch all documents with translations
   const { data: documents = [], isLoading, refetch } = api.documents.getAllDocuments.useQuery({
@@ -55,6 +54,12 @@ export function DocumentsContent() {
     
     return matchesCategory && matchesSearch;
   });
+
+  // Handle download document
+  const handleDownloadDocument = async (document: Document) => {
+    // This would typically use a download mutation
+    console.log('Download document:', document.id);
+  };
 
   // Get category name
   const getCategoryName = (category: DocumentCategory) => {
@@ -111,17 +116,6 @@ export function DocumentsContent() {
             title={t("documents.listView") || "List View"}
           >
             <List className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => setViewMode('table')}
-            className={`p-2 rounded transition-colors ${
-              viewMode === 'table'
-                ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
-                : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100'
-            }`}
-            title={t("documents.tableView") || "Table View"}
-          >
-            <FileText className="h-4 w-4" />
           </button>
         </div>
       </div>
@@ -192,61 +186,14 @@ export function DocumentsContent() {
       </div>
       
       {/* Documents list */}
-      {isLoading ? (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center border border-gray-200 dark:border-gray-700">
-          <div className="animate-pulse space-y-4">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="grid grid-cols-12 gap-4">
-                <div className="col-span-5 h-6 bg-gray-200 dark:bg-gray-600 rounded"></div>
-                <div className="col-span-2 h-6 bg-gray-200 dark:bg-gray-600 rounded"></div>
-                <div className="col-span-1 h-6 bg-gray-200 dark:bg-gray-600 rounded"></div>
-                <div className="col-span-1 h-6 bg-gray-200 dark:bg-gray-600 rounded"></div>
-                <div className="col-span-1 h-6 bg-gray-200 dark:bg-gray-600 rounded"></div>
-                <div className="col-span-1 h-6 bg-gray-200 dark:bg-gray-600 rounded"></div>
-                <div className="col-span-1 h-6 bg-gray-200 dark:bg-gray-600 rounded"></div>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : filteredDocuments.length === 0 ? (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center border border-gray-200 dark:border-gray-700">
-          <FileText className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-            {t("documents.noDocuments")}
-          </h3>
-          <p className="text-gray-500 dark:text-gray-400">
-            {searchQuery || selectedCategory !== null
-              ? t("documents.noMatchingDocuments")
-              : t("documents.noDocumentsDescription")
-            }
-          </p>
-        </div>
-      ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
-          {/* Table Header */}
-          <div className="bg-gray-50 dark:bg-gray-700 px-6 py-3 border-b border-gray-200 dark:border-gray-600">
-            <div className="grid grid-cols-12 gap-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-              <div className="col-span-5">{t("documents.name")}</div>
-              <div className="col-span-2">{t("documents.category")}</div>
-              <div className="col-span-1 text-center">{t("documents.original")}</div>
-              <div className="col-span-1 text-center">{t("documents.translations")}</div>
-              <div className="col-span-1">{t("documents.size")}</div>
-              <div className="col-span-1">{t("documents.views")}</div>
-              <div className="col-span-1 text-right">{t("documents.actions")}</div>
-            </div>
-          </div>
-          {/* Document rows */}
-          {filteredDocuments.map((document) => (
-            <DocumentCard
-              key={document.id}
-              document={document}
-              onView={handleViewDocument}
-              showActions={true}
-              viewMode="table"
-            />
-          ))}
-        </div>
-      )}
+      <DocumentList
+        initialDocuments={filteredDocuments}
+        viewMode={viewMode}
+        showSearch={false} // We handle search above
+        showFilters={false} // We handle filters above
+        onView={handleViewDocument}
+        onDownload={handleDownloadDocument}
+      />
     </div>
   );
 }
