@@ -3,6 +3,7 @@ import { createCallerFactory, router, publicProcedure } from "./trpc";
 import { documentsRouter } from "./routers/documents";
 import { translationsRouter } from "./routers/translations";
 import { adminRouter } from "./routers/admin";
+import { informationRouter } from "./routers/information";
 
 /**
  * This is the primary router for your server.
@@ -17,6 +18,7 @@ export const appRouter = router({
   documents: documentsRouter,
   translations: translationsRouter,
   admin: adminRouter,
+  information: informationRouter,
 });
 
 // export type definition of API

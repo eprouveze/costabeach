@@ -426,6 +426,29 @@
     "viewOriginal": "View Original",
     "views": "views"
   },
+  "information": {
+    "archived": "Archived",
+    "author": "Author",
+    "confirmDelete": "Are you sure you want to delete this post?",
+    "created": "Created",
+    "createPost": "Create Post",
+    "draft": "Draft",
+    "filterByStatus": "Filter by status",
+    "allStatuses": "All Statuses",
+    "languages": "languages",
+    "management": "Information Management",
+    "managementDescription": "Create and manage information posts and announcements",
+    "noPosts": "No information available",
+    "noPostsDescription": "Check back later for updates and announcements.",
+    "postCreated": "Information post created successfully",
+    "postDeleted": "Information post deleted successfully",
+    "postPublished": "Information post published successfully",
+    "publish": "Publish",
+    "published": "Published",
+    "status": "Status",
+    "title": "Title",
+    "translations": "Translations"
+  },
   "landing": {
     "aboutCommunity": {
       "lifestyle": {

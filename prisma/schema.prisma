@@ -338,6 +338,46 @@ model polls {
   @@index([status])
 }
 
+model information_posts {
+  id            String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title         String
+  content       String
+  excerpt       String?            // Short summary for previews
+  status        InformationStatus  @default(draft)
+  isPublished   Boolean            @map("is_published") @default(false)
+  publishedAt   DateTime?          @map("published_at") @db.Timestamptz(6)
+  createdBy     String             @map("created_by") @db.Uuid
+  createdAt     DateTime           @map("created_at") @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime           @map("updated_at") @default(now()) @db.Timestamptz(6)
+  
+  // Relations
+  creator       User               @relation("InformationCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  translations  information_translations[]
+
+  @@index([createdBy])
+  @@index([status])
+  @@index([isPublished])
+  @@index([publishedAt])
+}
+
+model information_translations {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  informationId   String   @map("information_id") @db.Uuid
+  language        Language
+  title           String
+  content         String
+  excerpt         String?
+  createdAt       DateTime @map("created_at") @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime @map("updated_at") @default(now()) @db.Timestamptz(6)
+  
+  // Relations
+  information     information_posts @relation(fields: [informationId], references: [id], onDelete: Cascade)
+
+  @@unique([informationId, language])
+  @@index([informationId])
+  @@index([language])
+}
+
 model qa_conversations {
   id                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   user_id             String?  @db.Uuid
@@ -408,6 +448,7 @@ model User {
   auditLog          audit_log[] @relation("UserAuditLog")
   documents         documents[]
   pollsCreated      polls[]     @relation("PollCreator")
+  informationCreated information_posts[] @relation("InformationCreator")
   
   @@map("users") // Keep existing table name
 }
@@ -539,6 +580,12 @@ enum DocumentCategory {
   other
 }
 
+enum InformationStatus {
+  draft
+  published
+  archived
+}
+
 enum Language {
   french
   arabic
@@ -606,6 +653,8 @@ enum Permission {
   manageSocieteDocuments
   manageLegalDocuments
   approveRegistrations
+  manageInformation
+  viewInformation
 }
 
 enum PollStatus {

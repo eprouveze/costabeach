@@ -446,6 +446,29 @@
     "viewOriginal": "عرض النسخة الأصلية",
     "views": "المشاهدات"
   },
+  "information": {
+    "archived": "مؤرشف",
+    "author": "المؤلف",
+    "confirmDelete": "هل أنت متأكد من رغبتك في حذف هذا المنشور؟",
+    "created": "تم الإنشاء",
+    "createPost": "إنشاء منشور",
+    "draft": "مسودة",
+    "filterByStatus": "فلترة حسب الحالة",
+    "allStatuses": "جميع الحالات",
+    "languages": "اللغات",
+    "management": "إدارة المعلومات",
+    "managementDescription": "إنشاء وإدارة منشورات المعلومات والإعلانات",
+    "noPosts": "لا توجد معلومات متاحة",
+    "noPostsDescription": "تحقق لاحقاً للحصول على التحديثات والإعلانات.",
+    "postCreated": "تم إنشاء منشور المعلومات بنجاح",
+    "postDeleted": "تم حذف منشور المعلومات بنجاح",
+    "postPublished": "تم نشر منشور المعلومات بنجاح",
+    "publish": "نشر",
+    "published": "منشور",
+    "status": "الحالة",
+    "title": "العنوان",
+    "translations": "الترجمات"
+  },
   "landing": {
     "aboutCommunity": {
       "lifestyle": {

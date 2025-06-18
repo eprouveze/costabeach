@@ -431,6 +431,29 @@
     "viewOriginal": "Voir l'original",
     "views": "vues"
   },
+  "information": {
+    "archived": "Archivé",
+    "author": "Auteur",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer cet article?",
+    "created": "Créé",
+    "createPost": "Créer un article",
+    "draft": "Brouillon",
+    "filterByStatus": "Filtrer par statut",
+    "allStatuses": "Tous les statuts",
+    "languages": "langues",
+    "management": "Gestion des informations",
+    "managementDescription": "Créer et gérer les articles d'information et les annonces",
+    "noPosts": "Aucune information disponible",
+    "noPostsDescription": "Revenez plus tard pour les mises à jour et les annonces.",
+    "postCreated": "Article créé avec succès",
+    "postDeleted": "Article supprimé avec succès",
+    "postPublished": "Article publié avec succès",
+    "publish": "Publier",
+    "published": "Publié",
+    "status": "Statut",
+    "title": "Titre",
+    "translations": "Traductions"
+  },
   "landing": {
     "aboutCommunity": {
       "lifestyle": {

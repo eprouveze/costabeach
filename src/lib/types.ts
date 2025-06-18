@@ -26,6 +26,12 @@ export enum TranslationStatus {
   FAILED = 'failed'
 }
 
+export enum InformationStatus {
+  DRAFT = 'draft',
+  PUBLISHED = 'published',
+  ARCHIVED = 'archived'
+}
+
 export enum Permission {
   // User Management
   MANAGE_USERS = 'manageUsers',
@@ -42,6 +48,10 @@ export enum Permission {
   MANAGE_LEGAL_DOCUMENTS = 'manageLegalDocuments',
   MANAGE_FINANCE_DOCUMENTS = 'manageFinanceDocuments',
   MANAGE_GENERAL_DOCUMENTS = 'manageGeneralDocuments',
+  
+  // Information Management
+  MANAGE_INFORMATION = 'manageInformation',
+  VIEW_INFORMATION = 'viewInformation',
   
   // System Administration
   MANAGE_SETTINGS = 'manageSettings',
@@ -107,6 +117,41 @@ export interface DocumentTranslationJob {
   createdAt: Date;
   startedAt?: Date | null;
   completedAt?: Date | null;
+}
+
+export interface InformationPost {
+  id: string;
+  title: string;
+  content: string;
+  excerpt?: string | null;
+  status: InformationStatus;
+  isPublished: boolean;
+  publishedAt?: Date | null;
+  createdBy: string;
+  createdAt: Date;
+  updatedAt: Date;
+  creator?: { id: string; name?: string | null };
+  translations?: InformationTranslation[];
+}
+
+export interface InformationTranslation {
+  id: string;
+  informationId: string;
+  language: Language;
+  title: string;
+  content: string;
+  excerpt?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface InformationWithTranslations {
+  original: InformationPost;
+  translations: {
+    [Language.FRENCH]: InformationTranslation | null;
+    [Language.ENGLISH]: InformationTranslation | null;
+    [Language.ARABIC]: InformationTranslation | null;
+  };
 }
 
 export enum UserRole {
