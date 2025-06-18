@@ -143,16 +143,35 @@ export const DocumentCard = ({
   const handleLanguageClick = (language: Language, e: React.MouseEvent) => {
     e.stopPropagation();
     
+    console.log('Language click:', {
+      selectedLanguage: language,
+      documentLanguage: document.language,
+      documentId: document.id,
+      availableLanguages: document.availableLanguages,
+      translations: document.translations?.map(t => ({ id: t.id, language: t.language, title: t.title }))
+    });
+    
     // Find the document in the requested language
     if (language === document.language) {
       // This is the original document
+      console.log('Navigating to original document:', document.id);
       if (onView) onView(document);
-    } else if (document.translations) {
+    } else if (document.translations && document.translations.length > 0) {
       // Find the translation
       const translation = document.translations.find(t => t.language === language);
-      if (translation && onView) {
+      if (translation && translation.id && onView) {
+        console.log(`Navigating to translation:`, { id: translation.id, language: translation.language, title: translation.title });
         onView(translation);
+      } else {
+        console.error(`Translation not found for language: ${language}`, { 
+          requestedLanguage: language,
+          availableTranslations: document.translations.map(t => ({ id: t.id, language: t.language, title: t.title })),
+          translationFound: !!translation,
+          translationHasId: translation?.id
+        });
       }
+    } else {
+      console.warn('No translations available for this document');
     }
   };
   
@@ -160,7 +179,7 @@ export const DocumentCard = ({
     return (
       <>
         <div className="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-          <div className="grid grid-cols-12 gap-4 items-center">
+          <div className="grid grid-cols-12 gap-2 items-center">
             {/* Document Name & Icon */}
             <div className="col-span-5 flex items-center min-w-0">
               <div className="mr-3 flex-shrink-0">
@@ -186,22 +205,32 @@ export const DocumentCard = ({
               {getCategoryLabel(document.category as DocumentCategory)}
             </div>
             
-            {/* Languages */}
-            <div className="col-span-2 flex items-center space-x-1">
+            {/* Original Language */}
+            <div className="col-span-1 flex items-center justify-center">
+              <span 
+                className="text-lg" 
+                title={`${getLanguageLabel(document.language as Language)} (${t("documents.original")})`}
+              >
+                {getLanguageFlag(document.language as Language)}
+              </span>
+            </div>
+            
+            {/* Available Translations */}
+            <div className="col-span-1 flex items-center justify-center space-x-1">
               {document.availableLanguages ? 
-                document.availableLanguages.map((lang: Language) => (
-                  <button
-                    key={lang}
-                    onClick={(e) => handleLanguageClick(lang, e)}
-                    className="text-lg hover:scale-110 transition-transform cursor-pointer"
-                    title={getLanguageLabel(lang)}
-                  >
-                    {getLanguageFlag(lang)}
-                  </button>
-                )) :
-                <span className="text-lg" title={getLanguageLabel(document.language as Language)}>
-                  {getLanguageFlag(document.language as Language)}
-                </span>
+                document.availableLanguages
+                  .filter((lang: Language) => lang !== document.language) // Only show translations, not original
+                  .map((lang: Language) => (
+                    <button
+                      key={lang}
+                      onClick={(e) => handleLanguageClick(lang, e)}
+                      className="text-lg hover:scale-110 transition-transform cursor-pointer"
+                      title={`${getLanguageLabel(lang)} (${t("documents.translation")})`}
+                    >
+                      {getLanguageFlag(lang)}
+                    </button>
+                  )) :
+                <span className="text-xs text-gray-500 dark:text-gray-400">{t("documents.noTranslations")}</span>
               }
             </div>
             

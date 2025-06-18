@@ -49,16 +49,6 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
     return searchParams?.get("category") === categoryId;
   };
 
-  // Check if all documents are being displayed (no category filter)
-  const isAllCategoryActive = () => {
-    return searchParams?.get("category") === "ALL" || (!searchParams?.get("category") && !searchParams?.get("type"));
-  };
-
-  // Check if information section is active
-  const isInformationActive = () => {
-    return searchParams?.get("type") === "information";
-  };
-
   const handleSignOut = async () => {
     setIsSigningOut(true);
     try {
@@ -104,7 +94,7 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
               <Link
                 href={`/${locale}/owner-dashboard`}
                 className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
-                  pathname === `/${locale}/owner-dashboard` && isAllCategoryActive() && !searchParams?.toString()
+                  pathname === `/${locale}/owner-dashboard`
                     ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
                     : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700"
                 }`}
@@ -115,9 +105,9 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
 
               {/* Information section */}
               <Link
-                href={`/${locale}/owner-dashboard?type=information`}
+                href={`/${locale}/owner-dashboard/informations`}
                 className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
-                  isInformationActive()
+                  pathname === `/${locale}/owner-dashboard/informations`
                     ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
                     : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700"
                 }`}
@@ -128,9 +118,9 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
 
               {/* Polls section */}
               <Link
-                href={`/${locale}/polls`}
+                href={`/${locale}/owner-dashboard/polls`}
                 className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
-                  pathname?.startsWith(`/${locale}/polls`)
+                  pathname === `/${locale}/owner-dashboard/polls`
                     ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
                     : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700"
                 }`}
@@ -148,10 +138,12 @@ export default function OwnerDashboardTemplate({ children }: { children?: React.
 
               {categories.map((category) => {
                 const Icon = category.icon;
-                const isActive = category.id === "ALL" ? isAllCategoryActive() : isCategoryActive(category.id);
+                const isActive = category.id === "ALL" 
+                  ? pathname === `/${locale}/owner-dashboard/documents`
+                  : (pathname === `/${locale}/owner-dashboard/documents` && isCategoryActive(category.id));
                 const href = category.id === "ALL" 
-                  ? `/${locale}/owner-dashboard` 
-                  : `/${locale}/owner-dashboard?category=${category.id}`;
+                  ? `/${locale}/owner-dashboard/documents` 
+                  : `/${locale}/owner-dashboard/documents?category=${category.id}`;
 
                 return (
                   <Link

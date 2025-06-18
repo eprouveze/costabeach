@@ -427,8 +427,6 @@ export const documentsRouter = router({
         // Debug: Also check if there are translation documents that might be missing their original
         const allDocumentsDebug = await prisma.documents.findMany({
           where: {
-            ...whereClause,
-            isTranslation: { in: [true, false] }, // Get both originals and translations
             title: { contains: 'pv ag costa beach', mode: 'insensitive' }
           },
           select: {
@@ -494,7 +492,7 @@ export const documentsRouter = router({
           }
           
           return {
-          id: doc.id,
+            id: doc.id,
           title: doc.title,
           description: doc.description,
           filePath: doc.filePath,
@@ -544,7 +542,8 @@ export const documentsRouter = router({
             id: doc.user.id, 
             name: doc.user.name || doc.user.email || 'Unknown' 
           } : { id: doc.createdBy || '', name: 'Unknown' }
-        }));
+        };
+        });
       } catch (error) {
         console.error("Error fetching all documents:", error);
         throw new TRPCError({

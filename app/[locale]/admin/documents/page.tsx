@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { api } from "@/lib/trpc/react";
 import { useI18n } from "@/lib/i18n/client";
-import { DocumentCategory, Language } from "@/lib/types";
+import { DocumentCategory, Language, Document } from "@/lib/types";
 import { DocumentCard } from "@/components/DocumentCard";
 import { DocumentUploadForm } from "@/components/DocumentUploadForm";
 import { Header } from "@/components/organisms/Header";
@@ -66,6 +66,16 @@ export default function AdminDocumentsPage() {
         console.error('Error initiating document deletion:', error);
       }
     }
+  };
+
+  const handleViewDocument = (document: Document) => {
+    // Navigate to the document detail page
+    console.log('Navigating to document:', { id: document.id, title: document.title, locale });
+    if (!document.id) {
+      console.error('Document ID is missing:', document);
+      return;
+    }
+    window.location.href = `/${locale}/owner-dashboard/documents/${document.id}`;
   };
 
   // Filter documents based on search and filters
@@ -266,13 +276,28 @@ export default function AdminDocumentsPage() {
             ))}
           </div>
         ) : filteredDocuments.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+            {/* Table Header */}
+            <div className="bg-gray-50 dark:bg-gray-700 px-6 py-3 border-b border-gray-200 dark:border-gray-600">
+              <div className="grid grid-cols-12 gap-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <div className="col-span-5">{t("documents.name")}</div>
+                <div className="col-span-2">{t("documents.category")}</div>
+                <div className="col-span-1 text-center">{t("documents.original")}</div>
+                <div className="col-span-1 text-center">{t("documents.translations")}</div>
+                <div className="col-span-1">{t("documents.size")}</div>
+                <div className="col-span-1">{t("documents.views")}</div>
+                <div className="col-span-1 text-right">{t("documents.actions")}</div>
+              </div>
+            </div>
+            {/* Document rows */}
             {filteredDocuments.map((document) => (
               <DocumentCard
                 key={document.id}
                 document={document}
                 onDelete={handleDeleteDocument}
+                onView={handleViewDocument}
                 showActions={true}
+                viewMode="table"
               />
             ))}
           </div>

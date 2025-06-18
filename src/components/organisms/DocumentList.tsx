@@ -187,13 +187,14 @@ export const DocumentList = ({
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
             {/* Table Header */}
             <div className="bg-gray-50 dark:bg-gray-800 px-6 py-3 border-b border-gray-200 dark:border-gray-700">
-              <div className="grid grid-cols-12 gap-4 text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                <div className="col-span-5">{t("documents.documentName") || "Document"}</div>
-                <div className="col-span-2">{t("documents.category") || "Category"}</div>
-                <div className="col-span-2">{t("documents.languages") || "Languages"}</div>
-                <div className="col-span-1">{t("documents.size") || "Size"}</div>
-                <div className="col-span-1">{t("documents.viewCount") || "Views"}</div>
-                <div className="col-span-1 text-right">{t("documents.actions") || "Actions"}</div>
+              <div className="grid grid-cols-12 gap-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <div className="col-span-5">{t("documents.name")}</div>
+                <div className="col-span-2">{t("documents.category")}</div>
+                <div className="col-span-1 text-center">{t("documents.original")}</div>
+                <div className="col-span-1 text-center">{t("documents.translations")}</div>
+                <div className="col-span-1">{t("documents.size")}</div>
+                <div className="col-span-1">{t("documents.views")}</div>
+                <div className="col-span-1 text-right">{t("documents.actions")}</div>
               </div>
             </div>
             
