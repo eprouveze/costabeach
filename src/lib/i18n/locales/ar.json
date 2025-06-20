@@ -215,6 +215,9 @@
         "name": "الاسم",
         "phoneNumber": "رقم الهاتف",
         "status": "الحالة"
+      },
+      "toasts": {
+        "templateNameRequired": "يرجى إدخال اسم القالب"
       }
     },
     "whatsappManagement": "إدارة واتساب",
