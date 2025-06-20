@@ -13,13 +13,15 @@ import {
   ClipboardList, 
   AlertTriangle, 
   History, 
-  Search 
+  Search,
+  Menu,
+  X 
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n/client";
 import { Header } from "@/components/organisms/Header";
-import { useState, FormEvent, useEffect } from "react";
+import { useState, FormEvent, useEffect, useRef } from "react";
 import { signOut } from "@/lib/supabase/auth";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
@@ -34,7 +36,31 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
   const [searchQuery, setSearchQuery] = useState(searchParams?.get("search") || "");
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [userPermissions, setUserPermissions] = useState<Permission[]>([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const session = useSession();
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  // Close sidebar when navigating on mobile
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [pathname]);
+
+  // Handle click outside to close sidebar on mobile
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isSidebarOpen && sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    if (isSidebarOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isSidebarOpen]);
 
   // Fetch user permissions
   useEffect(() => {
@@ -99,9 +125,34 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
       {/* Global Header */}
       <Header />
       
-      <div className="flex flex-1">
+      <div className="flex flex-1 relative">
+        {/* Mobile menu button */}
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="lg:hidden fixed top-20 left-4 z-50 p-3 rounded-md bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700 min-h-[44px] min-w-[44px] flex items-center justify-center"
+          aria-label={t("navigation.toggleMenu")}
+        >
+          {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+
+        {/* Mobile overlay */}
+        {isSidebarOpen && (
+          <div
+            className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+
         {/* Sidebar */}
-        <aside className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 fixed top-16 bottom-0 left-0 overflow-y-auto z-10">
+        <aside 
+          ref={sidebarRef}
+          className={`
+            w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 
+            fixed top-16 bottom-0 overflow-y-auto z-50
+            transition-transform duration-300 ease-in-out
+            ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+            lg:translate-x-0 lg:left-0
+          `}>
           <div className="p-4">
             <form onSubmit={handleSearch} className="mb-6">
               <div className="relative">
@@ -110,7 +161,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
                   placeholder={t("admin.searchLogsPlaceholder") || "Search..."}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 sm:py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[44px]"
                 />
                 <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400 dark:text-gray-500" />
                 <button type="submit" className="sr-only">Search</button>
@@ -121,7 +172,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
               {/* Admin Dashboard */}
               <Link
                 href={`/${locale}/admin`}
-                className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
+                className={`flex items-center gap-3 px-4 py-4 sm:py-3 text-sm font-medium rounded-md min-h-[48px] ${
                   pathname === `/${locale}/admin`
                     ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
                     : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -141,7 +192,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
               {/* User Management */}
               <Link
                 href={`/${locale}/admin/users`}
-                className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
+                className={`flex items-center gap-3 px-4 py-4 sm:py-3 text-sm font-medium rounded-md min-h-[48px] ${
                   pathname.startsWith(`/${locale}/admin/users`)
                     ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
                     : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -155,7 +206,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
               {(canManageDocuments || canManageComiteDocuments) && (
                 <Link
                   href={`/${locale}/admin/documents`}
-                  className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
+                  className={`flex items-center gap-3 px-4 py-4 sm:py-3 text-sm font-medium rounded-md min-h-[48px] ${
                     pathname.startsWith(`/${locale}/admin/documents`)
                       ? "text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20"
                       : "text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -170,7 +221,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
               {canManageInformation && (
                 <Link
                   href={`/${locale}/admin/information`}
-                  className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
+                  className={`flex items-center gap-3 px-4 py-4 sm:py-3 text-sm font-medium rounded-md min-h-[48px] ${
                     pathname.startsWith(`/${locale}/admin/information`)
                       ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
                       : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -184,7 +235,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
               {/* Polls Management */}
               <Link
                 href={`/${locale}/admin/polls`}
-                className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
+                className={`flex items-center gap-3 px-4 py-4 sm:py-3 text-sm font-medium rounded-md min-h-[48px] ${
                   pathname.startsWith(`/${locale}/admin/polls`)
                     ? "text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20"
                     : "text-gray-600 dark:text-gray-300 hover:text-yellow-600 dark:hover:text-yellow-400 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -197,7 +248,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
               {/* Owner Registrations */}
               <Link
                 href={`/${locale}/admin/owner-registrations`}
-                className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
+                className={`flex items-center gap-3 px-4 py-4 sm:py-3 text-sm font-medium rounded-md min-h-[48px] ${
                   pathname.startsWith(`/${locale}/admin/owner-registrations`)
                     ? "text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20"
                     : "text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -218,7 +269,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
               {canManageWhatsApp && (
                 <Link
                   href={`/${locale}/admin/whatsapp`}
-                  className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
+                  className={`flex items-center gap-3 px-4 py-4 sm:py-3 text-sm font-medium rounded-md min-h-[48px] ${
                     pathname.startsWith(`/${locale}/admin/whatsapp`)
                       ? "text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20"
                       : "text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -232,7 +283,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
               {/* Emergency Alerts */}
               <Link
                 href={`/${locale}/admin/emergency-alerts`}
-                className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
+                className={`flex items-center gap-3 px-4 py-4 sm:py-3 text-sm font-medium rounded-md min-h-[48px] ${
                   pathname.startsWith(`/${locale}/admin/emergency-alerts`)
                     ? "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20"
                     : "text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -253,7 +304,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
               {canManageTranslations && (
                 <Link
                   href={`/${locale}/admin/translations`}
-                  className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
+                  className={`flex items-center gap-3 px-4 py-4 sm:py-3 text-sm font-medium rounded-md min-h-[48px] ${
                     pathname.startsWith(`/${locale}/admin/translations`)
                       ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20"
                       : "text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -267,7 +318,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
               {/* Activity Logs */}
               <Link
                 href={`/${locale}/admin/logs`}
-                className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
+                className={`flex items-center gap-3 px-4 py-4 sm:py-3 text-sm font-medium rounded-md min-h-[48px] ${
                   pathname.startsWith(`/${locale}/admin/logs`)
                     ? "text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20"
                     : "text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -280,7 +331,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
               {/* Reports */}
               <Link
                 href={`/${locale}/admin/reports`}
-                className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
+                className={`flex items-center gap-3 px-4 py-4 sm:py-3 text-sm font-medium rounded-md min-h-[48px] ${
                   pathname.startsWith(`/${locale}/admin/reports`)
                     ? "text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20"
                     : "text-gray-600 dark:text-gray-300 hover:text-yellow-600 dark:hover:text-yellow-400 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -300,7 +351,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
               {/* System Settings */}
               <Link
                 href={`/${locale}/admin/settings`}
-                className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md ${
+                className={`flex items-center gap-3 px-4 py-4 sm:py-3 text-sm font-medium rounded-md min-h-[48px] ${
                   pathname.startsWith(`/${locale}/admin/settings`)
                     ? "text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20"
                     : "text-gray-600 dark:text-gray-300 hover:text-gray-600 dark:hover:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -328,7 +379,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
               <button
                 onClick={handleSignOut}
                 disabled={isSigningOut}
-                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center gap-3 px-4 py-4 sm:py-3 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px]"
               >
                 <LogOut className="w-5 h-5" />
                 {isSigningOut ? t("auth.signingOut") : t("auth.signOut")}
@@ -338,9 +389,9 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 ml-64 pt-16 pb-10 min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
-          {/* Content */}
-          <div className="p-6 max-w-7xl mx-auto">
+        <main className="flex-1 lg:ml-64 pt-16 pb-10 min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
+          {/* Content with padding for mobile menu button */}
+          <div className="p-4 sm:p-6 pt-20 lg:pt-6 max-w-7xl mx-auto">
             {children}
           </div>
         </main>

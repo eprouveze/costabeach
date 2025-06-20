@@ -158,7 +158,25 @@
     "unknownDocument": "Document inconnu",
     "user": "Utilisateur",
     "userManagement": "Gestion des utilisateurs",
-    "users": "",
+    "users": {
+      "actions": {
+        "activate": "",
+        "deactivate": "",
+        "edit": "",
+        "sendPasswordReset": ""
+      },
+      "adminRole": "",
+      "contentEditorRole": "",
+      "ownerBadge": "",
+      "status": {
+        "active": "",
+        "inactive": ""
+      },
+      "tableHeaders": {
+        "registered": ""
+      },
+      "userRole": ""
+    },
     "viewCompletedTranslations": "Voir les traductions terminées",
     "viewInDocuments": "Voir dans Documents",
     "whatsapp": {

@@ -56,10 +56,10 @@ export function DashboardContent() {
   };
 
   return (
-    <div className="p-6 space-y-8">
+    <div className="p-4 sm:p-6 space-y-6 sm:space-y-8">
       {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg shadow-lg p-6 text-white">
-        <h1 className="text-3xl font-bold mb-2">
+      <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg shadow-lg p-4 sm:p-6 text-white">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2">
           {t("admin.dashboard") || "Dashboard"}
         </h1>
         <p className="text-blue-100">
@@ -67,13 +67,13 @@ export function DashboardContent() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         {/* Latest Information Section */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center">
               <FileText className="h-6 w-6 text-blue-600 mr-3" />
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
                 {t("common.information") || "Information"}
               </h2>
             </div>
@@ -86,7 +86,7 @@ export function DashboardContent() {
             </Link>
           </div>
           
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {isLoadingInfo ? (
               <div className="flex justify-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
@@ -126,10 +126,10 @@ export function DashboardContent() {
 
         {/* Latest Documents Section */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center">
               <FileText className="h-6 w-6 text-green-600 mr-3" />
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
                 {t("common.documents") || "Documents"}
               </h2>
             </div>
@@ -142,7 +142,7 @@ export function DashboardContent() {
             </Link>
           </div>
           
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {isLoadingDocs ? (
               <div className="flex justify-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
@@ -191,17 +191,17 @@ export function DashboardContent() {
       </div>
 
       {/* Quick Links Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4">
           {t("navigation.quickLinks") || "Quick Links"}
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <Link
             href={`/${locale}/owner-dashboard/documents`}
-            className="flex items-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+            className="flex flex-col sm:flex-row items-center p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors text-center sm:text-left"
           >
-            <FileText className="h-8 w-8 text-blue-600 mr-3" />
-            <span className="font-medium text-gray-900 dark:text-white">
+            <FileText className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600 mb-2 sm:mb-0 sm:mr-3" />
+            <span className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">
               {t("common.documents")}
             </span>
           </Link>
@@ -211,7 +211,7 @@ export function DashboardContent() {
             className="flex items-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors"
           >
             <FileText className="h-8 w-8 text-green-600 mr-3" />
-            <span className="font-medium text-gray-900 dark:text-white">
+            <span className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">
               {t("common.information")}
             </span>
           </Link>
@@ -221,7 +221,7 @@ export function DashboardContent() {
             className="flex items-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
           >
             <FileText className="h-8 w-8 text-purple-600 mr-3" />
-            <span className="font-medium text-gray-900 dark:text-white">
+            <span className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">
               {t("navigation.polls")}
             </span>
           </Link>
@@ -231,7 +231,7 @@ export function DashboardContent() {
             className="flex items-center p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors"
           >
             <FileText className="h-8 w-8 text-orange-600 mr-3" />
-            <span className="font-medium text-gray-900 dark:text-white">
+            <span className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">
               {t("navigation.contact")}
             </span>
           </Link>

@@ -161,7 +161,25 @@
     "unknownDocument": "مستند غير معروف",
     "user": "المستخدم",
     "userManagement": "إدارة المستخدمين",
-    "users": "",
+    "users": {
+      "actions": {
+        "activate": "",
+        "deactivate": "",
+        "edit": "",
+        "sendPasswordReset": ""
+      },
+      "adminRole": "",
+      "contentEditorRole": "",
+      "ownerBadge": "",
+      "status": {
+        "active": "",
+        "inactive": ""
+      },
+      "tableHeaders": {
+        "registered": ""
+      },
+      "userRole": ""
+    },
     "viewCompletedTranslations": "عرض الترجمات المكتملة",
     "viewInDocuments": "عرض في المستندات",
     "whatsapp": {
