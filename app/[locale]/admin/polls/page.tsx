@@ -66,8 +66,12 @@ export default function AdminPollsPage() {
         try {
           const response = await fetch(`/api/users/${session.user.id}/permissions`);
           if (response.ok) {
-            const data = await response.json();
-            setUserPermissions(data.permissions || []);
+            try {
+              const data = await response.json();
+              setUserPermissions(data.permissions || []);
+            } catch (parseError) {
+              console.error("Error parsing permissions response:", parseError);
+            }
           }
         } catch (error) {
           console.error("Error fetching user permissions:", error);
@@ -110,8 +114,13 @@ export default function AdminPollsPage() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       
-      const data = await response.json();
-      setPolls(data.polls || []);
+      try {
+        const data = await response.json();
+        setPolls(data.polls || []);
+      } catch (parseError) {
+        console.error("Error parsing polls response:", parseError);
+        throw new Error("Failed to parse response");
+      }
     } catch (error) {
       console.error('Error loading polls:', error);
       setError(error instanceof Error ? error.message : 'Failed to load polls');
@@ -140,14 +149,22 @@ export default function AdminPollsPage() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create poll');
+        try {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to create poll');
+        } catch (parseError) {
+          throw new Error('Failed to create poll');
+        }
       }
 
-      const newPoll = await response.json();
-      setPolls(prev => [newPoll, ...prev]);
-      setShowCreateForm(false);
-      toast.success(t("polls.created") || "Poll created successfully!");
+      try {
+        const newPoll = await response.json();
+        setPolls(prev => [newPoll, ...prev]);
+        setShowCreateForm(false);
+        toast.success(t("polls.created") || "Poll created successfully!");
+      } catch (parseError) {
+        throw new Error('Failed to parse response');
+      }
     } catch (error) {
       console.error('Error creating poll:', error);
       toast.error(error instanceof Error ? error.message : 'Failed to create poll');

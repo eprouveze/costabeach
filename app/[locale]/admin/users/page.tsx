@@ -140,8 +140,13 @@ const matchesSearch =
         toast.success(t("admin.users.messages.userUpdated"));
         setShowEditModal(false);
       } else {
-        const errorData = await response.json();
-        toast.error(errorData.message || t("admin.users.errors.updateFailed"));
+        try {
+          const errorData = await response.json();
+          toast.error(errorData.message || t("admin.users.errors.updateFailed"));
+        } catch (parseError) {
+          console.error("Error parsing error response:", parseError);
+          toast.error(t("admin.users.errors.updateFailed"));
+        }
       }
     } catch (error) {
       console.error("Error updating user:", error);

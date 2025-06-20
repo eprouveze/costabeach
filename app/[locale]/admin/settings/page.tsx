@@ -80,8 +80,12 @@ export default function AdminSettingsPage() {
         try {
           const response = await fetch(`/api/users/${session.user.id}/permissions`);
           if (response.ok) {
-            const userData = await response.json();
-            setUserPermissions(userData.permissions || []);
+            try {
+              const userData = await response.json();
+              setUserPermissions(userData.permissions || []);
+            } catch (parseError) {
+              console.error("Error parsing permissions response:", parseError);
+            }
           }
         } catch (error) {
           console.error("Error fetching permissions:", error);

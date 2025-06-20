@@ -30,8 +30,13 @@ export default function OwnerRegistrationsPage() {
     try {
       const response = await fetch("/api/admin/owner-registrations");
       if (!response.ok) throw new Error("Failed to fetch registrations");
-      const data = await response.json();
-      setRegistrations(data);
+      try {
+        const data = await response.json();
+        setRegistrations(data);
+      } catch (parseError) {
+        console.error("Error parsing registrations response:", parseError);
+        throw new Error("Failed to parse response");
+      }
     } catch (error) {
       toast.error(t("admin.ownerRegistrations.loadError"));
     } finally {
