@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import { useI18n } from '@/lib/i18n/client';
 
 export default function NextAuthLoginForm() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -206,7 +206,7 @@ export default function NextAuthLoginForm() {
             <p className="text-center text-sm text-neutral-600 dark:text-neutral-400">
               {t('auth.signin.noAccount')}{" "}
               <Link
-                href="/auth/signup"
+                href={`/${locale}/auth/signup`}
                 className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500"
               >
                 {t('auth.signin.signup')}

@@ -11,7 +11,7 @@ import { useI18n } from '@/lib/i18n/client';
 import SocialLoginButtons from './SocialLoginButtons';
 
 export default function RegisterForm() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -51,7 +51,7 @@ export default function RegisterForm() {
       }
       
       toast.success(t('toast.auth.registrationSuccess'));
-      router.push('/auth/verify');
+      router.push(`/${locale}/auth/verify`);
     } catch (error: any) {
       setErrorMessage(error.message || t('toast.auth.unexpectedError'));
       toast.error(error.message || t('toast.auth.unexpectedError'));
@@ -316,7 +316,7 @@ export default function RegisterForm() {
             <p className="text-center text-sm text-neutral-600 dark:text-neutral-400">
               {t('auth.signup.alreadyHaveAccount')}{" "}
               <Link
-                href="/auth/signin"
+                href={`/${locale}/auth/signin`}
                 className="font-medium text-brandBlue-600 dark:text-brandBlue-400 hover:text-brandBlue-500"
               >
                 {t('auth.signup.signIn')}
@@ -325,7 +325,7 @@ export default function RegisterForm() {
             <p className="mt-2 text-center text-sm text-neutral-600 dark:text-neutral-400">
               {t('auth.signup.bySigningUp')}{" "}
               <Link
-                href="/privacy"
+                href={`/${locale}/privacy`}
                 className="font-medium text-brandBlue-600 dark:text-brandBlue-400 hover:text-brandBlue-500"
               >
                 {t('auth.signup.privacyPolicy')}

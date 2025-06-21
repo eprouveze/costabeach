@@ -47,13 +47,13 @@ export default function Hero({ className = "" }: HeroProps) {
           {/* CTA Buttons */}
           <div className={`flex flex-wrap gap-4 ${textAlignClass === 'text-right' ? 'justify-end' : 'justify-start'}`}>
             <Link 
-              href="/auth/signup" 
+              href={`/${locale}/auth/signup`} 
               className="bg-white text-blue-600 px-6 py-3 rounded-md hover:bg-gray-100 transition-colors font-medium"
             >
               {t("landing.registerCTA")}
             </Link>
             <Link 
-              href="/contact" 
+              href={`/${locale}/contact`} 
               className="bg-blue-700 text-white px-6 py-3 rounded-md hover:bg-blue-800 transition-colors font-medium border border-white/20"
             >
               {t("landing.contactCTA")}
