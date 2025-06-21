@@ -90,7 +90,49 @@
       "warningMessage": "Emergency alerts will be sent to all residents via WhatsApp. Use this feature responsibly and only for genuine emergencies or important community notifications.",
       "warningTitle": "Important:"
     },
-    "emergencyAlerts": "Emergency Alerts",
+    "emergencyAlerts": {
+      "title": "Emergency Alerts",
+      "description": "Send emergency notifications to all community members",
+      "accessDeniedMessage": "You don't have permission to send emergency alerts",
+      "howItWorks": {
+        "title": "How It Works"
+      },
+      "severityLevels": {
+        "title": "Severity Levels",
+        "low": "Low",
+        "lowDescription": "General information, non-urgent",
+        "medium": "Medium",
+        "mediumDescription": "Important but not critical",
+        "high": "High",
+        "highDescription": "Urgent attention required",
+        "critical": "Critical",
+        "criticalDescription": "Immediate action required"
+      },
+      "deliveryInfo": {
+        "title": "Delivery Information",
+        "instant": "Instant delivery via WhatsApp",
+        "branding": "Branded community messages",
+        "tracking": "Delivery status tracking",
+        "emergencyContacts": "Includes emergency contact info"
+      },
+      "bestPractices": {
+        "title": "Best Practices",
+        "writing": {
+          "title": "Writing Guidelines",
+          "clear": "Keep messages clear and concise",
+          "specific": "Be specific about the situation",
+          "actionable": "Include actionable instructions",
+          "severity": "Match severity to actual urgency"
+        },
+        "when": {
+          "title": "When to Use",
+          "emergencies": "Actual emergencies only",
+          "maintenance": "Critical maintenance notifications",
+          "security": "Security-related alerts",
+          "weather": "Severe weather warnings"
+        }
+      }
+    },
     "errors": {
       "permissionsFetchFailed": "Failed to fetch permissions"
     },

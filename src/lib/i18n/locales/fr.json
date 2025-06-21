@@ -90,7 +90,49 @@
       "warningMessage": "Les alertes d'urgence seront envoyées à tous les résidents via WhatsApp. Utilisez cette fonctionnalité de manière responsable et uniquement pour de véritables urgences ou des notifications communautaires importantes.",
       "warningTitle": "Important :"
     },
-    "emergencyAlerts": "Alertes d'urgence",
+    "emergencyAlerts": {
+      "title": "Alertes d'urgence",
+      "description": "Envoyer des notifications d'urgence à tous les membres de la communauté",
+      "accessDeniedMessage": "Vous n'avez pas la permission d'envoyer des alertes d'urgence",
+      "howItWorks": {
+        "title": "Comment ça fonctionne"
+      },
+      "severityLevels": {
+        "title": "Niveaux de sévérité",
+        "low": "Faible",
+        "lowDescription": "Information générale, non urgente",
+        "medium": "Moyen",
+        "mediumDescription": "Important mais pas critique",
+        "high": "Élevé",
+        "highDescription": "Attention urgente requise",
+        "critical": "Critique",
+        "criticalDescription": "Action immédiate requise"
+      },
+      "deliveryInfo": {
+        "title": "Informations de livraison",
+        "instant": "Livraison instantanée via WhatsApp",
+        "branding": "Messages communautaires avec marque",
+        "tracking": "Suivi du statut de livraison",
+        "emergencyContacts": "Inclut les informations de contact d'urgence"
+      },
+      "bestPractices": {
+        "title": "Meilleures pratiques",
+        "writing": {
+          "title": "Directives de rédaction",
+          "clear": "Gardez les messages clairs et concis",
+          "specific": "Soyez spécifique sur la situation",
+          "actionable": "Incluez des instructions concrètes",
+          "severity": "Adaptez la sévérité à l'urgence réelle"
+        },
+        "when": {
+          "title": "Quand utiliser",
+          "emergencies": "Urgences réelles uniquement",
+          "maintenance": "Notifications de maintenance critique",
+          "security": "Alertes liées à la sécurité",
+          "weather": "Alertes météorologiques sévères"
+        }
+      }
+    },
     "errors": {
       "permissionsFetchFailed": "Échec de la récupération des autorisations"
     },

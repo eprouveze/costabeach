@@ -105,6 +105,9 @@ prisma/
 
 ### Important Implementation Details
 
+**Development Notes**:
+- Use the safe version of i18n tools as per @docs/i18n-automation.md 
+
 **Database Design**:
 - Uses snake_case in database, camelCase in TypeScript
 - Row Level Security (RLS) enabled for sensitive tables

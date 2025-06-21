@@ -93,7 +93,49 @@
       "warningMessage": "سيتم إرسال تنبيهات الطوارئ إلى جميع المقيمين عبر واتساب. استخدم هذه الميزة بمسؤولية وفقط لحالات الطوارئ الحقيقية أو إشعارات المجتمع المهمة.",
       "warningTitle": "مهم:"
     },
-    "emergencyAlerts": "تنبيهات طارئة",
+    "emergencyAlerts": {
+      "title": "تنبيهات طارئة",
+      "description": "إرسال إشعارات طارئة لجميع أعضاء المجتمع",
+      "accessDeniedMessage": "ليس لديك إذن لإرسال تنبيهات طارئة",
+      "howItWorks": {
+        "title": "كيف يعمل"
+      },
+      "severityLevels": {
+        "title": "مستويات الخطورة",
+        "low": "منخفض",
+        "lowDescription": "معلومات عامة، غير عاجلة",
+        "medium": "متوسط",
+        "mediumDescription": "مهم ولكن غير حرج",
+        "high": "عالي",
+        "highDescription": "يتطلب انتباه عاجل",
+        "critical": "حرج",
+        "criticalDescription": "يتطلب إجراء فوري"
+      },
+      "deliveryInfo": {
+        "title": "معلومات التسليم",
+        "instant": "تسليم فوري عبر واتساب",
+        "branding": "رسائل مجتمعية ذات علامة تجارية",
+        "tracking": "تتبع حالة التسليم",
+        "emergencyContacts": "يتضمن معلومات الاتصال الطارئ"
+      },
+      "bestPractices": {
+        "title": "أفضل الممارسات",
+        "writing": {
+          "title": "إرشادات الكتابة",
+          "clear": "اجعل الرسائل واضحة وموجزة",
+          "specific": "كن محدداً حول الموقف",
+          "actionable": "أدرج تعليمات قابلة للتنفيذ",
+          "severity": "اجعل الخطورة تتناسب مع الإلحاح الفعلي"
+        },
+        "when": {
+          "title": "متى تستخدم",
+          "emergencies": "الحالات الطارئة الفعلية فقط",
+          "maintenance": "إشعارات الصيانة الحرجة",
+          "security": "تنبيهات متعلقة بالأمن",
+          "weather": "تحذيرات الطقس الشديد"
+        }
+      }
+    },
     "errors": {
       "permissionsFetchFailed": "فشل في جلب الصلاحيات"
     },
