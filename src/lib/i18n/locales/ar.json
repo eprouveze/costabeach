@@ -43,8 +43,6 @@
       "characterLimit_many": "{{count}} حرفاً متبقياً",
       "characterLimit_other": "{{count}} حرف متبقي",
       "communityName": "🏖️ اسم المجتمع",
-      "description": "إرسال تنبيهات طارئة لجميع المستخدمين.",
-      "send": "إرسال التنبيه",
       "presets": {
         "powerOutage": {
           "message": "انقطاع في التيار في المبنى. وقت استعادة الخدمة المقدر: ساعتان. الإضاءة الطارئة نشطة.",
@@ -96,9 +94,6 @@
       "warningTitle": "مهم:"
     },
     "emergencyAlerts": "تنبيهات طارئة",
-    "lastRun": "آخر تشغيل",
-    "logs": "السجلات",
-    "nextRun": "التشغيل التالي",
     "errors": {
       "permissionsFetchFailed": "فشل في جلب الصلاحيات"
     },
@@ -149,11 +144,8 @@
     "systemSettings": "إعدادات النظام",
     "timestamp": "الطابع الزمني",
     "totalDocuments": "إجمالي المستندات",
-    "totalMessages": "إجمالي الرسائل",
-    "totalProcessing": "إجمالي قيد المعالجة",
+    "totalJobs": "إجمالي المهام",
     "totalUsers": "إجمالي المستخدمين",
-    "translations": "الترجمات",
-    "translationsRecent": "الترجمات الحديثة",
     "translation": "ترجمة",
     "translationDescription": "مراقبة والتحكم في نظام ترجمة المستندات",
     "translationInstructions": {
@@ -168,10 +160,7 @@
     "translationManagement": "إدارة الترجمات",
     "unknownDocument": "مستند غير معروف",
     "user": "المستخدم",
-    "userId": "معرف المستخدم",
     "userManagement": "إدارة المستخدمين",
-    "userManagementSubtitle": "إدارة المستخدمين والأدوار والصلاحيات",
-    "users": "المستخدمون",
     "users": {
       "actions": {
         "activate": "تفعيل",
@@ -201,20 +190,12 @@
       "broadcastMessageLabel": "رسالة البث",
       "broadcastMessagePlaceholder": "أدخل رسالة البث هنا...",
       "broadcastTitle": "بث رسالة واتساب",
-      "broadcast": "بث",
-      "broadcastMessage": "رسالة البث",
-      "broadcastHistory": "تاريخ البث",
       "characterLimit_zero": "لا توجد أحرف متبقية",
       "characterLimit_one": "حرف واحد متبقي",
       "characterLimit_two": "حرفان متبقيان",
       "characterLimit_few": "{{count}} أحرف متبقية",
       "characterLimit_many": "{{count}} حرفاً متبقياً",
       "characterLimit_other": "{{count}} حرف متبقي",
-      "chat": "دردشة",
-      "chatHistory": "تاريخ الدردشة",
-      "chatSubtitle": "إرسال واستقبال رسائل واتساب",
-      "chatTemplates": "قوالب الدردشة",
-      "chatTemplatesSubtitle": "إدارة قوالب الرسائل المحددة مسبقاً",
       "clearAll": "مسح الكل",
       "connectionFailed": "فشل الاتصال",
       "credentialsNotConfigured": "بيانات الاعتماد غير مكونة",
@@ -222,7 +203,6 @@
       "namePlaceholder": "الاسم (اختياري)",
       "noRecipients": "لم يتم إضافة مستقبلين بعد",
       "phoneNumberPlaceholder": "+1234567890",
-      "recipient": "مستقبل",
       "recipients": "المستقبلون",
       "sendBroadcast_zero": "لا يوجد مستقبلون",
       "sendBroadcast_one": "إرسال إلى مستقبل واحد",
@@ -230,24 +210,11 @@
       "sendBroadcast_few": "إرسال إلى {{count}} مستقبلين",
       "sendBroadcast_many": "إرسال إلى {{count}} مستقبلاً",
       "sendBroadcast_other": "إرسال إلى {{count}} مستقبل",
-      "sendMessage": "إرسال رسالة",
-      "sendTestMessage": "إرسال رسالة اختبار",
-      "settings": "الإعدادات",
       "tableHeaders": {
         "actions": "الإجراءات",
         "name": "الاسم",
         "phoneNumber": "رقم الهاتف",
         "status": "الحالة"
-      },
-      "toasts": {
-        "broadcastSentPartial": "تم إرسال البث! {{successCount}} نجح، {{failedCount}} فشل",
-        "sampleRecipientsAdded_zero": "لم يتم إضافة مستقبلين عينة",
-        "sampleRecipientsAdded_one": "تم إضافة مستقبل عينة واحد",
-        "sampleRecipientsAdded_two": "تم إضافة مستقبلين عينة",
-        "sampleRecipientsAdded_few": "تم إضافة {{count}} مستقبلين عينة",
-        "sampleRecipientsAdded_many": "تم إضافة {{count}} مستقبلاً عينة",
-        "sampleRecipientsAdded_other": "تم إضافة {{count}} مستقبل عينة",
-        "templateNameRequired": "يرجى إدخال اسم القالب"
       }
     },
     "whatsappManagement": "إدارة واتساب",

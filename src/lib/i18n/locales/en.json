@@ -40,8 +40,6 @@
       "characterLimit_many": "{{count}} characters remaining",
       "characterLimit_other": "{{count}} characters remaining",
       "communityName": "🏖️ Community Name",
-      "description": "Send emergency alerts to all users.",
-      "send": "Send Alert",
       "presets": {
         "powerOutage": {
           "message": "Power outage in the building. Estimated restoration time: 2 hours. Emergency lighting is active.",
@@ -93,9 +91,6 @@
       "warningTitle": "Important:"
     },
     "emergencyAlerts": "Emergency Alerts",
-    "lastRun": "Last Run",
-    "logs": "Logs",
-    "nextRun": "Next Run",
     "errors": {
       "permissionsFetchFailed": "Failed to fetch permissions"
     },
@@ -146,11 +141,8 @@
     "systemSettings": "System Settings",
     "timestamp": "Timestamp",
     "totalDocuments": "Total Documents",
-    "totalMessages": "Total Messages",
-    "totalProcessing": "Total Processing",
+    "totalJobs": "Total Jobs",
     "totalUsers": "Total Users",
-    "translations": "Translations",
-    "translationsRecent": "Recent Translations",
     "translation": "Translation",
     "translationDescription": "Monitor and control the document translation system",
     "translationInstructions": {
@@ -165,28 +157,25 @@
     "translationManagement": "Translation Management",
     "unknownDocument": "Unknown Document",
     "user": "User",
-    "userId": "User ID",
     "userManagement": "User Management",
-    "userManagementSubtitle": "Manage users, roles, and permissions",
-    "users": "Users",
     "users": {
       "actions": {
-        "activate": "",
-        "deactivate": "",
-        "edit": "",
-        "sendPasswordReset": ""
+        "activate": "Activate",
+        "deactivate": "Deactivate",
+        "edit": "Edit",
+        "sendPasswordReset": "Send Password Reset"
       },
-      "adminRole": "",
-      "contentEditorRole": "",
-      "ownerBadge": "",
+      "adminRole": "Admin",
+      "contentEditorRole": "Content Editor",
+      "ownerBadge": "Owner",
       "status": {
-        "active": "",
-        "inactive": ""
+        "active": "Active",
+        "inactive": "Inactive"
       },
       "tableHeaders": {
-        "registered": ""
+        "registered": "Registered"
       },
-      "userRole": ""
+      "userRole": "User"
     },
     "viewCompletedTranslations": "View Completed Translations",
     "viewInDocuments": "View in Documents",
@@ -198,16 +187,9 @@
       "broadcastMessageLabel": "Broadcast Message",
       "broadcastMessagePlaceholder": "Enter your broadcast message here...",
       "broadcastTitle": "Broadcast WhatsApp Message",
-      "broadcast": "Broadcast",
-      "broadcastMessage": "Broadcast Message",
-      "broadcastHistory": "Broadcast History",
       "characterLimit_one": "{{count}} character remaining",
+      "characterLimit_many": "{{count}} characters remaining",
       "characterLimit_other": "{{count}} characters remaining",
-      "chat": "Chat",
-      "chatHistory": "Chat History",
-      "chatSubtitle": "Send and receive WhatsApp messages",
-      "chatTemplates": "Chat Templates",
-      "chatTemplatesSubtitle": "Manage pre-defined message templates",
       "clearAll": "Clear All",
       "connectionFailed": "Connection Failed",
       "credentialsNotConfigured": "Credentials Not Configured",
@@ -215,25 +197,15 @@
       "namePlaceholder": "Name (optional)",
       "noRecipients": "No recipients added yet",
       "phoneNumberPlaceholder": "+1234567890",
-      "recipient": "Recipient",
       "recipients": "Recipients",
       "sendBroadcast_one": "Send to {{count}} recipient",
+      "sendBroadcast_many": "Send to {{count}} recipients",
       "sendBroadcast_other": "Send to {{count}} recipients",
-      "sendMessage": "Send Message",
-      "sendTestMessage": "Send Test Message",
-      "settings": "Settings",
       "tableHeaders": {
         "actions": "Actions",
         "name": "Name",
         "phoneNumber": "Phone Number",
         "status": "Status"
-      },
-      "toasts": {
-        "broadcastSentPartial": "Broadcast sent! {{successCount}} successful, {{failedCount}} failed",
-        "sampleRecipientsAdded_one": "Added {{count}} sample recipient",
-        "sampleRecipientsAdded_many": "Added {{count}} sample recipients",
-        "sampleRecipientsAdded_other": "Added {{count}} sample recipients",
-        "templateNameRequired": "Please enter a template name"
       }
     },
     "whatsappManagement": "WhatsApp Management",
@@ -413,6 +385,7 @@
     "selectedFile": "Selected File",
     "selectFile": "Select File",
     "showingResults_one": "Showing {{count}} result",
+    "showingResults_many": "Showing {{count}} results",
     "showingResults_other": "Showing {{count}} results",
     "size": "Size",
     "supportedFormats": "Supported formats: PDF, Word, Excel, PowerPoint, Text, CSV, Images",
@@ -626,7 +599,7 @@
     "noPermission": "You don't have permission to create polls",
     "noPolls": "No Polls",
     "noPollsFound": "No Polls Found",
-    "noPollsUser": "",
+    "noPollsUser": "No polls for user",
     "options": "Options",
     "pollDetails": "Poll Details",
     "pollInfo": "Poll Information",
@@ -635,9 +608,9 @@
     "singleChoice": "Single Choice",
     "statistics": "Statistics",
     "stats": {
-      "active": "",
-      "totalPolls": "",
-      "yourVotes": ""
+      "active": "Active",
+      "totalPolls": "Total Polls",
+      "yourVotes": "Your Votes"
     },
     "status": "Status",
     "timeline": "Timeline",
@@ -834,6 +807,7 @@
       "recipientRequired": "Please add at least one recipient",
       "recipientsListCleared": "Recipients list cleared",
       "sampleRecipientsAdded_one": "Added {{count}} sample recipient",
+      "sampleRecipientsAdded_many": "Added {{count}} sample recipients",
       "sampleRecipientsAdded_other": "Added {{count}} sample recipients",
       "sampleRecipientsAlreadyAdded": "Sample recipients are already in the list",
       "settingsSaveError": "Failed to save settings: {{error}}",
