@@ -96,6 +96,19 @@
     "lastRun": "Dernière exécution",
     "logs": "Journaux",
     "nextRun": "Prochaine exécution",
+    "errors": {
+      "permissionsFetchFailed": "Échec de la récupération des autorisations"
+    },
+    "hideCompletedTranslations": "Masquer les traductions terminées",
+    "howTranslationWorks": "Comment fonctionne la traduction",
+    "messagesSent": "Messages envoyés",
+    "noCompletedTranslationsFound": "Aucune traduction terminée trouvée",
+    "noLogsDescription": "Aucun journal d'activité disponible pour le moment",
+    "noLogsFound": "Aucun journal trouvé",
+    "notConfigured": "Non configuré",
+    "ownerRegistrations": "Inscriptions en attente",
+    "pending": "En attente",
+    "pendingRegistrations": "Inscriptions en attente",
     "polls": {
       "actions": {
         "activate": "Activer",
@@ -111,6 +124,7 @@
       "status": "Statut",
       "votes": "Votes"
     },
+    "pollsManagement": "Gestion des sondages",
     "processing": "En cours de traitement",
     "processPendingJobs": "Traiter les tâches en attente",
     "queueSummary": "Résumé de la file d'attente",
@@ -124,6 +138,7 @@
     "retryFailedJobs": "Réessayer les tâches échouées",
     "running": "En cours d'exécution",
     "searchLogsPlaceholder": "Rechercher dans les journaux...",
+    "settings": "Paramètres",
     "startWorker": "Démarrer le travailleur",
     "stopped": "Arrêté",
     "stopWorker": "Arrêter le travailleur",
@@ -133,13 +148,29 @@
     "totalMessages": "Total des messages",
     "totalProcessing": "Total en traitement",
     "totalUsers": "Total des utilisateurs",
+    "translation": "Traduction",
+    "translationDescription": "Surveillez et contrôlez le système de traduction de documents",
+    "translationInstructions": {
+      "autoCreated": "• Lorsque des documents sont téléversés, des tâches de traduction sont automatiquement créées pour toutes les langues prises en charge",
+      "autoRefresh": "• La page se rafraîchit automatiquement toutes les 10 secondes pour afficher l'état actuel",
+      "backgroundProcessing": "• Le travailleur de traduction traite ces tâches en arrière-plan",
+      "cleanupOrphaned": "• Utilisez \"Nettoyer les orphelins\" pour supprimer les tâches de traduction des documents supprimés",
+      "completedDocuments": "• Les traductions terminées apparaissent comme des documents séparés dans la page Documents",
+      "manualProcessing": "• Utilisez \"Traiter les tâches en attente\" pour déclencher manuellement le traitement des traductions en attente",
+      "retryFailed": "• Les tâches échouées peuvent être relancées, et les tâches bloquées peuvent être récupérées"
+    },
+    "translationManagement": "Gestion des traductions",
     "translations": "Traductions",
     "translationsRecent": "Traductions récentes",
     "user": "Utilisateur",
     "userId": "ID de l'utilisateur",
     "userManagement": "Gestion des utilisateurs",
     "userManagementSubtitle": "Gérer les utilisateurs, les rôles et les autorisations",
+    "unknownDocument": "Document inconnu",
     "users": "Utilisateurs",
+    "viewCompletedTranslations": "Voir les traductions terminées",
+    "viewInDocuments": "Voir dans les documents",
+    "whatsappManagement": "Gestion WhatsApp",
     "workerStatus": "Statut du travailleur",
     "whatsapp": {
       "broadcast": "Diffuser",
@@ -183,7 +214,7 @@
     }
   },
   "auth": {
-    "email": "",
+    "email": "Email",
     "loginRequired": "Connexion requise",
     "password": "Mot de passe",
     "signin": {
@@ -377,7 +408,7 @@
     "uploadFirst": "Téléversez votre premier document",
     "uploading": "Téléversement...",
     "uploadProgress": "Téléversement : {{progress}}%",
-    "view": "",
+    "view": "Voir",
     "viewOriginal": "Voir l'original",
     "views": "vues"
   },
@@ -649,51 +680,51 @@
     "title": "Politique de confidentialité"
   },
   "profile": {
-    "admin": "",
-    "cancel": "",
-    "description": "",
-    "edit": "",
+    "admin": "Administrateur",
+    "cancel": "Annuler",
+    "description": "Gérez vos informations de profil et paramètres",
+    "edit": "Modifier",
     "email": "Email",
-    "emailNote": "",
-    "memberSince": "",
+    "emailNote": "L'adresse email ne peut pas être modifiée",
+    "memberSince": "Membre depuis",
     "name": "Nom",
-    "namePlaceholder": "",
-    "noName": "",
-    "notAvailable": "",
-    "owner": "",
-    "role": "",
-    "save": "",
-    "saving": "",
+    "namePlaceholder": "Entrez votre nom complet",
+    "noName": "Nom non spécifié",
+    "notAvailable": "Non disponible",
+    "owner": "Propriétaire",
+    "role": "Rôle",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
     "title": "Profil",
-    "updateError": "",
-    "updateSuccess": ""
+    "updateError": "Erreur lors de la mise à jour du profil",
+    "updateSuccess": "Profil mis à jour avec succès"
   },
   "settings": {
     "account": {
-      "currentEmail": "",
-      "emailNote": "",
-      "title": ""
+      "currentEmail": "Email actuel",
+      "emailNote": "Contactez le support pour changer votre email",
+      "title": "Paramètres du compte"
     },
-    "description": "Description",
+    "description": "Gérez les paramètres de votre compte et vos préférences",
     "language": {
-      "display": "",
-      "title": ""
+      "display": "Langue d'affichage",
+      "title": "Langue et région"
     },
     "notifications": {
-      "documents": "",
-      "email": "",
-      "emergency": "",
-      "polls": "",
-      "title": ""
+      "documents": "Notifications de documents",
+      "email": "Notifications par email",
+      "emergency": "Alertes d'urgence",
+      "polls": "Notifications de sondages",
+      "title": "Notifications"
     },
     "privacy": {
-      "showEmail": "",
-      "title": ""
+      "showEmail": "Afficher l'email aux autres utilisateurs",
+      "title": "Confidentialité"
     },
-    "save": "",
-    "saveError": "",
-    "saveSuccess": "",
-    "saving": "",
+    "save": "Enregistrer les paramètres",
+    "saveError": "Erreur lors de l'enregistrement des paramètres",
+    "saveSuccess": "Paramètres enregistrés avec succès",
+    "saving": "Enregistrement...",
     "title": "Paramètres"
   },
   "theme": {

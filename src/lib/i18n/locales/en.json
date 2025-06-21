@@ -41,6 +41,7 @@
       "characterLimit_other": "{{count}} characters remaining",
       "communityName": "🏖️ Community Name",
       "description": "Send emergency alerts to all users.",
+      "send": "Send Alert",
       "presets": {
         "powerOutage": {
           "message": "Power outage in the building. Estimated restoration time: 2 hours. Emergency lighting is active.",
@@ -239,7 +240,7 @@
     "workerStatus": "Worker Status"
   },
   "auth": {
-    "email": "",
+    "email": "Email",
     "loginRequired": "Login Required",
     "password": "Password",
     "signin": {
@@ -433,7 +434,7 @@
     "uploadFirst": "Upload your first document",
     "uploading": "Uploading...",
     "uploadProgress": "Uploading: {{progress}}%",
-    "view": "",
+    "view": "View",
     "viewOriginal": "View Original",
     "views": "views"
   },
@@ -705,51 +706,51 @@
     "title": "Privacy Policy"
   },
   "profile": {
-    "admin": "",
-    "cancel": "",
-    "description": "",
-    "edit": "",
+    "admin": "Admin",
+    "cancel": "Cancel",
+    "description": "Manage your profile information and settings",
+    "edit": "Edit",
     "email": "Email",
-    "emailNote": "",
-    "memberSince": "",
+    "emailNote": "Email address cannot be changed",
+    "memberSince": "Member since",
     "name": "Name",
-    "namePlaceholder": "",
-    "noName": "",
-    "notAvailable": "",
-    "owner": "",
-    "role": "",
-    "save": "",
-    "saving": "",
+    "namePlaceholder": "Enter your full name",
+    "noName": "No name specified",
+    "notAvailable": "Not available",
+    "owner": "Owner",
+    "role": "Role",
+    "save": "Save",
+    "saving": "Saving...",
     "title": "Profile",
-    "updateError": "",
-    "updateSuccess": ""
+    "updateError": "Profile update error",
+    "updateSuccess": "Profile updated successfully"
   },
   "settings": {
     "account": {
-      "currentEmail": "",
-      "emailNote": "",
-      "title": ""
+      "currentEmail": "Current Email",
+      "emailNote": "Contact support to change your email",
+      "title": "Account Settings"
     },
-    "description": "Description",
+    "description": "Manage your account settings and preferences",
     "language": {
-      "display": "",
-      "title": ""
+      "display": "Display Language",
+      "title": "Language & Region"
     },
     "notifications": {
-      "documents": "",
-      "email": "",
-      "emergency": "",
-      "polls": "",
-      "title": ""
+      "documents": "Document Notifications",
+      "email": "Email Notifications",
+      "emergency": "Emergency Alerts",
+      "polls": "Poll Notifications",
+      "title": "Notifications"
     },
     "privacy": {
-      "showEmail": "",
-      "title": ""
+      "showEmail": "Show email to other users",
+      "title": "Privacy"
     },
-    "save": "",
-    "saveError": "",
-    "saveSuccess": "",
-    "saving": "",
+    "save": "Save Settings",
+    "saveError": "Error saving settings",
+    "saveSuccess": "Settings saved successfully",
+    "saving": "Saving...",
     "title": "Settings"
   },
   "theme": {
