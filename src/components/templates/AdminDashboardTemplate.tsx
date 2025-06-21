@@ -261,7 +261,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
               {/* Communication Section */}
               <div className="pt-4 pb-2">
                 <h3 className="px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Communication
+                  {t("admin.sectionHeaders.communication")}
                 </h3>
               </div>
 
@@ -296,7 +296,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
               {/* Tools Section */}
               <div className="pt-4 pb-2">
                 <h3 className="px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Tools
+                  {t("admin.sectionHeaders.tools")}
                 </h3>
               </div>
 

@@ -128,6 +128,12 @@
     "processPendingJobs": "معالجة المهام المعلقة",
     "queueSummary": "ملخص القائمة",
     "quickActions": "إجراءات سريعة",
+    "quickActionsGuide": {
+      "configureSettings": "• تكوين إعدادات النظام وتنبيهات الطوارئ",
+      "manageContent": "• إدارة المستخدمين والمستندات ومنشورات المعلومات والاتصالات",
+      "monitorActivity": "• مراقبة نشاط النظام من خلال السجلات والتقارير",
+      "useNavigation": "• استخدم التنقل الأيسر للوصول إلى أقسام الإدارة المختلفة"
+    },
     "ready": "جاهز",
     "recoverStalled": "استرداد المهام المتوقفة",
     "refreshStatus": "تحديث الحالة",
@@ -137,6 +143,10 @@
     "retryFailedJobs": "إعادة محاولة المهام الفاشلة",
     "running": "قيد التشغيل",
     "searchLogsPlaceholder": "بحث في السجلات...",
+    "sectionHeaders": {
+      "communication": "التواصل",
+      "tools": "الأدوات"
+    },
     "settings": "الإعدادات",
     "startWorker": "تشغيل العامل",
     "stopped": "متوقف",
@@ -261,6 +271,62 @@
         "phoneNumber": "رقم الهاتف",
         "status": "الحالة"
       }
+    },
+    "whatsappAnalytics": {
+      "activity": {
+        "broadcastSent": "تم إرسال البث إلى {{count}} مستلم",
+        "daysAgo": "منذ {{count}} أيام",
+        "documentNotificationSent": "تم إرسال إشعار المستند",
+        "emergencyAlertSent": "تم إرسال تنبيه الطوارئ",
+        "failedToSend": "فشل الإرسال إلى {{phone}}",
+        "hoursAgo": "منذ {{count}} ساعات",
+        "minutesAgo": "منذ {{count}} دقائق",
+        "title": "النشاط الحديث"
+      },
+      "changes": {
+        "fromLastMonth": "+{{percent}}% من الشهر الماضي",
+        "fromLastMonthNegative": "{{percent}}% من الشهر الماضي",
+        "fromSendToDelivery": "من الإرسال إلى التسليم",
+        "ofDelivered": "{{delivered}} من {{total}} تم تسليمها",
+        "ofRead": "{{read}} من {{delivered}} تم قراءتها"
+      },
+      "export": {
+        "title": "تصدير تقرير التحليلات"
+      },
+      "messageTypes": {
+        "documentMessages": "رسائل المستندات",
+        "imageMessages": "رسائل الصور",
+        "templateMessages": "رسائل القوالب",
+        "textMessages": "الرسائل النصية",
+        "title": "أنواع الرسائل"
+      },
+      "performance": {
+        "title": "مقاييس الأداء"
+      },
+      "stats": {
+        "activeRecipients": "المستلمون النشطون",
+        "avgResponseTime": "متوسط وقت الاستجابة",
+        "deliveryRate": "معدل التسليم",
+        "failedMessages": "الرسائل الفاشلة",
+        "readRate": "معدل القراءة",
+        "totalMessagesSent": "إجمالي الرسائل المرسلة"
+      },
+      "timeDistribution": {
+        "messagesAtHour": "{{hour}}: {{count}} رسائل",
+        "messagesAtHour_zero": "",
+        "messagesAtHour_one": "",
+        "messagesAtHour_two": "",
+        "messagesAtHour_few": "",
+        "messagesAtHour_many": "",
+        "messagesAtHour_other": "",
+        "title": "توزيع الرسائل حسب الساعة"
+      },
+      "timeRange": {
+        "last30Days": "آخر 30 يوماً",
+        "last7Days": "آخر 7 أيام",
+        "last90Days": "آخر 90 يوماً"
+      },
+      "title": "تحليلات واتساب"
     },
     "whatsappManagement": "إدارة واتساب",
     "workerStatus": "حالة العامل"

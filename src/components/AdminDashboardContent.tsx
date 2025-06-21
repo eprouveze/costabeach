@@ -126,10 +126,10 @@ export function AdminDashboardContent() {
           {t("admin.quickActions") || "Quick Actions"}
         </h2>
         <div className="text-gray-600 dark:text-gray-300 space-y-2">
-          <p>• Use the left navigation to access different admin sections</p>
-          <p>• Manage users, documents, information posts, and communications</p>
-          <p>• Monitor system activity through logs and reports</p>
-          <p>• Configure system settings and emergency alerts</p>
+          <p>{t("admin.quickActionsGuide.useNavigation")}</p>
+          <p>{t("admin.quickActionsGuide.manageContent")}</p>
+          <p>{t("admin.quickActionsGuide.monitorActivity")}</p>
+          <p>{t("admin.quickActionsGuide.configureSettings")}</p>
         </div>
       </div>
     </div>

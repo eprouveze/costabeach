@@ -125,6 +125,12 @@
     "processPendingJobs": "Traiter les tâches en attente",
     "queueSummary": "Résumé de la file d'attente",
     "quickActions": "Actions rapides",
+    "quickActionsGuide": {
+      "configureSettings": "• Configurez les paramètres système et les alertes d'urgence",
+      "manageContent": "• Gérez les utilisateurs, documents, publications d'information et communications",
+      "monitorActivity": "• Surveillez l'activité du système grâce aux journaux et rapports",
+      "useNavigation": "• Utilisez la navigation de gauche pour accéder aux différentes sections d'administration"
+    },
     "ready": "Prêt",
     "recoverStalled": "Récupérer les tâches bloquées",
     "refreshStatus": "Actualiser le statut",
@@ -134,6 +140,10 @@
     "retryFailedJobs": "Réessayer les tâches échouées",
     "running": "En cours d'exécution",
     "searchLogsPlaceholder": "Rechercher dans les journaux...",
+    "sectionHeaders": {
+      "communication": "Communication",
+      "tools": "Outils"
+    },
     "settings": "Paramètres",
     "startWorker": "Démarrer le travailleur",
     "stopped": "Arrêté",
@@ -252,6 +262,59 @@
         "phoneNumber": "Numéro de téléphone",
         "status": "Statut"
       }
+    },
+    "whatsappAnalytics": {
+      "activity": {
+        "broadcastSent": "Diffusion envoyée à {{count}} destinataires",
+        "daysAgo": "il y a {{count}} jours",
+        "documentNotificationSent": "Notification de document envoyée",
+        "emergencyAlertSent": "Alerte d'urgence envoyée",
+        "failedToSend": "Échec d'envoi à {{phone}}",
+        "hoursAgo": "il y a {{count}} heures",
+        "minutesAgo": "il y a {{count}} minutes",
+        "title": "Activité récente"
+      },
+      "changes": {
+        "fromLastMonth": "+{{percent}}% par rapport au mois dernier",
+        "fromLastMonthNegative": "{{percent}}% par rapport au mois dernier",
+        "fromSendToDelivery": "De l'envoi à la livraison",
+        "ofDelivered": "{{delivered}} sur {{total}} livrés",
+        "ofRead": "{{read}} sur {{delivered}} lus"
+      },
+      "export": {
+        "title": "Exporter le rapport d'analyses"
+      },
+      "messageTypes": {
+        "documentMessages": "Messages de documents",
+        "imageMessages": "Messages d'images",
+        "templateMessages": "Messages de modèles",
+        "textMessages": "Messages texte",
+        "title": "Types de messages"
+      },
+      "performance": {
+        "title": "Métriques de performance"
+      },
+      "stats": {
+        "activeRecipients": "Destinataires actifs",
+        "avgResponseTime": "Temps de réponse moyen",
+        "deliveryRate": "Taux de livraison",
+        "failedMessages": "Messages échoués",
+        "readRate": "Taux de lecture",
+        "totalMessagesSent": "Total des messages envoyés"
+      },
+      "timeDistribution": {
+        "messagesAtHour": "{{hour}} : {{count}} messages",
+        "messagesAtHour_one": "",
+        "messagesAtHour_many": "",
+        "messagesAtHour_other": "",
+        "title": "Distribution des messages par heure"
+      },
+      "timeRange": {
+        "last30Days": "30 derniers jours",
+        "last7Days": "7 derniers jours",
+        "last90Days": "90 derniers jours"
+      },
+      "title": "Analyses WhatsApp"
     },
     "whatsappManagement": "Gestion WhatsApp",
     "workerStatus": "Statut du travailleur"

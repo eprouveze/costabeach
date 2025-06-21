@@ -11,11 +11,13 @@ import {
   Clock,
   Calendar
 } from "lucide-react";
+import { useI18n } from "@/lib/i18n/client";
 
 interface StatCard {
-  title: string;
+  titleKey: string;
   value: string;
-  change: string;
+  changeKey: string;
+  changeValue: string;
   trend: 'up' | 'down' | 'neutral';
   icon: React.ComponentType<any>;
 }
@@ -24,39 +26,43 @@ interface StatCard {
 const mockStats = {
   overview: [
     {
-      title: "Total Messages Sent",
+      titleKey: "admin.whatsappAnalytics.stats.totalMessagesSent",
       value: "1,234",
-      change: "+12% from last month",
+      changeKey: "admin.whatsappAnalytics.changes.fromLastMonth",
+      changeValue: "12",
       trend: 'up' as const,
       icon: MessageCircle
     },
     {
-      title: "Active Recipients",
+      titleKey: "admin.whatsappAnalytics.stats.activeRecipients",
       value: "456",
-      change: "+8% from last month",
+      changeKey: "admin.whatsappAnalytics.changes.fromLastMonth", 
+      changeValue: "8",
       trend: 'up' as const,
       icon: Users
     },
     {
-      title: "Delivery Rate",
+      titleKey: "admin.whatsappAnalytics.stats.deliveryRate",
       value: "94.2%",
-      change: "-1.2% from last month",
+      changeKey: "admin.whatsappAnalytics.changes.fromLastMonthNegative",
+      changeValue: "-1.2",
       trend: 'down' as const,
       icon: CheckCircle
     },
     {
-      title: "Failed Messages",
+      titleKey: "admin.whatsappAnalytics.stats.failedMessages",
       value: "72",
-      change: "+15% from last month",
+      changeKey: "admin.whatsappAnalytics.changes.fromLastMonth",
+      changeValue: "15",
       trend: 'down' as const,
       icon: XCircle
     }
   ],
   messageTypes: [
-    { type: 'Text Messages', count: 856, percentage: 69.3 },
-    { type: 'Document Messages', count: 234, percentage: 19.0 },
-    { type: 'Template Messages', count: 98, percentage: 7.9 },
-    { type: 'Image Messages', count: 46, percentage: 3.7 }
+    { typeKey: 'admin.whatsappAnalytics.messageTypes.textMessages', count: 856, percentage: 69.3 },
+    { typeKey: 'admin.whatsappAnalytics.messageTypes.documentMessages', count: 234, percentage: 19.0 },
+    { typeKey: 'admin.whatsappAnalytics.messageTypes.templateMessages', count: 98, percentage: 7.9 },
+    { typeKey: 'admin.whatsappAnalytics.messageTypes.imageMessages', count: 46, percentage: 3.7 }
   ],
   timeDistribution: [
     { hour: '09:00', count: 45 },
@@ -74,29 +80,36 @@ const mockStats = {
   ],
   recentActivity: [
     {
-      action: 'Broadcast sent to 25 recipients',
-      timestamp: '5 minutes ago',
+      actionKey: 'admin.whatsappAnalytics.activity.broadcastSent',
+      actionParams: { count: 25 },
+      timestampKey: 'admin.whatsappAnalytics.activity.minutesAgo',
+      timestampParams: { count: 5 },
       status: 'success'
     },
     {
-      action: 'Emergency alert sent',
-      timestamp: '2 hours ago',
+      actionKey: 'admin.whatsappAnalytics.activity.emergencyAlertSent',
+      timestampKey: 'admin.whatsappAnalytics.activity.hoursAgo',
+      timestampParams: { count: 2 },
       status: 'success'
     },
     {
-      action: 'Failed to send to +15551234567',
-      timestamp: '3 hours ago',
+      actionKey: 'admin.whatsappAnalytics.activity.failedToSend',
+      actionParams: { phone: '+15551234567' },
+      timestampKey: 'admin.whatsappAnalytics.activity.hoursAgo',
+      timestampParams: { count: 3 },
       status: 'error'
     },
     {
-      action: 'Document notification sent',
-      timestamp: '1 day ago',
+      actionKey: 'admin.whatsappAnalytics.activity.documentNotificationSent',
+      timestampKey: 'admin.whatsappAnalytics.activity.daysAgo',
+      timestampParams: { count: 1 },
       status: 'success'
     }
   ]
 };
 
 export default function WhatsAppStats() {
+  const { t } = useI18n();
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
 
   const getTrendIcon = (trend: 'up' | 'down' | 'neutral') => {
@@ -115,7 +128,7 @@ export default function WhatsAppStats() {
     <div className="p-6">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">WhatsApp Analytics</h2>
+          <h2 className="text-2xl font-bold text-gray-900">{t("admin.whatsappAnalytics.title")}</h2>
           
           {/* Time Range Selector */}
           <div className="flex items-center space-x-2">
@@ -125,9 +138,9 @@ export default function WhatsAppStats() {
               onChange={(e) => setTimeRange(e.target.value as any)}
               className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="7d">Last 7 days</option>
-              <option value="30d">Last 30 days</option>
-              <option value="90d">Last 90 days</option>
+              <option value="7d">{t("admin.whatsappAnalytics.timeRange.last7Days")}</option>
+              <option value="30d">{t("admin.whatsappAnalytics.timeRange.last30Days")}</option>
+              <option value="90d">{t("admin.whatsappAnalytics.timeRange.last90Days")}</option>
             </select>
           </div>
         </div>
@@ -140,7 +153,7 @@ export default function WhatsAppStats() {
               <div key={index} className="bg-white rounded-lg border border-gray-200 p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">{stat.title}</p>
+                    <p className="text-sm font-medium text-gray-600">{t(stat.titleKey)}</p>
                     <p className="text-2xl font-bold text-gray-900 mt-2">{stat.value}</p>
                   </div>
                   <div className="flex-shrink-0">
@@ -149,7 +162,7 @@ export default function WhatsAppStats() {
                 </div>
                 <div className={`flex items-center mt-4 ${getTrendColor(stat.trend)}`}>
                   {getTrendIcon(stat.trend)}
-                  <span className="text-sm ml-1">{stat.change}</span>
+                  <span className="text-sm ml-1">{t(stat.changeKey, { percent: stat.changeValue })}</span>
                 </div>
               </div>
             );
@@ -159,11 +172,11 @@ export default function WhatsAppStats() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Message Types Distribution */}
           <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Message Types</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">{t("admin.whatsappAnalytics.messageTypes.title")}</h3>
             <div className="space-y-4">
               {mockStats.messageTypes.map((type, index) => (
                 <div key={index} className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-700">{type.type}</span>
+                  <span className="text-sm font-medium text-gray-700">{t(type.typeKey)}</span>
                   <div className="flex items-center space-x-3">
                     <div className="w-24 bg-gray-200 rounded-full h-2">
                       <div 
@@ -180,7 +193,7 @@ export default function WhatsAppStats() {
 
           {/* Activity Timeline */}
           <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Recent Activity</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">{t("admin.whatsappAnalytics.activity.title")}</h3>
             <div className="space-y-4">
               {mockStats.recentActivity.map((activity, index) => (
                 <div key={index} className="flex items-start space-x-3">
@@ -188,10 +201,10 @@ export default function WhatsAppStats() {
                     activity.status === 'success' ? 'bg-green-500' : 'bg-red-500'
                   }`}></div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-gray-900">{activity.action}</p>
+                    <p className="text-sm text-gray-900">{t(activity.actionKey, activity.actionParams)}</p>
                     <p className="text-xs text-gray-500 flex items-center mt-1">
                       <Clock className="h-3 w-3 mr-1" />
-                      {activity.timestamp}
+                      {t(activity.timestampKey, activity.timestampParams)}
                     </p>
                   </div>
                 </div>
@@ -202,7 +215,7 @@ export default function WhatsAppStats() {
 
         {/* Time Distribution Chart */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Message Distribution by Hour</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">{t("admin.whatsappAnalytics.timeDistribution.title")}</h3>
           <div className="mt-6">
             <div className="flex items-end space-x-2 h-48">
               {mockStats.timeDistribution.map((data, index) => {
@@ -214,7 +227,7 @@ export default function WhatsAppStats() {
                       <div 
                         className="w-full bg-blue-500 rounded-t transition-all duration-300 hover:bg-blue-600"
                         style={{ height: `${height}%` }}
-                        title={`${data.hour}: ${data.count} messages`}
+                        title={t("admin.whatsappAnalytics.timeDistribution.messagesAtHour", { hour: data.hour, count: data.count })}
                       ></div>
                     </div>
                     <div className="text-xs text-gray-600 mt-2 transform -rotate-45 origin-left">
@@ -229,24 +242,24 @@ export default function WhatsAppStats() {
 
         {/* Performance Metrics */}
         <div className="mt-8 bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Performance Metrics</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">{t("admin.whatsappAnalytics.performance.title")}</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
               <div className="text-3xl font-bold text-green-600">94.2%</div>
-              <div className="text-sm text-gray-600 mt-1">Delivery Rate</div>
-              <div className="text-xs text-gray-500 mt-1">1,164 of 1,234 delivered</div>
+              <div className="text-sm text-gray-600 mt-1">{t("admin.whatsappAnalytics.stats.deliveryRate")}</div>
+              <div className="text-xs text-gray-500 mt-1">{t("admin.whatsappAnalytics.changes.ofDelivered", { delivered: "1,164", total: "1,234" })}</div>
             </div>
             
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600">2.3s</div>
-              <div className="text-sm text-gray-600 mt-1">Avg Response Time</div>
-              <div className="text-xs text-gray-500 mt-1">From send to delivery</div>
+              <div className="text-sm text-gray-600 mt-1">{t("admin.whatsappAnalytics.stats.avgResponseTime")}</div>
+              <div className="text-xs text-gray-500 mt-1">{t("admin.whatsappAnalytics.changes.fromSendToDelivery")}</div>
             </div>
             
             <div className="text-center">
               <div className="text-3xl font-bold text-purple-600">67%</div>
-              <div className="text-sm text-gray-600 mt-1">Read Rate</div>
-              <div className="text-xs text-gray-500 mt-1">780 of 1,164 read</div>
+              <div className="text-sm text-gray-600 mt-1">{t("admin.whatsappAnalytics.stats.readRate")}</div>
+              <div className="text-xs text-gray-500 mt-1">{t("admin.whatsappAnalytics.changes.ofRead", { read: "780", delivered: "1,164" })}</div>
             </div>
           </div>
         </div>
@@ -255,7 +268,7 @@ export default function WhatsAppStats() {
         <div className="mt-6 flex justify-end">
           <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
             <BarChart3 className="h-4 w-4 mr-2" />
-            Export Analytics Report
+            {t("admin.whatsappAnalytics.export.title")}
           </button>
         </div>
       </div>
