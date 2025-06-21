@@ -128,8 +128,8 @@
           "title": "Quand utiliser",
           "emergencies": "Urgences réelles uniquement",
           "maintenance": "Notifications de maintenance critique",
-          "security": "Alertes liées à la sécurité",
-          "weather": "Alertes météorologiques sévères"
+          "weather": "Alertes météorologiques sévères",
+          "security": "Alertes liées à la sécurité"
         }
       }
     },
@@ -358,37 +358,7 @@
       },
       "title": "Analyses WhatsApp"
     },
-    "whatsappManagement": {
-      "title": "Gestion WhatsApp",
-      "description": "Gérer les communications WhatsApp pour les résidents de Costa Beach",
-      "connectionStatus": {
-        "connected": "Connecté",
-        "connecting": "Connexion en cours...",
-        "disconnected": "Déconnecté"
-      },
-      "tabs": {
-        "compose": {
-          "label": "Composer un message",
-          "description": "Envoyer des messages WhatsApp individuels"
-        },
-        "broadcast": {
-          "label": "Diffusion",
-          "description": "Envoyer des messages à plusieurs destinataires"
-        },
-        "history": {
-          "label": "Historique des messages",
-          "description": "Voir les messages envoyés et reçus"
-        },
-        "stats": {
-          "label": "Statistiques",
-          "description": "Voir les analyses de messagerie"
-        },
-        "settings": {
-          "label": "Paramètres",
-          "description": "Configurer l'intégration WhatsApp"
-        }
-      }
-    },
+    "whatsappManagement": "Gestion WhatsApp",
     "whatsappSettings": {
       "actions": {
         "saveSettings": "Enregistrer les paramètres",
@@ -908,39 +878,6 @@
       }
     },
     "title": "Politique de confidentialité"
-  },
-  "owner": {
-    "signup": {
-      "title": "Créer un compte",
-      "subtitle": "Inscrivez-vous pour accéder au portail propriétaire",
-      "emailLabel": "Adresse e-mail",
-      "emailPlaceholder": "vous@exemple.com",
-      "createAccountButton": "Créer un compte",
-      "creatingAccountButton": "Création du compte...",
-      "alreadyHaveAccount": "Vous avez déjà un compte ?",
-      "signInLink": "Se connecter",
-      "backToHome": "Retour"
-    },
-    "login": {
-      "title": "Portail Propriétaire",
-      "subtitle": "Connectez-vous pour accéder à vos documents et ressources",
-      "emailLabel": "Adresse e-mail",
-      "emailPlaceholder": "vous@exemple.com",
-      "signInButton": "Se connecter avec l'e-mail",
-      "sendingLinkButton": "Envoi du lien...",
-      "newOwner": "Nouveau propriétaire ?",
-      "registerLink": "S'inscrire ici",
-      "privacyText": "En vous connectant, vous acceptez notre",
-      "privacyLink": "Politique de confidentialité",
-      "backToHome": "Retour",
-      "redirectingMessage": "Redirection vers la page de connexion..."
-    },
-    "propertyDetail": {
-      "redirectingMessage": "Redirection vers la page de détail de la propriété..."
-    },
-    "common": {
-      "loading": "Chargement..."
-    }
   },
   "profile": {
     "admin": "Administrateur",

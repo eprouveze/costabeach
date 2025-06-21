@@ -1,0 +1,78 @@
+{
+  "admin": {
+    "emergencyAlerts": {
+      "accessDeniedMessage": "Vous n'avez pas la permission d'envoyer des alertes d'urgence",
+      "bestPractices": {
+        "title": "Meilleures pratiques",
+        "when": {
+          "emergencies": "Urgences réelles uniquement",
+          "maintenance": "Notifications de maintenance critique",
+          "security": "Alertes liées à la sécurité",
+          "title": "Quand utiliser",
+          "weather": "Alertes météorologiques sévères"
+        },
+        "writing": {
+          "actionable": "Incluez des instructions concrètes",
+          "clear": "Gardez les messages clairs et concis",
+          "severity": "Adaptez la sévérité à l'urgence réelle",
+          "specific": "Soyez spécifique sur la situation",
+          "title": "Directives de rédaction"
+        }
+      },
+      "deliveryInfo": {
+        "branding": "Messages communautaires avec marque",
+        "emergencyContacts": "Inclut les informations de contact d'urgence",
+        "instant": "Livraison instantanée via WhatsApp",
+        "title": "Informations de livraison",
+        "tracking": "Suivi du statut de livraison"
+      },
+      "description": "Envoyer des notifications d'urgence à tous les membres de la communauté",
+      "howItWorks": {
+        "title": "Comment ça fonctionne"
+      },
+      "severityLevels": {
+        "critical": "Critique",
+        "criticalDescription": "Action immédiate requise",
+        "high": "Élevé",
+        "highDescription": "Attention urgente requise",
+        "low": "Faible",
+        "lowDescription": "Information générale, non urgente",
+        "medium": "Moyen",
+        "mediumDescription": "Important mais pas critique",
+        "title": "Niveaux de sévérité"
+      },
+      "title": "Alertes d'urgence"
+    },
+    "whatsappManagement": {
+      "connectionStatus": {
+        "connected": "Connecté",
+        "connecting": "Connexion en cours...",
+        "disconnected": "Déconnecté"
+      },
+      "description": "Gérer les communications WhatsApp pour les résidents de Costa Beach",
+      "tabs": {
+        "broadcast": {
+          "description": "Envoyer des messages à plusieurs destinataires",
+          "label": "Diffusion"
+        },
+        "compose": {
+          "description": "Envoyer des messages WhatsApp individuels",
+          "label": "Composer un message"
+        },
+        "history": {
+          "description": "Voir les messages envoyés et reçus",
+          "label": "Historique des messages"
+        },
+        "settings": {
+          "description": "Configurer l'intégration WhatsApp",
+          "label": "Paramètres"
+        },
+        "stats": {
+          "description": "Voir les analyses de messagerie",
+          "label": "Statistiques"
+        }
+      },
+      "title": "Gestion WhatsApp"
+    }
+  }
+}

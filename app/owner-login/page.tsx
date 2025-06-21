@@ -60,18 +60,18 @@ function SignInContent() {
         className="group absolute left-4 top-4 flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-neutral-600 transition-colors hover:text-neutral-900"
       >
         <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-        Back
+        {t("owner.login.backToHome")}
       </Link>
 
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600">
-              Owner Portal
+              {t("owner.login.title")}
             </span>
           </h1>
           <p className="mt-3 text-neutral-600 dark:text-neutral-300">
-            Sign in to access your documents and resources
+            {t("owner.login.subtitle")}
           </p>
         </div>
 
@@ -82,7 +82,7 @@ function SignInContent() {
                 htmlFor="email"
                 className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
               >
-                Email address
+                {t("owner.login.emailLabel")}
               </label>
               <div className="mt-2">
                 <input
@@ -94,7 +94,7 @@ function SignInContent() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="block w-full rounded-lg border border-neutral-300 dark:border-neutral-600 px-4 py-3 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 shadow-sm dark:bg-neutral-800 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400"
-                  placeholder="you@example.com"
+                  placeholder={t("owner.login.emailPlaceholder")}
                   disabled={isLoading}
                 />
               </div>
@@ -105,27 +105,27 @@ function SignInContent() {
               disabled={isLoading}
               className="w-full rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-3 text-sm font-medium text-white transition-all hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? "Sending link..." : "Sign in with Email"}
+              {isLoading ? t("owner.login.sendingLinkButton") : t("owner.login.signInButton")}
             </button>
           </form>
 
           <div className="mt-6">
             <p className="text-center text-sm text-neutral-600 dark:text-neutral-400">
-              New owner?{" "}
+              {t("owner.login.newOwner")}{" "}
               <Link
                 href="/owner-register"
                 className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500"
               >
-                Register here
+                {t("owner.login.registerLink")}
               </Link>
             </p>
             <p className="mt-2 text-center text-sm text-neutral-600 dark:text-neutral-400">
-              By signing in, you agree to our{" "}
+              {t("owner.login.privacyText")}{" "}
               <Link
                 href="/privacy"
                 className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500"
               >
-                Privacy Policy
+                {t("owner.login.privacyLink")}
               </Link>
             </p>
           </div>
@@ -136,6 +136,7 @@ function SignInContent() {
 }
 
 export default function OwnerLoginRedirectPage() {
+  const { t } = useI18n();
   const router = useRouter();
 
   useEffect(() => {
@@ -145,7 +146,7 @@ export default function OwnerLoginRedirectPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <p className="text-lg">Redirecting to login page...</p>
+      <p className="text-lg">{t("owner.login.redirectingMessage")}</p>
     </div>
   );
 } 

@@ -1,0 +1,78 @@
+{
+  "admin": {
+    "emergencyAlerts": {
+      "accessDeniedMessage": "You don't have permission to send emergency alerts",
+      "bestPractices": {
+        "title": "Best Practices",
+        "when": {
+          "emergencies": "Actual emergencies only",
+          "maintenance": "Critical maintenance notifications",
+          "security": "Security-related alerts",
+          "title": "When to Use",
+          "weather": "Severe weather warnings"
+        },
+        "writing": {
+          "actionable": "Include actionable instructions",
+          "clear": "Keep messages clear and concise",
+          "severity": "Match severity to actual urgency",
+          "specific": "Be specific about the situation",
+          "title": "Writing Guidelines"
+        }
+      },
+      "deliveryInfo": {
+        "branding": "Branded community messages",
+        "emergencyContacts": "Includes emergency contact info",
+        "instant": "Instant delivery via WhatsApp",
+        "title": "Delivery Information",
+        "tracking": "Delivery status tracking"
+      },
+      "description": "Send emergency notifications to all community members",
+      "howItWorks": {
+        "title": "How It Works"
+      },
+      "severityLevels": {
+        "critical": "Critical",
+        "criticalDescription": "Immediate action required",
+        "high": "High",
+        "highDescription": "Urgent attention required",
+        "low": "Low",
+        "lowDescription": "General information, non-urgent",
+        "medium": "Medium",
+        "mediumDescription": "Important but not critical",
+        "title": "Severity Levels"
+      },
+      "title": "Emergency Alerts"
+    },
+    "whatsappManagement": {
+      "connectionStatus": {
+        "connected": "Connected",
+        "connecting": "Connecting...",
+        "disconnected": "Disconnected"
+      },
+      "description": "Manage WhatsApp communications for Costa Beach residents",
+      "tabs": {
+        "broadcast": {
+          "description": "Send messages to multiple recipients",
+          "label": "Broadcast"
+        },
+        "compose": {
+          "description": "Send individual WhatsApp messages",
+          "label": "Compose Message"
+        },
+        "history": {
+          "description": "View sent and received messages",
+          "label": "Message History"
+        },
+        "settings": {
+          "description": "Configure WhatsApp integration",
+          "label": "Settings"
+        },
+        "stats": {
+          "description": "View messaging analytics",
+          "label": "Statistics"
+        }
+      },
+      "title": "WhatsApp Management"
+    }
+  }
+}

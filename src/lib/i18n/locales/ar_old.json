@@ -1,0 +1,78 @@
+{
+  "admin": {
+    "emergencyAlerts": {
+      "accessDeniedMessage": "ليس لديك إذن لإرسال تنبيهات طارئة",
+      "bestPractices": {
+        "title": "أفضل الممارسات",
+        "when": {
+          "emergencies": "الحالات الطارئة الفعلية فقط",
+          "maintenance": "إشعارات الصيانة الحرجة",
+          "security": "تنبيهات متعلقة بالأمن",
+          "title": "متى تستخدم",
+          "weather": "تحذيرات الطقس الشديد"
+        },
+        "writing": {
+          "actionable": "أدرج تعليمات قابلة للتنفيذ",
+          "clear": "اجعل الرسائل واضحة وموجزة",
+          "severity": "اجعل الخطورة تتناسب مع الإلحاح الفعلي",
+          "specific": "كن محدداً حول الموقف",
+          "title": "إرشادات الكتابة"
+        }
+      },
+      "deliveryInfo": {
+        "branding": "رسائل مجتمعية ذات علامة تجارية",
+        "emergencyContacts": "يتضمن معلومات الاتصال الطارئ",
+        "instant": "تسليم فوري عبر واتساب",
+        "title": "معلومات التسليم",
+        "tracking": "تتبع حالة التسليم"
+      },
+      "description": "إرسال إشعارات طارئة لجميع أعضاء المجتمع",
+      "howItWorks": {
+        "title": "كيف يعمل"
+      },
+      "severityLevels": {
+        "critical": "حرج",
+        "criticalDescription": "يتطلب إجراء فوري",
+        "high": "عالي",
+        "highDescription": "يتطلب انتباه عاجل",
+        "low": "منخفض",
+        "lowDescription": "معلومات عامة، غير عاجلة",
+        "medium": "متوسط",
+        "mediumDescription": "مهم ولكن غير حرج",
+        "title": "مستويات الخطورة"
+      },
+      "title": "تنبيهات طارئة"
+    },
+    "whatsappManagement": {
+      "connectionStatus": {
+        "connected": "متصل",
+        "connecting": "جاري الاتصال...",
+        "disconnected": "غير متصل"
+      },
+      "description": "إدارة اتصالات واتساب لسكان كوستا بيتش",
+      "tabs": {
+        "broadcast": {
+          "description": "إرسال رسائل إلى عدة مستلمين",
+          "label": "بث"
+        },
+        "compose": {
+          "description": "إرسال رسائل واتساب فردية",
+          "label": "كتابة رسالة"
+        },
+        "history": {
+          "description": "عرض الرسائل المرسلة والمستلمة",
+          "label": "سجل الرسائل"
+        },
+        "settings": {
+          "description": "تكوين تكامل واتساب",
+          "label": "الإعدادات"
+        },
+        "stats": {
+          "description": "عرض تحليلات الرسائل",
+          "label": "الإحصائيات"
+        }
+      },
+      "title": "إدارة واتساب"
+    }
+  }
+}

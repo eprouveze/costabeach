@@ -146,33 +146,33 @@ export default function AdminWhatsAppPage() {
   const tabs = [
     { 
       id: 'compose' as TabType, 
-      label: 'Compose Message', 
+      label: t('admin.whatsappManagement.tabs.compose.label'), 
       icon: Send,
-      description: 'Send individual WhatsApp messages'
+      description: t('admin.whatsappManagement.tabs.compose.description')
     },
     { 
       id: 'broadcast' as TabType, 
-      label: 'Broadcast', 
+      label: t('admin.whatsappManagement.tabs.broadcast.label'), 
       icon: Users,
-      description: 'Send messages to multiple recipients'
+      description: t('admin.whatsappManagement.tabs.broadcast.description')
     },
     { 
       id: 'history' as TabType, 
-      label: 'Message History', 
+      label: t('admin.whatsappManagement.tabs.history.label'), 
       icon: History,
-      description: 'View sent and received messages'
+      description: t('admin.whatsappManagement.tabs.history.description')
     },
     { 
       id: 'stats' as TabType, 
-      label: 'Statistics', 
+      label: t('admin.whatsappManagement.tabs.stats.label'), 
       icon: BarChart3,
-      description: 'View messaging analytics'
+      description: t('admin.whatsappManagement.tabs.stats.description')
     },
     { 
       id: 'settings' as TabType, 
-      label: 'Settings', 
+      label: t('admin.whatsappManagement.tabs.settings.label'), 
       icon: Settings,
-      description: 'Configure WhatsApp integration'
+      description: t('admin.whatsappManagement.tabs.settings.description')
     },
   ];
 
@@ -202,10 +202,10 @@ export default function AdminWhatsAppPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                WhatsApp Management
+                {t('admin.whatsappManagement.title')}
               </h1>
               <p className="text-gray-600">
-                Manage WhatsApp communications for Costa Beach residents
+                {t('admin.whatsappManagement.description')}
               </p>
             </div>
             
@@ -216,8 +216,8 @@ export default function AdminWhatsAppPage() {
                 connectionStatus === 'connecting' ? 'bg-yellow-500' : 'bg-red-500'
               }`}></div>
               <span className="text-sm font-medium text-gray-600">
-                {connectionStatus === 'connected' ? 'Connected' : 
-                 connectionStatus === 'connecting' ? 'Connecting...' : 'Disconnected'}
+                {connectionStatus === 'connected' ? t('admin.whatsappManagement.connectionStatus.connected') : 
+                 connectionStatus === 'connecting' ? t('admin.whatsappManagement.connectionStatus.connecting') : t('admin.whatsappManagement.connectionStatus.disconnected')}
               </span>
             </div>
           </div>

@@ -924,39 +924,6 @@
     },
     "title": "سياسة الخصوصية"
   },
-  "owner": {
-    "signup": {
-      "title": "إنشاء حساب",
-      "subtitle": "سجل للوصول إلى بوابة المالك",
-      "emailLabel": "عنوان البريد الإلكتروني",
-      "emailPlaceholder": "انت@مثال.com",
-      "createAccountButton": "إنشاء حساب",
-      "creatingAccountButton": "جاري إنشاء الحساب...",
-      "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
-      "signInLink": "تسجيل الدخول",
-      "backToHome": "عودة"
-    },
-    "login": {
-      "title": "بوابة المالك",
-      "subtitle": "سجل الدخول للوصول إلى مستنداتك ومواردك",
-      "emailLabel": "عنوان البريد الإلكتروني",
-      "emailPlaceholder": "انت@مثال.com",
-      "signInButton": "تسجيل الدخول بالبريد الإلكتروني",
-      "sendingLinkButton": "جاري إرسال الرابط...",
-      "newOwner": "مالك جديد؟",
-      "registerLink": "سجل هنا",
-      "privacyText": "بتسجيل الدخول، فإنك توافق على",
-      "privacyLink": "سياسة الخصوصية",
-      "backToHome": "عودة",
-      "redirectingMessage": "جاري التوجيه إلى صفحة تسجيل الدخول..."
-    },
-    "propertyDetail": {
-      "redirectingMessage": "جاري التوجيه إلى صفحة تفاصيل العقار..."
-    },
-    "common": {
-      "loading": "جاري التحميل..."
-    }
-  },
   "profile": {
     "admin": "مشرف",
     "cancel": "إلغاء",

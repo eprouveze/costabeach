@@ -128,8 +128,8 @@
           "title": "When to Use",
           "emergencies": "Actual emergencies only",
           "maintenance": "Critical maintenance notifications",
-          "security": "Security-related alerts",
-          "weather": "Severe weather warnings"
+          "weather": "Severe weather warnings",
+          "security": "Security-related alerts"
         }
       }
     },
@@ -357,37 +357,7 @@
       },
       "title": "WhatsApp Analytics"
     },
-    "whatsappManagement": {
-      "title": "WhatsApp Management",
-      "description": "Manage WhatsApp communications for Costa Beach residents",
-      "connectionStatus": {
-        "connected": "Connected",
-        "connecting": "Connecting...",
-        "disconnected": "Disconnected"
-      },
-      "tabs": {
-        "compose": {
-          "label": "Compose Message",
-          "description": "Send individual WhatsApp messages"
-        },
-        "broadcast": {
-          "label": "Broadcast",
-          "description": "Send messages to multiple recipients"
-        },
-        "history": {
-          "label": "Message History",
-          "description": "View sent and received messages"
-        },
-        "stats": {
-          "label": "Statistics",
-          "description": "View messaging analytics"
-        },
-        "settings": {
-          "label": "Settings",
-          "description": "Configure WhatsApp integration"
-        }
-      }
-    },
+    "whatsappManagement": "WhatsApp Management",
     "whatsappSettings": {
       "actions": {
         "saveSettings": "Save Settings",
@@ -907,39 +877,6 @@
       }
     },
     "title": "Privacy Policy"
-  },
-  "owner": {
-    "signup": {
-      "title": "Create Account",
-      "subtitle": "Sign up to access the owner portal",
-      "emailLabel": "Email address",
-      "emailPlaceholder": "you@example.com",
-      "createAccountButton": "Create Account",
-      "creatingAccountButton": "Creating account...",
-      "alreadyHaveAccount": "Already have an account?",
-      "signInLink": "Sign in",
-      "backToHome": "Back"
-    },
-    "login": {
-      "title": "Owner Portal",
-      "subtitle": "Sign in to access your documents and resources",
-      "emailLabel": "Email address",
-      "emailPlaceholder": "you@example.com",
-      "signInButton": "Sign in with Email",
-      "sendingLinkButton": "Sending link...",
-      "newOwner": "New owner?",
-      "registerLink": "Register here",
-      "privacyText": "By signing in, you agree to our",
-      "privacyLink": "Privacy Policy",
-      "backToHome": "Back",
-      "redirectingMessage": "Redirecting to login page..."
-    },
-    "propertyDetail": {
-      "redirectingMessage": "Redirecting to property detail page..."
-    },
-    "common": {
-      "loading": "Loading..."
-    }
   },
   "profile": {
     "admin": "Admin",

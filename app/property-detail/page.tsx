@@ -2,8 +2,10 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useI18n } from "@/lib/i18n/client";
 
 export default function PropertyDetailRedirectPage() {
+  const { t } = useI18n();
   const router = useRouter();
 
   useEffect(() => {
@@ -13,7 +15,7 @@ export default function PropertyDetailRedirectPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <p className="text-lg">Redirecting to property detail page...</p>
+      <p className="text-lg">{t("owner.propertyDetail.redirectingMessage")}</p>
     </div>
   );
 } 

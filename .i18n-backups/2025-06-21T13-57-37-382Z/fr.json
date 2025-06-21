@@ -909,39 +909,6 @@
     },
     "title": "Politique de confidentialité"
   },
-  "owner": {
-    "signup": {
-      "title": "Créer un compte",
-      "subtitle": "Inscrivez-vous pour accéder au portail propriétaire",
-      "emailLabel": "Adresse e-mail",
-      "emailPlaceholder": "vous@exemple.com",
-      "createAccountButton": "Créer un compte",
-      "creatingAccountButton": "Création du compte...",
-      "alreadyHaveAccount": "Vous avez déjà un compte ?",
-      "signInLink": "Se connecter",
-      "backToHome": "Retour"
-    },
-    "login": {
-      "title": "Portail Propriétaire",
-      "subtitle": "Connectez-vous pour accéder à vos documents et ressources",
-      "emailLabel": "Adresse e-mail",
-      "emailPlaceholder": "vous@exemple.com",
-      "signInButton": "Se connecter avec l'e-mail",
-      "sendingLinkButton": "Envoi du lien...",
-      "newOwner": "Nouveau propriétaire ?",
-      "registerLink": "S'inscrire ici",
-      "privacyText": "En vous connectant, vous acceptez notre",
-      "privacyLink": "Politique de confidentialité",
-      "backToHome": "Retour",
-      "redirectingMessage": "Redirection vers la page de connexion..."
-    },
-    "propertyDetail": {
-      "redirectingMessage": "Redirection vers la page de détail de la propriété..."
-    },
-    "common": {
-      "loading": "Chargement..."
-    }
-  },
   "profile": {
     "admin": "Administrateur",
     "cancel": "Annuler",
