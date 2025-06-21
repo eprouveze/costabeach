@@ -39,7 +39,8 @@
       "characterLimit_one": "{{count}} character remaining",
       "characterLimit_many": "{{count}} characters remaining",
       "characterLimit_other": "{{count}} characters remaining",
-      "communityName": "🏖️ Costa Beach Community",
+      "communityName": "🏖️ Community Name",
+      "description": "Send emergency alerts to all users.",
       "presets": {
         "powerOutage": {
           "message": "Power outage in the building. Estimated restoration time: 2 hours. Emergency lighting is active.",
@@ -74,7 +75,7 @@
         "low": "Low Priority",
         "medium": "Medium Priority"
       },
-      "title": "Send Emergency Alert",
+      "title": "Emergency Alert",
       "types": {
         "maintenance": "Maintenance",
         "maintenanceDesc": "Building maintenance and repairs",
@@ -91,6 +92,9 @@
       "warningTitle": "Important:"
     },
     "emergencyAlerts": "Emergency Alerts",
+    "lastRun": "Last Run",
+    "logs": "Logs",
+    "nextRun": "Next Run",
     "errors": {
       "permissionsFetchFailed": "Failed to fetch permissions"
     },
@@ -110,7 +114,7 @@
         "activate": "Activate",
         "close": "Close"
       },
-      "adminActions": "Administrator Actions",
+      "adminActions": "Admin Actions",
       "stats": {
         "active": "Active",
         "closed": "Closed",

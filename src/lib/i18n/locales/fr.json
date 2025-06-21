@@ -41,21 +41,75 @@
       "characterLimit_other": "{{count}} caractères restants",
       "communityName": "🏖️ Nom de la communauté",
       "description": "Envoyer des alertes d'urgence à tous les utilisateurs.",
+      "presets": {
+        "powerOutage": {
+          "message": "Panne d'électricité dans le bâtiment. Temps de restauration estimé : 2 heures. L'éclairage de secours est actif.",
+          "title": "Panne d'électricité"
+        },
+        "scheduledMaintenance": {
+          "message": "Une maintenance programmée sera effectuée demain de 9h00 à 12h00. Le service d'eau pourrait être temporairement interrompu.",
+          "title": "Maintenance programmée"
+        },
+        "securityAlert": {
+          "message": "Veuillez vous assurer que toutes les portes et fenêtres sont verrouillées. Signalez immédiatement toute activité suspecte à la gestion du bâtiment.",
+          "title": "Alerte de sécurité"
+        },
+        "stormWarning": {
+          "message": "Conditions météorologiques sévères attendues ce soir. Veuillez sécuriser tous les objets extérieurs et éviter les zones de balcon.",
+          "title": "Alerte tempête"
+        }
+      },
+      "preview": {
+        "actionMessage": "⚠️ Veuillez prendre les mesures appropriées et restez en sécurité.",
+        "alertMessage": "[Message d'alerte]",
+        "alertTitle": "[Titre de l'alerte]",
+        "signature": "Alerte d'urgence envoyée par la plateforme communautaire Costa Beach"
+      },
+      "previewTitle": "Aperçu du message WhatsApp",
+      "quickPresets": "Modèles rapides",
       "send": "Envoyer l'alerte",
-      "title": "Alerte d'urgence"
+      "sendEmergencyAlert": "Envoyer l'alerte d'urgence",
+      "sendingAlert": "Envoi de l'alerte...",
+      "severity": {
+        "critical": "Critique",
+        "high": "Priorité élevée",
+        "low": "Priorité faible",
+        "medium": "Priorité moyenne"
+      },
+      "title": "Alerte d'urgence",
+      "types": {
+        "maintenance": "Maintenance",
+        "maintenanceDesc": "Maintenance et réparations du bâtiment",
+        "other": "Alerte générale",
+        "otherDesc": "Alertes communautaires générales",
+        "security": "Sécurité",
+        "securityDesc": "Questions liées à la sécurité",
+        "utilities": "Services publics",
+        "utilitiesDesc": "Problèmes d'électricité, d'eau ou d'internet",
+        "weather": "Météo",
+        "weatherDesc": "Alertes et avertissements météorologiques"
+      },
+      "warningMessage": "Les alertes d'urgence seront envoyées à tous les résidents via WhatsApp. Utilisez cette fonctionnalité de manière responsable et uniquement pour de véritables urgences ou des notifications communautaires importantes.",
+      "warningTitle": "Important :"
     },
     "failed": "Échoué",
     "lastRun": "Dernière exécution",
     "logs": "Journaux",
     "nextRun": "Prochaine exécution",
     "polls": {
+      "actions": {
+        "activate": "Activer",
+        "close": "Fermer"
+      },
       "adminActions": "Actions de l'administrateur",
       "stats": {
         "active": "Actif",
         "closed": "Fermé",
-        "draft": "Brouillons"
+        "draft": "Brouillons",
+        "totalPolls": "Total des sondages"
       },
-      "status": "Statut"
+      "status": "Statut",
+      "votes": "Votes"
     },
     "processing": "En cours de traitement",
     "processPendingJobs": "Traiter les tâches en attente",
