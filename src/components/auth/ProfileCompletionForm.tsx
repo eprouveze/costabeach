@@ -11,7 +11,7 @@ import { Language } from '@/lib/types';
 import { useI18n } from '@/lib/i18n/client';
 
 export default function ProfileCompletionForm() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { session, user, isLoading: sessionLoading } = useSupabaseSession();
   const [buildingNumber, setBuildingNumber] = useState('');
   const [apartmentNumber, setApartmentNumber] = useState('');
@@ -25,7 +25,7 @@ export default function ProfileCompletionForm() {
   useEffect(() => {
     // If there's no session, redirect to login
     if (!sessionLoading && !session) {
-      router.push('/auth/signin');
+      router.push(`/${locale}/auth/signin`);
       return;
     }
 
@@ -42,7 +42,7 @@ export default function ProfileCompletionForm() {
       if (isComplete) {
         // Profile is already complete, redirect to owner dashboard
         toast.success(t('toast.auth.profileAlreadyComplete'));
-        router.push('/owner-dashboard');
+        router.push(`/${locale}/owner-dashboard`);
       }
     } catch (error: any) {
       console.error('Error checking profile completion:', error);

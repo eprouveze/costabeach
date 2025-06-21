@@ -11,7 +11,7 @@ interface FooterProps {
 }
 
 export const Footer = ({ className = "" }: FooterProps) => {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   return (
     <footer className={`bg-gray-900 text-white py-12 ${className}`}>
@@ -35,17 +35,17 @@ export const Footer = ({ className = "" }: FooterProps) => {
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
+                <Link href={`/${locale}/contact`} className="text-gray-400 hover:text-white transition-colors">
                   {t("common.contact")}
                 </Link>
               </li>
               <li>
-                <Link href="/auth/signin" className="text-gray-400 hover:text-white transition-colors">
+                <Link href={`/${locale}/auth/signin`} className="text-gray-400 hover:text-white transition-colors">
                   {t("auth.signIn")}
                 </Link>
               </li>
               <li>
-                <Link href="/auth/signup" className="text-gray-400 hover:text-white transition-colors">
+                <Link href={`/${locale}/auth/signup`} className="text-gray-400 hover:text-white transition-colors">
                   {t("auth.signUp")}
                 </Link>
               </li>

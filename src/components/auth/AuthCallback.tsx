@@ -3,9 +3,11 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { handleAuthCallback } from '@/lib/supabase/auth';
+import { useI18n } from '@/lib/i18n/client';
 
 export default function AuthCallback() {
   const router = useRouter();
+  const { locale } = useI18n();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -19,7 +21,7 @@ export default function AuthCallback() {
       }
       
       // Redirect to dashboard on successful sign in
-      router.push('/dashboard');
+      router.push(`/${locale}/dashboard`);
     }
 
     handleCallback();
@@ -31,7 +33,7 @@ export default function AuthCallback() {
         <h2 className="text-xl font-semibold mb-2">Authentication Error</h2>
         <p>{error}</p>
         <button 
-          onClick={() => router.push('/auth/login')}
+          onClick={() => router.push(`/${locale}/auth/signin`)}
           className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
         >
           Return to Login
