@@ -381,22 +381,22 @@
     },
     "aboutFeatures": {
       "amenities": {
-        "description": "Piscines, centre de fitness, jardins et espaces récréatifs pour tous les résidents.",
-        "title": "Équipements premium"
+        "description": "Piscines extérieures multiples, aires de jeux pour enfants, jardins paysagers et espaces de bronzage.",
+        "title": "Équipements Premium"
       },
       "architecture": {
-        "description": "Design contemporain avec des aménagements spacieux et des finitions haut de gamme dans toute la propriété.",
-        "title": "Architecture moderne"
+        "description": "Appartements contemporains avec chambres spacieuses, cuisines équipées, balcons privés et terrasses avec vue sur l'océan.",
+        "title": "Appartements Modernes"
       },
       "beachfront": {
-        "description": "Accès direct à une plage privée immaculée avec une vue imprenable sur l'océan Atlantique.",
-        "title": "Accès à la plage"
+        "description": "À distance de marche des plages de sable fin de Bouznika, réputées pour leur propreté et leurs vagues douces.",
+        "title": "Accès à la Plage"
       },
       "location": {
-        "description": "Idéalement situé avec un accès facile aux commerces, restaurants et options de divertissement.",
-        "title": "Emplacement de choix"
+        "description": "Situation privilégiée à Bouznika, entre Casablanca et Rabat, offrant un accès facile aux deux grandes métropoles du Royaume.",
+        "title": "Emplacement privilégié"
       },
-      "title": "Caractéristiques de la propriété"
+      "title": "Caractéristiques de la Propriété"
     },
     "aboutHistory": {
       "paragraph1": "Costa Beach est un complexe résidentiel moderne et recherché situé à Bouznika, une ville côtière entre Casablanca et Rabat sur la côte atlantique du Maroc. Le développement est populaire parmi les visiteurs marocains et internationaux pour son mélange de confort, de sécurité et de proximité avec la mer, ce qui le rend idéal pour les escapades familiales, les longues vacances ou les week-ends.",

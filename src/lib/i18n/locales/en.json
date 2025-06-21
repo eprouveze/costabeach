@@ -487,19 +487,19 @@
     },
     "aboutFeatures": {
       "amenities": {
-        "description": "Swimming pools, fitness center, gardens, and recreational areas for all residents.",
+        "description": "Multiple outdoor swimming pools, children's play areas, landscaped gardens, and sunbathing areas.",
         "title": "Premium Amenities"
       },
       "architecture": {
-        "description": "Contemporary design with spacious layouts and premium finishes throughout the property.",
-        "title": "Modern Architecture"
+        "description": "Contemporary apartments with spacious bedrooms, equipped kitchens, private balconies and terraces with ocean views.",
+        "title": "Modern Apartments"
       },
       "beachfront": {
-        "description": "Direct access to a pristine private beach with stunning views of the Atlantic Ocean.",
-        "title": "Beachfront Access"
+        "description": "Walking distance to Bouznika's fine sandy beaches, renowned for their cleanliness and gentle waves.",
+        "title": "Beach Access"
       },
       "location": {
-        "description": "Conveniently located with easy access to shopping, dining, and entertainment options.",
+        "description": "Prime location in Bouznika, between Casablanca and Rabat, offering easy access to both major metropolitan areas of the Kingdom.",
         "title": "Prime Location"
       },
       "title": "Property Features"
