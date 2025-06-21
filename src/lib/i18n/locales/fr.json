@@ -127,5 +127,607 @@
         "templateNameRequired": "Veuillez saisir un nom de modèle"
       }
     }
+  },
+  "auth": {
+    "email": "",
+    "loginRequired": "Connexion requise",
+    "password": "Mot de passe",
+    "signin": {
+      "backToLogin": "Retour à la connexion",
+      "checkEmail": "Vérifiez votre email",
+      "email": "Adresse email",
+      "emailPlaceholder": "vous@exemple.com",
+      "forgotPassword": "Mot de passe oublié ?",
+      "googleSignIn": "Se connecter avec Google",
+      "magicLinkDescription": "Nous avons envoyé un lien de connexion sécurisé à votre adresse email.",
+      "magicLinkSent": "Lien magique envoyé !",
+      "noAccount": "Vous n'avez pas de compte ?",
+      "orContinueWith": "Ou continuez avec votre email",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "••••••••",
+      "rememberMe": "Se souvenir de moi",
+      "resetPassword": "Réinitialisez-le ici",
+      "sendingMagicLink": "Envoi du lien...",
+      "sendMagicLink": "Envoyer le lien magique",
+      "signup": "S'inscrire",
+      "submit": "Se connecter",
+      "submitting": "Connexion en cours...",
+      "subtitle": "Connectez-vous à votre compte",
+      "success": "Connexion réussie",
+      "title": "Bon retour"
+    },
+    "signIn": "Se connecter",
+    "signingOut": "Déconnexion en cours...",
+    "signOut": "Se déconnecter",
+    "signOutSuccess": "Déconnexion réussie",
+    "signup": {
+      "alreadyHaveAccount": "Vous avez déjà un compte ?",
+      "apartmentNumber": "Numéro d'appartement",
+      "apartmentNumberPlaceholder": "304",
+      "arabic": "Arabe",
+      "buildingNumber": "Numéro de bâtiment",
+      "buildingNumberPlaceholder": "B12",
+      "bySigningUp": "En vous inscrivant, vous acceptez nos",
+      "confirmPassword": "Confirmer le mot de passe",
+      "confirmPasswordPlaceholder": "••••••••",
+      "email": "Adresse email",
+      "emailPlaceholder": "vous@exemple.com",
+      "english": "Anglais",
+      "french": "Français",
+      "fullName": "Nom complet",
+      "fullNamePlaceholder": "Jean Dupont",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "••••••••",
+      "phoneNumber": "Numéro de téléphone",
+      "phoneNumberPlaceholder": "+212 123 456 789",
+      "preferredLanguage": "Langue préférée",
+      "privacyPolicy": "Politique de confidentialité",
+      "signIn": "Se connecter",
+      "submit": "Créer le compte",
+      "submitting": "Création du compte...",
+      "subtitle": "Rejoignez Costa Beach pour accéder aux ressources exclusives des propriétaires",
+      "title": "Créer un compte"
+    },
+    "signUp": "S'inscrire",
+    "social": {
+      "orContinueWith": "Ou continuez avec"
+    }
+  },
+  "common": {
+    "accessDenied": "Accès refusé",
+    "actions": "Actions",
+    "back": "Retour",
+    "cancel": "Annuler",
+    "contact": "Contact",
+    "delete": "Supprimer",
+    "documents": "Documents",
+    "edit": "Modifier",
+    "error": "Erreur",
+    "filters": "Filtres",
+    "home": "Accueil",
+    "information": "Informations",
+    "language": "Langue",
+    "loading": "Chargement...",
+    "next": "Suivant",
+    "no": "Non",
+    "noResults": "Aucun résultat",
+    "previous": "Précédent",
+    "retry": "Réessayer",
+    "save": "Enregistrer",
+    "saveChanges": "Enregistrer les modifications",
+    "saving": "Enregistrement...",
+    "search": "Rechercher",
+    "seeAll": "Voir tout",
+    "settings": "Paramètres",
+    "siteTitle": "Costa Beach 3",
+    "success": "Succès",
+    "unknown": "Inconnu",
+    "update": "Mettre à jour",
+    "user": "Utilisateur",
+    "yes": "Oui"
+  },
+  "contact": {
+    "contactInfo": {
+      "address": "Costa Beach 3, Bouznika, Province de Benslimane, Maroc",
+      "email": "info@costabeach.ma",
+      "title": "Informations de contact"
+    },
+    "department": "Département",
+    "departments": {
+      "financial": "Questions financières",
+      "general": "Demandes générales",
+      "legal": "Affaires juridiques",
+      "maintenance": "Maintenance",
+      "management": "Gestion du syndic"
+    },
+    "description": "Vous avez des questions sur le syndic Costa Beach 3 ? Contactez-nous et nous vous répondrons dans les plus brefs délais.",
+    "email": "Email",
+    "message": "Message",
+    "messageSent": "Votre message a été envoyé avec succès !",
+    "name": "Nom",
+    "subject": "Sujet",
+    "submit": "Envoyer le message",
+    "title": "Nous contacter",
+    "validation": {
+      "departmentRequired": "Veuillez sélectionner un département",
+      "emailRequired": "Veuillez entrer votre adresse email",
+      "messageRequired": "Veuillez entrer votre message",
+      "nameRequired": "Veuillez entrer votre nom",
+      "subjectRequired": "Veuillez entrer un sujet"
+    }
+  },
+  "documents": {
+    "actions": "Actions",
+    "allCategories": "Toutes les catégories",
+    "allLanguages": "Toutes les langues",
+    "browseDocuments": "Parcourir les documents",
+    "categories": {
+      "comiteDeSuivi": "Comité de suivi",
+      "finance": "Documents financiers",
+      "general": "Général",
+      "legal": "Documents juridiques",
+      "societeDeGestion": "Société de gestion"
+    },
+    "category": "Catégorie",
+    "categoryField": "Catégorie *",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce document ?",
+    "deleting": "Suppression...",
+    "description": "Description",
+    "descriptionField": "Description",
+    "descriptionPlaceholder": "Entrez la description du document (optionnel)",
+    "documentDetails": "Détails du document",
+    "documentFileField": "Fichier du document *",
+    "documentNotFound": "Document non trouvé",
+    "documentNotFoundDescription": "Le document que vous recherchez n'existe pas ou a été supprimé.",
+    "download": "Télécharger",
+    "downloading": "Téléchargement...",
+    "dragDropText": "Glissez-déposez votre fichier ici, ou cliquez pour parcourir",
+    "editDocument": "Modifier le document",
+    "errorDownloadingDocument": "Erreur lors du téléchargement du document",
+    "fileType": "Type de fichier",
+    "language": "Langue",
+    "languageField": "Langue *",
+    "listView": "Vue en liste",
+    "machineTranslation": "Traduction automatique",
+    "name": "Nom",
+    "noDocuments": "Aucun document trouvé",
+    "noDocumentsDescription": "Il n'y a actuellement aucun document disponible dans cette catégorie.",
+    "noDocumentsFound": "Aucun document trouvé",
+    "noMatchingDocuments": "Aucun document correspondant trouvé",
+    "noTranslations": "Aucune",
+    "original": "Original",
+    "preview": "Aperçu",
+    "previewNotAvailable": "L'aperçu n'est pas disponible pour ce type de document",
+    "searchPlaceholder": "Rechercher des documents...",
+    "selectedFile": "Fichier sélectionné",
+    "selectFile": "Sélectionner un fichier",
+    "showingResults_one": "Affichage de {{count}} résultat",
+    "showingResults_other": "Affichage de {{count}} résultats",
+    "size": "Taille",
+    "supportedFormats": "Formats supportés : PDF, Word, Excel, PowerPoint, Texte, CSV, Images",
+    "tilesView": "Vue en mosaïque",
+    "title": "Documents",
+    "titleFieldPlaceholder": "Entrez le titre du document",
+    "titlePlaceholder": "Entrez le titre...",
+    "titleRequired": "Titre *",
+    "translation": "Traduction",
+    "translations": "Traductions",
+    "unknownFileType": "Type inconnu",
+    "updateError": "Erreur de mise à jour",
+    "updateSuccess": "Document mis à jour avec succès",
+    "upload": "Téléverser",
+    "uploadDate": "Date de téléversement",
+    "uploadDocument": "Téléverser un document",
+    "uploadedBy": "Téléversé par",
+    "uploadedOn": "Téléversé le {{date}}",
+    "uploadFirst": "Téléversez votre premier document",
+    "uploading": "Téléversement...",
+    "uploadProgress": "Téléversement : {{progress}}%",
+    "view": "",
+    "viewOriginal": "Voir l'original",
+    "views": "vues"
+  },
+  "information": {
+    "allStatuses": "Tous les statuts",
+    "archived": "Archivé",
+    "author": "Auteur",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer cet article ?",
+    "content": "Contenu",
+    "contentPlaceholder": "Rédigez le contenu complet de votre article d'information...",
+    "created": "Créé",
+    "createPost": "Créer un article",
+    "draft": "Brouillon",
+    "editPost": "Modifier l'article d'information",
+    "excerpt": "Extrait",
+    "excerptPlaceholder": "Résumé bref pour les aperçus (optionnel)",
+    "fillRequiredFields": "Veuillez remplir tous les champs obligatoires",
+    "filterByStatus": "Filtrer par statut",
+    "languages": "langues",
+    "management": "Gestion des informations",
+    "managementDescription": "Créer et gérer les articles d'information et les annonces",
+    "noPosts": "Aucun article d'information",
+    "noPostsDescription": "Commencez par créer votre premier article d'information.",
+    "postCreated": "Article d'information créé avec succès",
+    "postDeleted": "Article d'information supprimé avec succès",
+    "postPublished": "Article d'information publié avec succès",
+    "postUpdated": "Article d'information mis à jour avec succès",
+    "publish": "Publier",
+    "published": "Publié",
+    "publishImmediately": "Publier immédiatement",
+    "publishPost": "Publier l'article",
+    "saveDraft": "Enregistrer comme brouillon",
+    "status": "Statut",
+    "title": "Titre",
+    "titlePlaceholder": "Entrez le titre de l'article",
+    "translations": "Traductions"
+  },
+  "landing": {
+    "aboutCommunity": {
+      "lifestyle": {
+        "item1": "Événements et rassemblements communautaires",
+        "item2": "Activités de plage et sports nautiques",
+        "item3": "Cours de fitness et programmes de bien-être",
+        "item4": "Environnement familial",
+        "title": "Style de vie et activités"
+      },
+      "services": {
+        "item1": "Services de sécurité et conciergerie 24h/24",
+        "item2": "Gestion immobilière professionnelle",
+        "item3": "Entretien régulier des espaces communs",
+        "item4": "Équipe de support dédiée aux résidents",
+        "title": "Services et gestion"
+      },
+      "title": "Points forts de la communauté"
+    },
+    "aboutFeatures": {
+      "amenities": {
+        "description": "Piscines, centre de fitness, jardins et espaces récréatifs pour tous les résidents.",
+        "title": "Équipements premium"
+      },
+      "architecture": {
+        "description": "Design contemporain avec des aménagements spacieux et des finitions haut de gamme dans toute la propriété.",
+        "title": "Architecture moderne"
+      },
+      "beachfront": {
+        "description": "Accès direct à une plage privée immaculée avec une vue imprenable sur l'océan Atlantique.",
+        "title": "Accès à la plage"
+      },
+      "location": {
+        "description": "Idéalement situé avec un accès facile aux commerces, restaurants et options de divertissement.",
+        "title": "Emplacement de choix"
+      },
+      "title": "Caractéristiques de la propriété"
+    },
+    "aboutHistory": {
+      "paragraph1": "Costa Beach est un complexe résidentiel moderne et recherché situé à Bouznika, une ville côtière entre Casablanca et Rabat sur la côte atlantique du Maroc. Le développement est populaire parmi les visiteurs marocains et internationaux pour son mélange de confort, de sécurité et de proximité avec la mer, ce qui le rend idéal pour les escapades familiales, les longues vacances ou les week-ends.",
+      "paragraph2": "Costa Beach 3 est l'une des phases les plus récentes de ce développement, offrant des équipements améliorés et un environnement tranquille et familial. Le complexe est conçu avec la détente et la commodité à l'esprit, offrant aux résidents et aux invités une expérience de type resort à quelques pas des plages de sable renommées de Bouznika.",
+      "title": "Aperçu de Costa Beach et Costa Beach 3"
+    },
+    "aboutSubtitle": "Une résidence moderne en bord de mer à Bouznika, entre Casablanca et Rabat",
+    "aboutTitle": "À propos de Costa Beach 3",
+    "contactCTA": "Nous contacter",
+    "features": {
+      "community": {
+        "description": "Restez informé des événements communautaires, des règles et des annonces importantes.",
+        "title": "Informations communautaires"
+      },
+      "documents": {
+        "description": "Accédez à tous les documents du syndic, procès-verbaux de réunions et informations légales en un seul endroit sécurisé.",
+        "title": "Accès aux documents"
+      },
+      "information": {
+        "description": "Accédez à toutes les informations dans votre langue préférée grâce à notre support multilingue.",
+        "title": "Support multilingue"
+      },
+      "notifications": {
+        "description": "Recevez des notifications en temps opportun concernant la maintenance, les réunions et autres mises à jour importantes.",
+        "title": "Notifications importantes"
+      }
+    },
+    "featuresTitle": "Fonctionnalités du portail",
+    "footer": {
+      "contact": "Informations de contact",
+      "copyright": "Tous droits réservés.",
+      "description": "Le portail officiel de l'association des propriétaires de la communauté résidentielle Costa Beach 3.",
+      "quickLinks": "Liens rapides"
+    },
+    "heroSubtitle": "Accédez aux documents importants, informations communautaires et ressources du syndic en un seul endroit sécurisé.",
+    "heroTitle": "Portail de l'association des propriétaires Costa Beach 3",
+    "learnMoreCTA": "En savoir plus",
+    "registerCTA": "S'inscrire comme propriétaire"
+  },
+  "languages": {
+    "arabic": "Arabe",
+    "english": "Anglais",
+    "french": "Français"
+  },
+  "navigation": {
+    "admin": "Admin",
+    "categories": "Catégories",
+    "community": "Communauté",
+    "contact": "Contact",
+    "dashboard": "Tableau de bord",
+    "documents": "Documents",
+    "home": "Accueil",
+    "notifications": "Notifications",
+    "ownerPortal": "Portail propriétaire",
+    "polls": "Sondages",
+    "profile": "Profil",
+    "quickLinks": "Liens rapides",
+    "settings": "Paramètres",
+    "toggleMenu": "Basculer le menu"
+  },
+  "polls": {
+    "activePolls": "Actifs",
+    "adminDescription": "Gérer les sondages communautaires avec un contrôle administratif",
+    "adminRequired": "Permission administrateur requise",
+    "adminTitle": "Administration des sondages",
+    "allPolls": "Tous les sondages",
+    "anonymous": "Anonyme",
+    "closedPolls": "Fermés",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce sondage ?",
+    "create": "Créer",
+    "created": "Créé",
+    "createDescription": "Créer un sondage pour recueillir les commentaires de la communauté et prendre des décisions ensemble",
+    "createNew": "Créer un nouveau sondage",
+    "createPoll": "Créer un sondage",
+    "createSuccess": "Sondage créé avec succès !",
+    "creating": "Création...",
+    "creatingPoll": "Création du sondage...",
+    "deadline": "Date limite",
+    "deleted": "Supprimé",
+    "description": "Description",
+    "detailsDescription": "Voir les détails et résultats du sondage",
+    "draftPolls": "Brouillons",
+    "errorLoading": "Erreur de chargement",
+    "explanationRequired": "Explication requise",
+    "form": {
+      "addOption": "+ Ajouter une option",
+      "anonymousVoting": "Vote anonyme (recommandé)",
+      "cancel": "Annuler",
+      "deadlineInFuture": "La date limite de vote doit être dans le futur",
+      "duplicateOptions": "Les options doivent être uniques",
+      "invalidDate": "Format de date invalide",
+      "maxChoices": "Choix maximum (optionnel)",
+      "maxChoicesError": "Le maximum de choix doit être entre 1 et {{max}}",
+      "maxChoicesPlaceholder": "Laisser vide pour illimité",
+      "minTwoOptions": "Au moins 2 options sont requises",
+      "multipleChoice": "Choix multiple",
+      "multipleChoiceDescription": "Choix multiple (les utilisateurs peuvent sélectionner plusieurs options)",
+      "noDeadlineHint": "Laisser vide pour aucune date limite",
+      "optionPlaceholder": "Option {{number}}",
+      "options": "Options du sondage",
+      "optionsRequired": "Au moins 2 options sont requises",
+      "optionsUnique": "Les options doivent être uniques",
+      "question": "Question du sondage",
+      "questionPlaceholder": "Que voulez-vous demander à la communauté ?",
+      "questionRequired": "La question du sondage est requise",
+      "removeOption": "Supprimer l'option",
+      "requireExplanation": "Exiger une explication pour les votes",
+      "settings": "Paramètres du sondage",
+      "singleChoice": "Choix unique",
+      "singleChoiceDescription": "Choix unique (les utilisateurs peuvent sélectionner une option)",
+      "type": "Type de sondage",
+      "votingDeadline": "Date limite de vote (optionnel)"
+    },
+    "maxChoices": "Choix maximum",
+    "multipleChoice": "Choix multiple",
+    "noPermission": "Vous n'avez pas la permission de créer des sondages",
+    "noPolls": "Aucun sondage",
+    "noPollsFound": "Aucun sondage trouvé",
+    "noPollsUser": "",
+    "options": "Options",
+    "pollDetails": "Détails du sondage",
+    "pollInfo": "Informations du sondage",
+    "searchPolls": "Rechercher des sondages et options...",
+    "signInToVote": "Connectez-vous pour voter",
+    "singleChoice": "Choix unique",
+    "statistics": "Statistiques",
+    "stats": {
+      "active": "",
+      "totalPolls": "",
+      "yourVotes": ""
+    },
+    "status": "Statut",
+    "timeline": "Chronologie",
+    "title": "Paramètres",
+    "totalVotes": "Total des votes",
+    "type": "Type",
+    "updated": "Mis à jour",
+    "viewPublic": "Voir public",
+    "voteSubmitted": "Vote soumis"
+  },
+  "privacy": {
+    "lastUpdated": "Dernière mise à jour",
+    "sections": {
+      "contact": {
+        "address": "Costa Beach 3, Bouznika, Province de Benslimane, Maroc",
+        "content": "Si vous avez des questions concernant cette politique de confidentialité, veuillez nous contacter à",
+        "email": "info@costabeach.ma",
+        "title": "Nous contacter"
+      },
+      "dataCollection": {
+        "content": "Nous collectons les informations que vous nous fournissez directement, par exemple lorsque vous créez un compte, enregistrez une propriété ou nous contactez pour obtenir de l'aide.",
+        "title": "Collecte de données",
+        "types": {
+          "communication": "Historique de communication",
+          "personal": "Informations personnelles (nom, prénom, adresse email)",
+          "property": "Informations sur la propriété",
+          "title": "Types de données collectées :",
+          "usage": "Données d'utilisation de la plateforme"
+        }
+      },
+      "dataRights": {
+        "content": "Conformément à la loi marocaine, vous disposez des droits suivants :",
+        "rights": {
+          "access": "Droit d'accès à vos données personnelles",
+          "deletion": "Droit à l'effacement de vos données",
+          "objection": "Droit d'opposition au traitement",
+          "portability": "Droit à la portabilité des données",
+          "rectification": "Droit de rectification des données inexactes"
+        },
+        "title": "Vos droits"
+      },
+      "dataSecurity": {
+        "content": "Nous mettons en œuvre des mesures de sécurité appropriées pour protéger vos données personnelles contre l'accès, la modification, la divulgation ou la destruction non autorisés.",
+        "title": "Sécurité des données"
+      },
+      "dataSharing": {
+        "content": "Nous ne vendons, n'échangeons ni ne transférons d'autre manière vos informations personnelles à des tiers sans votre consentement, sauf comme décrit dans cette politique.",
+        "title": "Partage de données"
+      },
+      "dataUsage": {
+        "content": "Nous utilisons les informations que nous collectons pour fournir, maintenir et améliorer nos services, traiter les transactions et communiquer avec vous.",
+        "purposes": {
+          "communication": "Communication avec les propriétaires",
+          "improvement": "Amélioration de nos services",
+          "legal": "Conformité aux obligations légales",
+          "service": "Fourniture des services de gestion immobilière",
+          "title": "Finalités du traitement :"
+        },
+        "title": "Utilisation des données"
+      },
+      "introduction": {
+        "content": "Costa Beach 3 s'engage à protéger votre vie privée et vos données personnelles conformément à la loi marocaine n° 09-08 relative à la protection des personnes physiques à l'égard du traitement des données à caractère personnel.",
+        "title": "Introduction"
+      }
+    },
+    "title": "Politique de confidentialité"
+  },
+  "profile": {
+    "admin": "",
+    "cancel": "",
+    "description": "",
+    "edit": "",
+    "email": "Email",
+    "emailNote": "",
+    "memberSince": "",
+    "name": "Nom",
+    "namePlaceholder": "",
+    "noName": "",
+    "notAvailable": "",
+    "owner": "",
+    "role": "",
+    "save": "",
+    "saving": "",
+    "title": "Profil",
+    "updateError": "",
+    "updateSuccess": ""
+  },
+  "settings": {
+    "account": {
+      "currentEmail": "",
+      "emailNote": "",
+      "title": ""
+    },
+    "description": "Description",
+    "language": {
+      "display": "",
+      "title": ""
+    },
+    "notifications": {
+      "documents": "",
+      "email": "",
+      "emergency": "",
+      "polls": "",
+      "title": ""
+    },
+    "privacy": {
+      "showEmail": "",
+      "title": ""
+    },
+    "save": "",
+    "saveError": "",
+    "saveSuccess": "",
+    "saving": "",
+    "title": "Paramètres"
+  },
+  "theme": {
+    "toggle": "Basculer le thème"
+  },
+  "toast": {
+    "admin": {
+      "alertMessageRequired": "Veuillez entrer un message d'alerte",
+      "alertTitleRequired": "Veuillez entrer un titre d'alerte",
+      "completedTranslationsFetchError": "Échec de la récupération des traductions terminées",
+      "documentDeleteError": "Erreur lors de la suppression du document",
+      "documentDeleteSuccess": "Document supprimé avec succès",
+      "emergencyAlertSendError": "Échec de l'envoi de l'alerte : {{error}}",
+      "emergencyAlertSendFailed": "Échec de l'envoi de l'alerte d'urgence. Veuillez réessayer.",
+      "emergencyAlertSentSuccess": "Alerte d'urgence envoyée avec succès !",
+      "failedJobsQueuedForRetry": "Tâches échouées mises en file pour nouvelle tentative",
+      "operationError": "Échec de {{action}} : {{error}}",
+      "translationStatusFetchError": "Échec de la récupération du statut de traduction"
+    },
+    "auth": {
+      "accessDenied": "Accès refusé. Veuillez vous assurer d'avoir un compte approuvé",
+      "checkEmailForLink": "Vérifiez votre email pour le lien de connexion !",
+      "googleSignInFailed": "Échec de la connexion avec Google",
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "passwordTooShort": "Le mot de passe doit comporter au moins 8 caractères",
+      "passwordUpdateSuccess": "Mot de passe mis à jour avec succès",
+      "permissionDenied": "Vous n'avez pas la permission d'accéder à cette page",
+      "profileAlreadyComplete": "Votre profil est déjà complet",
+      "profileIncompleteWarning": "Impossible de récupérer le profil utilisateur complet, redirection vers la page d'accueil",
+      "profileUpdateSuccess": "Profil mis à jour avec succès !",
+      "registrationSuccess": "Inscription réussie ! Veuillez vérifier votre email pour confirmer votre compte.",
+      "resetLinkSent": "Lien de réinitialisation du mot de passe envoyé à votre email",
+      "signInError": "Une erreur s'est produite lors de la connexion. Veuillez réessayer",
+      "signInFailed": "Échec de la connexion. Veuillez réessayer",
+      "signOutSuccess": "Vous avez été déconnecté avec succès",
+      "unexpectedError": "Une erreur inattendue s'est produite. Veuillez réessayer"
+    },
+    "documents": {
+      "deleteError": "Erreur lors de la suppression du document : {{error}}",
+      "deleteSuccess": "Document supprimé avec succès",
+      "downloadError": "Erreur lors du téléchargement du document : {{error}}",
+      "fetchError": "Erreur lors de la récupération des documents : {{error}}",
+      "fileRequired": "Veuillez sélectionner un fichier à téléverser",
+      "previewError": "Échec de l'aperçu du document",
+      "previewLoadError": "Échec du chargement de l'aperçu du document",
+      "titleRequired": "Veuillez entrer un titre pour le document",
+      "translationRequested": "Traduction demandée. Cela peut prendre quelques minutes.",
+      "translationRequestError": "Échec de la demande de traduction",
+      "uploadError": "Erreur lors du téléversement du document : {{error}}",
+      "uploadSuccess": "Document téléversé avec succès"
+    },
+    "general": {
+      "errorOccurred": "Une erreur s'est produite",
+      "failed": "Échec",
+      "loading": "Chargement...",
+      "success": "Succès"
+    },
+    "speech": {
+      "microphoneAccessRequired": "L'accès au microphone est requis pour utiliser l'enregistrement vocal.",
+      "recordingFailed": "L'enregistrement a échoué. Veuillez réessayer.",
+      "recordingNotSupported": "L'enregistrement n'est pas pris en charge dans ce navigateur.",
+      "transcriptionError": "Une erreur s'est produite lors de la transcription.",
+      "transcriptionFailed": "La transcription a échoué."
+    },
+    "whatsapp": {
+      "broadcastAllFailed": "Tous les messages ont échoué à être envoyés",
+      "broadcastFailed": "Échec de la diffusion : {{error}}",
+      "broadcastSentPartial": "Diffusion envoyée ! {{successCount}} réussis, {{failedCount}} échoués",
+      "connectionFailed": "Échec de la connexion : {{error}}",
+      "connectionSuccessful": "Connexion WhatsApp réussie !",
+      "documentUrlRequired": "Veuillez fournir l'URL du document et le nom du fichier",
+      "historyExportSuccess": "Historique des messages exporté avec succès",
+      "imageUrlRequired": "Veuillez fournir l'URL de l'image",
+      "messageRequired": "Veuillez entrer un message",
+      "messageSendError": "Échec de l'envoi du message : {{error}}",
+      "messageSentSuccess": "Message envoyé avec succès ! ID : {{messageId}}",
+      "phoneNumberDuplicate": "Ce numéro de téléphone est déjà dans la liste",
+      "phoneNumberInvalidFormat": "Le numéro de téléphone doit être au format international (+1234567890)",
+      "phoneNumberRequired": "Veuillez entrer un numéro de téléphone",
+      "recipientAddedSuccess": "Destinataire ajouté avec succès",
+      "recipientRequired": "Veuillez ajouter au moins un destinataire",
+      "recipientsListCleared": "Liste des destinataires effacée",
+      "sampleRecipientsAdded_one": "{{count}} destinataire d'exemple ajouté",
+      "sampleRecipientsAdded_other": "{{count}} destinataires d'exemple ajoutés",
+      "sampleRecipientsAlreadyAdded": "Les destinataires d'exemple sont déjà dans la liste",
+      "settingsSaveError": "Échec de la sauvegarde des paramètres : {{error}}",
+      "settingsSaveSuccess": "Paramètres sauvegardés avec succès !",
+      "templateNameRequired": "Veuillez saisir un nom de modèle"
+    }
   }
 }

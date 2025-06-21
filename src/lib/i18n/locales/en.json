@@ -37,26 +37,90 @@
       "alertTitlePlaceholder": "Enter alert title",
       "alertType": "Alert Type *",
       "characterLimit_one": "{{count}} character remaining",
-      "characterLimit_other": "{{count}} characters remaining",
       "characterLimit_many": "{{count}} characters remaining",
-      "communityName": "🏖️ Community Name",
-      "description": "Send emergency alerts to all users.",
-      "send": "Send Alert",
-      "title": "Emergency Alert"
+      "characterLimit_other": "{{count}} characters remaining",
+      "communityName": "🏖️ Costa Beach Community",
+      "presets": {
+        "powerOutage": {
+          "message": "Power outage in the building. Estimated restoration time: 2 hours. Emergency lighting is active.",
+          "title": "Power Outage"
+        },
+        "scheduledMaintenance": {
+          "message": "Scheduled maintenance will be performed tomorrow from 9:00 AM to 12:00 PM. Water service may be temporarily interrupted.",
+          "title": "Scheduled Maintenance"
+        },
+        "securityAlert": {
+          "message": "Please ensure all doors and windows are locked. Report any suspicious activity to building management immediately.",
+          "title": "Security Alert"
+        },
+        "stormWarning": {
+          "message": "Severe weather expected tonight. Please secure any outdoor items and avoid the balcony areas.",
+          "title": "Storm Warning"
+        }
+      },
+      "preview": {
+        "actionMessage": "⚠️ Please take appropriate action and stay safe.",
+        "alertMessage": "[Alert Message]",
+        "alertTitle": "[Alert Title]",
+        "signature": "Emergency alert sent by Costa Beach Community Platform"
+      },
+      "previewTitle": "WhatsApp Message Preview",
+      "quickPresets": "Quick Presets",
+      "sendEmergencyAlert": "Send Emergency Alert",
+      "sendingAlert": "Sending Alert...",
+      "severity": {
+        "critical": "Critical",
+        "high": "High Priority",
+        "low": "Low Priority",
+        "medium": "Medium Priority"
+      },
+      "title": "Send Emergency Alert",
+      "types": {
+        "maintenance": "Maintenance",
+        "maintenanceDesc": "Building maintenance and repairs",
+        "other": "General Alert",
+        "otherDesc": "General community alerts",
+        "security": "Security",
+        "securityDesc": "Security-related issues",
+        "utilities": "Utilities",
+        "utilitiesDesc": "Power, water, or internet issues",
+        "weather": "Weather",
+        "weatherDesc": "Weather warnings and alerts"
+      },
+      "warningMessage": "Emergency alerts will be sent to all residents via WhatsApp. Use this feature responsibly and only for genuine emergencies or important community notifications.",
+      "warningTitle": "Important:"
+    },
+    "emergencyAlerts": "Emergency Alerts",
+    "errors": {
+      "permissionsFetchFailed": "Failed to fetch permissions"
     },
     "failed": "Failed",
-    "lastRun": "Last Run",
-    "logs": "Logs",
-    "nextRun": "Next Run",
+    "hideCompletedTranslations": "Hide Completed Translations",
+    "howTranslationWorks": "How Translation Works",
+    "messagesSent": "Messages Sent",
+    "noCompletedTranslationsFound": "No completed translations found",
+    "noLogsDescription": "No activity logs available at this time",
+    "noLogsFound": "No logs found",
+    "notConfigured": "Not Configured",
+    "ownerRegistrations": "Pending Registrations",
+    "pending": "Pending",
+    "pendingRegistrations": "Pending Registrations",
     "polls": {
+      "actions": {
+        "activate": "Activate",
+        "close": "Close"
+      },
       "adminActions": "Administrator Actions",
       "stats": {
         "active": "Active",
         "closed": "Closed",
-        "draft": "Drafts"
+        "draft": "Drafts",
+        "totalPolls": "Total Polls"
       },
-      "status": "Status"
+      "status": "Status",
+      "votes": "Votes"
     },
+    "pollsManagement": "Poll Management",
     "processing": "Processing",
     "processPendingJobs": "Process Pending Jobs",
     "queueSummary": "Queue Summary",
@@ -70,6 +134,7 @@
     "retryFailedJobs": "Retry Failed Jobs",
     "running": "Running",
     "searchLogsPlaceholder": "Search logs...",
+    "settings": "Settings",
     "startWorker": "Start Worker",
     "stopped": "Stopped",
     "stopWorker": "Stop Worker",
@@ -81,51 +146,694 @@
     "totalUsers": "Total Users",
     "translations": "Translations",
     "translationsRecent": "Recent Translations",
+    "translation": "Translation",
+    "translationDescription": "Monitor and control the document translation system",
+    "translationInstructions": {
+      "autoCreated": "• When documents are uploaded, translation jobs are automatically created for all supported languages",
+      "autoRefresh": "• The page auto-refreshes every 10 seconds to show current status",
+      "backgroundProcessing": "• The translation worker processes these jobs in the background",
+      "cleanupOrphaned": "• Use \"Cleanup Orphaned\" to remove translation jobs for deleted documents",
+      "completedDocuments": "• Completed translations appear as separate documents in the Documents page",
+      "manualProcessing": "• Use \"Process Pending Jobs\" to manually trigger processing of waiting translations",
+      "retryFailed": "• Failed jobs can be retried, and stalled jobs can be recovered"
+    },
+    "translationManagement": "Translation Management",
+    "unknownDocument": "Unknown Document",
     "user": "User",
     "userId": "User ID",
     "userManagement": "User Management",
     "userManagementSubtitle": "Manage users, roles, and permissions",
     "users": "Users",
-    "workerStatus": "Worker Status",
+    "users": {
+      "actions": {
+        "activate": "",
+        "deactivate": "",
+        "edit": "",
+        "sendPasswordReset": ""
+      },
+      "adminRole": "",
+      "contentEditorRole": "",
+      "ownerBadge": "",
+      "status": {
+        "active": "",
+        "inactive": ""
+      },
+      "tableHeaders": {
+        "registered": ""
+      },
+      "userRole": ""
+    },
+    "viewCompletedTranslations": "View Completed Translations",
+    "viewInDocuments": "View in Documents",
     "whatsapp": {
+      "add": "Add",
+      "addRecipientsToStart": "Add recipients to start broadcasting",
+      "addSamples": "Add Samples",
+      "broadcasting": "Broadcasting...",
+      "broadcastMessageLabel": "Broadcast Message",
+      "broadcastMessagePlaceholder": "Enter your broadcast message here...",
+      "broadcastTitle": "Broadcast WhatsApp Message",
       "broadcast": "Broadcast",
       "broadcastMessage": "Broadcast Message",
       "broadcastHistory": "Broadcast History",
+      "characterLimit_one": "{{count}} character remaining",
+      "characterLimit_other": "{{count}} characters remaining",
       "chat": "Chat",
       "chatHistory": "Chat History",
       "chatSubtitle": "Send and receive WhatsApp messages",
       "chatTemplates": "Chat Templates",
       "chatTemplatesSubtitle": "Manage pre-defined message templates",
+      "clearAll": "Clear All",
+      "connectionFailed": "Connection Failed",
+      "credentialsNotConfigured": "Credentials Not Configured",
+      "export": "Export",
+      "namePlaceholder": "Name (optional)",
+      "noRecipients": "No recipients added yet",
+      "phoneNumberPlaceholder": "+1234567890",
       "recipient": "Recipient",
       "recipients": "Recipients",
+      "sendBroadcast_one": "Send to {{count}} recipient",
+      "sendBroadcast_other": "Send to {{count}} recipients",
       "sendMessage": "Send Message",
       "sendTestMessage": "Send Test Message",
       "settings": "Settings",
+      "tableHeaders": {
+        "actions": "Actions",
+        "name": "Name",
+        "phoneNumber": "Phone Number",
+        "status": "Status"
+      },
       "toasts": {
-        "broadcastFailed": "Broadcast failed: {{error}}",
         "broadcastSentPartial": "Broadcast sent! {{successCount}} successful, {{failedCount}} failed",
-        "connectionFailed": "Connection failed: {{error}}",
-        "connectionSuccessful": "WhatsApp connection successful!",
-        "documentUrlRequired": "Please provide document URL and filename",
-        "historyExportSuccess": "Message history exported successfully",
-        "imageUrlRequired": "Please provide image URL",
-        "messageRequired": "Please enter a message",
-        "messageSendError": "Failed to send message: {{error}}",
-        "messageSentSuccess": "Message sent successfully! ID: {{messageId}}",
-        "phoneNumberDuplicate": "This phone number is already in the list",
-        "phoneNumberInvalidFormat": "Phone number must be in international format (+1234567890)",
-        "phoneNumberRequired": "Please enter a phone number",
-        "recipientAddedSuccess": "Recipient added successfully",
-        "recipientRequired": "Please add at least one recipient",
-        "recipientsListCleared": "Recipients list cleared",
         "sampleRecipientsAdded_one": "Added {{count}} sample recipient",
-        "sampleRecipientsAdded_other": "Added {{count}} sample recipients",
         "sampleRecipientsAdded_many": "Added {{count}} sample recipients",
-        "sampleRecipientsAlreadyAdded": "Sample recipients are already in the list",
-        "settingsSaveError": "Failed to save settings: {{error}}",
-        "settingsSaveSuccess": "Settings saved successfully!",
+        "sampleRecipientsAdded_other": "Added {{count}} sample recipients",
         "templateNameRequired": "Please enter a template name"
       }
+    },
+    "whatsappManagement": "WhatsApp Management",
+    "workerStatus": "Worker Status"
+  },
+  "auth": {
+    "email": "",
+    "loginRequired": "Login Required",
+    "password": "Password",
+    "signin": {
+      "backToLogin": "Back to login",
+      "checkEmail": "Check your email",
+      "email": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "forgotPassword": "Forgot password?",
+      "googleSignIn": "Sign in with Google",
+      "magicLinkDescription": "We've sent a secure login link to your email address.",
+      "magicLinkSent": "Magic link sent!",
+      "noAccount": "Don't have an account?",
+      "orContinueWith": "Or continue with your email",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••",
+      "rememberMe": "Remember me",
+      "resetPassword": "Reset it here",
+      "sendingMagicLink": "Sending link...",
+      "sendMagicLink": "Send magic link",
+      "signup": "Sign up",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "subtitle": "Sign in to your account",
+      "success": "Login Successful",
+      "title": "Welcome Back"
+    },
+    "signIn": "Sign In",
+    "signingOut": "Signing out...",
+    "signOut": "Sign Out",
+    "signOutSuccess": "Successfully signed out",
+    "signup": {
+      "alreadyHaveAccount": "Already have an account?",
+      "apartmentNumber": "Apartment Number",
+      "apartmentNumberPlaceholder": "304",
+      "arabic": "Arabic",
+      "buildingNumber": "Building Number",
+      "buildingNumberPlaceholder": "B12",
+      "bySigningUp": "By signing up, you agree to our",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "••••••••",
+      "email": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "english": "English",
+      "french": "French",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "John Doe",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••",
+      "phoneNumber": "Phone Number",
+      "phoneNumberPlaceholder": "+212 123 456 789",
+      "preferredLanguage": "Preferred Language",
+      "privacyPolicy": "Privacy Policy",
+      "signIn": "Sign in",
+      "submit": "Create Account",
+      "submitting": "Creating account...",
+      "subtitle": "Join Costa Beach to access exclusive owner resources",
+      "title": "Create Account"
+    },
+    "signUp": "Sign Up",
+    "social": {
+      "orContinueWith": "Or continue with"
+    }
+  },
+  "common": {
+    "accessDenied": "Access Denied",
+    "actions": "Actions",
+    "back": "Back",
+    "cancel": "Cancel",
+    "contact": "Contact",
+    "delete": "Delete",
+    "documents": "Documents",
+    "edit": "Edit",
+    "error": "Error",
+    "filters": "Filters",
+    "home": "Home",
+    "information": "Information",
+    "language": "Language",
+    "loading": "Loading...",
+    "next": "Next",
+    "no": "No",
+    "noResults": "No Results",
+    "previous": "Previous",
+    "retry": "Retry",
+    "save": "Save",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "search": "Search",
+    "seeAll": "See all",
+    "settings": "Settings",
+    "siteTitle": "Costa Beach 3",
+    "success": "Success",
+    "unknown": "Unknown",
+    "update": "Update",
+    "user": "User",
+    "yes": "Yes"
+  },
+  "contact": {
+    "contactInfo": {
+      "address": "Costa Beach 3, Bouznika, Province of Benslimane, Morocco",
+      "email": "info@costabeach.ma",
+      "title": "Contact Information"
+    },
+    "department": "Department",
+    "departments": {
+      "financial": "Financial Questions",
+      "general": "General Inquiries",
+      "legal": "Legal Matters",
+      "maintenance": "Maintenance",
+      "management": "HOA Management"
+    },
+    "description": "Have questions about Costa Beach 3 HOA? Get in touch with us and we'll get back to you as soon as possible.",
+    "email": "Email",
+    "message": "Message",
+    "messageSent": "Your message has been sent successfully!",
+    "name": "Name",
+    "subject": "Subject",
+    "submit": "Send Message",
+    "title": "Contact Us",
+    "validation": {
+      "departmentRequired": "Please select a department",
+      "emailRequired": "Please enter your email address",
+      "messageRequired": "Please enter your message",
+      "nameRequired": "Please enter your name",
+      "subjectRequired": "Please enter a subject"
+    }
+  },
+  "documents": {
+    "actions": "Actions",
+    "allCategories": "All Categories",
+    "allLanguages": "All Languages",
+    "browseDocuments": "Browse Documents",
+    "categories": {
+      "comiteDeSuivi": "Monitoring Committee",
+      "finance": "Financial Documents",
+      "general": "General",
+      "legal": "Legal Documents",
+      "societeDeGestion": "Management Company"
+    },
+    "category": "Category",
+    "categoryField": "Category *",
+    "confirmDelete": "Are you sure you want to delete this document?",
+    "deleting": "Deleting...",
+    "description": "Description",
+    "descriptionField": "Description",
+    "descriptionPlaceholder": "Enter document description (optional)",
+    "documentDetails": "Document Details",
+    "documentFileField": "Document File *",
+    "documentNotFound": "Document Not Found",
+    "documentNotFoundDescription": "The document you're looking for doesn't exist or has been deleted.",
+    "download": "Download",
+    "downloading": "Downloading...",
+    "dragDropText": "Drag and drop your file here, or click to browse",
+    "editDocument": "Edit Document",
+    "errorDownloadingDocument": "Error downloading document",
+    "fileType": "File Type",
+    "language": "Language",
+    "languageField": "Language *",
+    "listView": "List View",
+    "machineTranslation": "Machine Translation",
+    "name": "Name",
+    "noDocuments": "No documents found",
+    "noDocumentsDescription": "There are currently no documents available in this category.",
+    "noDocumentsFound": "No documents found",
+    "noMatchingDocuments": "No matching documents found",
+    "noTranslations": "None",
+    "original": "Original",
+    "preview": "Preview",
+    "previewNotAvailable": "Preview is not available for this document type",
+    "searchPlaceholder": "Search documents...",
+    "selectedFile": "Selected File",
+    "selectFile": "Select File",
+    "showingResults_one": "Showing {{count}} result",
+    "showingResults_other": "Showing {{count}} results",
+    "size": "Size",
+    "supportedFormats": "Supported formats: PDF, Word, Excel, PowerPoint, Text, CSV, Images",
+    "tilesView": "Tiles View",
+    "title": "Documents",
+    "titleFieldPlaceholder": "Enter document title",
+    "titlePlaceholder": "Enter title...",
+    "titleRequired": "Title *",
+    "translation": "Translation",
+    "translations": "Translations",
+    "unknownFileType": "Unknown type",
+    "updateError": "Update Error",
+    "updateSuccess": "Document updated successfully",
+    "upload": "Upload",
+    "uploadDate": "Upload Date",
+    "uploadDocument": "Upload Document",
+    "uploadedBy": "Uploaded By",
+    "uploadedOn": "Uploaded on {{date}}",
+    "uploadFirst": "Upload your first document",
+    "uploading": "Uploading...",
+    "uploadProgress": "Uploading: {{progress}}%",
+    "view": "",
+    "viewOriginal": "View Original",
+    "views": "views"
+  },
+  "information": {
+    "allStatuses": "All Statuses",
+    "archived": "Archived",
+    "author": "Author",
+    "confirmDelete": "Are you sure you want to delete this post?",
+    "content": "Content",
+    "contentPlaceholder": "Write the full content of your information post...",
+    "created": "Created",
+    "createPost": "Create Post",
+    "draft": "Draft",
+    "editPost": "Edit Information Post",
+    "excerpt": "Excerpt",
+    "excerptPlaceholder": "Brief summary for previews (optional)",
+    "fillRequiredFields": "Please fill in all required fields",
+    "filterByStatus": "Filter by status",
+    "languages": "languages",
+    "management": "Information Management",
+    "managementDescription": "Create and manage information posts and announcements",
+    "noPosts": "No information posts",
+    "noPostsDescription": "Get started by creating your first information post.",
+    "postCreated": "Information post created successfully",
+    "postDeleted": "Information post deleted successfully",
+    "postPublished": "Information post published successfully",
+    "postUpdated": "Information post updated successfully",
+    "publish": "Publish",
+    "published": "Published",
+    "publishImmediately": "Publish immediately",
+    "publishPost": "Publish Post",
+    "saveDraft": "Save Draft",
+    "status": "Status",
+    "title": "Title",
+    "titlePlaceholder": "Enter the post title",
+    "translations": "Translations"
+  },
+  "landing": {
+    "aboutCommunity": {
+      "lifestyle": {
+        "item1": "Community events and gatherings",
+        "item2": "Beachfront activities and water sports",
+        "item3": "Fitness classes and wellness programs",
+        "item4": "Family-friendly environment",
+        "title": "Lifestyle & Activities"
+      },
+      "services": {
+        "item1": "24/7 security and concierge services",
+        "item2": "Professional property management",
+        "item3": "Regular maintenance of common areas",
+        "item4": "Dedicated resident support team",
+        "title": "Services & Management"
+      },
+      "title": "Community Highlights"
+    },
+    "aboutFeatures": {
+      "amenities": {
+        "description": "Swimming pools, fitness center, gardens, and recreational areas for all residents.",
+        "title": "Premium Amenities"
+      },
+      "architecture": {
+        "description": "Contemporary design with spacious layouts and premium finishes throughout the property.",
+        "title": "Modern Architecture"
+      },
+      "beachfront": {
+        "description": "Direct access to a pristine private beach with stunning views of the Atlantic Ocean.",
+        "title": "Beachfront Access"
+      },
+      "location": {
+        "description": "Conveniently located with easy access to shopping, dining, and entertainment options.",
+        "title": "Prime Location"
+      },
+      "title": "Property Features"
+    },
+    "aboutHistory": {
+      "paragraph1": "Costa Beach is a modern and sought-after residential complex located in Bouznika, a coastal town between Casablanca and Rabat on Morocco's Atlantic coast. The development is popular with both Moroccan and international visitors for its blend of comfort, security, and proximity to the sea, making it ideal for family getaways, extended vacations, or weekend escapes.",
+      "paragraph2": "Costa Beach 3 is one of the newer phases of this development, offering enhanced amenities and a quiet, family-friendly environment. The complex is designed with relaxation and convenience in mind, providing residents and guests with a resort-like experience just steps from Bouznika's renowned sandy beaches.",
+      "title": "About Costa Beach and Costa Beach 3"
+    },
+    "aboutSubtitle": "A modern beachfront residential community in Bouznika, between Casablanca and Rabat",
+    "aboutTitle": "About Costa Beach 3",
+    "contactCTA": "Contact Us",
+    "features": {
+      "community": {
+        "description": "Stay informed about community events, rules, and important announcements.",
+        "title": "Community Information"
+      },
+      "documents": {
+        "description": "Access all HOA documents, meeting minutes, and legal information in one secure location.",
+        "title": "Document Access"
+      },
+      "information": {
+        "description": "Access all information in your preferred language with our multilingual support.",
+        "title": "Multilingual Support"
+      },
+      "notifications": {
+        "description": "Receive timely notifications about maintenance, meetings, and other important updates.",
+        "title": "Important Notifications"
+      }
+    },
+    "featuresTitle": "Portal Features",
+    "footer": {
+      "contact": "Contact Information",
+      "copyright": "All rights reserved.",
+      "description": "The official homeowners association portal for Costa Beach 3 residential community.",
+      "quickLinks": "Quick Links"
+    },
+    "heroSubtitle": "Access important documents, community information, and HOA resources in one secure place.",
+    "heroTitle": "Costa Beach 3 Homeowners Association Portal",
+    "learnMoreCTA": "Learn More",
+    "registerCTA": "Register as Owner"
+  },
+  "languages": {
+    "arabic": "Arabic",
+    "english": "English",
+    "french": "French"
+  },
+  "navigation": {
+    "admin": "Admin",
+    "categories": "Categories",
+    "community": "Community",
+    "contact": "Contact",
+    "dashboard": "Dashboard",
+    "documents": "Documents",
+    "home": "Home",
+    "notifications": "Notifications",
+    "ownerPortal": "Owner Portal",
+    "polls": "Polls",
+    "profile": "Profile",
+    "quickLinks": "Quick Links",
+    "settings": "Settings",
+    "toggleMenu": "Toggle Menu"
+  },
+  "polls": {
+    "activePolls": "Active",
+    "adminDescription": "Manage community polls with administrative control",
+    "adminRequired": "Administrator permission required",
+    "adminTitle": "Poll Administration",
+    "allPolls": "All Polls",
+    "anonymous": "Anonymous",
+    "closedPolls": "Closed",
+    "confirmDelete": "Are you sure you want to delete this poll?",
+    "create": "Create",
+    "created": "Created",
+    "createDescription": "Create a poll to gather community feedback and make decisions together",
+    "createNew": "Create New Poll",
+    "createPoll": "Create Poll",
+    "createSuccess": "Poll created successfully!",
+    "creating": "Creating...",
+    "creatingPoll": "Creating Poll...",
+    "deadline": "Deadline",
+    "deleted": "Deleted",
+    "description": "Description",
+    "detailsDescription": "View poll details and results",
+    "draftPolls": "Draft",
+    "errorLoading": "Error Loading",
+    "explanationRequired": "Explanation Required",
+    "form": {
+      "addOption": "+ Add Option",
+      "anonymousVoting": "Anonymous voting (recommended)",
+      "cancel": "Cancel",
+      "deadlineInFuture": "Voting deadline must be in the future",
+      "duplicateOptions": "Options must be unique",
+      "invalidDate": "Invalid date format",
+      "maxChoices": "Maximum Choices (optional)",
+      "maxChoicesError": "Max choices must be between 1 and {{max}}",
+      "maxChoicesPlaceholder": "Leave empty for unlimited",
+      "minTwoOptions": "At least 2 options are required",
+      "multipleChoice": "Multiple Choice",
+      "multipleChoiceDescription": "Multiple Choice (users can select multiple options)",
+      "noDeadlineHint": "Leave empty for no deadline",
+      "optionPlaceholder": "Option {{number}}",
+      "options": "Poll Options",
+      "optionsRequired": "At least 2 options are required",
+      "optionsUnique": "Options must be unique",
+      "question": "Poll Question",
+      "questionPlaceholder": "What would you like to ask the community?",
+      "questionRequired": "Poll question is required",
+      "removeOption": "Remove option",
+      "requireExplanation": "Require explanation for votes",
+      "settings": "Poll Settings",
+      "singleChoice": "Single Choice",
+      "singleChoiceDescription": "Single Choice (users can select one option)",
+      "type": "Poll Type",
+      "votingDeadline": "Voting Deadline (optional)"
+    },
+    "maxChoices": "Maximum Choices",
+    "multipleChoice": "Multiple Choice",
+    "noPermission": "You don't have permission to create polls",
+    "noPolls": "No Polls",
+    "noPollsFound": "No Polls Found",
+    "noPollsUser": "",
+    "options": "Options",
+    "pollDetails": "Poll Details",
+    "pollInfo": "Poll Information",
+    "searchPolls": "Search polls and options...",
+    "signInToVote": "Sign in to vote",
+    "singleChoice": "Single Choice",
+    "statistics": "Statistics",
+    "stats": {
+      "active": "",
+      "totalPolls": "",
+      "yourVotes": ""
+    },
+    "status": "Status",
+    "timeline": "Timeline",
+    "title": "Settings",
+    "totalVotes": "Total Votes",
+    "type": "Type",
+    "updated": "Updated",
+    "viewPublic": "View Public",
+    "voteSubmitted": "Vote Submitted"
+  },
+  "privacy": {
+    "lastUpdated": "Last updated",
+    "sections": {
+      "contact": {
+        "address": "Costa Beach 3, Bouznika, Province of Benslimane, Morocco",
+        "content": "If you have any questions about this Privacy Policy, please contact us at",
+        "email": "info@costabeach.ma",
+        "title": "Contact Us"
+      },
+      "dataCollection": {
+        "content": "We collect information you provide directly to us, such as when you create an account, register a property, or contact us for support.",
+        "title": "Data Collection",
+        "types": {
+          "communication": "Communication history",
+          "personal": "Personal information (name, surname, email address)",
+          "property": "Property information",
+          "title": "Types of data collected:",
+          "usage": "Platform usage data"
+        }
+      },
+      "dataRights": {
+        "content": "In accordance with Moroccan law, you have the following rights:",
+        "rights": {
+          "access": "Right of access to your personal data",
+          "deletion": "Right to erasure of your data",
+          "objection": "Right to object to processing",
+          "portability": "Right to data portability",
+          "rectification": "Right to rectification of inaccurate data"
+        },
+        "title": "Your Rights"
+      },
+      "dataSecurity": {
+        "content": "We implement appropriate security measures to protect your personal data against unauthorized access, modification, disclosure, or destruction.",
+        "title": "Data Security"
+      },
+      "dataSharing": {
+        "content": "We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy.",
+        "title": "Data Sharing"
+      },
+      "dataUsage": {
+        "content": "We use the information we collect to provide, maintain, and improve our services, process transactions, and communicate with you.",
+        "purposes": {
+          "communication": "Communication with property owners",
+          "improvement": "Improvement of our services",
+          "legal": "Compliance with legal obligations",
+          "service": "Provision of property management services",
+          "title": "Processing purposes:"
+        },
+        "title": "Data Usage"
+      },
+      "introduction": {
+        "content": "Costa Beach 3 is committed to protecting your privacy and personal data in accordance with Moroccan Law No. 09-08 relating to the protection of individuals with regard to the processing of personal data.",
+        "title": "Introduction"
+      }
+    },
+    "title": "Privacy Policy"
+  },
+  "profile": {
+    "admin": "",
+    "cancel": "",
+    "description": "",
+    "edit": "",
+    "email": "Email",
+    "emailNote": "",
+    "memberSince": "",
+    "name": "Name",
+    "namePlaceholder": "",
+    "noName": "",
+    "notAvailable": "",
+    "owner": "",
+    "role": "",
+    "save": "",
+    "saving": "",
+    "title": "Profile",
+    "updateError": "",
+    "updateSuccess": ""
+  },
+  "settings": {
+    "account": {
+      "currentEmail": "",
+      "emailNote": "",
+      "title": ""
+    },
+    "description": "Description",
+    "language": {
+      "display": "",
+      "title": ""
+    },
+    "notifications": {
+      "documents": "",
+      "email": "",
+      "emergency": "",
+      "polls": "",
+      "title": ""
+    },
+    "privacy": {
+      "showEmail": "",
+      "title": ""
+    },
+    "save": "",
+    "saveError": "",
+    "saveSuccess": "",
+    "saving": "",
+    "title": "Settings"
+  },
+  "theme": {
+    "toggle": "Toggle theme"
+  },
+  "toast": {
+    "admin": {
+      "alertMessageRequired": "Please enter an alert message",
+      "alertTitleRequired": "Please enter an alert title",
+      "completedTranslationsFetchError": "Failed to fetch completed translations",
+      "documentDeleteError": "Error deleting document",
+      "documentDeleteSuccess": "Document deleted successfully",
+      "emergencyAlertSendError": "Failed to send alert: {{error}}",
+      "emergencyAlertSendFailed": "Failed to send emergency alert. Please try again.",
+      "emergencyAlertSentSuccess": "Emergency alert sent successfully!",
+      "failedJobsQueuedForRetry": "Failed jobs queued for retry",
+      "operationError": "Failed to {{action}}: {{error}}",
+      "translationStatusFetchError": "Failed to fetch translation status"
+    },
+    "auth": {
+      "accessDenied": "Access denied. Please make sure you have an approved account",
+      "checkEmailForLink": "Check your email for the login link!",
+      "googleSignInFailed": "Failed to sign in with Google",
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 8 characters long",
+      "passwordUpdateSuccess": "Password updated successfully",
+      "permissionDenied": "You do not have permission to access this page",
+      "profileAlreadyComplete": "Your profile is already complete",
+      "profileIncompleteWarning": "Could not fetch complete user profile, redirecting to home page",
+      "profileUpdateSuccess": "Profile updated successfully!",
+      "registrationSuccess": "Registration successful! Please check your email to confirm your account.",
+      "resetLinkSent": "Password reset link sent to your email",
+      "signInError": "An error occurred during sign in. Please try again",
+      "signInFailed": "Failed to sign in. Please try again",
+      "signOutSuccess": "You have been signed out successfully",
+      "unexpectedError": "An unexpected error occurred. Please try again"
+    },
+    "documents": {
+      "deleteError": "Error deleting document: {{error}}",
+      "deleteSuccess": "Document deleted successfully",
+      "downloadError": "Error downloading document: {{error}}",
+      "fetchError": "Error fetching documents: {{error}}",
+      "fileRequired": "Please select a file to upload",
+      "previewError": "Failed to preview document",
+      "previewLoadError": "Failed to load document preview",
+      "titleRequired": "Please enter a title for the document",
+      "translationRequested": "Translation requested. This may take a few minutes.",
+      "translationRequestError": "Failed to request translation",
+      "uploadError": "Error uploading document: {{error}}",
+      "uploadSuccess": "Document uploaded successfully"
+    },
+    "general": {
+      "errorOccurred": "An error occurred",
+      "failed": "Failed",
+      "loading": "Loading...",
+      "success": "Success"
+    },
+    "speech": {
+      "microphoneAccessRequired": "Microphone access is required to use voice recording.",
+      "recordingFailed": "Recording failed. Please try again.",
+      "recordingNotSupported": "Recording is not supported in this browser.",
+      "transcriptionError": "An error occurred during transcription.",
+      "transcriptionFailed": "Transcription failed."
+    },
+    "whatsapp": {
+      "broadcastAllFailed": "All messages failed to send",
+      "broadcastFailed": "Broadcast failed: {{error}}",
+      "broadcastSentPartial": "Broadcast sent! {{successCount}} successful, {{failedCount}} failed",
+      "connectionFailed": "Connection failed: {{error}}",
+      "connectionSuccessful": "WhatsApp connection successful!",
+      "documentUrlRequired": "Please provide document URL and filename",
+      "historyExportSuccess": "Message history exported successfully",
+      "imageUrlRequired": "Please provide image URL",
+      "messageRequired": "Please enter a message",
+      "messageSendError": "Failed to send message: {{error}}",
+      "messageSentSuccess": "Message sent successfully! ID: {{messageId}}",
+      "phoneNumberDuplicate": "This phone number is already in the list",
+      "phoneNumberInvalidFormat": "Phone number must be in international format (+1234567890)",
+      "phoneNumberRequired": "Please enter a phone number",
+      "recipientAddedSuccess": "Recipient added successfully",
+      "recipientRequired": "Please add at least one recipient",
+      "recipientsListCleared": "Recipients list cleared",
+      "sampleRecipientsAdded_one": "Added {{count}} sample recipient",
+      "sampleRecipientsAdded_other": "Added {{count}} sample recipients",
+      "sampleRecipientsAlreadyAdded": "Sample recipients are already in the list",
+      "settingsSaveError": "Failed to save settings: {{error}}",
+      "settingsSaveSuccess": "Settings saved successfully!",
+      "templateNameRequired": "Please enter a template name"
     }
   }
 }
