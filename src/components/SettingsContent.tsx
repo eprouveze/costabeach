@@ -42,10 +42,10 @@ export function SettingsContent() {
       // Here you would typically make an API call to save user preferences
       // await fetch('/api/user/settings', { method: 'POST', body: JSON.stringify(formData) });
 
-      toast.success(t("settings.saveSuccess") || "Settings saved successfully");
+      toast.success(t("settings.saveSuccess"));
     } catch (error) {
       console.error("Error saving settings:", error);
-      toast.error(t("settings.saveError") || "Failed to save settings");
+      toast.error(t("settings.saveError"));
     } finally {
       setLoading(false);
     }
@@ -64,10 +64,10 @@ export function SettingsContent() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          {t("settings.title") || "Settings"}
+          {t("settings.title")}
         </h1>
         <p className="text-gray-600">
-          {t("settings.description") || "Manage your preferences and account settings"}
+          {t("settings.description")}
         </p>
       </div>
 
@@ -77,13 +77,13 @@ export function SettingsContent() {
           <div className="flex items-center gap-3 mb-4">
             <Globe className="h-5 w-5 text-blue-600" />
             <h2 className="text-xl font-semibold text-gray-900">
-              {t("settings.language.title") || "Language Preferences"}
+              {t("settings.language.title")}
             </h2>
           </div>
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t("settings.language.display") || "Display Language"}
+                {t("settings.language.display")}
               </label>
               <select
                 value={formData.language}
@@ -103,7 +103,7 @@ export function SettingsContent() {
           <div className="flex items-center gap-3 mb-4">
             <Bell className="h-5 w-5 text-blue-600" />
             <h2 className="text-xl font-semibold text-gray-900">
-              {t("settings.notifications.title") || "Notification Preferences"}
+              {t("settings.notifications.title")}
             </h2>
           </div>
           <div className="space-y-4">
@@ -115,7 +115,7 @@ export function SettingsContent() {
                 className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
               <span className="text-gray-900">
-                {t("settings.notifications.email") || "Email notifications"}
+                {t("settings.notifications.email")}
               </span>
             </label>
 
@@ -127,7 +127,7 @@ export function SettingsContent() {
                 className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
               <span className="text-gray-900">
-                {t("settings.notifications.documents") || "New document notifications"}
+                {t("settings.notifications.documents")}
               </span>
             </label>
 
@@ -139,7 +139,7 @@ export function SettingsContent() {
                 className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
               <span className="text-gray-900">
-                {t("settings.notifications.polls") || "Poll notifications"}
+                {t("settings.notifications.polls")}
               </span>
             </label>
 
@@ -151,7 +151,7 @@ export function SettingsContent() {
                 className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
               <span className="text-gray-900">
-                {t("settings.notifications.emergency") || "Emergency alerts"}
+                {t("settings.notifications.emergency")}
               </span>
             </label>
           </div>
@@ -162,7 +162,7 @@ export function SettingsContent() {
           <div className="flex items-center gap-3 mb-4">
             <Shield className="h-5 w-5 text-blue-600" />
             <h2 className="text-xl font-semibold text-gray-900">
-              {t("settings.privacy.title") || "Privacy Settings"}
+              {t("settings.privacy.title")}
             </h2>
           </div>
           <div className="space-y-4">
@@ -180,7 +180,7 @@ export function SettingsContent() {
                   <EyeOff className="h-4 w-4 text-gray-400" />
                 )}
                 <span className="text-gray-900">
-                  {t("settings.privacy.showEmail") || "Show email in community directory"}
+                  {t("settings.privacy.showEmail")}
                 </span>
               </div>
             </label>
@@ -192,19 +192,19 @@ export function SettingsContent() {
           <div className="flex items-center gap-3 mb-4">
             <Shield className="h-5 w-5 text-blue-600" />
             <h2 className="text-xl font-semibold text-gray-900">
-              {t("settings.account.title") || "Account Settings"}
+              {t("settings.account.title")}
             </h2>
           </div>
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t("settings.account.currentEmail") || "Current Email"}
+                {t("settings.account.currentEmail")}
               </label>
               <div className="px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-gray-900">
                 {session.user.email}
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                {t("settings.account.emailNote") || "Contact support to change your email address"}
+                {t("settings.account.emailNote")}
               </p>
             </div>
           </div>
@@ -218,7 +218,7 @@ export function SettingsContent() {
             className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Save className="h-4 w-4" />
-            {loading ? (t("settings.saving") || "Saving...") : (t("settings.save") || "Save Settings")}
+            {loading ? t("settings.saving") : t("settings.save")}
           </button>
         </div>
       </div>

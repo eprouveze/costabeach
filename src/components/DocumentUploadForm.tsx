@@ -204,12 +204,12 @@ export function DocumentUploadForm({ isOpen, onClose, onUploadSuccess }: Documen
           {/* File Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {t("documents.selectFile") || "Select File"}
+              {t("documents.selectFile")}
             </label>
             <FileUpload onChange={handleFilesChange} />
             {selectedFiles.length > 0 && (
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                {t("documents.selectedFile") || "Selected"}: {selectedFiles[0].name}
+                {t("documents.selectedFile")}: {selectedFiles[0].name}
               </p>
             )}
           </div>
@@ -225,7 +225,7 @@ export function DocumentUploadForm({ isOpen, onClose, onUploadSuccess }: Documen
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all"
-              placeholder={t("documents.titlePlaceholder") || "Enter document title..."}
+              placeholder={t("documents.titlePlaceholder")}
               required
               disabled={isUploading}
             />
@@ -242,7 +242,7 @@ export function DocumentUploadForm({ isOpen, onClose, onUploadSuccess }: Documen
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
               className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all resize-none"
-              placeholder={t("documents.descriptionPlaceholder") || "Enter description..."}
+              placeholder={t("documents.descriptionPlaceholder")}
               disabled={isUploading}
             />
           </div>
@@ -307,7 +307,7 @@ export function DocumentUploadForm({ isOpen, onClose, onUploadSuccess }: Documen
               {isUploading ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  {t("documents.uploading") || "Uploading..."}
+                  {t("documents.uploading")}
                 </>
               ) : (
                 <>

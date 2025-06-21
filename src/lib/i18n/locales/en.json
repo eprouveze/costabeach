@@ -316,6 +316,51 @@
       "title": "WhatsApp Analytics"
     },
     "whatsappManagement": "WhatsApp Management",
+    "whatsappSettings": {
+      "actions": {
+        "saveSettings": "Save Settings",
+        "saving": "Saving..."
+      },
+      "apiConfiguration": {
+        "accessToken": "Access Token",
+        "businessAccountId": "Business Account ID",
+        "phoneNumberId": "Phone Number ID",
+        "title": "API Configuration",
+        "webhookSecret": "Webhook Secret"
+      },
+      "connectionStatus": {
+        "connected": "Connected",
+        "disconnected": "Disconnected",
+        "testConnection": "Test Connection",
+        "testing": "Testing...",
+        "title": "Connection Status"
+      },
+      "messageTemplates": {
+        "emptyState": {
+          "createInMeta": "Templates need to be created in Meta Business Manager",
+          "noTemplates": "No message templates found"
+        },
+        "headers": {
+          "category": "Category",
+          "language": "Language",
+          "status": "Status",
+          "templateName": "Template Name"
+        },
+        "title": "Message Templates"
+      },
+      "notificationSettings": {
+        "descriptions": {
+          "autoResponses": "Automatic responses to incoming messages",
+          "communityUpdates": "Regular community updates and announcements",
+          "documentUploads": "Send WhatsApp notifications when new documents are uploaded",
+          "emergencyAlerts": "Send urgent notifications for emergency situations",
+          "pollCreation": "Notify community members about new polls"
+        },
+        "enable": "Enable",
+        "title": "Notification Settings"
+      },
+      "title": "WhatsApp Settings"
+    },
     "workerStatus": "Worker Status"
   },
   "auth": {
@@ -503,6 +548,12 @@
     "titleRequired": "Title *",
     "translation": "Translation",
     "translations": "Translations",
+    "translationStatus": {
+      "inProgress": "Translation in progress...",
+      "pending": "Translation pending...",
+      "processing": "Translation processing...",
+      "requestTranslation": "Request Translation"
+    },
     "unknownFileType": "Unknown type",
     "updateError": "Update Error",
     "updateSuccess": "Document updated successfully",

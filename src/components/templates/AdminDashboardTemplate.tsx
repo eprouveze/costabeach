@@ -158,7 +158,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
               <div className="relative">
                 <input
                   type="text"
-                  placeholder={t("admin.searchLogsPlaceholder") || "Search..."}
+                  placeholder={t("admin.searchLogsPlaceholder")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 sm:py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[44px]"
@@ -185,7 +185,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
               {/* Management Section */}
               <div className="pt-4 pb-2">
                 <h3 className="px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {t("admin.configuration") || "Management"}
+                  {t("admin.configuration")}
                 </h3>
               </div>
 
@@ -199,7 +199,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
                 }`}
               >
                 <Users className="w-5 h-5" />
-                {t("admin.userManagement") || "User Management"}
+                {t("admin.userManagement")}
               </Link>
 
               {/* Document Management */}
@@ -213,7 +213,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
                   }`}
                 >
                   <FileText className="w-5 h-5" />
-                  {t("admin.documentManagement") || "Documents"}
+                  {t("admin.documentManagement")}
                 </Link>
               )}
 
@@ -228,7 +228,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
                   }`}
                 >
                   <Info className="w-5 h-5" />
-                  {t("information.management") || "Information"}
+                  {t("information.management")}
                 </Link>
               )}
 
@@ -242,7 +242,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
                 }`}
               >
                 <ClipboardList className="w-5 h-5" />
-                {t("admin.pollsManagement") || "Polls"}
+                {t("admin.pollsManagement")}
               </Link>
 
               {/* Owner Registrations */}
@@ -255,7 +255,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
                 }`}
               >
                 <ClipboardList className="w-5 h-5" />
-                {t("admin.ownerRegistrations") || "Registrations"}
+                {t("admin.ownerRegistrations")}
               </Link>
 
               {/* Communication Section */}
@@ -276,7 +276,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
                   }`}
                 >
                   <MessageSquare className="w-5 h-5" />
-                  {t("admin.whatsappManagement") || "WhatsApp"}
+                  {t("admin.whatsappManagement")}
                 </Link>
               )}
 
@@ -290,7 +290,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
                 }`}
               >
                 <AlertTriangle className="w-5 h-5" />
-                {t("admin.emergencyAlerts") || "Emergency Alerts"}
+                {t("admin.emergencyAlerts")}
               </Link>
 
               {/* Tools Section */}
@@ -311,7 +311,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
                   }`}
                 >
                   <Languages className="w-5 h-5" />
-                  {t("admin.translationManagement") || "Translations"}
+                  {t("admin.translationManagement")}
                 </Link>
               )}
 
@@ -325,7 +325,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
                 }`}
               >
                 <History className="w-5 h-5" />
-                {t("admin.activityLogs") || "Activity Logs"}
+                {t("admin.activityLogs")}
               </Link>
 
               {/* Reports */}
@@ -338,13 +338,13 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
                 }`}
               >
                 <ClipboardList className="w-5 h-5" />
-                {t("admin.reports") || "Reports"}
+                {t("admin.reports")}
               </Link>
 
               {/* Settings Section */}
               <div className="pt-4 pb-2">
                 <h3 className="px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {t("common.settings") || "Settings"}
+                  {t("common.settings")}
                 </h3>
               </div>
 
@@ -358,13 +358,13 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
                 }`}
               >
                 <Settings className="w-5 h-5" />
-                {t("admin.systemSettings") || "System Settings"}
+                {t("admin.systemSettings")}
               </Link>
 
               {/* Back to Owner Dashboard */}
               <div className="pt-4 pb-2">
                 <h3 className="px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  {t("navigation.ownerPortal") || "Owner Portal"}
+                  {t("navigation.ownerPortal")}
                 </h3>
               </div>
 
@@ -373,7 +373,7 @@ export default function AdminDashboardTemplate({ children }: { children?: React.
                 className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md"
               >
                 <User className="w-5 h-5" />
-                {t("admin.backToDashboard") || "Back to Dashboard"}
+                {t("admin.backToDashboard")}
               </Link>
 
               <button

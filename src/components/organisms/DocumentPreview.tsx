@@ -253,18 +253,18 @@ export const DocumentPreview = ({
 
   const getTranslationButtonText = () => {
     if (isTranslationInProgress) {
-      return "Translation in progress...";
+      return t("documents.translationStatus.inProgress");
     }
     
     if (translationStatus.data?.status === "pending") {
-      return "Translation pending...";
+      return t("documents.translationStatus.pending");
     }
     
     if (translationStatus.data?.status === "processing") {
-      return "Translation processing...";
+      return t("documents.translationStatus.processing");
     }
     
-    return "Request Translation";
+    return t("documents.translationStatus.requestTranslation");
   };
 
   return (

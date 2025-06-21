@@ -317,6 +317,51 @@
       "title": "Analyses WhatsApp"
     },
     "whatsappManagement": "Gestion WhatsApp",
+    "whatsappSettings": {
+      "actions": {
+        "saveSettings": "Enregistrer les paramètres",
+        "saving": "Enregistrement..."
+      },
+      "apiConfiguration": {
+        "accessToken": "Jeton d'accès",
+        "businessAccountId": "ID du compte professionnel",
+        "phoneNumberId": "ID du numéro de téléphone",
+        "title": "Configuration API",
+        "webhookSecret": "Secret du webhook"
+      },
+      "connectionStatus": {
+        "connected": "Connecté",
+        "disconnected": "Déconnecté",
+        "testConnection": "Tester la connexion",
+        "testing": "Test en cours...",
+        "title": "État de la connexion"
+      },
+      "messageTemplates": {
+        "emptyState": {
+          "createInMeta": "Les modèles doivent être créés dans Meta Business Manager",
+          "noTemplates": "Aucun modèle de message trouvé"
+        },
+        "headers": {
+          "category": "Catégorie",
+          "language": "Langue",
+          "status": "Statut",
+          "templateName": "Nom du modèle"
+        },
+        "title": "Modèles de messages"
+      },
+      "notificationSettings": {
+        "descriptions": {
+          "autoResponses": "Réponses automatiques aux messages entrants",
+          "communityUpdates": "Mises à jour régulières de la communauté et annonces",
+          "documentUploads": "Envoyer des notifications WhatsApp lors du téléchargement de nouveaux documents",
+          "emergencyAlerts": "Envoyer des notifications urgentes pour les situations d'urgence",
+          "pollCreation": "Notifier les membres de la communauté des nouveaux sondages"
+        },
+        "enable": "Activer",
+        "title": "Paramètres de notification"
+      },
+      "title": "Paramètres WhatsApp"
+    },
     "workerStatus": "Statut du travailleur"
   },
   "auth": {
@@ -504,6 +549,12 @@
     "titleRequired": "Titre *",
     "translation": "Traduction",
     "translations": "Traductions",
+    "translationStatus": {
+      "inProgress": "Traduction en cours...",
+      "pending": "Traduction en attente...",
+      "processing": "Traduction en cours de traitement...",
+      "requestTranslation": "Demander la traduction"
+    },
     "unknownFileType": "Type inconnu",
     "updateError": "Erreur de mise à jour",
     "updateSuccess": "Document mis à jour avec succès",

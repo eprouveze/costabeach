@@ -165,9 +165,9 @@ export default function WhatsAppSettings() {
 
   const getStatusText = () => {
     switch (config.connectionStatus) {
-      case 'connected': return 'Connected';
-      case 'testing': return 'Testing...';
-      case 'disconnected': return 'Disconnected';
+      case 'connected': return t('admin.whatsappSettings.connectionStatus.connected');
+      case 'testing': return t('admin.whatsappSettings.connectionStatus.testing');
+      case 'disconnected': return t('admin.whatsappSettings.connectionStatus.disconnected');
     }
   };
 
@@ -182,12 +182,12 @@ export default function WhatsAppSettings() {
   return (
     <div className="p-6">
       <div className="max-w-4xl mx-auto space-y-8">
-        <h2 className="text-2xl font-bold text-gray-900">WhatsApp Settings</h2>
+        <h2 className="text-2xl font-bold text-gray-900">{t('admin.whatsappSettings.title')}</h2>
 
         {/* Connection Status */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-medium text-gray-900">Connection Status</h3>
+            <h3 className="text-lg font-medium text-gray-900">{t('admin.whatsappSettings.connectionStatus.title')}</h3>
             <div className={`flex items-center space-x-2 ${getStatusColor()}`}>
               {getConnectionStatusIcon()}
               <span className="font-medium">{getStatusText()}</span>
@@ -201,20 +201,20 @@ export default function WhatsAppSettings() {
               className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
             >
               <RefreshCw className={`h-4 w-4 mr-2 ${isTestingConnection ? 'animate-spin' : ''}`} />
-              Test Connection
+              {t('admin.whatsappSettings.connectionStatus.testConnection')}
             </button>
           </div>
         </div>
 
         {/* API Configuration */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">API Configuration</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">{t('admin.whatsappSettings.apiConfiguration.title')}</h3>
           
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <Phone className="inline h-4 w-4 mr-1" />
-                Phone Number ID
+                {t('admin.whatsappSettings.apiConfiguration.phoneNumberId')}
               </label>
               <input
                 type="text"
@@ -228,7 +228,7 @@ export default function WhatsAppSettings() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <Key className="inline h-4 w-4 mr-1" />
-                Access Token
+                {t('admin.whatsappSettings.apiConfiguration.accessToken')}
               </label>
               <div className="relative">
                 <input
@@ -255,7 +255,7 @@ export default function WhatsAppSettings() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <Globe className="inline h-4 w-4 mr-1" />
-                Business Account ID
+                {t('admin.whatsappSettings.apiConfiguration.businessAccountId')}
               </label>
               <input
                 type="text"
@@ -269,7 +269,7 @@ export default function WhatsAppSettings() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <Key className="inline h-4 w-4 mr-1" />
-                Webhook Secret
+                {t('admin.whatsappSettings.apiConfiguration.webhookSecret')}
               </label>
               <input
                 type={showTokens ? "text" : "password"}
@@ -286,7 +286,7 @@ export default function WhatsAppSettings() {
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <h3 className="text-lg font-medium text-gray-900 mb-4">
             <Bell className="inline h-5 w-5 mr-2" />
-            Notification Settings
+            {t('admin.whatsappSettings.notificationSettings.title')}
           </h3>
           
           <div className="space-y-4">
@@ -297,11 +297,11 @@ export default function WhatsAppSettings() {
                     {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
                   </h4>
                   <p className="text-sm text-gray-500">
-                    {key === 'documentUploads' && 'Send WhatsApp notifications when new documents are uploaded'}
-                    {key === 'pollCreation' && 'Notify community members about new polls'}
-                    {key === 'emergencyAlerts' && 'Send urgent notifications for emergency situations'}
-                    {key === 'communityUpdates' && 'Regular community updates and announcements'}
-                    {key === 'autoResponses' && 'Automatic responses to incoming messages'}
+                    {key === 'documentUploads' && t('admin.whatsappSettings.notificationSettings.descriptions.documentUploads')}
+                    {key === 'pollCreation' && t('admin.whatsappSettings.notificationSettings.descriptions.pollCreation')}
+                    {key === 'emergencyAlerts' && t('admin.whatsappSettings.notificationSettings.descriptions.emergencyAlerts')}
+                    {key === 'communityUpdates' && t('admin.whatsappSettings.notificationSettings.descriptions.communityUpdates')}
+                    {key === 'autoResponses' && t('admin.whatsappSettings.notificationSettings.descriptions.autoResponses')}
                   </p>
                 </div>
                 <label className="flex items-center">
@@ -311,7 +311,7 @@ export default function WhatsAppSettings() {
                     onChange={(e) => setNotifications(prev => ({ ...prev, [key]: e.target.checked }))}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
-                  <span className="ml-2 text-sm text-gray-900">Enable</span>
+                  <span className="ml-2 text-sm text-gray-900">{t('admin.whatsappSettings.notificationSettings.enable')}</span>
                 </label>
               </div>
             ))}
@@ -322,7 +322,7 @@ export default function WhatsAppSettings() {
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <h3 className="text-lg font-medium text-gray-900 mb-4">
             <MessageSquare className="inline h-5 w-5 mr-2" />
-            Message Templates
+            {t('admin.whatsappSettings.messageTemplates.title')}
           </h3>
           
           {templates.length > 0 ? (
@@ -331,16 +331,16 @@ export default function WhatsAppSettings() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Template Name
+                      {t('admin.whatsappSettings.messageTemplates.headers.templateName')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Language
+                      {t('admin.whatsappSettings.messageTemplates.headers.language')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
+                      {t('admin.whatsappSettings.messageTemplates.headers.status')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Category
+                      {t('admin.whatsappSettings.messageTemplates.headers.category')}
                     </th>
                   </tr>
                 </thead>
@@ -373,8 +373,8 @@ export default function WhatsAppSettings() {
           ) : (
             <div className="text-center py-6 text-gray-500">
               <MessageSquare className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-              <p>No message templates found</p>
-              <p className="text-sm">Templates need to be created in Meta Business Manager</p>
+              <p>{t('admin.whatsappSettings.messageTemplates.emptyState.noTemplates')}</p>
+              <p className="text-sm">{t('admin.whatsappSettings.messageTemplates.emptyState.createInMeta')}</p>
             </div>
           )}
         </div>
@@ -393,12 +393,12 @@ export default function WhatsAppSettings() {
             {isSaving ? (
               <>
                 <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                Saving...
+                {t('admin.whatsappSettings.actions.saving')}
               </>
             ) : (
               <>
                 <Settings className="h-4 w-4 mr-2" />
-                Save Settings
+                {t('admin.whatsappSettings.actions.saveSettings')}
               </>
             )}
           </button>

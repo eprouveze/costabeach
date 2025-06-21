@@ -329,6 +329,51 @@
       "title": "تحليلات واتساب"
     },
     "whatsappManagement": "إدارة واتساب",
+    "whatsappSettings": {
+      "actions": {
+        "saveSettings": "حفظ الإعدادات",
+        "saving": "جاري الحفظ..."
+      },
+      "apiConfiguration": {
+        "accessToken": "رمز الوصول",
+        "businessAccountId": "معرف الحساب التجاري",
+        "phoneNumberId": "معرف رقم الهاتف",
+        "title": "تكوين API",
+        "webhookSecret": "سر الويب هوك"
+      },
+      "connectionStatus": {
+        "connected": "متصل",
+        "disconnected": "غير متصل",
+        "testConnection": "اختبار الاتصال",
+        "testing": "جاري الاختبار...",
+        "title": "حالة الاتصال"
+      },
+      "messageTemplates": {
+        "emptyState": {
+          "createInMeta": "يجب إنشاء القوالب في Meta Business Manager",
+          "noTemplates": "لم يتم العثور على قوالب رسائل"
+        },
+        "headers": {
+          "category": "الفئة",
+          "language": "اللغة",
+          "status": "الحالة",
+          "templateName": "اسم القالب"
+        },
+        "title": "قوالب الرسائل"
+      },
+      "notificationSettings": {
+        "descriptions": {
+          "autoResponses": "الردود التلقائية على الرسائل الواردة",
+          "communityUpdates": "تحديثات المجتمع العادية والإعلانات",
+          "documentUploads": "إرسال إشعارات واتساب عند رفع مستندات جديدة",
+          "emergencyAlerts": "إرسال إشعارات عاجلة لحالات الطوارئ",
+          "pollCreation": "إشعار أعضاء المجتمع بالاستطلاعات الجديدة"
+        },
+        "enable": "تفعيل",
+        "title": "إعدادات الإشعارات"
+      },
+      "title": "إعدادات واتساب"
+    },
     "workerStatus": "حالة العامل"
   },
   "auth": {
@@ -519,6 +564,12 @@
     "titleRequired": "العنوان *",
     "translation": "ترجمة",
     "translations": "الترجمات",
+    "translationStatus": {
+      "inProgress": "الترجمة قيد التقدم...",
+      "pending": "الترجمة في الانتظار...",
+      "processing": "جاري معالجة الترجمة...",
+      "requestTranslation": "طلب الترجمة"
+    },
     "unknownFileType": "نوع غير معروف",
     "updateError": "خطأ في التحديث",
     "updateSuccess": "تم التحديث بنجاح",
