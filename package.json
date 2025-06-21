@@ -33,6 +33,7 @@
     "translation:worker:start": "node scripts/translation-worker.js",
     "translation:check-config": "node scripts/check-translation-config.js",
     "i18n:extract": "i18next --config i18next-parser.config.js",
+    "i18n:extract-safe": "node scripts/i18n-safe-extract.js",
     "i18n:validate": "i18next --config i18next-parser.config.js --silent && node scripts/validate-translations.js",
     "i18n:check": "npm run i18n:extract -- --fail-on-update && npm run i18n:validate",
     "i18n:check-strict": "npm run i18n:extract && npm run i18n:validate && npm run i18n:find-hardcoded",

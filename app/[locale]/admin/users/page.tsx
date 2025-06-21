@@ -20,6 +20,12 @@ interface User {
   isVerifiedOwner: boolean;
   permissions: string[];
   createdAt: string;
+  updatedAt: string;
+  buildingNumber: string;
+  apartmentNumber: string;
+  phoneNumber: string;
+  preferredLanguage: string;
+  isVerified: boolean;
   lastLogin?: string;
   isActive: boolean;
 }
@@ -108,14 +114,17 @@ const matchesSearch =
   });
 
   const handleEditUser = (user: User) => {
-    setSelectedUser(user);
+    setSelectedUser({
+      ...user,
+      permissions: user.permissions || []
+    });
     setShowEditModal(true);
   };
 
   const handleUpdateUser = async (userId: string, updates: Partial<User>) => {
-    // Prevent self-modification of admin status
-    if (userId === session?.user?.id && ('isAdmin' in updates || 'role' in updates)) {
-      toast.error(t("admin.users.errors.cannotModifySelf"));
+    // Prevent self-modification of security-related fields only
+    if (userId === session?.user?.id && ('isAdmin' in updates || 'role' in updates || 'permissions' in updates)) {
+      toast.error(t("admin.users.errors.cannotModifySecurityFields"));
       return;
     }
 
@@ -273,6 +282,9 @@ const matchesSearch =
                     {t("admin.users.tableHeaders.status")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t("admin.users.tableHeaders.contact")}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     {t("admin.users.tableHeaders.registered")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -322,6 +334,19 @@ const matchesSearch =
                       }`}>
                         {user.isActive ? t("admin.users.status.active") : t("admin.users.status.inactive")}
                       </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900 dark:text-white">
+                        {user.buildingNumber && user.apartmentNumber && (
+                          <div>{t("admin.users.fields.apartment")}: {user.buildingNumber}-{user.apartmentNumber}</div>
+                        )}
+                        {user.phoneNumber && (
+                          <div className="text-gray-500 dark:text-gray-400">{user.phoneNumber}</div>
+                        )}
+                        {!user.buildingNumber && !user.apartmentNumber && !user.phoneNumber && (
+                          <span className="text-gray-400 text-xs">{t("admin.users.noContactInfo")}</span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                       {new Date(user.createdAt).toLocaleDateString()}
@@ -414,7 +439,7 @@ const matchesSearch =
                     <input
                       type="checkbox"
                       id="isVerifiedOwner"
-                      checked={selectedUser.isVerifiedOwner}
+                      checked={selectedUser.isVerifiedOwner || false}
                       onChange={(e) => setSelectedUser({
                         ...selectedUser,
                         isVerifiedOwner: e.target.checked
@@ -430,7 +455,7 @@ const matchesSearch =
                     <input
                       type="checkbox"
                       id="isActive"
-                      checked={selectedUser.isActive}
+                      checked={selectedUser.isActive !== undefined ? selectedUser.isActive : true}
                       onChange={(e) => setSelectedUser({
                         ...selectedUser,
                         isActive: e.target.checked
@@ -440,6 +465,67 @@ const matchesSearch =
                     <label htmlFor="isActive" className="ml-3 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
                       {t("admin.users.fields.activeAccount")}
                     </label>
+                  </div>
+
+                  {/* Contact Information */}
+                  <div className="pt-4 border-t border-gray-200 dark:border-gray-600">
+                    <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-3">{t("admin.users.contactInfo")}</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t("admin.users.fields.buildingNumber")}</label>
+                        <input
+                          type="text"
+                          value={selectedUser.buildingNumber || ''}
+                          onChange={(e) => setSelectedUser({
+                            ...selectedUser,
+                            buildingNumber: e.target.value
+                          })}
+                          className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                          placeholder={t("admin.users.placeholders.buildingNumber")}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t("admin.users.fields.apartmentNumber")}</label>
+                        <input
+                          type="text"
+                          value={selectedUser.apartmentNumber || ''}
+                          onChange={(e) => setSelectedUser({
+                            ...selectedUser,
+                            apartmentNumber: e.target.value
+                          })}
+                          className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                          placeholder={t("admin.users.placeholders.apartmentNumber")}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t("admin.users.fields.phoneNumber")}</label>
+                        <input
+                          type="tel"
+                          value={selectedUser.phoneNumber || ''}
+                          onChange={(e) => setSelectedUser({
+                            ...selectedUser,
+                            phoneNumber: e.target.value
+                          })}
+                          className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                          placeholder={t("admin.users.placeholders.phoneNumber")}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t("admin.users.fields.preferredLanguage")}</label>
+                        <select
+                          value={selectedUser.preferredLanguage || 'french'}
+                          onChange={(e) => setSelectedUser({
+                            ...selectedUser,
+                            preferredLanguage: e.target.value
+                          })}
+                          className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                        >
+                          <option value="french">{t("admin.users.languages.french")}</option>
+                          <option value="arabic">{t("admin.users.languages.arabic")}</option>
+                          <option value="english">{t("admin.users.languages.english")}</option>
+                        </select>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Permissions Section */}
@@ -460,7 +546,7 @@ const matchesSearch =
                                 <input
                                   type="checkbox"
                                   id={permission}
-                                  checked={selectedUser.permissions.includes(permission)}
+                                  checked={selectedUser.permissions?.includes(permission) || false}
                                   onChange={(e) => {
                                     const updatedPermissions = e.target.checked
                                       ? [...selectedUser.permissions, permission]
@@ -491,7 +577,7 @@ const matchesSearch =
                                 <input
                                   type="checkbox"
                                   id={permission}
-                                  checked={selectedUser.permissions.includes(permission)}
+                                  checked={selectedUser.permissions?.includes(permission) || false}
                                   onChange={(e) => {
                                     const updatedPermissions = e.target.checked
                                       ? [...selectedUser.permissions, permission]
@@ -526,7 +612,7 @@ const matchesSearch =
                                 <input
                                   type="checkbox"
                                   id={permission}
-                                  checked={selectedUser.permissions.includes(permission)}
+                                  checked={selectedUser.permissions?.includes(permission) || false}
                                   onChange={(e) => {
                                     const updatedPermissions = e.target.checked
                                       ? [...selectedUser.permissions, permission]
@@ -557,7 +643,7 @@ const matchesSearch =
                                 <input
                                   type="checkbox"
                                   id={permission}
-                                  checked={selectedUser.permissions.includes(permission)}
+                                  checked={selectedUser.permissions?.includes(permission) || false}
                                   onChange={(e) => {
                                     const updatedPermissions = e.target.checked
                                       ? [...selectedUser.permissions, permission]
@@ -590,13 +676,28 @@ const matchesSearch =
                     {t("common.cancel")}
                   </button>
                   <button
-                    onClick={() => handleUpdateUser(selectedUser.id, {
-                      role: selectedUser.role,
-                      isAdmin: selectedUser.isAdmin,
-                      isVerifiedOwner: selectedUser.isVerifiedOwner,
-                      isActive: selectedUser.isActive,
-                      permissions: selectedUser.permissions
-                    })}
+                    onClick={() => {
+                      const isSelf = selectedUser.id === session?.user?.id;
+                      const updates: Partial<User> = {
+                        buildingNumber: selectedUser.buildingNumber,
+                        apartmentNumber: selectedUser.apartmentNumber,
+                        phoneNumber: selectedUser.phoneNumber,
+                        preferredLanguage: selectedUser.preferredLanguage
+                      };
+                      
+                      // Only include security fields if not editing yourself
+                      if (!isSelf) {
+                        updates.role = selectedUser.role;
+                        updates.isAdmin = selectedUser.isAdmin;
+                        updates.permissions = selectedUser.permissions;
+                      }
+                      
+                      // isVerifiedOwner and isActive can be changed by anyone with permissions
+                      updates.isVerifiedOwner = selectedUser.isVerifiedOwner;
+                      updates.isActive = selectedUser.isActive;
+                      
+                      handleUpdateUser(selectedUser.id, updates);
+                    }}
                     className="w-full sm:w-auto px-4 py-3 sm:py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 min-h-[44px]"
                   >
                     {t("common.saveChanges")}

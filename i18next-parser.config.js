@@ -29,10 +29,10 @@ export default {
   sort: true,
   
   // Keep existing translations that are no longer found in code
-  keepRemoved: false,
+  keepRemoved: true,
   
   // Create backup of old catalogs before updating
-  createOldCatalogs: false,
+  createOldCatalogs: true,
   
   // Default value for missing keys
   defaultValue: '',
@@ -98,6 +98,9 @@ export default {
   
   // Fail on missing translations
   failOnUpdate: false,
+  
+  // Reset default value if set to null/undefined (prevents overwriting)
+  resetDefaultValueLocale: null,
   
   // Fail on warnings
   failOnWarnings: false,

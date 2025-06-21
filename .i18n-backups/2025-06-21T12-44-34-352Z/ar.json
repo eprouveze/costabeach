@@ -169,59 +169,14 @@
         "sendPasswordReset": "إرسال إعادة تعيين كلمة المرور"
       },
       "adminRole": "مشرف",
-      "allRoles": "جميع الأدوار",
-      "contactInfo": "معلومات الاتصال",
       "contentEditorRole": "محرر المحتوى",
-      "editUser": "تعديل المستخدم",
-      "errors": {
-        "cannotModifySecurityFields": "لا يمكنك تعديل معلومات الأمان الخاصة بك (الدور، حالة المشرف، الصلاحيات)",
-        "cannotModifySelf": "لا يمكنك تعديل معلومات الأمان الخاصة بك",
-        "onlyAdminsCanGrantAdmin": "المشرفون فقط يمكنهم منح امتيازات الإدارة",
-        "onlyAdminsCanManageAdmin": "المشرفون فقط يمكنهم إدارة أدوار الإدارة",
-        "updateError": "خطأ في تحديث المستخدم",
-        "updateFailed": "فشل في تحديث المستخدم"
-      },
-      "fields": {
-        "activeAccount": "حساب نشط",
-        "apartment": "شقة",
-        "apartmentNumber": "رقم الشقة",
-        "buildingNumber": "رقم المبنى",
-        "phoneNumber": "رقم الهاتف",
-        "preferredLanguage": "اللغة المفضلة",
-        "role": "الدور",
-        "verifiedOwner": "مالك مُوثق"
-      },
-      "languages": {
-        "arabic": "العربية",
-        "english": "English",
-        "french": "Français"
-      },
-      "messages": {
-        "userUpdated": "تم تحديث المستخدم بنجاح"
-      },
-      "noContactInfo": "لا توجد معلومات اتصال",
       "ownerBadge": "مالك",
-      "permissions": {
-        "adminHasAll": "المشرفون لديهم جميع الصلاحيات",
-        "title": "الصلاحيات"
-      },
-      "placeholders": {
-        "apartmentNumber": "مثال: 101، 102...",
-        "buildingNumber": "مثال: أ، ب، 1، 2...",
-        "phoneNumber": "مثال: +212 6 12 34 56 78"
-      },
-      "searchPlaceholder": "البحث بالاسم أو البريد الإلكتروني...",
       "status": {
         "active": "نشط",
         "inactive": "غير نشط"
       },
       "tableHeaders": {
-        "actions": "الإجراءات",
-        "contact": "الاتصال",
-        "registered": "تاريخ التسجيل",
-        "role": "الدور",
-        "status": "الحالة",
-        "user": "المستخدم"
+        "registered": "تاريخ التسجيل"
       },
       "userRole": "مستخدم"
     },

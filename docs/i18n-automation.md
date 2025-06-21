@@ -16,7 +16,10 @@ The project uses **i18next-parser** and custom scripts to automatically manage t
 ### Core Commands
 
 ```bash
-# Extract all translation keys from code
+# Extract all translation keys from code (RECOMMENDED - includes safety checks)
+npm run i18n:extract-safe
+
+# Extract all translation keys from code (UNSAFE - may remove manual translations)
 npm run i18n:extract
 
 # Validate translation completeness and consistency
@@ -99,7 +102,7 @@ Generates comprehensive reports on:
 
 2. **Extract new keys**:
    ```bash
-   npm run i18n:extract
+   npm run i18n:extract-safe
    ```
 
 3. **Check coverage**:
@@ -224,7 +227,7 @@ For languages with complex plural rules (like Arabic):
 **1. Missing translation keys after extraction**
 - Check if `t()` calls use string literals (not variables)
 - Ensure files are included in input patterns
-- Run `npm run i18n:extract` to refresh
+- Run `npm run i18n:extract-safe` to refresh
 
 **2. Validation failures**
 - Review missing keys listed in validation output
@@ -232,7 +235,7 @@ For languages with complex plural rules (like Arabic):
 - Verify parameter consistency across locales
 
 **3. Build failures**
-- Use `npm run i18n:extract` instead of `npm run i18n:check` for development
+- Use `npm run i18n:extract-safe` instead of `npm run i18n:check` for development
 - Check console output for specific validation errors
 - Run `npm run i18n:stats` to see completion status
 
@@ -241,7 +244,7 @@ For languages with complex plural rules (like Arabic):
 1. **View detailed statistics**: `npm run i18n:stats`
 2. **Check specific validation issues**: `npm run i18n:validate`
 3. **Find hardcoded text**: `npm run i18n:find-hardcoded`
-4. **Extract latest keys**: `npm run i18n:extract`
+4. **Extract latest keys**: `npm run i18n:extract-safe`
 
 ## Future Enhancements
 
@@ -273,7 +276,7 @@ Potential improvements to consider:
 
 2. **Extract the keys**:
    ```bash
-   npm run i18n:extract
+   npm run i18n:extract-safe
    ```
 
 3. **Add French translations** (source language):
@@ -306,3 +309,40 @@ Potential improvements to consider:
    ```
 
 This automated workflow ensures all translations are properly managed and no text is left untranslated!
+
+## ⚠️ Important Safety Notes
+
+### Safe vs Unsafe Commands
+
+**✅ SAFE COMMANDS (recommended):**
+- `npm run i18n:extract-safe` - Extracts keys with backup and validation
+- `npm run i18n:validate` - Only validates, doesn't modify files
+- `npm run i18n:stats` - Only reads and reports, doesn't modify files
+- `npm run i18n:find-hardcoded` - Only scans, doesn't modify files
+
+**⚠️ POTENTIALLY DANGEROUS COMMANDS:**
+- `npm run i18n:extract` - Can remove manually added translations if `keepRemoved: false`
+- `npm run i18n:check` - Uses unsafe extract internally
+- `npm run i18n:check-strict` - Uses unsafe extract internally
+
+### Configuration Safety
+
+The `i18next-parser.config.js` has been configured with safety measures:
+- `keepRemoved: true` - Preserves manually added translations
+- `createOldCatalogs: true` - Creates backups before each run
+- `resetDefaultValueLocale: null` - Prevents value overwrites
+
+### Recovery from Data Loss
+
+If translations are accidentally lost:
+
+1. **Check for backups**: Look in `.i18n-backups/` directory
+2. **Git restore**: `git restore src/lib/i18n/locales/*.json`
+3. **Manual restore**: Copy from the timestamped backup in `.i18n-backups/`
+
+### Best Practices
+
+1. **Always use the safe extract**: `npm run i18n:extract-safe`
+2. **Test in development first**: Never run extraction commands in production
+3. **Commit before extraction**: Always have a git commit to fall back to
+4. **Review changes**: Check git diff after extraction to ensure no data loss

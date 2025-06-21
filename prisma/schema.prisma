@@ -439,6 +439,7 @@ model User {
   createdAt         DateTime?   @map("created_at") @default(now()) @db.Timestamptz(6)
   updatedAt         DateTime?   @map("updated_at") @default(now()) @db.Timestamptz(6)
   isVerified        Boolean?    @map("is_verified") @default(false)
+  isActive          Boolean?    @map("is_active") @default(true)
   
   // NextAuth relations
   accounts          Account[]

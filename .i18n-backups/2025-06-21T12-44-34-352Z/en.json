@@ -166,59 +166,14 @@
         "sendPasswordReset": "Send Password Reset"
       },
       "adminRole": "Admin",
-      "allRoles": "All Roles",
-      "contactInfo": "Contact Information",
       "contentEditorRole": "Content Editor",
-      "editUser": "Edit User",
-      "errors": {
-        "cannotModifySecurityFields": "You cannot modify your own security information (role, admin status, permissions)",
-        "cannotModifySelf": "You cannot modify your own security information",
-        "onlyAdminsCanGrantAdmin": "Only administrators can grant admin privileges",
-        "onlyAdminsCanManageAdmin": "Only administrators can manage admin roles",
-        "updateError": "Error updating user",
-        "updateFailed": "Failed to update user"
-      },
-      "fields": {
-        "activeAccount": "Active Account",
-        "apartment": "Apartment",
-        "apartmentNumber": "Apartment Number",
-        "buildingNumber": "Building Number",
-        "phoneNumber": "Phone Number",
-        "preferredLanguage": "Preferred Language",
-        "role": "Role",
-        "verifiedOwner": "Verified Owner"
-      },
-      "languages": {
-        "arabic": "العربية",
-        "english": "English",
-        "french": "Français"
-      },
-      "messages": {
-        "userUpdated": "User updated successfully"
-      },
-      "noContactInfo": "No contact info",
       "ownerBadge": "Owner",
-      "permissions": {
-        "adminHasAll": "Administrators have all permissions",
-        "title": "Permissions"
-      },
-      "placeholders": {
-        "apartmentNumber": "Ex: 101, 102...",
-        "buildingNumber": "Ex: A, B, 1, 2...",
-        "phoneNumber": "Ex: +1 234 567 8900"
-      },
-      "searchPlaceholder": "Search by name or email...",
       "status": {
         "active": "Active",
         "inactive": "Inactive"
       },
       "tableHeaders": {
-        "actions": "Actions",
-        "contact": "Contact",
-        "registered": "Registered",
-        "role": "Role",
-        "status": "Status",
-        "user": "User"
+        "registered": "Registered"
       },
       "userRole": "User"
     },

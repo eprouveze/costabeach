@@ -166,59 +166,14 @@
         "sendPasswordReset": "Envoyer la réinitialisation de mot de passe"
       },
       "adminRole": "Administrateur",
-      "allRoles": "Tous les rôles",
-      "contactInfo": "Informations de contact",
       "contentEditorRole": "Éditeur de contenu",
-      "editUser": "Modifier l'utilisateur",
-      "errors": {
-        "cannotModifySecurityFields": "Vous ne pouvez pas modifier vos propres informations de sécurité (rôle, statut admin, permissions)",
-        "cannotModifySelf": "Vous ne pouvez pas modifier vos propres informations de sécurité",
-        "onlyAdminsCanGrantAdmin": "Seuls les administrateurs peuvent accorder des privilèges d'administration",
-        "onlyAdminsCanManageAdmin": "Seuls les administrateurs peuvent gérer les rôles d'administration",
-        "updateError": "Erreur lors de la mise à jour",
-        "updateFailed": "Échec de la mise à jour de l'utilisateur"
-      },
-      "fields": {
-        "activeAccount": "Compte actif",
-        "apartment": "Appartement",
-        "apartmentNumber": "Numéro d'appartement",
-        "buildingNumber": "Numéro de bâtiment",
-        "phoneNumber": "Numéro de téléphone",
-        "preferredLanguage": "Langue préférée",
-        "role": "Rôle",
-        "verifiedOwner": "Propriétaire vérifié"
-      },
-      "languages": {
-        "arabic": "العربية",
-        "english": "English",
-        "french": "Français"
-      },
-      "messages": {
-        "userUpdated": "Utilisateur mis à jour avec succès"
-      },
-      "noContactInfo": "Aucune info de contact",
       "ownerBadge": "Propriétaire",
-      "permissions": {
-        "adminHasAll": "Les administrateurs ont toutes les permissions",
-        "title": "Permissions"
-      },
-      "placeholders": {
-        "apartmentNumber": "Ex: 101, 102...",
-        "buildingNumber": "Ex: A, B, 1, 2...",
-        "phoneNumber": "Ex: +33 1 23 45 67 89"
-      },
-      "searchPlaceholder": "Rechercher par nom ou email...",
       "status": {
         "active": "Actif",
         "inactive": "Inactif"
       },
       "tableHeaders": {
-        "actions": "Actions",
-        "contact": "Contact",
-        "registered": "Inscrit",
-        "role": "Rôle",
-        "status": "Statut",
-        "user": "Utilisateur"
+        "registered": "Inscrit"
       },
       "userRole": "Utilisateur"
     },
